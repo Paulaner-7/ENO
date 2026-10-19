@@ -19,9 +19,9 @@ QJsonObject g_builtIn;
 QJsonObject g_manifest;
 QString g_cachePath;
 
-// Merges an upstream manifest with KAI's built-in manifest so upstream domain
-// fixes and new sources are applied while custom KAI sources (new IDs or
-// entries marked with "kaiOverride": true) are never lost or overwritten.
+// Merges an upstream manifest with ENO's built-in manifest so upstream domain
+// fixes and new sources are applied while custom ENO sources (new IDs or
+// entries marked with "enoOverride": true) are never lost or overwritten.
 QJsonObject mergeWithBuiltIn(const QJsonObject &incoming, const QJsonObject &builtIn) {
     if (builtIn.isEmpty())
         return incoming;
@@ -43,12 +43,13 @@ QJsonObject mergeWithBuiltIn(const QJsonObject &incoming, const QJsonObject &bui
             if (id.isEmpty())
                 continue;
             if (!indexById.contains(id)) {
-                // Custom source added in KAI that does not exist upstream.
+                // Custom source added in ENO that does not exist upstream.
                 indexById.insert(id, targetArr.size());
                 targetArr.append(obj);
-            } else if (obj.value(QStringLiteral("kaiOverride")).toBool() ||
+            } else if (obj.value(QStringLiteral("enoOverride")).toBool() ||
+                       obj.value(QStringLiteral("kaiOverride")).toBool() ||
                        obj.value(QStringLiteral("custom")).toBool()) {
-                // Existing source explicitly customized in KAI.
+                // Existing source explicitly customized in ENO.
                 targetArr.replace(indexById.value(id), obj);
             }
         }

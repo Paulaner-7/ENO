@@ -376,7 +376,7 @@ Item {
                 Text {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("KAI ") + App.version
+                    text: qsTr("ENO ") + App.version
                     color: Theme.textFaint
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textXs + 1

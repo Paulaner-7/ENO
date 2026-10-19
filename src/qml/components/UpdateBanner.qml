@@ -47,7 +47,7 @@ Rectangle {
             }
             Text {
                 width: parent.width
-                text: qsTr("Ask Antigravity to sync KAI with this update.")
+                text: qsTr("Ask Antigravity to sync ENO with this update.")
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm

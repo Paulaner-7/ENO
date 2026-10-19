@@ -1,16 +1,16 @@
-# KAI — Architecture & Agent Guidelines
+# ENO — Architecture & Agent Guidelines
 
-> **IMPORTANT FOR ALL AGENTS**: This file (`AGENTS.md`) is an Always-On Workspace Rule for the **KAI** project (a customized fork of SCANCORE running on macOS Apple Silicon). Read and strictly follow these architectural invariants before planning or making any code changes.
+> **IMPORTANT FOR ALL AGENTS**: This file (`AGENTS.md`) is an Always-On Workspace Rule for the **ENO** project (a customized fork of SCANCORE running on macOS Apple Silicon). Read and strictly follow these architectural invariants before planning or making any code changes.
 
 ---
 
-## 1. What KAI Is
+## 1. What ENO Is
 
-**KAI** is a native desktop media application (Comics/Manga/Manhwa, Web Novels, and Anime) written in **C++20** and **Qt 6 (Qt Quick / QML)**, forked from `medium-gh/scancore`.
-- **Bundle & Identity**: Built as `KAI.app` (`com.vittorio.kai`), display name `KAI`, organization `KAI`.
-- **Local Data Isolation**: All user data, SQLite database, cookies, image cache, and backups live under macOS standard paths for `KAI`:
-  - App Data: `~/Library/Application Support/KAI/` (`scancore.db`, `cookies.txt`, `manifest.json`)
-  - Cache: `~/Library/Caches/KAI/` (`images/`)
+**ENO** is a native desktop media application (Comics/Manga/Manhwa, Web Novels, and Anime) written in **C++20** and **Qt 6 (Qt Quick / QML)**, forked from `medium-gh/scancore`.
+- **Bundle & Identity**: Built as `ENO.app` (`com.vittorio.eno`), display name `ENO`, organization `ENO`.
+- **Local Data Isolation**: All user data, SQLite database, cookies, image cache, and backups live under macOS standard paths for `ENO`:
+  - App Data: `~/Library/Application Support/ENO/` (`scancore.db`, `cookies.txt`, `manifest.json`)
+  - Cache: `~/Library/Caches/ENO/` (`images/`)
   - It is completely isolated from any standalone installation of the original SCANCORE app.
 
 ---
@@ -31,11 +31,11 @@ PATH="/opt/homebrew/bin:$PATH" cmake --build --preset release
 # Run offline unit tests (MUST pass after every C++/source modification)
 PATH="/opt/homebrew/bin:$PATH" ctest --preset debug
 
-# Launch KAI on macOS
-open ./build/debug/bin/KAI.app
+# Launch ENO on macOS
+open ./build/debug/bin/ENO.app
 
 # Headless/automated UI smoke test & screenshot verification
-SCANCORE_START='{"section":"home","screenshot":"/tmp/kai_check.png","delay":1500}' ./build/debug/bin/KAI.app/Contents/MacOS/KAI
+SCANCORE_START='{"section":"home","screenshot":"/tmp/eno_check.png","delay":1500}' ./build/debug/bin/ENO.app/Contents/MacOS/ENO
 ```
 
 ---
@@ -96,7 +96,7 @@ All classes in `src/app/` are registered as `QML_ELEMENT` + `QML_SINGLETON` unde
 
 ---
 
-## 4. Golden Rules for Modifying KAI Safely
+## 4. Golden Rules for Modifying ENO Safely
 
 When implementing any user request, **never break the existing architecture**. Follow these rules:
 
@@ -105,7 +105,7 @@ When implementing any user request, **never break the existing architecture**. F
    - QML must interact with asynchronous C++ operations exclusively via `sc::Task *` properties/signals.
 2. **Use Existing UI Tokens & Components**:
    - Never hardcode colors, fonts, or animation durations in QML. Always bind to `Theme.*` (`Theme.surface`, `Theme.text`, `Theme.accent`, `Theme.radiusMd`, etc.) and `Motion.*`.
-   - Reuse existing components in `src/qml/components/` (`ScButton`, `Chip`, `Select`, `Toggle`, `SettingRow`, `SettingsGroup`, `StateView`, `ConfirmDialog`) so new features look and feel 100% native to KAI.
+   - Reuse existing components in `src/qml/components/` (`ScButton`, `Chip`, `Select`, `Toggle`, `SettingRow`, `SettingsGroup`, `StateView`, `ConfirmDialog`) so new features look and feel 100% native to ENO.
    - Keep responsive layout in mind: check if the page needs to adapt when `Theme.compact` is true.
 3. **Settings Persistence**:
    - To add a new user preference, read it in QML via `App.settings.<myKey>` and write it via `App.setSetting("<myKey>", value)`.
@@ -117,20 +117,20 @@ When implementing any user request, **never break the existing architecture**. F
 5. **Database Schema Changes**:
    - All SQLite schema definitions live in `Database::open` (`src/core/Database.cpp`) using `CREATE TABLE IF NOT EXISTS` and additive migrations (`ALTER TABLE ...` or new tables). Never drop or destructively alter existing tables (`library`, `progress`, `history`, `downloads`, `prefs`).
 6. **Verify Before Finishing**:
-   - Always compile (`PATH="/opt/homebrew/bin:$PATH" cmake --build --preset debug`), run unit tests (`PATH="/opt/homebrew/bin:$PATH" ctest --preset debug`), and verify that `KAI.app` launches cleanly without QML errors.
+   - Always compile (`PATH="/opt/homebrew/bin:$PATH" cmake --build --preset debug`), run unit tests (`PATH="/opt/homebrew/bin:$PATH" ctest --preset debug`), and verify that `ENO.app` launches cleanly without QML errors.
 
 ---
 
 ## 5. Upstream SCANCORE Updates & Manifest Smart Merge
 
-KAI is designed to receive official upstream improvements from `medium-gh/scancore` **without ever losing or overwriting personal KAI modifications**:
+ENO is designed to receive official upstream improvements from `medium-gh/scancore` **without ever losing or overwriting personal ENO modifications**:
 
 1. **In-App Update Detection (Never Binary Self-Overwrite)**:
    - `Updater::canInstall()` (`src/app/Updater.cpp`) intentionally returns `false`.
-   - KAI still checks `api.github.com/repos/medium-gh/scancore/releases/latest` and notifies the user via `UpdateBanner.qml` and `AboutSettings.qml` when a new upstream SCANCORE version is released, but **never** downloads or installs the pre-compiled vanilla `.dmg` (which would erase KAI's custom code).
-   - Instead, when the user asks Antigravity to apply an official update, follow the **`sync-upstream` skill** (`.agents/skills/sync-upstream/SKILL.md`) to merge upstream commits at the Git source level while preserving all KAI changes.
+   - ENO still checks `api.github.com/repos/medium-gh/scancore/releases/latest` and notifies the user via `UpdateBanner.qml` and `AboutSettings.qml` when a new upstream SCANCORE version is released, but **never** downloads or installs the pre-compiled vanilla `.dmg` (which would erase ENO's custom code).
+   - Instead, when the user asks Antigravity to apply an official update, follow the **`sync-upstream` skill** (`.agents/skills/sync-upstream/SKILL.md`) to merge upstream commits at the Git source level while preserving all ENO changes.
 
 2. **Manifest Smart Merge (`src/sources/Manifest.cpp`)**:
-   - At runtime, KAI loads `:/sources/manifest.json` (`g_builtIn`) and merges any newer cached or remote upstream `manifest.json` via `mergeWithBuiltIn(incoming, g_builtIn)`.
+   - At runtime, ENO loads `:/sources/manifest.json` (`g_builtIn`) and merges any newer cached or remote upstream `manifest.json` via `mergeWithBuiltIn(incoming, g_builtIn)`.
    - Standard upstream sources automatically receive live domain updates and fixes from `medium-gh/scancore`.
-   - Any custom source added to KAI's `sources/manifest.json` with a new `"id"`, or any existing source customized with `"kaiOverride": true` (or `"custom": true`), is **automatically preserved** and never overwritten by upstream manifest refreshes.
+   - Any custom source added to ENO's `sources/manifest.json` with a new `"id"`, or any existing source customized with `"enoOverride": true` (or `"kaiOverride": true`, `"custom": true`), is **automatically preserved** and never overwritten by upstream manifest refreshes.

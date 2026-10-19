@@ -67,7 +67,7 @@ Rectangle {
             anchors.left: logo.right
             anchors.leftMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            text: "KAI"
+            text: "ENO"
             color: Theme.text
             font.family: Theme.fontDisplay
             font.pixelSize: 15

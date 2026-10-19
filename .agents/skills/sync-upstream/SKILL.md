@@ -2,23 +2,23 @@
 name: sync-upstream
 description: >-
   Safely fetches and merges official upstream SCANCORE updates (from medium-gh/scancore)
-  into the customized KAI codebase without losing or breaking any personal KAI modifications.
+  into the customized ENO codebase without losing or breaking any personal ENO modifications.
   Activate whenever the user asks to check, pull, sync, or apply an official SCANCORE update.
 ---
 
-# Syncing Upstream SCANCORE Updates into KAI
+# Syncing Upstream SCANCORE Updates into ENO
 
-Use this procedure whenever the user wants to bring new official updates from `https://github.com/medium-gh/scancore` into **KAI** without overwriting or breaking KAI's custom identity, UI, sources, or features.
+Use this procedure whenever the user wants to bring new official updates from `https://github.com/medium-gh/scancore` into **ENO** without overwriting or breaking ENO's custom identity, UI, sources, or features.
 
 ---
 
-## Step 1: Ensure Clean Working Tree & Commit Any Unsaved KAI Work
+## Step 1: Ensure Clean Working Tree & Commit Any Unsaved ENO Work
 
 Before fetching or merging upstream changes, check `git status`:
 ```bash
 git status
 ```
-If there are uncommitted local modifications made for KAI, stage and commit them on the local branch first (e.g. `git add -A && git commit -m "chore(kai): save local KAI customizations before upstream sync"`) so Git has a clean snapshot of all KAI work and can perform a 3-way merge.
+If there are uncommitted local modifications made for ENO, stage and commit them on the local branch first (e.g. `git add -A && git commit -m "chore(eno): save local ENO customizations before upstream sync"`) so Git has a clean snapshot of all ENO work and can perform a 3-way merge.
 
 ---
 
@@ -38,32 +38,32 @@ Summarize the upstream changes for the user (new features, bug fixes, source ada
 
 ---
 
-## Step 3: Merge Upstream Without Losing KAI Customizations
+## Step 3: Merge Upstream Without Losing ENO Customizations
 
 Run a no-auto-commit merge first so you can inspect and verify every change before finalizing:
 ```bash
 git merge --no-commit --no-ff origin/main
 ```
 
-### Mandatory KAI Invariants to Preserve During Merge:
-Even if upstream touched these files, **always preserve** KAI's customizations:
+### Mandatory ENO Invariants to Preserve During Merge:
+Even if upstream touched these files, **always preserve** ENO's customizations:
 1. **`CMakeLists.txt` & `src/CMakeLists.txt`**:
-   - Keep `project(KAI VERSION <latest_upstream_version> ...)` (adopt upstream's new `VERSION` number so `Updater` knows KAI is now synced to that version, while keeping project name `KAI`).
-   - Keep `OUTPUT_NAME KAI`, `MACOSX_BUNDLE_GUI_IDENTIFIER com.vittorio.kai`, and `MACOSX_BUNDLE_BUNDLE_NAME KAI`.
+   - Keep `project(ENO VERSION <latest_upstream_version> ...)` (adopt upstream's new `VERSION` number so `Updater` knows ENO is now synced to that version, while keeping project name `ENO`).
+   - Keep `OUTPUT_NAME ENO`, `MACOSX_BUNDLE_GUI_IDENTIFIER com.vittorio.eno`, and `MACOSX_BUNDLE_BUNDLE_NAME ENO`.
 2. **`src/main.cpp`**:
-   - Keep `OrganizationName`, `ApplicationName`, `ApplicationDisplayName`, and system tray labels set to `"KAI"` (`"kai.app"`).
+   - Keep `OrganizationName`, `ApplicationName`, `ApplicationDisplayName`, and system tray labels set to `"ENO"` (`"eno.app"`).
 3. **`src/app/Updater.cpp`**:
-   - Keep `Updater::canInstall()` returning `false` so KAI never replaces `KAI.app` with a pre-compiled vanilla SCANCORE `.dmg`.
+   - Keep `Updater::canInstall()` returning `false` so ENO never replaces `ENO.app` with a pre-compiled vanilla SCANCORE `.dmg`.
 4. **`src/sources/Manifest.cpp`**:
-   - Keep `mergeWithBuiltIn(object, g_builtIn)` so custom KAI sources and `"kaiOverride": true` entries in `sources/manifest.json` are preserved alongside upstream manifest updates.
+   - Keep `mergeWithBuiltIn(object, g_builtIn)` so custom ENO sources and `"enoOverride": true` entries in `sources/manifest.json` are preserved alongside upstream manifest updates.
 5. **UI Branding & Custom Features (`src/qml/`)**:
-   - Keep `"KAI"` in `Main.qml`, `Sidebar.qml`, `SettingsPage.qml`, `AboutSettings.qml`, `UpdateBanner.qml`, plus any custom QML pages, components, C++ services, or sources the user has added to KAI.
+   - Keep `"ENO"` in `Main.qml`, `Sidebar.qml`, `SettingsPage.qml`, `AboutSettings.qml`, `UpdateBanner.qml`, plus any custom QML pages, components, C++ services, or sources the user has added to ENO.
 
 ---
 
 ## Step 4: Compile, Run Tests, and Commit
 
-After resolving any conflicts and verifying all KAI invariants:
+After resolving any conflicts and verifying all ENO invariants:
 ```bash
 PATH="/opt/homebrew/bin:$PATH" cmake --build --preset debug
 PATH="/opt/homebrew/bin:$PATH" ctest --preset debug
@@ -71,5 +71,5 @@ PATH="/opt/homebrew/bin:$PATH" cmake --build --preset release
 ```
 Once both Debug and Release compile cleanly and `ctest` passes 100%, commit the merge:
 ```bash
-git commit -m "chore(kai): merge upstream SCANCORE updates while preserving KAI customizations"
+git commit -m "chore(eno): merge upstream SCANCORE updates while preserving ENO customizations"
 ```

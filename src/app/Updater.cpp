@@ -55,10 +55,10 @@ QString Updater::assetSuffix() const {
 }
 
 bool Updater::canInstall() const {
-    // KAI is a custom source fork of SCANCORE: never replace KAI.app with a
+    // ENO is a custom source fork of SCANCORE: never replace ENO.app with a
     // prebuilt upstream SCANCORE binary installer. Upstream releases are
     // detected and surfaced in the UI so the Antigravity agent can merge them
-    // at the source level while preserving all KAI customizations.
+    // at the source level while preserving all ENO customizations.
     return false;
 }
 

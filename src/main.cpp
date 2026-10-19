@@ -164,10 +164,10 @@ int main(int argc, char *argv[]) {
 #ifdef Q_OS_MACOS
     app.installEventFilter(new FileOpenFilter(&app));
 #endif
-    Application::setOrganizationName(QStringLiteral("KAI"));
-    Application::setOrganizationDomain(QStringLiteral("kai.app"));
-    Application::setApplicationName(QStringLiteral("KAI"));
-    Application::setApplicationDisplayName(QStringLiteral("KAI"));
+    Application::setOrganizationName(QStringLiteral("ENO"));
+    Application::setOrganizationDomain(QStringLiteral("eno.app"));
+    Application::setApplicationName(QStringLiteral("ENO"));
+    Application::setApplicationDisplayName(QStringLiteral("ENO"));
     Application::setApplicationVersion(QStringLiteral(SCANCORE_VERSION));
     // Development hook for testing updates.
     if (qEnvironmentVariableIsSet("SCANCORE_PRETEND_VERSION"))
@@ -232,11 +232,11 @@ int main(int argc, char *argv[]) {
 #ifndef Q_OS_ANDROID
     QSystemTrayIcon tray(QApplication::windowIcon());
     QMenu trayMenu;
-    trayMenu.addAction(QStringLiteral("Open KAI"), appState, &App::activateRequested);
+    trayMenu.addAction(QStringLiteral("Open ENO"), appState, &App::activateRequested);
     trayMenu.addSeparator();
     trayMenu.addAction(QStringLiteral("Quit"), &app, &QApplication::quit);
     tray.setContextMenu(&trayMenu);
-    tray.setToolTip(QStringLiteral("KAI"));
+    tray.setToolTip(QStringLiteral("ENO"));
     QObject::connect(&tray, &QSystemTrayIcon::activated, appState, [appState](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger)
             emit appState->activateRequested();

@@ -10,11 +10,11 @@ SettingsPane {
     readonly property string updateLine: Updater.managedByFlatpak ? qsTr("Updates come through Flatpak.")
         : Updater.state === "checking" ? qsTr("Checking upstream SCANCORE for updates…")
         : Updater.state === "current" ? qsTr("Synced with the latest upstream SCANCORE release.")
-        : Updater.state === "available" ? qsTr("Upstream SCANCORE ") + Updater.version + qsTr(" is available — ask Antigravity to sync KAI.")
+        : Updater.state === "available" ? qsTr("Upstream SCANCORE ") + Updater.version + qsTr(" is available — ask Antigravity to sync ENO.")
         : Updater.state === "downloading" ? qsTr("Downloading ") + Updater.version + " · " + Math.round(Updater.progress * 100) + "%"
         : Updater.state === "ready" ? qsTr("Version ") + Updater.version + qsTr(" is ready to install.")
         : Updater.state === "error" ? Updater.error
-        : qsTr("Custom KAI build · Forked from SCANCORE.")
+        : qsTr("Custom ENO build · Forked from SCANCORE.")
 
     // A key drawn as a keycap.
     component Key: Rectangle {
@@ -77,7 +77,7 @@ SettingsPane {
                     Row {
                         spacing: 8
                         Text {
-                            text: "KAI"
+                            text: "ENO"
                             color: Theme.text
                             font.family: Theme.fontDisplay
                             font.pixelSize: Theme.textXl
@@ -139,7 +139,7 @@ SettingsPane {
         title: qsTr("Updates")
         SettingRow {
             title: qsTr("Check for upstream SCANCORE updates")
-            description: qsTr("Notifies you when a new official SCANCORE release is out so Antigravity can merge it into KAI without losing your changes.")
+            description: qsTr("Notifies you when a new official SCANCORE release is out so Antigravity can merge it into ENO without losing your changes.")
             Toggle { checked: App.settings.checkAppUpdates !== false; onToggled: App.setSetting("checkAppUpdates", checked) }
         }
     }
