@@ -55,19 +55,11 @@ QString Updater::assetSuffix() const {
 }
 
 bool Updater::canInstall() const {
-    if (managedByFlatpak())
-        return false;
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    // Only the AppImage can replace itself; the runtime sets $APPIMAGE.
-    return !qEnvironmentVariableIsEmpty("APPIMAGE") && QFileInfo(qEnvironmentVariable("APPIMAGE")).isWritable();
-#elif defined(Q_OS_WIN)
-    // Portable zip builds have no installer to run.
-    return QFileInfo::exists(QCoreApplication::applicationDirPath() + QStringLiteral("/unins000.exe"));
-#elif defined(Q_OS_MACOS)
-    return QCoreApplication::applicationDirPath().endsWith(QLatin1String(".app/Contents/MacOS"));
-#else
-    return true;
-#endif
+    // KAI is a custom source fork of SCANCORE: never replace KAI.app with a
+    // prebuilt upstream SCANCORE binary installer. Upstream releases are
+    // detected and surfaced in the UI so the Antigravity agent can merge them
+    // at the source level while preserving all KAI customizations.
+    return false;
 }
 
 bool Updater::managedByFlatpak() const {

@@ -4,6 +4,8 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#include <QHash>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QReadWriteLock>
 #include <QSaveFile>
@@ -13,15 +15,61 @@ namespace sc {
 
 namespace {
 QReadWriteLock g_lock;
+QJsonObject g_builtIn;
 QJsonObject g_manifest;
 QString g_cachePath;
+
+// Merges an upstream manifest with KAI's built-in manifest so upstream domain
+// fixes and new sources are applied while custom KAI sources (new IDs or
+// entries marked with "kaiOverride": true) are never lost or overwritten.
+QJsonObject mergeWithBuiltIn(const QJsonObject &incoming, const QJsonObject &builtIn) {
+    if (builtIn.isEmpty())
+        return incoming;
+    QJsonObject merged = incoming;
+    for (const auto &category : {QStringLiteral("comics"), QStringLiteral("novels")}) {
+        const auto builtInArr = builtIn.value(category).toArray();
+        if (builtInArr.isEmpty())
+            continue;
+        auto targetArr = merged.value(category).toArray();
+        QHash<QString, int> indexById;
+        for (int i = 0; i < targetArr.size(); ++i) {
+            const auto id = targetArr.at(i).toObject().value(QStringLiteral("id")).toString();
+            if (!id.isEmpty())
+                indexById.insert(id, i);
+        }
+        for (const auto &val : builtInArr) {
+            const auto obj = val.toObject();
+            const auto id = obj.value(QStringLiteral("id")).toString();
+            if (id.isEmpty())
+                continue;
+            if (!indexById.contains(id)) {
+                // Custom source added in KAI that does not exist upstream.
+                indexById.insert(id, targetArr.size());
+                targetArr.append(obj);
+            } else if (obj.value(QStringLiteral("kaiOverride")).toBool() ||
+                       obj.value(QStringLiteral("custom")).toBool()) {
+                // Existing source explicitly customized in KAI.
+                targetArr.replace(indexById.value(id), obj);
+            }
+        }
+        merged.insert(category, targetArr);
+    }
+    return merged;
+}
 } // namespace
 
 void Manifest::load(const QString &cachePath) {
     g_cachePath = cachePath;
     QFile builtIn(QStringLiteral(":/sources/manifest.json"));
-    if (builtIn.open(QIODevice::ReadOnly))
-        apply(builtIn.readAll(), false);
+    if (builtIn.open(QIODevice::ReadOnly)) {
+        const auto raw = builtIn.readAll();
+        const auto obj = QJsonDocument::fromJson(raw).object();
+        if (obj.value(QStringLiteral("comics")).isArray()) {
+            QWriteLocker lock(&g_lock);
+            g_builtIn = obj;
+            g_manifest = obj;
+        }
+    }
     QFile cached(cachePath);
     if (cached.open(QIODevice::ReadOnly))
         apply(cached.readAll(), false);
@@ -58,7 +106,7 @@ bool Manifest::apply(const QByteArray &json, bool persist) {
         if (!g_manifest.isEmpty() &&
             object.value(QStringLiteral("version")).toInt() <= g_manifest.value(QStringLiteral("version")).toInt())
             return false;
-        g_manifest = object;
+        g_manifest = mergeWithBuiltIn(object, g_builtIn);
     }
     if (persist && !g_cachePath.isEmpty()) {
         QSaveFile file(g_cachePath);

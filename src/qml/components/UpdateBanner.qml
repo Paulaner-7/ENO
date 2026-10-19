@@ -38,7 +38,7 @@ Rectangle {
             spacing: 2
             Text {
                 width: parent.width
-                text: qsTr("SCANCORE ") + Updater.version + (Updater.state === "ready" ? qsTr(" is ready") : qsTr(" is out"))
+                text: qsTr("Upstream SCANCORE ") + Updater.version + qsTr(" is out")
                 color: Theme.text
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textMd
@@ -47,7 +47,7 @@ Rectangle {
             }
             Text {
                 width: parent.width
-                text: Updater.state === "ready" ? qsTr("Restart to finish updating.") : qsTr("Get it from the releases page.")
+                text: qsTr("Ask Antigravity to sync KAI with this update.")
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
@@ -61,8 +61,8 @@ Rectangle {
             ScButton {
                 compact: true
                 variant: "primary"
-                text: Updater.state === "ready" ? qsTr("Restart") : qsTr("Open")
-                onClicked: Updater.state === "ready" ? Updater.install() : App.openUrl(Updater.pageUrl)
+                text: qsTr("Release notes")
+                onClicked: App.openUrl(Updater.pageUrl)
             }
             IconButton { iconName: "x"; diameter: 30; iconSize: 14; tip: qsTr("Later"); onClicked: banner.dismissed = true }
         }

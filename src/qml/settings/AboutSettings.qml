@@ -8,13 +8,13 @@ SettingsPane {
     iconName: "info"
 
     readonly property string updateLine: Updater.managedByFlatpak ? qsTr("Updates come through Flatpak.")
-        : Updater.state === "checking" ? qsTr("Checking for updates…")
-        : Updater.state === "current" ? qsTr("You have the latest version.")
-        : Updater.state === "available" ? qsTr("Version ") + Updater.version + qsTr(" is available.")
+        : Updater.state === "checking" ? qsTr("Checking upstream SCANCORE for updates…")
+        : Updater.state === "current" ? qsTr("Synced with the latest upstream SCANCORE release.")
+        : Updater.state === "available" ? qsTr("Upstream SCANCORE ") + Updater.version + qsTr(" is available — ask Antigravity to sync KAI.")
         : Updater.state === "downloading" ? qsTr("Downloading ") + Updater.version + " · " + Math.round(Updater.progress * 100) + "%"
         : Updater.state === "ready" ? qsTr("Version ") + Updater.version + qsTr(" is ready to install.")
         : Updater.state === "error" ? Updater.error
-        : qsTr("Free and open source, by Medium Dev.")
+        : qsTr("Custom KAI build · Forked from SCANCORE.")
 
     // A key drawn as a keycap.
     component Key: Rectangle {
@@ -77,7 +77,7 @@ SettingsPane {
                     Row {
                         spacing: 8
                         Text {
-                            text: "SCANCORE"
+                            text: "KAI"
                             color: Theme.text
                             font.family: Theme.fontDisplay
                             font.pixelSize: Theme.textXl
@@ -120,7 +120,7 @@ SettingsPane {
                 ScButton {
                     visible: Updater.state === "available" || Updater.state === "ready"
                     variant: "primary"
-                    text: Updater.state === "ready" ? qsTr("Restart to update") : Updater.canInstall ? qsTr("Update") : qsTr("Download")
+                    text: Updater.state === "ready" ? qsTr("Restart to update") : Updater.canInstall ? qsTr("Update") : qsTr("Release notes")
                     onClicked: Updater.canInstall ? (Updater.state === "ready" ? Updater.install() : Updater.download()) : App.openUrl(Updater.pageUrl)
                 }
                 ScButton {
@@ -138,14 +138,9 @@ SettingsPane {
         visible: !Updater.managedByFlatpak
         title: qsTr("Updates")
         SettingRow {
-            title: qsTr("Check for app updates")
+            title: qsTr("Check for upstream SCANCORE updates")
+            description: qsTr("Notifies you when a new official SCANCORE release is out so Antigravity can merge it into KAI without losing your changes.")
             Toggle { checked: App.settings.checkAppUpdates !== false; onToggled: App.setSetting("checkAppUpdates", checked) }
-        }
-        SettingRow {
-            title: qsTr("Install updates automatically")
-            description: Updater.canInstall ? qsTr("New versions download in the background and install when you restart.")
-                : "This copy cannot update itself (for example a portable or source build); you will be told when a new version is out."
-            Toggle { checked: App.settings.autoUpdate !== false; onToggled: App.setSetting("autoUpdate", checked) }
         }
     }
 

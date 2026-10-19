@@ -10,7 +10,7 @@ ApplicationWindow {
     minimumWidth: 360
     minimumHeight: 560
     visible: true
-    title: "SCANCORE"
+    title: "KAI"
     // Clear only when the window has an alpha channel to show through.
     color: Customize.translucentWindow ? "transparent" : Theme.base
     font.family: Theme.fontSans

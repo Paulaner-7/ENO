@@ -67,7 +67,7 @@ Rectangle {
             anchors.left: logo.right
             anchors.leftMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            text: "SCANCORE"
+            text: "KAI"
             color: Theme.text
             font.family: Theme.fontDisplay
             font.pixelSize: 15
