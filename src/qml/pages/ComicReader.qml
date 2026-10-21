@@ -117,14 +117,24 @@ Rectangle {
 
     // ------------------------------------------------------------ progress
 
-    property real lastSaved: 0
-    function saveProgress(force) {
+    Timer {
+        id: saveTimer
+        interval: 600
+        onTriggered: reader.commitProgress()
+    }
+    function commitProgress() {
         if (!series.id || !unit.key || panels.length === 0) return
-        const now = Date.now()
-        if (!force && now - lastSaved < 1500) return
-        lastSaved = now
         const percent = finished ? 1 : (currentPanel + 1) / panels.length
         Library.recordProgress(series, unit, { type: reader.mode, panel: currentPanel }, percent, finished || percent >= 0.98)
+    }
+    function saveProgress(force) {
+        if (!series.id || !unit.key || panels.length === 0) return
+        if (force) {
+            saveTimer.stop()
+            commitProgress()
+        } else {
+            saveTimer.restart()
+        }
     }
 
     onCurrentPanelChanged: {
@@ -235,6 +245,7 @@ Rectangle {
         model: reader.mode === "strip" ? reader.panels : []
         cacheBuffer: Math.max(2400, height * 3)
         boundsBehavior: Flickable.StopAtBounds
+        flickableDirection: Flickable.VerticalFlick
         maximumFlickVelocity: 7000
         flickDeceleration: 2600
         spacing: reader.gap
@@ -269,6 +280,12 @@ Rectangle {
             onWheel: (event) => {
                 if (event.modifiers & Qt.ControlModifier) {
                     reader.setOpt("readerWidth", Math.max(360, Math.min(2400, reader.stripWidth + (event.angleDelta.y > 0 ? 60 : -60))))
+                    return
+                }
+                if (event.phase !== Qt.NoScrollPhase || event.pixelDelta.y !== 0) {
+                    scrollAnim.stop()
+                    const dy = event.pixelDelta.y !== 0 ? event.pixelDelta.y : event.angleDelta.y
+                    strip.contentY = Math.max(strip.originY, Math.min(strip.contentHeight + strip.originY - strip.height, strip.contentY - dy))
                     return
                 }
                 reader.scrollBy(-event.angleDelta.y / 120 * 180)

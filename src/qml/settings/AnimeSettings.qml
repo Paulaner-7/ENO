@@ -38,5 +38,35 @@ SettingsPane {
             description: qsTr("Goes straight to the next episode's countdown when the credits start.")
             Toggle { checked: App.settings.autoSkipEndings === true; onToggled: App.setSetting("autoSkipEndings", checked) }
         }
+        SettingRow {
+            iconName: "captions"
+            title: qsTr("Default subtitle language")
+            description: qsTr("Automatically selects Italian subtitles when available.")
+            Segmented {
+                options: [{ value: "it", label: qsTr("Italian") }, { value: "en", label: qsTr("English") }, { value: "orig", label: qsTr("Original") }]
+                value: App.settings.animeSubLang || "it"
+                onPicked: (v) => App.setSetting("animeSubLang", v)
+            }
+        }
+        SettingRow {
+            iconName: "sparkles"
+            title: qsTr("Subtitle quality")
+            description: qsTr("Render resolution for ASS/SSA styled subtitles.")
+            Segmented {
+                options: [{ value: "high", label: qsTr("High") }, { value: "medium", label: qsTr("Medium") }, { value: "low", label: qsTr("Low") }]
+                value: App.settings.animeSubQuality || "high"
+                onPicked: (v) => App.setSetting("animeSubQuality", v)
+            }
+        }
+        SettingRow {
+            iconName: "video"
+            title: qsTr("Default video quality")
+            description: qsTr("Selects the highest available stream resolution (e.g. 1080p).")
+            Segmented {
+                options: [{ value: "max", label: qsTr("Highest") }, { value: "720", label: "720p" }, { value: "auto", label: qsTr("Auto") }]
+                value: App.settings.animeVideoQuality || "max"
+                onPicked: (v) => App.setSetting("animeVideoQuality", v)
+            }
+        }
     }
 }

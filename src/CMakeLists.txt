@@ -33,7 +33,9 @@ set(SCANCORE_PLATFORM_SOURCES)
 if(WIN32)
     list(APPEND SCANCORE_PLATFORM_SOURCES ${PROJECT_SOURCE_DIR}/packaging/windows/scancore.rc)
 elseif(APPLE)
-    set(SCANCORE_ICNS ${PROJECT_SOURCE_DIR}/packaging/macos/scancore.icns)
+    # ENO.icns + Assets.car are compiled from packaging/macos/ENO.icon with Xcode's actool
+    # (Liquid Glass app icon); the compiled outputs are committed so builds don't need Xcode.
+    set(SCANCORE_ICNS ${PROJECT_SOURCE_DIR}/packaging/macos/ENO.icns ${PROJECT_SOURCE_DIR}/packaging/macos/Assets.car)
     set_source_files_properties(${SCANCORE_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     list(APPEND SCANCORE_PLATFORM_SOURCES ${SCANCORE_ICNS})
 endif()
@@ -46,7 +48,7 @@ set_target_properties(scancore PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME ENO
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
-    MACOSX_BUNDLE_ICON_FILE scancore.icns
+    MACOSX_BUNDLE_ICON_FILE ENO
     MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/packaging/macos/Info.plist.in)
 target_compile_definitions(scancore PRIVATE SCANCORE_VERSION="${PROJECT_VERSION}"
     SCANCORE_DISCORD_APP_ID="${SCANCORE_DISCORD_APP_ID}"
@@ -121,7 +123,13 @@ qt_add_resources(scancore assets
         ${PROJECT_SOURCE_DIR}/resources/fonts/Literata.ttf
         ${PROJECT_SOURCE_DIR}/resources/fonts/Literata-Italic.ttf
         ${PROJECT_SOURCE_DIR}/resources/branding/scancore.svg
-        ${PROJECT_SOURCE_DIR}/resources/branding/shadow.png)
+        ${PROJECT_SOURCE_DIR}/resources/branding/shadow.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-logo-dark.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-logo-light.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-symbol-dark.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-symbol-light.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon-glass.png)
 foreach(icon ${SCANCORE_ICONS})
     list(APPEND SCANCORE_ICON_PATHS ${PROJECT_SOURCE_DIR}/${icon})
 endforeach()
@@ -135,7 +143,7 @@ qt_add_resources(scancore lncrawl
     FILES
         ${PROJECT_SOURCE_DIR}/resources/lncrawl/sources.json
         ${PROJECT_SOURCE_DIR}/resources/lncrawl/bridge.py)
-qt_add_resources(scancore manifest
+qt_add_resources(scancore_core manifest
     PREFIX /
     BASE ${PROJECT_SOURCE_DIR}
     FILES ${PROJECT_SOURCE_DIR}/sources/manifest.json)
@@ -143,7 +151,7 @@ qt_add_resources(scancore manifest
 target_include_directories(scancore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/app ${CMAKE_CURRENT_SOURCE_DIR}/core)
 
 target_link_libraries(scancore PRIVATE
-    scancore_core Qt6::Gui Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+    scancore_core Qt6::CorePrivate Qt6::Gui Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
 if(ANDROID)
     # Qt's network stack on Android needs OpenSSL shipped inside the APK.
     include(FetchContent)

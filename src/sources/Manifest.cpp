@@ -19,27 +19,40 @@ QJsonObject g_builtIn;
 QJsonObject g_manifest;
 QString g_cachePath;
 
+// A manifest entry's identity: "id" upstream, "key" in ENO's manifest.
+QString entryId(const QJsonObject &entry) {
+    const auto id = entry.value(QStringLiteral("id")).toString();
+    return id.isEmpty() ? entry.value(QStringLiteral("key")).toString() : id;
+}
+
 // Merges an upstream manifest with ENO's built-in manifest so upstream domain
 // fixes and new sources are applied while custom ENO sources (new IDs or
 // entries marked with "enoOverride": true) are never lost or overwritten.
+// A category listed in the built-in manifest's "enoExclusive" is pinned to
+// the built-in list entirely (ENO ships only MangaWorld for comics).
 QJsonObject mergeWithBuiltIn(const QJsonObject &incoming, const QJsonObject &builtIn) {
     if (builtIn.isEmpty())
         return incoming;
     QJsonObject merged = incoming;
+    const auto exclusive = builtIn.value(QStringLiteral("enoExclusive")).toArray();
     for (const auto &category : {QStringLiteral("comics"), QStringLiteral("novels")}) {
         const auto builtInArr = builtIn.value(category).toArray();
         if (builtInArr.isEmpty())
             continue;
+        if (exclusive.contains(category)) {
+            merged.insert(category, builtInArr);
+            continue;
+        }
         auto targetArr = merged.value(category).toArray();
         QHash<QString, int> indexById;
         for (int i = 0; i < targetArr.size(); ++i) {
-            const auto id = targetArr.at(i).toObject().value(QStringLiteral("id")).toString();
+            const auto id = entryId(targetArr.at(i).toObject());
             if (!id.isEmpty())
                 indexById.insert(id, i);
         }
         for (const auto &val : builtInArr) {
             const auto obj = val.toObject();
-            const auto id = obj.value(QStringLiteral("id")).toString();
+            const auto id = entryId(obj);
             if (id.isEmpty())
                 continue;
             if (!indexById.contains(id)) {

@@ -16,6 +16,7 @@ Item {
     // This Qt WebEngine cannot decode H.264, which every episode uses. Qt's
     // own packages are built without it; distribution and Flathub ones have it.
     signal unsupported()
+    signal toggleFullScreen()
     property bool reportedUnsupported: false
 
     function seek(seconds) {
@@ -28,11 +29,14 @@ Item {
             + "<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100%;height:100%}</style>"
             + "</head><body><iframe id='f' src=\"" + safe + "\" allow='autoplay; fullscreen; encrypted-media; picture-in-picture' allowfullscreen referrerpolicy='origin'></iframe>"
             + "<script>"
-            + "window.__sc={t:0,d:0,s:'',h264:!!(window.MediaSource&&MediaSource.isTypeSupported('video/mp4; codecs=\\\"avc1.42E01E\\\"'))};var f=document.getElementById('f');"
+            + "window.__sc={t:0,d:0,s:'',fs:false,h264:!!(window.MediaSource&&MediaSource.isTypeSupported('video/mp4; codecs=\\\"avc1.42E01E\\\"'))};var f=document.getElementById('f');"
             + "addEventListener('message',function(e){if(e.source!==f.contentWindow)return;var x=e.data;"
             + "if(typeof x==='string'){try{x=JSON.parse(x)}catch(_){return}}if(!x)return;"
             + "if(x.currentTime!==undefined){__sc.t=+x.currentTime||0;__sc.d=+x.duration||0}"
-            + "if(x.playerStatus)__sc.s=String(x.playerStatus)});"
+            + "if(x.playerStatus)__sc.s=String(x.playerStatus);"
+            + "if(x.zenCommand==='toggleFullscreen'){__sc.fs=true;}"
+            + "if(x.zenCommand==='getFullscreenState'){try{f.contentWindow.postMessage({zenFullscreenState:!!window.__sc.isFs},'*')}catch(_){}}"
+            + "});"
             + "setInterval(function(){try{f.contentWindow.postMessage({command:'getTime'},'*')}catch(_){}},1000);"
             + "window.scSeek=function(v){f.contentWindow.postMessage({command:'seek',value:v},'*')};"
             + "</script></body></html>"
@@ -73,16 +77,22 @@ Item {
         target: root.Window.window
         function onVisibilityChanged(visibility) {
             if (visibility !== Window.FullScreen && web.isFullScreen) web.fullScreenCancelled()
+            const isFs = visibility === Window.FullScreen
+            web.runJavaScript("window.__sc.isFs=" + isFs + ";var f=document.getElementById('f');if(f&&f.contentWindow){try{f.contentWindow.postMessage({zenFullscreenState:" + isFs + "},'*')}catch(_){}}")
         }
     }
 
     Timer {
-        interval: 1000
+        interval: 500
         running: root.visible
         repeat: true
         onTriggered: web.runJavaScript("JSON.stringify(window.__sc||{})", (result) => {
             try {
                 const s = JSON.parse(result)
+                if (s.fs) {
+                    web.runJavaScript("window.__sc.fs=false")
+                    root.toggleFullScreen()
+                }
                 if (s.h264 === false && !root.reportedUnsupported) {
                     root.reportedUnsupported = true
                     root.unsupported()

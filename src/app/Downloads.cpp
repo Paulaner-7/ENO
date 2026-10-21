@@ -27,8 +27,15 @@ QString hashed(const QString &value) {
     return QString::fromLatin1(QCryptographicHash::hash(value.toUtf8(), QCryptographicHash::Sha1).toHex().left(16));
 }
 
-QString root() {
+QString defaultRoot() {
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/downloads");
+}
+
+QString root() {
+    const QString custom = Database::pref(QStringLiteral("setting.downloadsPath")).toString().trimmed();
+    if (!custom.isEmpty())
+        return custom;
+    return defaultRoot();
 }
 
 QString extensionFor(const QByteArray &contentType, const QString &url) {
@@ -90,7 +97,22 @@ int Downloads::pending() const {
 }
 
 QString Downloads::unitFolder(const QString &seriesId, const QString &unitKey) {
-    return QStringLiteral("%1/%2/%3").arg(root(), hashed(seriesId), hashed(unitKey));
+    const auto sub = QStringLiteral("%1/%2").arg(hashed(seriesId), hashed(unitKey));
+    const auto custom = Database::pref(QStringLiteral("setting.downloadsPath")).toString().trimmed();
+    if (!custom.isEmpty()) {
+        const auto customPath = QStringLiteral("%1/%2").arg(custom, sub);
+        if (QFile::exists(customPath + QStringLiteral("/index.json")) ||
+            QFile::exists(customPath + QStringLiteral("/chapter.json"))) {
+            return customPath;
+        }
+    }
+    const auto def = defaultRoot();
+    const auto defaultPath = QStringLiteral("%1/%2").arg(def, sub);
+    if (!custom.isEmpty() && (QFile::exists(defaultPath + QStringLiteral("/index.json")) ||
+                              QFile::exists(defaultPath + QStringLiteral("/chapter.json")))) {
+        return defaultPath;
+    }
+    return QStringLiteral("%1/%2").arg(root(), sub);
 }
 
 void Downloads::enqueue(const QVariantMap &series, const QVariantList &units) {
@@ -275,12 +297,40 @@ void Downloads::clearFinished() {
 
 QString Downloads::folder() const { return root(); }
 
+bool Downloads::hasCustomFolder() const {
+    return !Database::pref(QStringLiteral("setting.downloadsPath")).toString().trimmed().isEmpty();
+}
+
+void Downloads::setFolder(const QString &folder) {
+    QString path = folder;
+    if (path.startsWith(QLatin1String("file://")))
+        path = QUrl(folder).toLocalFile();
+    path = path.trimmed();
+    if (path.isEmpty())
+        return;
+    QDir().mkpath(path);
+    Database::setPref(QStringLiteral("setting.downloadsPath"), path);
+    notify();
+}
+
+void Downloads::resetFolder() {
+    Database::setPref(QStringLiteral("setting.downloadsPath"), QString());
+    notify();
+}
+
 QString Downloads::sizeOnDisk() const {
     qint64 total = 0;
     QDirIterator it(root(), QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         it.next();
         total += it.fileInfo().size();
+    }
+    if (hasCustomFolder()) {
+        QDirIterator itDef(defaultRoot(), QDir::Files, QDirIterator::Subdirectories);
+        while (itDef.hasNext()) {
+            itDef.next();
+            total += itDef.fileInfo().size();
+        }
     }
     return QLocale().formattedDataSize(total);
 }

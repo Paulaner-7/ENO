@@ -80,6 +80,8 @@ std::unique_ptr<Source> createSource(const SourceConfig &config) {
         return std::make_unique<InMangaSource>(config);
     if (e == QLatin1String("leercapitulo"))
         return std::make_unique<LeerCapituloSource>(config);
+    if (e == QLatin1String("mangaworld"))
+        return std::make_unique<MangaWorldSource>(config);
     return nullptr;
 }
 
@@ -113,7 +115,8 @@ QString chapterNumberFrom(const QString &text) {
 
 QString chapterLabel(const QString &language, const QString &number, const QString &title) {
     const bool spanish = language == QLatin1String("es") || language.startsWith(QLatin1String("es-"));
-    const auto word = spanish ? QString::fromUtf8("Capítulo") : QStringLiteral("Chapter");
+    const bool italian = language == QLatin1String("it") || language.startsWith(QLatin1String("it-"));
+    const auto word = spanish ? QString::fromUtf8("Capítulo") : italian ? QStringLiteral("Capitolo") : QStringLiteral("Chapter");
     return title.isEmpty() ? QStringLiteral("%1 %2").arg(word, number) : QStringLiteral("%1 %2: %3").arg(word, number, title);
 }
 

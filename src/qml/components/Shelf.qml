@@ -16,17 +16,21 @@ Column {
     property var subtitleFor: (item) => ""
     property var badgeFor: (item) => ""
     property var progressFor: (item) => -1
+    property Component headerExtra: null
     signal action()
     signal retry()
     signal opened(var item, Item coverItem)
 
     // As in CoverGrid: only the first fill rises in.
     property bool settled: false
-    onItemsChanged: if (items.length > 0 && !settled) Qt.callLater(() => shelf.settled = true)
+    onItemsChanged: {
+        if (items.length > 0 && !settled) Qt.callLater(() => shelf.settled = true)
+        if (list) list.contentX = -list.leftMargin
+    }
 
     spacing: 14
     width: parent ? parent.width : 800
-    visible: loading || error.length > 0 || items.length > 0
+    visible: loading || error.length > 0 || items.length > 0 || (headerExtra !== null && opacity > 0)
 
     Item {
         width: parent.width
@@ -85,15 +89,35 @@ Column {
         }
     }
 
+    Loader {
+        width: parent.width
+        active: shelf.headerExtra !== null
+        visible: active
+        sourceComponent: shelf.headerExtra
+    }
+
     Item {
         width: parent.width
-        height: shelf.cardWidth * shelf.coverRatio + 84
+        height: shelf.items.length > 0 ? (shelf.cardWidth * shelf.coverRatio + 84) : (shelf.headerExtra !== null ? 48 : 0)
+        visible: height > 0
+
+        Text {
+            visible: shelf.items.length === 0 && !shelf.loading && shelf.error.length === 0 && shelf.headerExtra !== null
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.gutter
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("No titles in this category")
+            color: Theme.textMuted
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+        }
 
         ListView {
             id: list
             anchors.fill: parent
-            visible: !shelf.loading && shelf.error.length === 0
+            visible: shelf.items.length > 0 && !shelf.loading && shelf.error.length === 0
             orientation: ListView.Horizontal
+            flickableDirection: Flickable.HorizontalFlick
             leftMargin: Theme.gutter
             rightMargin: Theme.gutter
             spacing: 18

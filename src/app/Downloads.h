@@ -17,6 +17,8 @@ class Downloads : public QObject {
     QML_SINGLETON
     Q_PROPERTY(int revision READ revision NOTIFY changed)
     Q_PROPERTY(int pending READ pending NOTIFY changed)
+    Q_PROPERTY(QString folder READ folder NOTIFY changed)
+    Q_PROPERTY(bool hasCustomFolder READ hasCustomFolder NOTIFY changed)
 
 public:
     static Downloads *instance();
@@ -34,6 +36,9 @@ public:
     Q_INVOKABLE void retryFailed();
     Q_INVOKABLE void clearFinished();
     Q_INVOKABLE QString folder() const;
+    Q_INVOKABLE bool hasCustomFolder() const;
+    Q_INVOKABLE void setFolder(const QString &folder);
+    Q_INVOKABLE void resetFolder();
     Q_INVOKABLE QString sizeOnDisk() const;
 
     static QVariantList localPanels(const QString &seriesId, const QString &unitKey);

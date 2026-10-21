@@ -12,14 +12,13 @@ SettingsPane {
     subtitle: qsTr("Your library, progress and activity on every device")
     iconName: "cloud"
 
-    readonly property string active: Sync.kind !== "" ? Sync.kind : Account.customSite ? "server" : "scancore"
+    readonly property string active: Sync.kind !== "" ? Sync.kind : Account.customSite ? "server" : "folder"
     // The tab shown; starts on the one in use.
     property string view: active
-    readonly property var methods: [
-        { value: "scancore", label: "scancore.onl", icon: "cloud" },
-        { value: "server", label: qsTr("Your server"), icon: "server" },
-        { value: "webdav", label: "WebDAV", icon: "globe" }
-    ].concat(App.platform === "android" ? [] : [{ value: "folder", label: qsTr("Folder"), icon: "folder-open" }])
+    readonly property var methods: (App.platform === "android" ? [] : [{ value: "folder", label: qsTr("Google Drive / Cartella"), icon: "folder-open" }]).concat([
+        { value: "webdav", label: "WebDAV", icon: "globe" },
+        { value: "server", label: qsTr("Server personale"), icon: "server" }
+    ])
 
     readonly property string name: Account.user.username || Account.user.email || ""
     readonly property string avatarUrl: {
@@ -45,21 +44,14 @@ SettingsPane {
 
     // ------------------------------------------------------------ accounts
 
-    // Signed in elsewhere than the tab shows.
     Notice {
-        visible: (pane.view === "scancore" && Account.signedIn && Account.customSite)
-            || (pane.view === "server" && Account.signedIn && !Account.customSite)
-        text: qsTr("You are signed in to ") + pane.host + qsTr(". Sign out to use ") + (pane.view === "scancore" ? "scancore.onl." : qsTr("another website."))
-    }
-    Notice {
-        visible: (pane.view === "scancore" || pane.view === "server") && Sync.kind !== ""
-        text: qsTr("Sync is using ") + (Sync.kind === "webdav" ? "WebDAV" : qsTr("a folder")) + qsTr(" now. Stop that first to sync through an account.")
+        visible: pane.view === "server" && Sync.kind !== ""
+        text: qsTr("Sync is using ") + (Sync.kind === "webdav" ? "WebDAV" : qsTr("a folder")) + qsTr(" now. Stop that first to sync through a server.")
     }
 
     // Signed in: who, when it last synced, and the actions.
     Rectangle {
-        visible: Account.signedIn && Sync.kind === ""
-            && ((pane.view === "scancore" && !Account.customSite) || (pane.view === "server" && Account.customSite))
+        visible: Account.signedIn && Sync.kind === "" && pane.view === "server"
         width: parent.width
         height: profile.height + 36
         radius: Theme.radiusLg
@@ -197,9 +189,9 @@ SettingsPane {
                 }
                 ScButton {
                     visible: Account.customSite
-                    text: qsTr("Use scancore.onl")
+                    text: qsTr("Reset server")
                     variant: "ghost"
-                    onClicked: { Account.setSite(""); pane.view = "scancore" }
+                    onClicked: { Account.setSite(""); pane.view = "server" }
                 }
                 ScButton {
                     text: qsTr("How to set it up")
@@ -213,8 +205,7 @@ SettingsPane {
 
     // Signed out: what an account is for, then the form.
     Rectangle {
-        visible: !Account.signedIn && Sync.kind === ""
-            && ((pane.view === "scancore" && !Account.customSite) || (pane.view === "server" && Account.customSite))
+        visible: !Account.signedIn && Sync.kind === "" && pane.view === "server" && Account.customSite
         width: parent.width
         height: signIn.height + 40
         radius: Theme.radiusLg
@@ -344,6 +335,13 @@ SettingsPane {
                             task.failed.connect((e) => Router.toast(e, "error"))
                         }
                     }
+                    ScButton {
+                        visible: Sync.kind === "folder" && App.platform !== "android"
+                        text: qsTr("Open folder")
+                        iconName: "folder-open"
+                        variant: "ghost"
+                        onClicked: App.openFolder(Sync.location)
+                    }
                     ScButton { text: qsTr("Stop syncing"); variant: "ghost"; onClicked: stopConfirm.open() }
                 }
             }
@@ -448,17 +446,76 @@ SettingsPane {
             x: 20
             y: 20
             width: parent.width - 40
-            spacing: 14
+            spacing: 16
             property var task: null
             Text {
                 width: parent.width
                 wrapMode: Text.Wrap
-                text: qsTr("Choose a folder that Syncthing, Dropbox, OneDrive, iCloud Drive or Nextcloud keeps the same on your computers. ")
-                    + qsTr("SCANCORE keeps a small file for each device in it and reads the others'.")
+                text: qsTr("Keep your library, history and reading progress synchronized across all your devices using Google Drive, iCloud Drive, Dropbox, or any shared folder. ENO writes a small snapshot for each device and merges them seamlessly.")
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
             }
+
+            Repeater {
+                model: App.googleDriveAccounts()
+                delegate: Rectangle {
+                    required property var modelData
+                    width: parent.width
+                    height: gdriveRow.height + 28
+                    radius: Theme.radiusMd
+                    color: Theme.alpha(Theme.accent, 0.08)
+                    border.width: 1
+                    border.color: Theme.alpha(Theme.accent, 0.25)
+                    Row {
+                        id: gdriveRow
+                        x: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width - 32
+                        spacing: 14
+                        Rectangle {
+                            width: 40
+                            height: 40
+                            radius: 12
+                            color: Theme.accent
+                            Icon { anchors.centerIn: parent; name: "cloud"; size: 20; color: Theme.accentInk }
+                        }
+                        Column {
+                            width: parent.width - 54 - (connectBtn.visible ? connectBtn.width + 12 : 0)
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 2
+                            Text {
+                                text: qsTr("Google Drive: ") + modelData.email
+                                color: Theme.text
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textMd
+                                font.weight: Font.DemiBold
+                            }
+                            Text {
+                                width: parent.width
+                                text: modelData.path + "/ENO"
+                                color: Theme.textMuted
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textXs
+                                elide: Text.ElideMiddle
+                            }
+                        }
+                        ScButton {
+                            id: connectBtn
+                            anchors.verticalCenter: parent.verticalCenter
+                            variant: "primary"
+                            text: qsTr("Connect Google Drive")
+                            iconName: "check"
+                            loading: folderColumn.task !== null && folderColumn.task.loading
+                            onClicked: {
+                                folderColumn.task = Sync.useFolder(modelData.path + "/ENO")
+                                folderColumn.task.finished.connect(() => Router.toast(qsTr("Syncing with Google Drive"), "success"))
+                            }
+                        }
+                    }
+                }
+            }
+
             Text {
                 visible: folderColumn.task !== null && !folderColumn.task.loading && !folderColumn.task.ok
                 width: parent.width
@@ -468,12 +525,16 @@ SettingsPane {
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
             }
-            ScButton {
-                variant: "primary"
-                text: qsTr("Choose folder")
-                iconName: "folder-open"
-                loading: folderColumn.task !== null && folderColumn.task.loading
-                onClicked: folderDialog.open()
+
+            Row {
+                spacing: 8
+                ScButton {
+                    variant: App.googleDrivePath() !== "" ? "ghost" : "primary"
+                    text: App.googleDrivePath() !== "" ? qsTr("Choose another folder…") : qsTr("Choose folder")
+                    iconName: "folder-open"
+                    loading: folderColumn.task !== null && folderColumn.task.loading
+                    onClicked: folderDialog.open()
+                }
             }
         }
     }
@@ -488,7 +549,7 @@ SettingsPane {
     // Devices that synced through the account's website.
     DeviceList {
         visible: Account.signedIn && Sync.kind === "" && devices.length > 1
-            && ((pane.view === "scancore" && !Account.customSite) || (pane.view === "server" && Account.customSite))
+            && pane.view === "server" && Account.customSite
         width: parent.width
         devices: Sync.devices
     }

@@ -130,6 +130,23 @@ public:
     static QList<Panel> parsePanels(const QByteArray &html, const QString &pageUrl);
 };
 
+// MangaWorld (Italian): server-rendered archive and series pages, and a
+// reader that lists every page at once when asked with ?style=list.
+class MangaWorldSource : public Source {
+public:
+    using Source::Source;
+    QList<Summary> search(const QString &query) override;
+    QList<Chapter> chapters(const QString &seriesUrl) override;
+    QList<Panel> panels(const QString &chapterUrl) override;
+    std::optional<Details> details(const QString &seriesUrl) override;
+    QList<LatestItem> latest(int limit) override;
+    bool hasLatest() const override { return true; }
+
+    static QList<Summary> parseCards(const QByteArray &html, const QString &base);
+    static QList<Chapter> parseChapters(const QByteArray &html, const QString &pageUrl);
+    static QList<Panel> parsePanels(const QByteArray &html, const QString &pageUrl);
+};
+
 // WordPress manga themes (MangaReader/MangaStream).
 class WpSource : public Source {
 public:

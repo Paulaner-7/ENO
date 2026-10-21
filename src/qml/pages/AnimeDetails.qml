@@ -15,7 +15,7 @@ Item {
     property var episodesTask: Anime.episodes(anilistId)
     property var recsTask: Anime.recommendations(anilistId)
 
-    readonly property var media: mediaTask && mediaTask.ok ? mediaTask.result : Object.assign({ anilistId: anilistId }, summary)
+    readonly property var media: mediaTask && mediaTask.ok ? mediaTask.result : Object.assign({}, summary, { anilistId: anilistId })
     readonly property var series: Anime.seriesFor(media)
     readonly property string seriesId: Anime.seriesId(anilistId)
     readonly property var episodes: episodesTask && episodesTask.ok ? episodesTask.result : []
@@ -44,7 +44,8 @@ Item {
         if (last && last.unitKey) {
             const i = episodes.findIndex(e => e.key === last.unitKey)
             if (i >= 0) {
-                if (last.completed && i + 1 < episodes.length)
+                const reallyFinished = last.completed && (last.percent >= 0.96 || (last.position && last.position.duration > 0 && last.position.seconds >= last.position.duration - 20))
+                if (reallyFinished && i + 1 < episodes.length)
                     return { index: i + 1, label: qsTr("Watch episode ") + (i + 2), detail: "" }
                 return { index: i, label: qsTr("Continue episode ") + (i + 1), detail: last.percent > 0.02 ? Math.round(last.percent * 100) + qsTr("% watched") : "" }
             }
@@ -56,6 +57,39 @@ Item {
         if (i < 0 || i >= episodes.length) return
         Library.markSeen(seriesId)
         Router.openWatch(media, episodes, i)
+    }
+
+    property string relatedFilter: "TV"
+    readonly property var allRelations: (page.media.relations || []).map(r => Object.assign({ media: "anime", id: Anime.seriesId(r.anilistId) }, r))
+    readonly property var relatedFilterOptions: ["TV", "Movie", "OVA", "Special", "All"]
+
+    function matchFormat(fmt, category) {
+        if (!fmt) return false
+        const f = String(fmt).toUpperCase().replace(/_/g, " ").trim()
+        if (category === "TV") return f === "TV" || f === "TV SHORT"
+        if (category === "Movie") return f === "MOVIE"
+        if (category === "OVA") return f === "OVA" || f === "ONA"
+        if (category === "Special") return f === "SPECIAL"
+        return true
+    }
+
+    readonly property var filteredRelations: {
+        if (relatedFilter === "All") return allRelations
+        return allRelations.filter(r => page.matchFormat(r.format, page.relatedFilter))
+    }
+
+    onAllRelationsChanged: {
+        if (allRelations.length > 0) {
+            const hasTv = allRelations.some(r => page.matchFormat(r.format, "TV"))
+            relatedFilter = hasTv ? "TV" : "All"
+        }
+    }
+
+    Component.onCompleted: {
+        if (page.autoResume && page.episodesTask && page.episodesTask.ok) {
+            page.autoResume = false
+            page.watch(page.resumeInfo.index)
+        }
     }
 
     Connections {
@@ -81,13 +115,14 @@ Item {
             DetailsHeader {
                 id: header
                 series: Object.assign({}, page.media, { author: (page.media.studios || []).join(", ") })
+                anilist: page.media
                 kicker: qsTr("Anime") + (page.media.format ? " · " + page.media.format : "")
                 meta: [
                     page.media.status,
                     page.media.year,
                     page.media.episodes ? page.media.episodes + qsTr(" episodes") : (page.media.released ? page.media.released + qsTr(" episodes so far") : ""),
                     page.media.duration ? page.media.duration + qsTr(" min") : "",
-                    page.media.score ? "★ " + page.media.score + "%" : "",
+                    page.media.score ? "★ " + page.media.score : "",
                     page.media.nextEpisode ? qsTr("Ep ") + page.media.nextEpisode + " " + App.relativeTime(page.media.nextAiringAt) : ""
                 ]
                 primaryText: page.resumeInfo.label
@@ -123,41 +158,10 @@ Item {
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
             }
 
-            Segmented {
-                x: Theme.gutter
-                options: [{ value: "episodes", label: qsTr("Episodes") },
-                          { value: "reviews", label: qsTr("Reviews") },
-                          { value: "discussion", label: qsTr("Discussion") }]
-                value: page.tab
-                onPicked: (v) => page.tab = v
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "reviews"
-                visible: active
-                sourceComponent: Reviews {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "discussion"
-                visible: active
-                sourceComponent: Discussion {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
-            }
-
             Item {
                 width: parent.width
                 height: 34
-                visible: page.tab === "episodes" && page.episodes.length > 0
+                visible: page.episodes.length > 0
                 Text {
                     x: Theme.gutter
                     anchors.verticalCenter: parent.verticalCenter
@@ -190,7 +194,7 @@ Item {
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 8
-                visible: page.tab === "episodes" && page.episodes.length > page.rangeSize
+                visible: page.episodes.length > page.rangeSize
                 Repeater {
                     model: Math.ceil(page.episodes.length / page.rangeSize)
                     Chip {
@@ -206,7 +210,7 @@ Item {
 
             Flow {
                 id: episodeFlow
-                visible: page.tab === "episodes"
+                visible: true
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 16
@@ -306,9 +310,8 @@ Item {
             StateView {
                 width: parent.width
                 height: visible ? 220 : 0
-                // Only on the episodes tab (StateView shows itself when needed).
-                task: page.tab === "episodes" ? page.episodesTask : null
-                empty: page.tab === "episodes" && page.episodesTask && page.episodesTask.ok && page.episodes.length === 0
+                task: page.episodesTask
+                empty: page.episodesTask && page.episodesTask.ok && page.episodes.length === 0
                 emptyTitle: qsTr("No episodes yet")
                 emptyText: page.media.nextEpisode ? qsTr("Episode ") + page.media.nextEpisode + qsTr(" airs ") + App.relativeTime(page.media.nextAiringAt) + "." : qsTr("This anime has not aired yet.")
                 emptyIcon: "calendar"
@@ -317,8 +320,22 @@ Item {
 
             Shelf {
                 title: qsTr("Related")
-                items: (page.media.relations || []).map(r => Object.assign({ media: "anime", id: Anime.seriesId(r.anilistId) }, r))
-                subtitleFor: (it) => it.relation + (it.format ? " · " + it.format : "")
+                visible: page.allRelations.length > 0
+                headerExtra: Component {
+                    ChipRow {
+                        Repeater {
+                            model: page.relatedFilterOptions
+                            Chip {
+                                required property var modelData
+                                text: modelData
+                                selected: page.relatedFilter === modelData
+                                onClicked: page.relatedFilter = modelData
+                            }
+                        }
+                    }
+                }
+                items: page.filteredRelations
+                subtitleFor: (it) => [it.relation, it.format, it.year].filter(Boolean).join(" · ")
                 onOpened: (it, cover) => Router.openSeries(it, cover)
             }
             Shelf {

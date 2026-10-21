@@ -262,7 +262,7 @@ Item {
                 title: qsTr("Continue watching")
                 items: page.history
                 subtitleFor: (it) => qsTr("Episode ") + (it.unitNumber || it.unitKey || "")
-                progressFor: (it) => it.completed ? 1 : (it.percent || 0)
+                progressFor: (it) => (it.completed && (it.percent >= 0.96 || (it.position && it.position.duration > 0 && it.position.seconds >= it.position.duration - 20))) ? 1 : (it.percent || 0)
                 onOpened: (it, cover) => Router.resume(it)
             }
             Shelf {

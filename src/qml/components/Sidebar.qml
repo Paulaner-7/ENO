@@ -19,9 +19,9 @@ Rectangle {
 
     readonly property var sections: [
         { key: "home", label: qsTr("Home"), icon: "house" },
-        { key: "comics", label: qsTr("Comics"), icon: "book-open" },
-        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
+        { key: "comics", label: qsTr("Manga"), icon: "book-open" },
+        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "divider" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "history", label: qsTr("History"), icon: "history" },
@@ -51,30 +51,41 @@ Rectangle {
         id: brand
         width: parent.width
         height: 72
-        Icon {
-            id: logo
-            x: sidebar.collapsed ? 18 : 22
-            anchors.verticalCenter: parent.verticalCenter
-            name: "scancore-mark"
-            size: 36
-            height: 18
-            sourceSize: Qt.size(72 * Screen.devicePixelRatio, 36 * Screen.devicePixelRatio)
-            fillMode: Image.PreserveAspectFit
-            color: Theme.text
-            Behavior on x { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: sidebar.navigate("home")
         }
-        Text {
-            anchors.left: logo.right
-            anchors.leftMargin: 12
+
+        // Symbol (shown when sidebar is collapsed to icon rail)
+        Image {
+            id: brandSymbol
+            anchors.centerIn: parent
+            height: 32
+            width: Math.round(height * (592 / 792))
+            fillMode: Image.PreserveAspectFit
+            source: Theme.dark ? "qrc:/branding/eno-symbol-dark.png" : "qrc:/branding/eno-symbol-light.png"
+            opacity: sidebar.collapsed ? 1 : 0
+            visible: opacity > 0
+            smooth: true
+            mipmap: true
+            Behavior on opacity { NumberAnimation { duration: Motion.fast } }
+        }
+
+        // Official full text logo (shown when sidebar is expanded)
+        Image {
+            id: brandLogo
+            x: 20
             anchors.verticalCenter: parent.verticalCenter
-            text: "ENO"
-            color: Theme.text
-            font.family: Theme.fontDisplay
-            font.pixelSize: 15
-            font.weight: Font.DemiBold
-            font.letterSpacing: 3.2
+            height: 38
+            width: Math.round(height * (866 / 428))
+            fillMode: Image.PreserveAspectFit
+            source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
             opacity: sidebar.collapsed ? 0 : 1
             visible: opacity > 0
+            smooth: true
+            mipmap: true
             Behavior on opacity { NumberAnimation { duration: Motion.fast } }
         }
     }

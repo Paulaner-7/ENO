@@ -10,6 +10,7 @@
 #include <QTimeZone>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QLocale>
 #include <QMutex>
 #include <QRegularExpression>
 #include <QSet>
@@ -1050,6 +1051,162 @@ std::optional<Details> LeerCapituloSource::details(const QString &seriesUrl) {
             d.author = value;
     }
     return d;
+}
+
+// ---------------------------------------------------------------- MangaWorld
+
+namespace {
+// "18 Ottobre 2026" dates on the chapter list.
+QString italianDate(const QString &text) {
+    if (text.isEmpty())
+        return {};
+    QLocale locale(QLocale::Italian, QLocale::Italy);
+    const auto date = locale.toDate(collapse(text), QStringLiteral("d MMMM yyyy"));
+    return date.isValid() ? date.toString(Qt::ISODate) : QString();
+}
+} // namespace
+
+QList<Summary> MangaWorldSource::parseCards(const QByteArray &html, const QString &base) {
+    const HtmlDocument doc(html);
+    QList<Summary> out;
+    QSet<QString> seen;
+    for (const auto &card : doc.select(QStringLiteral("div.entry"))) {
+        const auto name = card.first(QStringLiteral("a.manga-title"));
+        const auto url = resolveUrl(base + QLatin1Char('/'), name.attr("href"));
+        if (url.isEmpty() || name.textTrim().isEmpty() || seen.contains(url))
+            continue;
+        seen.insert(url);
+        Summary item;
+        item.title = name.textTrim();
+        item.url = url;
+        const auto img = card.first(QStringLiteral("a.thumb img"));
+        item.cover = resolveUrl(base + QLatin1Char('/'), img.attr("src").isEmpty() ? img.attr("data-src") : img.attr("src"));
+        item.type = card.first(QStringLiteral("div.genre a, div.status a")).textTrim();
+        item.author = card.first(QStringLiteral("div.author a")).textTrim();
+        QStringList genres;
+        for (const auto &g : card.select(QStringLiteral("div.genres a")))
+            if (const auto text = g.textTrim(); !text.isEmpty())
+                genres.append(text);
+        item.genres = genres.join(QStringLiteral(", "));
+        out.append(item);
+    }
+    return out;
+}
+
+QList<Summary> MangaWorldSource::search(const QString &query) {
+    const auto html = Http::getOk(queryUrl(m_config.base + QStringLiteral("/archive"),
+                                           {{"keyword", query}, {"page", "1"}}),
+                                  htmlHeaders(), 20000)
+                          .body;
+    auto out = parseCards(html, m_config.base);
+    for (auto &item : out)
+        item.source = key();
+    return out;
+}
+
+QList<Chapter> MangaWorldSource::parseChapters(const QByteArray &html, const QString &pageUrl) {
+    const HtmlDocument doc(html);
+    QList<Chapter> out;
+    QSet<QString> seen;
+    for (const auto &a : doc.select(QStringLiteral("#chapterList a.chap"))) {
+        const auto url = resolveUrl(pageUrl, a.attr("href"));
+        if (url.isEmpty() || seen.contains(url))
+            continue;
+        seen.insert(url);
+        Chapter ch;
+        ch.url = url;
+        ch.title = a.first(QStringLiteral("span")).textTrim();
+        if (ch.title.isEmpty())
+            ch.title = a.attr("title").trimmed();
+        ch.number = chapterNumberFrom(ch.title);
+        ch.slug = pathSegment(QUrl(url), -1);
+        ch.released = italianDate(a.first(QStringLiteral(".chap-date")).textTrim());
+        out.append(ch);
+    }
+    sortChapters(out);
+    return out;
+}
+
+QList<Chapter> MangaWorldSource::chapters(const QString &seriesUrl) {
+    return parseChapters(Http::getOk(QUrl(seriesUrl), htmlHeaders(), 20000).body, seriesUrl);
+}
+
+QList<Panel> MangaWorldSource::parsePanels(const QByteArray &html, const QString &pageUrl) {
+    const HtmlDocument doc(html);
+    QList<Panel> out;
+    QSet<QString> seen;
+    for (const auto &img : doc.select(QStringLiteral("img.page-image"))) {
+        const auto src = img.attr("src").isEmpty() ? img.attr("data-src") : img.attr("src");
+        const auto url = resolveUrl(pageUrl, src);
+        if (url.isEmpty() || seen.contains(url))
+            continue;
+        seen.insert(url);
+        out.append({url});
+    }
+    return out;
+}
+
+QList<Panel> MangaWorldSource::panels(const QString &chapterUrl) {
+    // The reader pages one image at a time; ?style=list renders them all.
+    QUrl url(chapterUrl);
+    QUrlQuery query(url);
+    query.addQueryItem(QStringLiteral("style"), QStringLiteral("list"));
+    url.setQuery(query);
+    auto out = parsePanels(Http::getOk(url, htmlHeaders(), 20000).body, chapterUrl);
+    if (out.isEmpty())
+        throw Error(QStringLiteral("MangaWorld did not return any pages for this chapter."));
+    return out;
+}
+
+std::optional<Details> MangaWorldSource::details(const QString &seriesUrl) {
+    const HtmlDocument doc(Http::getOk(QUrl(seriesUrl), htmlHeaders(), 20000).body);
+    Details d;
+    d.title = doc.first(QStringLiteral("h1.name")).textTrim();
+    if (d.title.isEmpty())
+        d.title = metaContent(doc, QStringLiteral("og:title"));
+    const auto image = doc.first(QStringLiteral(".comic-info .thumb img"));
+    d.cover = resolveUrl(seriesUrl, image.attr("src").isEmpty() ? metaContent(doc, QStringLiteral("og:image")) : image.attr("src"));
+    d.description = doc.first(QStringLiteral("#noidungm")).textTrim();
+    for (const auto &badge : doc.select(QStringLiteral(".meta-data a[href*=\"genre=\"]")))
+        if (const auto text = badge.textTrim(); !text.isEmpty() && !d.genres.contains(text))
+            d.genres.append(text);
+    for (const auto &row : doc.select(QStringLiteral(".meta-data div"))) {
+        const auto text = row.textTrim();
+        if (text.startsWith(QStringLiteral("Autore:")))
+            d.author = row.first(QStringLiteral("a")).textTrim();
+        else if (text.startsWith(QStringLiteral("Stato:")))
+            d.status = row.first(QStringLiteral("a")).textTrim();
+    }
+    return d;
+}
+
+QList<LatestItem> MangaWorldSource::latest(int limit) {
+    const HtmlDocument doc(Http::getOk(QUrl(m_config.base + QLatin1Char('/')), htmlHeaders(), 20000).body);
+    QList<LatestItem> out;
+    QSet<QString> seen;
+    for (const auto &card : doc.select(QStringLiteral("#chapters-slide .entry"))) {
+        const auto link = card.first(QStringLiteral("a.thumb"));
+        const auto url = resolveUrl(m_config.base + QLatin1Char('/'), link.attr("href"));
+        const auto title = card.first(QStringLiteral("a.manga-title")).textTrim();
+        if (url.isEmpty() || title.isEmpty() || seen.contains(url))
+            continue;
+        seen.insert(url);
+        LatestItem item;
+        item.source = key();
+        item.sourceLabel = label();
+        item.title = title;
+        item.url = url;
+        const auto img = card.first(QStringLiteral("img"));
+        item.cover = resolveUrl(m_config.base + QLatin1Char('/'), img.attr("src").isEmpty() ? img.attr("data-src") : img.attr("src"));
+        const auto chapter = card.first(QStringLiteral("div.chapter")).textTrim();
+        item.chapterNumber = chapterNumberFrom(chapter);
+        item.chapterTitle = chapter;
+        item.chapterUrl = url;
+        out.append(item);
+        if (out.size() >= limit)
+            break;
+    }
+    return out;
 }
 
 } // namespace sc::comics

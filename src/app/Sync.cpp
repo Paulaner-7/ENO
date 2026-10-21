@@ -41,7 +41,19 @@ QString ownFile() { return Activity::deviceId() + QStringLiteral(".json"); }
 
 class FolderStore : public Sync::Store {
 public:
-    explicit FolderStore(const QString &root) : m_dir(root + QStringLiteral("/SCANCORE Sync/devices")) {}
+    explicit FolderStore(const QString &root) {
+        const QString clean = QDir::cleanPath(root);
+        if (clean.endsWith(QLatin1String("/devices"))) {
+            m_dir = QDir(clean);
+        } else if (clean.endsWith(QLatin1String("/ENO Sync")) || clean.endsWith(QLatin1String("/SCANCORE Sync"))) {
+            m_dir = QDir(clean + QStringLiteral("/devices"));
+        } else if (QDir(clean + QStringLiteral("/SCANCORE Sync/devices")).exists() &&
+                   !QDir(clean + QStringLiteral("/ENO Sync/devices")).exists()) {
+            m_dir = QDir(clean + QStringLiteral("/SCANCORE Sync/devices"));
+        } else {
+            m_dir = QDir(clean + QStringLiteral("/ENO Sync/devices"));
+        }
+    }
     void ensure() override {
         if (!QDir().mkpath(m_dir.path()))
             throw Error(QStringLiteral("Could not use the folder %1.").arg(QDir::toNativeSeparators(m_dir.path())));
@@ -60,9 +72,17 @@ public:
         return file.readAll();
     }
     void write(const QString &name, const QByteArray &data) override {
-        QSaveFile file(m_dir.filePath(name));
-        if (!file.open(QIODevice::WriteOnly) || file.write(data) != data.size() || !file.commit())
-            throw Error(QStringLiteral("Could not write to %1.").arg(QDir::toNativeSeparators(m_dir.path())));
+        const QString target = m_dir.filePath(name);
+        QSaveFile file(target);
+        if (file.open(QIODevice::WriteOnly) && file.write(data) == data.size() && file.commit()) {
+            return;
+        }
+        // Fallback for virtual cloud filesystems (e.g. CloudStorage / Google Drive)
+        QFile direct(target);
+        if (direct.open(QIODevice::WriteOnly | QIODevice::Truncate) && direct.write(data) == data.size()) {
+            return;
+        }
+        throw Error(QStringLiteral("Could not write to %1.").arg(QDir::toNativeSeparators(m_dir.path())));
     }
 
 private:

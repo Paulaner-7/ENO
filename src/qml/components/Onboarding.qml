@@ -205,14 +205,13 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.compact ? 220 : 300
                     height: width / 2.02
-                    Icon {
+                    Image {
                         id: mark
                         anchors.fill: parent
-                        name: "scancore-mark"
-                        size: parent.width
-                        sourceSize: Qt.size(parent.width * 2, parent.height * 2)
+                        source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
                         fillMode: Image.PreserveAspectFit
-                        color: Theme.text
+                        smooth: true
+                        mipmap: true
                         opacity: 0
                         scale: 0.92
                         Component.onCompleted: intro.start()

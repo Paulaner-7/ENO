@@ -7,8 +7,10 @@ import ScanCore
 Flickable {
     id: flick
     property real wheelStep: 120
-    property real target: contentY
+    property real target: 0
     readonly property real maxY: Math.max(0, contentHeight - height + topMargin + bottomMargin) - topMargin
+
+    onContentYChanged: if (!wheelAnim.running) target = contentY
 
     clip: true
     boundsBehavior: Flickable.StopAtBounds
@@ -21,6 +23,7 @@ Flickable {
         const clamped = Math.max(-topMargin, Math.min(maxY, y))
         if (animated === false || Motion.reduced) {
             wheelAnim.stop()
+            target = clamped
             contentY = clamped
             return
         }
@@ -42,6 +45,12 @@ Flickable {
         onWheel: (event) => {
             if (event.modifiers & Qt.ControlModifier) {
                 event.accepted = false
+                return
+            }
+            if (event.phase !== Qt.NoScrollPhase || event.pixelDelta.y !== 0) {
+                wheelAnim.stop()
+                const dy = event.pixelDelta.y !== 0 ? event.pixelDelta.y : event.angleDelta.y
+                flick.contentY = Math.max(-flick.topMargin, Math.min(flick.maxY, flick.contentY - dy))
                 return
             }
             const base = wheelAnim.running ? flick.target : flick.contentY

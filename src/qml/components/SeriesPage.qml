@@ -45,6 +45,16 @@ Item {
     // ties the series to its comments, reviews and tracking.
     readonly property string catalogId: (series.extra && series.extra.hid) || summary.hid || ""
 
+    property var anilistTask: Trackers.anilistDetails(seriesId, media, series.title || "")
+    readonly property var anilist: anilistTask && anilistTask.ok ? anilistTask.result : ({})
+
+    Connections {
+        target: Trackers
+        function onChanged() {
+            page.anilistTask = Trackers.anilistDetails(page.seriesId, page.media, page.series.title || "")
+        }
+    }
+
     readonly property var resumeInfo: {
         Library.revision
         if (chapters.length === 0) return { index: 0, label: page.media === "novel" ? qsTr("Start reading") : qsTr("Start reading"), detail: "" }
@@ -143,7 +153,7 @@ Item {
     ListView {
         id: list
         anchors.fill: parent
-        model: page.tab === "chapters" ? page.pageRows : []
+        model: page.pageRows
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         maximumFlickVelocity: 5000
@@ -162,13 +172,14 @@ Item {
             DetailsHeader {
                 id: details
                 series: page.series
+                anilist: page.anilist
                 coverReferer: page.coverReferer
                 kicker: (page.series.sourceLabel || page.series.source || "") + (page.media === "novel" ? qsTr(" · Novel") : qsTr(" · Comic"))
                 meta: [
-                    page.series.status,
+                    page.series.status || (page.anilist && page.anilist.status ? page.anilist.status : ""),
                     page.chapters.length ? page.chapters.length + (page.media === "novel" ? qsTr(" chapters") : qsTr(" chapters")) : "",
-                    page.series.type,
-                    page.series.rating ? "★ " + page.series.rating : "",
+                    page.series.type || (page.anilist && page.anilist.format ? page.anilist.format : ""),
+                    (page.anilist && page.anilist.score) ? ("★ " + page.anilist.score) : (page.series.rating ? ("★ " + page.series.rating) : ""),
                     page.task && page.task.ok && page.task.result.offline ? qsTr("Offline copy") : ""
                 ]
                 primaryText: page.resumeInfo.label
@@ -186,6 +197,13 @@ Item {
                                           : App.openUrl(page.url)
                 }
                 IconButton {
+                    visible: !!page.anilist && !!page.anilist.url
+                    iconName: "external-link"
+                    filled: true
+                    tip: qsTr("Open on AniList")
+                    onClicked: App.openUrl(page.anilist.url)
+                }
+                IconButton {
                     visible: !page.local && (!!Trackers.anilist.name || !!Trackers.mal.name || !!Trackers.comick.name)
                     iconName: "link"
                     filled: true
@@ -200,51 +218,11 @@ Item {
                 }
             }
 
-            Item {
-                width: list.width
-                height: 60
-                visible: !page.local
-                Segmented {
-                    x: Theme.gutter
-                    anchors.verticalCenter: parent.verticalCenter
-                    options: [{ value: "chapters", label: qsTr("Chapters") },
-                              { value: "reviews", label: qsTr("Reviews") },
-                              { value: "discussion", label: qsTr("Discussion") }]
-                    value: page.tab
-                    onPicked: (v) => page.tab = v
-                }
-            }
-
-            Loader {
-                x: Theme.gutter
-                width: list.width - 2 * Theme.gutter
-                active: page.tab === "reviews"
-                visible: active
-                sourceComponent: Reviews {
-                    media: page.media
-                    title: page.series.title || ""
-                    comickHid: page.catalogId
-                    url: page.url
-                }
-            }
-            Loader {
-                x: Theme.gutter
-                width: list.width - 2 * Theme.gutter
-                active: page.tab === "discussion"
-                visible: active
-                sourceComponent: Discussion {
-                    media: page.media
-                    title: page.series.title || ""
-                    comickHid: page.catalogId
-                    url: page.url
-                }
-            }
-
             // Toolbar
             Item {
                 width: list.width
                 height: 56
-                visible: page.tab === "chapters" && (page.chapters.length > 0 || (page.task && page.task.loading))
+                visible: page.chapters.length > 0 || (page.task && page.task.loading)
                 Rectangle {
                     x: Theme.gutter
                     width: parent.width - 2 * Theme.gutter

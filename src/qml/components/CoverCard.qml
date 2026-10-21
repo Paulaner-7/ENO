@@ -32,7 +32,7 @@ AbstractButton {
     opacity: 0
     transform: Translate { id: rise; y: 14 }
     Component.onCompleted: {
-        if (!animateIn || Motion.reduced) {
+        if (!animateIn || Motion.reduced || index >= 24) {
             opacity = 1
             rise.y = 0
             return

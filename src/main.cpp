@@ -35,9 +35,12 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQuickWindow>
+#include <QScreen>
 #include <QStandardPaths>
 #include <QTimer>
 #include <QUrl>
+#include <QtCore/private/qabstractanimation_p.h>
+#include <cmath>
 
 #ifdef SCANCORE_HAVE_WEBENGINE
 #include <QtWebEngineQuick/QtWebEngineQuick>
@@ -126,6 +129,37 @@ void openStorage() {
     novels::Registry::rebuild();
 }
 
+void configureHighRefreshRate(QQuickWindow *window) {
+    if (!window)
+        return;
+    auto syncTimingInterval = [window]() {
+        QScreen *screen = window->screen() ? window->screen() : QGuiApplication::primaryScreen();
+        if (!screen)
+            return;
+        const qreal hz = screen->refreshRate();
+        const int interval = hz > 61.0 ? std::max(1, int(std::floor(1000.0 / hz))) : 16;
+        if (auto *timer = QUnifiedTimer::instance(true))
+            timer->setTimingInterval(interval);
+    };
+    auto rateConn = std::make_shared<QMetaObject::Connection>();
+    auto bindScreen = [window, syncTimingInterval, rateConn](QScreen *screen) {
+        QObject::disconnect(*rateConn);
+        syncTimingInterval();
+        if (screen) {
+            *rateConn = QObject::connect(screen, &QScreen::refreshRateChanged, window,
+                                         [syncTimingInterval](qreal) { syncTimingInterval(); });
+        }
+    };
+    bindScreen(window->screen());
+    QObject::connect(window, &QWindow::screenChanged, window, bindScreen);
+    // Keep the native CVDisplayLink / ProMotion loop stepped up at 120Hz while
+    // any QML animation or Flickable scroll is active.
+    QObject::connect(window, &QQuickWindow::frameSwapped, window, [window] {
+        if (auto *timer = QUnifiedTimer::instance(false); timer && timer->runningAnimationCount() > 0)
+            window->requestUpdate();
+    });
+}
+
 } // namespace
 
 int main(int argc, char *argv[]) {
@@ -173,7 +207,11 @@ int main(int argc, char *argv[]) {
     if (qEnvironmentVariableIsSet("SCANCORE_PRETEND_VERSION"))
         Application::setApplicationVersion(qEnvironmentVariable("SCANCORE_PRETEND_VERSION"));
     Application::setDesktopFileName(QStringLiteral("com.mediumdev.scancore"));
-    Application::setWindowIcon(QIcon(QStringLiteral(":/branding/scancore.svg")));
+    // On macOS the Dock uses the bundle icon (.icns), so the system applies its own
+    // Liquid Glass treatment; a runtime pixmap would override it with an opaque image.
+#ifndef Q_OS_MACOS
+    Application::setWindowIcon(QIcon(QStringLiteral(":/branding/eno-icon-glass.png")));
+#endif
 #ifndef Q_OS_ANDROID
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
@@ -187,9 +225,11 @@ int main(int argc, char *argv[]) {
     // Launching again while SCANCORE runs (in the tray, say) brings that one
     // back instead of starting a second copy on the same library.
     SingleInstance instance;
-    if (instance.forwardToRunning(openArguments))
-        return 0;
-    instance.listen();
+    if (qEnvironmentVariableIsEmpty("SCANCORE_START")) {
+        if (instance.forwardToRunning(openArguments))
+            return 0;
+        instance.listen();
+    }
 #endif
 
     QQuickStyle::setStyle(QStringLiteral("Basic"));
@@ -252,6 +292,7 @@ int main(int argc, char *argv[]) {
     if (engine.rootObjects().isEmpty())
         return 1;
     if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
+        configureHighRefreshRate(window);
         QObject::connect(appState, &App::activateRequested, window, [window] {
             if (window->visibility() == QWindow::Hidden || window->visibility() == QWindow::Minimized)
                 window->setVisibility(QWindow::Windowed);
@@ -283,6 +324,9 @@ int main(int argc, char *argv[]) {
     QObject::connect(&app, &Application::aboutToQuit, [] {
         CancelScope::cancelAll();
         CookieJar::shared().save();
+        try {
+            Database::exec(QStringLiteral("PRAGMA wal_checkpoint(TRUNCATE)"));
+        } catch (...) {}
     });
     return app.exec();
 }

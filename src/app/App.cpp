@@ -51,6 +51,9 @@ const QVariantMap kDefaults{
     {"novelJustify", false},
     {"autoNext", true},
     {"autoSkip", false},
+    {"animeSubLang", "it"},
+    {"animeSubQuality", "high"},
+    {"animeVideoQuality", "max"},
     {"libraryCheckHours", 2},
     {"notifyUpdates", true},
     {"showNsfwSources", false},
@@ -65,6 +68,7 @@ const QVariantMap kDefaults{
     {"onboarded", false},
     {"autoUpdate", true},
     {"novelSource", "all"},
+    {"downloadsPath", ""},
 };
 
 } // namespace
@@ -165,6 +169,59 @@ void App::moveToBackground() const {
 void App::openFolder(const QString &path) const {
     QDir().mkpath(path);
     QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+}
+
+QVariantList App::googleDriveAccounts() const {
+    QVariantList list;
+#if defined(Q_OS_MACOS)
+    const QString home = QDir::homePath();
+    const QDir cloudStorage(home + QStringLiteral("/Library/CloudStorage"));
+    if (cloudStorage.exists()) {
+        const auto entries = cloudStorage.entryList({QStringLiteral("GoogleDrive-*")}, QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const auto &entry : entries) {
+            const QString base = cloudStorage.filePath(entry);
+            QString targetPath;
+            for (const auto &sub : {QStringLiteral("Il mio Drive"), QStringLiteral("My Drive")}) {
+                const QString candidate = base + QLatin1Char('/') + sub;
+                if (QDir(candidate).exists()) {
+                    targetPath = candidate;
+                    break;
+                }
+            }
+            if (targetPath.isEmpty() && QDir(base).exists()) {
+                if (!QDir(base).entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty())
+                    targetPath = base;
+            }
+            if (!targetPath.isEmpty()) {
+                QString email = entry.mid(12);
+                if (email.contains(QLatin1Char(' ')))
+                    email = email.section(QLatin1Char(' '), 0, 0);
+                list.append(QVariantMap{
+                    {QStringLiteral("email"), email},
+                    {QStringLiteral("path"), targetPath}
+                });
+            }
+        }
+    }
+#elif defined(Q_OS_WIN)
+    for (const auto &drive : {QStringLiteral("G:/My Drive"), QStringLiteral("G:/Il mio Drive"), QStringLiteral("G:/")}) {
+        if (QDir(drive).exists()) {
+            list.append(QVariantMap{
+                {QStringLiteral("email"), QStringLiteral("Google Drive")},
+                {QStringLiteral("path"), drive}
+            });
+            break;
+        }
+    }
+#endif
+    return list;
+}
+
+QString App::googleDrivePath() const {
+    const auto accounts = googleDriveAccounts();
+    if (!accounts.isEmpty())
+        return accounts.first().toMap().value(QStringLiteral("path")).toString();
+    return QString();
 }
 
 void App::copy(const QString &text) const { QGuiApplication::clipboard()->setText(text); }

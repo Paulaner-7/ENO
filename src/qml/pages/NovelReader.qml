@@ -102,14 +102,25 @@ Rectangle {
         return found
     }
 
-    property real lastSaved: 0
-    function savePosition(force) {
+    Timer {
+        id: saveTimer
+        interval: 600
+        onTriggered: reader.commitPosition()
+    }
+    function commitPosition() {
         if (!series.id || !unit.key || blocks.length === 0) return
-        if (!force && Date.now() - lastSaved < 1500) return
-        lastSaved = Date.now()
         const max = Math.max(1, flick.contentHeight - flick.height)
         const percent = finished ? 1 : Math.min(1, Math.max(0, flick.contentY / max))
         Library.recordProgress(series, unit, { type: "text", block: firstVisibleBlock(), percent: percent }, percent, finished || percent > 0.97)
+    }
+    function savePosition(force) {
+        if (!series.id || !unit.key || blocks.length === 0) return
+        if (force) {
+            saveTimer.stop()
+            commitPosition()
+        } else {
+            saveTimer.restart()
+        }
     }
 
     function exit() {

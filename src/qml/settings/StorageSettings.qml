@@ -76,12 +76,30 @@ SettingsPane {
         SettingRow {
             iconName: "download"
             title: qsTr("Downloaded chapters")
-            description: Downloads.sizeOnDisk() + (App.platform !== "android" ? " · " + Downloads.folder() : "")
-            ScButton {
+            description: Downloads.sizeOnDisk() + (App.platform !== "android" ? " · " + Downloads.folder : "")
+            Row {
+                spacing: 8
                 visible: App.platform !== "android"
-                text: qsTr("Open folder")
-                iconName: "folder-open"
-                onClicked: App.openFolder(Downloads.folder())
+                ScButton {
+                    text: qsTr("Change folder")
+                    iconName: "folder"
+                    variant: "ghost"
+                    onClicked: downloadFolderDialog.open()
+                }
+                ScButton {
+                    visible: Downloads.hasCustomFolder
+                    text: qsTr("Reset")
+                    variant: "ghost"
+                    onClicked: {
+                        Downloads.resetFolder()
+                        Router.toast(qsTr("Reset to default downloads folder"))
+                    }
+                }
+                ScButton {
+                    text: qsTr("Open folder")
+                    iconName: "folder-open"
+                    onClicked: App.openFolder(Downloads.folder)
+                }
             }
         }
         SettingRow {
@@ -122,5 +140,14 @@ SettingsPane {
         fileMode: FileDialog.OpenFile
         nameFilters: [qsTr("SCANCORE backup (*.scancore)"), qsTr("All files (*)")]
         onAccepted: pane.report(App.importBackup(selectedFile), (r) => r)
+    }
+
+    FolderDialog {
+        id: downloadFolderDialog
+        title: qsTr("Choose downloads folder")
+        onAccepted: {
+            Downloads.setFolder(selectedFolder)
+            Router.toast(qsTr("Downloads folder updated"), "success")
+        }
     }
 }

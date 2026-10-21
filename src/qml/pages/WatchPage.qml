@@ -32,6 +32,8 @@ Rectangle {
     property real position: 0
     property real duration: 0
     property real resumeAt: 0
+    property bool resumed: false
+    property int resumeSeekAttempts: 0
     property bool sideOpen: false
     property bool ended: false
 
@@ -72,6 +74,17 @@ Rectangle {
     color: "#000000"
     focus: true
 
+    function applyResumeTime(urlStr, seconds) {
+        if (!urlStr) return ""
+        if (seconds <= 5) return urlStr
+        const t = Math.floor(seconds)
+        const hasQuery = urlStr.indexOf("?") >= 0
+        if (/([?&])start_at=\d+/.test(urlStr)) {
+            return urlStr.replace(/([?&])start_at=\d+/, "$1start_at=" + t)
+        }
+        return urlStr + (hasQuery ? "&" : "?") + "start_at=" + t
+    }
+
     function load(i) {
         saveProgress(true)
         nextCountdown.stop()
@@ -82,7 +95,11 @@ Rectangle {
         unsupported = false
         skipTask = null
         const p = Library.progressMap(series.id)[episodes[i].key]
-        resumeAt = p && !p.completed && p.position ? (p.position.seconds || 0) : 0
+        const isNearEnd = p && p.position && p.position.duration > 0 && p.position.seconds >= p.position.duration - 20
+        const isCompleted = p && p.completed && (p.percent >= 0.96 || isNearEnd)
+        resumeAt = p && !isCompleted && p.position ? (p.position.seconds || 0) : 0
+        resumed = (resumeAt <= 5)
+        resumeSeekAttempts = 0
         currentUrl = ""
         streamsTask = Anime.streams(media.anilistId, episodes[i].number)
         Presence.show("anime", series.title || "", qsTr("Episode ") + (episodes[i].number || ""))
@@ -95,7 +112,7 @@ Rectangle {
         wake()
         Activity.setMedia("anime")
     }
-    // However the player is closed (Back, Esc, the arrow), leave full screen.
+    // However the player is closed (Back, Esc, the arrow), save progress.
     Component.onDestruction: {
         Activity.setMedia("")
         Presence.clear()
@@ -115,40 +132,68 @@ Rectangle {
         function onFinished(result) {
             // The server picked last time, when this episode has it.
             const preferred = result.streams.find(s => s.quality === App.settings.animeServer)
-            if (result.streams.length > 0) watch.currentUrl = (preferred || result.streams[0]).url
+            if (result.streams.length > 0) {
+                const streamUrl = (preferred || result.streams[0]).url
+                watch.currentUrl = watch.applyResumeTime(streamUrl, watch.resumeAt)
+            }
         }
     }
 
     function pickServer(stream) {
-        currentUrl = stream.url
+        const at = position > 5 ? position : resumeAt
+        currentUrl = applyResumeTime(stream.url, at)
         App.setSetting("animeServer", stream.quality)
     }
 
     property real lastSaved: 0
     function saveProgress(force) {
         if (!series.id || !episode.key || duration <= 0) return
+        if (resumeAt > 30 && (!resumed || position < 10)) return
+        if (!resumed && resumeAt > 5) return
         if (!force && Date.now() - lastSaved < 5000) return
         lastSaved = Date.now()
         const percent = Math.min(1, position / duration)
+        const isCompleted = ended || (duration > 0 && position >= duration - 15) || percent >= 0.97
         Library.recordProgress(series, { key: episode.key, title: episode.title, number: String(episode.number) },
-                               { type: "video", seconds: position, duration: duration }, percent, percent > 0.9)
+                               { type: "video", seconds: position, duration: duration }, percent, isCompleted)
+    }
+
+    Connections {
+        target: Qt.application
+        function onAboutToQuit() {
+            watch.saveProgress(true)
+        }
     }
 
     function onPlayerTime(seconds, total, status) {
         if (total > 0 && duration === 0) {
             duration = total
             skipTask = Anime.skipTimes(media.anilistId, episode.number, Math.round(total))
-            if (resumeAt > 5 && resumeAt < total - 30 && seconds < resumeAt - 5) {
-                player.seek(resumeAt)
-                Router.toast(qsTr("Resumed at ") + formatTime(resumeAt))
-            }
         }
         if (total > 0) duration = total
+
+        if (!resumed && resumeAt > 5 && total > 0) {
+            const tolerance = Math.max(15, 0.05 * resumeAt)
+            if (Math.abs(seconds - resumeAt) <= tolerance || seconds >= resumeAt - 5) {
+                resumed = true
+                Router.toast(qsTr("Resumed at ") + formatTime(seconds))
+            } else {
+                resumeSeekAttempts++
+                if (resumeSeekAttempts > 15) {
+                    resumed = true
+                } else {
+                    player.seek(resumeAt)
+                }
+            }
+        }
+
         // Moving forward: the episode is playing, which counts as watching
         // time on the Activity page.
-        if (seconds > position && seconds - position < 5) Activity.playing()
-        position = seconds
-        saveProgress(false)
+        if (resumed || resumeAt <= 5) {
+            if (seconds > position && seconds - position < 5) Activity.playing()
+            position = seconds
+            saveProgress(false)
+        }
         if (skipsItself(activeSkip))
             player.seek(activeSkip.end)
         if ((status === "Ended" || (total > 0 && seconds >= total - 1)) && !ended) {
@@ -179,13 +224,11 @@ Rectangle {
 
     function exit() {
         saveProgress(true)
-        if (fullScreen) Window.window.showNormal()
         Router.back()
     }
 
     function leave() {
-        if (fullScreen) Window.window.showNormal()
-        else exit()
+        exit()
     }
 
     function nextEpisode() {
@@ -230,7 +273,7 @@ Rectangle {
     // that the native view does not cover, so the pointer can bring it back.
     Item {
         id: edge
-        visible: watch.docked && !watch.chromeShown
+        visible: watch.docked && !watch.systemView && !watch.chromeShown
         width: parent.width
         height: 4
         HoverHandler { onHoveredChanged: if (hovered) watch.wake() }
@@ -240,9 +283,9 @@ Rectangle {
         id: stage
         x: 0
         y: watch.phone ? (watch.landscape ? 0 : bar.height)
-         : watch.docked ? (watch.chromeShown ? bar.height : edge.visible ? edge.height : 0) : 0
+         : (watch.docked && !watch.systemView) ? (watch.fullScreen ? Math.max(edge.visible ? edge.height : 0, bar.y + bar.height) : (watch.chromeShown ? bar.height : edge.visible ? edge.height : 0)) : 0
         width: watch.phone && watch.landscape ? watch.width - rail.width
-             : watch.docked ? watch.width - side.width : watch.width
+             : (watch.docked && !watch.systemView) ? watch.width - side.width : watch.width
         height: watch.phone && !watch.landscape ? Math.round(Math.min(watch.width * 9 / 16, watch.height * 0.45))
               : watch.height - y
 
@@ -254,7 +297,23 @@ Rectangle {
             visible: !(watch.systemView && comments.visible)
             active: Anime.playerEngine !== "" && watch.currentUrl.length > 0
             source: watch.systemView ? "../components/WebPlayerSystem.qml" : "../components/WebPlayer.qml"
-            onLoaded: item.url = Qt.binding(() => watch.currentUrl)
+            onLoaded: {
+                item.url = Qt.binding(() => watch.currentUrl)
+                if (watch.systemView) {
+                    item.mediaTitle = Qt.binding(() => watch.media.title || "")
+                    item.episodeLine = Qt.binding(() => watch.episodeLine)
+                    item.hasPrev = Qt.binding(() => watch.hasPrev)
+                    item.hasNext = Qt.binding(() => watch.hasNext)
+                    item.streams = Qt.binding(() => watch.streams)
+                    item.currentUrl = Qt.binding(() => watch.currentUrl)
+                    item.chromeShown = Qt.binding(() => watch.chromeShown)
+                    item.resumeAt = Qt.binding(() => watch.resumeAt)
+                    item.skips = Qt.binding(() => watch.skips)
+                    item.activeSkip = Qt.binding(() => watch.activeSkip)
+                    item.episodesList = Qt.binding(() => watch.episodes)
+                    item.currentIndex = Qt.binding(() => watch.index)
+                }
+            }
             function seek(seconds) { if (item) item.seek(seconds) }
             Connections {
                 target: player.item
@@ -262,6 +321,13 @@ Rectangle {
                 function onInteracted() { watch.wake() }
                 function onKey(press) { watch.pageKey(press) }
                 function onUnsupported() { watch.unsupported = true }
+                function onToggleFullScreen() { watch.toggleFullScreen() }
+                function onBackClicked() { watch.exit() }
+                function onPrevClicked() { if (watch.hasPrev) watch.load(watch.index - 1) }
+                function onNextClicked() { if (watch.hasNext) watch.load(watch.index + 1) }
+                function onServerPicked(url, quality) { watch.pickServer({url: url, quality: quality}) }
+                function onSkipClicked(toSeconds) { player.seek(toSeconds) }
+                function onEpisodeSelected(idx) { watch.load(idx) }
             }
         }
 
@@ -416,15 +482,33 @@ Rectangle {
     Rectangle {
         id: bar
         width: parent.width
-        height: watch.phone ? 52 : watch.docked ? 64 : 72
-        visible: watch.phone ? !watch.landscape : watch.docked ? watch.chromeShown : opacity > 0.01
-        opacity: watch.phone || watch.docked || watch.chromeShown ? 1 : 0
-        Behavior on opacity { enabled: !watch.phone && !watch.docked; NumberAnimation { duration: Motion.slow } }
+        height: watch.phone ? 52 : watch.docked ? 64 : 96
+        y: watch.phone ? 0 : (watch.docked && watch.fullScreen) ? (watch.chromeShown ? 0 : -height) : 0
+        opacity: watch.phone || (!watch.fullScreen) || watch.chromeShown ? 1 : 0
+        visible: !watch.systemView && (watch.phone ? !watch.landscape : (opacity > 0.001 && y > -height))
+        Behavior on y {
+            NumberAnimation {
+                duration: Motion.slow
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Motion.emphasized
+            }
+        }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Motion.slow
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Motion.emphasized
+            }
+        }
         color: watch.phone || watch.docked ? "#0b0b0c" : "transparent"
         gradient: watch.phone || watch.docked ? null : barShade
         Gradient {
             id: barShade
-            GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.85) }
+            GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.95) }
+            GradientStop { position: 0.25; color: Qt.rgba(0, 0, 0, 0.82) }
+            GradientStop { position: 0.50; color: Qt.rgba(0, 0, 0, 0.55) }
+            GradientStop { position: 0.72; color: Qt.rgba(0, 0, 0, 0.25) }
+            GradientStop { position: 0.88; color: Qt.rgba(0, 0, 0, 0.08) }
             GradientStop { position: 1.0; color: "transparent" }
         }
         HoverHandler { id: barHover }
@@ -432,7 +516,7 @@ Rectangle {
         IconButton {
             id: backButton
             x: 12
-            anchors.verticalCenter: parent.verticalCenter
+            y: watch.phone || watch.docked ? Math.round((parent.height - height) / 2) : 14
             iconName: "arrow-left"
             iconColor: "white"
             tip: qsTr("Close player (Esc)")
@@ -443,7 +527,7 @@ Rectangle {
             anchors.leftMargin: 10
             anchors.right: watch.phone ? parent.right : barActions.left
             anchors.rightMargin: watch.phone ? 16 : 12
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: backButton.verticalCenter
             Text {
                 width: parent.width
                 text: watch.media.title || ""
@@ -468,7 +552,7 @@ Rectangle {
             id: barActions
             anchors.right: controls.left
             anchors.rightMargin: visible ? 12 : 0
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: backButton.verticalCenter
             spacing: 6
             visible: watch.systemView && !watch.phone && (skipNow.visible || nextNow.visible)
             ScButton {
@@ -499,7 +583,7 @@ Rectangle {
             id: controls
             anchors.right: parent.right
             anchors.rightMargin: 12
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: backButton.verticalCenter
             spacing: 6
             visible: !watch.phone
             Repeater {
@@ -515,20 +599,6 @@ Rectangle {
             IconButton { iconName: "skip-back"; iconColor: "white"; enabled: watch.hasPrev; tip: qsTr("Previous episode") + watch.keyHint("player.prev"); onClicked: watch.load(watch.index - 1) }
             IconButton { iconName: "skip-forward"; iconColor: "white"; enabled: watch.hasNext; tip: qsTr("Next episode") + watch.keyHint("player.next"); onClicked: watch.load(watch.index + 1) }
             IconButton { iconName: "list"; iconColor: "white"; active: watch.sideOpen; tip: qsTr("Episodes"); onClicked: watch.sideOpen = !watch.sideOpen }
-            IconButton { iconName: "message-circle"; iconColor: "white"; tip: qsTr("Comments"); onClicked: comments.open() }
-            IconButton {
-                iconName: "external-link"
-                iconColor: "white"
-                enabled: watch.currentUrl.length > 0
-                tip: qsTr("Open in your browser")
-                onClicked: App.openUrl(watch.currentUrl)
-            }
-            IconButton {
-                iconName: watch.fullScreen ? "minimize" : "maximize"
-                iconColor: "white"
-                tip: (watch.fullScreen ? qsTr("Exit full screen") : qsTr("Full screen")) + watch.keyHint("player.fullscreen")
-                onClicked: watch.toggleFullScreen()
-            }
         }
     }
 
@@ -589,8 +659,8 @@ Rectangle {
     // every frame).
     Rectangle {
         id: side
-        visible: !watch.phone && width > 0
-        y: bar.visible ? bar.height : 0
+        visible: !watch.phone && !watch.systemView && width > 0
+        y: bar.visible ? (bar.y + bar.height) : 0
         height: parent.height - y
         anchors.right: parent.right
         width: watch.sideOpen && watch.chromeShown ? 340 : 0

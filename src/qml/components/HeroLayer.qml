@@ -46,6 +46,7 @@ Item {
     Cover {
         id: proxy
         visible: layer.active
+        decodeWidth: 200
         x: layer.lerp(layer.from.x, layer.to.x, layer.progress)
         y: layer.lerp(layer.from.y, layer.to.y, layer.progress)
         width: layer.lerp(layer.from.width, layer.to.width, layer.progress)

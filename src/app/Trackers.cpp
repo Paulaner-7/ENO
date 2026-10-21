@@ -2,6 +2,7 @@
 
 #include "App.h"
 #include "core/Database.h"
+#include "core/Html.h"
 #include "core/Text.h"
 
 #include <QCryptographicHash>
@@ -12,6 +13,7 @@
 #include <QJsonObject>
 #include <QMutex>
 #include <QRandomGenerator>
+#include <QRegularExpression>
 #include <QTcpSocket>
 #include <QUrlQuery>
 #include <QUuid>
@@ -311,6 +313,146 @@ QVariantMap exactMatch(const QVariantList &candidates, const QString &title) {
                 return candidate;
     }
     return {};
+}
+
+QString cleanDescription(const QString &text) {
+    auto out = text;
+    out.replace(QRegularExpression(QStringLiteral("<br\\s*/?>"), QRegularExpression::CaseInsensitiveOption),
+                QStringLiteral("\n"));
+    out.remove(QRegularExpression(QStringLiteral("<[^>]+>")));
+    out = decodeEntities(out);
+    return out.trimmed();
+}
+
+QVariantMap bestMatch(const QVariantList &candidates, const QString &title) {
+    const auto exact = exactMatch(candidates, title);
+    if (!exact.isEmpty())
+        return exact;
+    const auto wanted = titleKey(title);
+    if (wanted.isEmpty() || candidates.isEmpty())
+        return {};
+    for (const auto &value : candidates) {
+        const auto candidate = value.toMap();
+        for (const auto &t : candidate.value("titles").toStringList()) {
+            const auto key = titleKey(t);
+            if (!key.isEmpty() && (key.startsWith(wanted) || wanted.startsWith(key)))
+                return candidate;
+        }
+    }
+    if (candidates.size() == 1)
+        return candidates.first().toMap();
+    return {};
+}
+
+QVariantMap anilistMediaDetails(int id, const QString &token = {}) {
+    const QString cacheKey = QStringLiteral("anilist:details:%1").arg(id);
+    if (token.isEmpty()) {
+        if (auto cached = Database::cacheGet(cacheKey)) {
+            return QJsonDocument::fromJson(*cached).toVariant().toMap();
+        }
+    }
+
+    const auto data = anilistQuery(QStringLiteral(R"(
+        query ($id: Int) {
+          Media(id: $id) {
+            id idMal siteUrl
+            title { romaji english native userPreferred }
+            description(asHtml: false)
+            format status(version: 2)
+            averageScore meanScore popularity favourites
+            genres
+            tags { name rank isMediaSpoiler }
+            startDate { year month day }
+            chapters volumes episodes duration
+            bannerImage
+            coverImage { extraLarge large medium color }
+            mediaListEntry { id status score(format: POINT_10_DECIMAL) progress progressVolumes }
+          }
+        })"),
+        {{"id", id}}, token);
+
+    const auto m = data.value("Media").toObject();
+    if (m.isEmpty())
+        return {};
+
+    const auto t = m.value("title").toObject();
+    QString title = t.value("english").toString();
+    if (title.isEmpty())
+        title = t.value("userPreferred").toString();
+    if (title.isEmpty())
+        title = t.value("romaji").toString();
+    if (title.isEmpty())
+        title = t.value("native").toString();
+
+    const auto cover = m.value("coverImage").toObject();
+    const auto format = m.value("format").toString();
+    const auto status = m.value("status").toString();
+
+    const QString desc = cleanDescription(m.value("description").toString());
+
+    QStringList tags;
+    for (const auto &tagVal : m.value("tags").toArray()) {
+        const auto tagObj = tagVal.toObject();
+        if (tagObj.value("rank").toInt() >= 60 && !tagObj.value("isMediaSpoiler").toBool()) {
+            tags.append(tagObj.value("name").toString());
+            if (tags.size() >= 10)
+                break;
+        }
+    }
+
+    QString formatName = format;
+    if (format == QLatin1String("MANGA")) formatName = QStringLiteral("Manga");
+    else if (format == QLatin1String("NOVEL")) formatName = QStringLiteral("Light Novel");
+    else if (format == QLatin1String("ONE_SHOT")) formatName = QStringLiteral("One Shot");
+    else if (format == QLatin1String("TV")) formatName = QStringLiteral("TV");
+    else if (format == QLatin1String("MOVIE")) formatName = QStringLiteral("Movie");
+
+    QString statusName = status;
+    if (status == QLatin1String("RELEASING")) statusName = QStringLiteral("Releasing");
+    else if (status == QLatin1String("FINISHED")) statusName = QStringLiteral("Finished");
+    else if (status == QLatin1String("NOT_YET_RELEASED")) statusName = QStringLiteral("Upcoming");
+    else if (status == QLatin1String("CANCELLED")) statusName = QStringLiteral("Cancelled");
+    else if (status == QLatin1String("HIATUS")) statusName = QStringLiteral("Hiatus");
+
+    const auto entry = m.value("mediaListEntry").toObject();
+    QString userStatus = entry.value("status").toString();
+    double userScore = entry.value("score").toDouble();
+    int userProgress = entry.value("progress").toInt();
+
+    QVariantMap out;
+    out.insert(QStringLiteral("id"), m.value("id").toInt());
+    out.insert(QStringLiteral("idMal"), m.value("idMal").toInt());
+    out.insert(QStringLiteral("url"), m.value("siteUrl").toString(QStringLiteral("https://anilist.co/manga/%1").arg(m.value("id").toInt())));
+    out.insert(QStringLiteral("title"), title);
+    out.insert(QStringLiteral("romaji"), t.value("romaji").toString());
+    out.insert(QStringLiteral("native"), t.value("native").toString());
+    out.insert(QStringLiteral("description"), desc);
+    out.insert(QStringLiteral("format"), formatName);
+    out.insert(QStringLiteral("rawFormat"), format);
+    out.insert(QStringLiteral("status"), statusName);
+    out.insert(QStringLiteral("rawStatus"), status);
+    out.insert(QStringLiteral("score"), m.value("averageScore").toInt());
+    out.insert(QStringLiteral("scoreFormatted"), m.value("averageScore").toInt() > 0 ? QStringLiteral("★ %1%").arg(m.value("averageScore").toInt()) : QString());
+    out.insert(QStringLiteral("popularity"), m.value("popularity").toInt());
+    out.insert(QStringLiteral("favourites"), m.value("favourites").toInt());
+    out.insert(QStringLiteral("genres"), m.value("genres").toVariant());
+    out.insert(QStringLiteral("tags"), tags);
+    out.insert(QStringLiteral("year"), m.value("startDate").toObject().value("year").toInt());
+    out.insert(QStringLiteral("chapters"), m.value("chapters").toInt());
+    out.insert(QStringLiteral("volumes"), m.value("volumes").toInt());
+    out.insert(QStringLiteral("episodes"), m.value("episodes").toInt());
+    out.insert(QStringLiteral("banner"), m.value("bannerImage").toString());
+    out.insert(QStringLiteral("cover"), cover.value("extraLarge").toString(cover.value("large").toString()));
+    out.insert(QStringLiteral("color"), cover.value("color").toString());
+    out.insert(QStringLiteral("hasUserEntry"), !entry.isEmpty());
+    out.insert(QStringLiteral("userStatus"), userStatus);
+    out.insert(QStringLiteral("userScore"), userScore);
+    out.insert(QStringLiteral("userProgress"), userProgress);
+
+    if (token.isEmpty() && !out.isEmpty()) {
+        Database::cachePut(cacheKey, QJsonDocument(QJsonObject::fromVariantMap(out)).toJson(QJsonDocument::Compact), 86400);
+    }
+    return out;
 }
 
 // What the series' source stored about it: a Comick catalogue entry
@@ -701,6 +843,44 @@ void Trackers::link(const QString &seriesId, const QString &service, const QVari
 void Trackers::unlink(const QString &seriesId, const QString &service) {
     saveLink(seriesId, service, QVariant(), {});
     emit changed();
+}
+
+Task *Trackers::anilistDetails(const QString &seriesId, const QString &media, const QString &title) {
+    return Task::run([seriesId, media, title]() -> QVariant {
+        int id = allLinks().value(seriesId).toMap().value("anilist").toMap().value("id").toInt();
+        if (id <= 0 && media == QLatin1String("anime")) {
+            if (seriesId.startsWith(QLatin1String("anime:anilist:")))
+                id = seriesId.section(QLatin1Char(':'), 2).toInt();
+        }
+        if (id <= 0 && media == QLatin1String("comic")) {
+            id = seriesExtra(seriesId).value("anilist").toInt();
+            if (id > 0)
+                saveLink(seriesId, QStringLiteral("anilist"), id, title);
+        }
+        if (id <= 0 && !title.trimmed().isEmpty()) {
+            try {
+                const auto candidates = anilistSearch(media, title);
+                const auto match = bestMatch(candidates, title);
+                if (!match.isEmpty() && match.value("id").toInt() > 0) {
+                    id = match.value("id").toInt();
+                    saveLink(seriesId, QStringLiteral("anilist"), id, match.value("title").toString());
+                }
+            } catch (const Error &e) {
+                qWarning().noquote() << "AniList lookup error:" << e.message();
+            }
+        }
+        if (id <= 0)
+            return QVariantMap{};
+
+        const auto account = Database::pref(QStringLiteral("tracker.anilist")).toMap();
+        const auto token = account.value("token").toString();
+        try {
+            return anilistMediaDetails(id, token);
+        } catch (const Error &e) {
+            qWarning().noquote() << "AniList details error:" << e.message();
+            return QVariantMap{};
+        }
+    });
 }
 
 QVariantList Trackers::comickLibrary() {

@@ -8,6 +8,7 @@
 #include <QImageReader>
 #include <QMutex>
 #include <QPainter>
+#include <QPainterPath>
 #include <QQuickWindow>
 #include <QSGImageNode>
 #include <QSvgRenderer>
@@ -43,7 +44,7 @@ QString unb64(const QString &value) {
     return QString::fromUtf8(QByteArray::fromBase64(value.toLatin1(), QByteArray::Base64UrlEncoding));
 }
 
-QImage decode(const QByteArray &data, const QSize &requested, int maxWidth = 0) {
+QImage decode(const QByteArray &data, const QSize &requested, int maxWidth = 0, int cornerRadius = 0) {
     QBuffer buffer;
     buffer.setData(data);
     buffer.open(QIODevice::ReadOnly);
@@ -66,21 +67,70 @@ QImage decode(const QByteArray &data, const QSize &requested, int maxWidth = 0) 
     QImage image = reader.read();
     if (image.isNull())
         throw Error(QStringLiteral("This image format could not be read."));
+    if (cornerRadius > 0 && requested.width() > 0 && requested.height() > 0) {
+        if (image.width() < requested.width() || image.height() < requested.height())
+            image = image.scaled(requested, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        const int cropX = std::max(0, (image.width() - requested.width()) / 2);
+        const int cropY = std::max(0, (image.height() - requested.height()) / 2);
+        QImage rounded(requested, QImage::Format_ARGB32_Premultiplied);
+        rounded.fill(Qt::transparent);
+        QPainter painter(&rounded);
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
+        QPainterPath path;
+        const qreal r = std::min<qreal>(cornerRadius, std::min(requested.width(), requested.height()) / 2.0);
+        path.addRoundedRect(QRectF(0, 0, requested.width(), requested.height()), r, r);
+        painter.setClipPath(path);
+        painter.drawImage(QPoint(0, 0), image, QRect(cropX, cropY, requested.width(), requested.height()));
+        return rounded;
+    }
+    const auto targetFormat = image.hasAlphaChannel() ? QImage::Format_ARGB32_Premultiplied : QImage::Format_RGB32;
+    if (image.format() != targetFormat)
+        image = image.convertToFormat(targetFormat);
     return image;
+}
+
+QMutex &decodedCacheMutex() {
+    static QMutex mutex;
+    return mutex;
+}
+
+// 64 MB of already-decoded covers and banners in RAM so scrolling shelves,
+// switching sections and opening details pages do not re-decode JPEGs/WebPs.
+QCache<QString, QImage> &decodedCache() {
+    static QCache<QString, QImage> cache(64 * 1024 * 1024);
+    return cache;
 }
 
 class RemoteResponse : public QQuickImageResponse, public QRunnable {
 public:
-    RemoteResponse(QString url, QString referer, QSize size)
-        : m_url(std::move(url)), m_referer(std::move(referer)), m_size(size),
+    RemoteResponse(QString url, QString referer, QSize size, int cornerRadius = 0)
+        : m_url(std::move(url)), m_referer(std::move(referer)), m_size(size), m_cornerRadius(cornerRadius),
           m_cancel(std::make_shared<std::atomic_bool>(false)) {
         setAutoDelete(false);
     }
 
+    bool tryFromMemory() {
+        const auto key = cacheKey();
+        QMutexLocker lock(&decodedCacheMutex());
+        if (const auto *cached = decodedCache().object(key)) {
+            m_image = *cached;
+            return true;
+        }
+        return false;
+    }
+
+    void finishImmediately() { emit finished(); }
+
     void run() override {
         CancelScope scope(m_cancel);
+        const auto key = cacheKey();
         try {
-            m_image = decode(ImageCache::fetch(m_url, m_referer), m_size);
+            m_image = decode(ImageCache::fetch(m_url, m_referer), m_size, 0, m_cornerRadius);
+            if (!m_image.isNull()) {
+                QMutexLocker lock(&decodedCacheMutex());
+                const int cost = int(std::min<qsizetype>(m_image.sizeInBytes(), 16 * 1024 * 1024));
+                decodedCache().insert(key, new QImage(m_image), std::max(1, cost));
+            }
         } catch (const Error &e) {
             m_error = e.message();
         } catch (const std::exception &e) {
@@ -94,15 +144,20 @@ public:
     void cancel() override { m_cancel->store(true); }
 
 private:
+    QString cacheKey() const {
+        return QStringLiteral("%1#%2x%3r%4").arg(m_url).arg(m_size.width()).arg(m_size.height()).arg(m_cornerRadius);
+    }
+
     QString m_url;
     QString m_referer;
     QSize m_size;
+    int m_cornerRadius = 0;
     QImage m_image;
     QString m_error;
     CancelFlag m_cancel;
 };
 
-constexpr int kTileHeight = 4096;
+constexpr int kTileHeight = 2048;
 
 } // namespace
 
@@ -112,18 +167,26 @@ QString RemoteImageProvider::encode(const QString &url, const QString &referer) 
 
 QQuickImageResponse *RemoteImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize) {
     const auto parts = id.split(QLatin1Char('~'));
-    auto *response = new RemoteResponse(unb64(parts.value(0)), unb64(parts.value(1)), requestedSize);
+    const int cornerRadius = parts.size() > 2 ? parts.value(2).toInt() : 0;
+    auto *response = new RemoteResponse(unb64(parts.value(0)), unb64(parts.value(1)), requestedSize, cornerRadius);
+    if (response->tryFromMemory()) {
+        QMetaObject::invokeMethod(response, &RemoteResponse::finishImmediately, Qt::QueuedConnection);
+        return response;
+    }
     coverPool().start(response);
     return response;
 }
 
 // ---------------------------------------------------------------- Icons
 
-IconProvider::IconProvider() : QQuickImageProvider(QQuickImageProvider::Image, ForceAsynchronousImageLoading) {}
+IconProvider::IconProvider() : QQuickImageProvider(QQuickImageProvider::Image) {}
 
 QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
     static QMutex mutex;
     static QHash<QString, QByteArray> sources;
+    static QHash<QString, QImage> rendered;
+    const QSize target = requestedSize.isValid() && !requestedSize.isEmpty() ? requestedSize : QSize(48, 48);
+    const QString renderKey = QStringLiteral("%1@%2x%3").arg(id).arg(target.width()).arg(target.height());
     const auto name = id.section(QLatin1Char('?'), 0, 0);
     const auto query = QUrlQuery(id.section(QLatin1Char('?'), 1));
     const auto color = query.queryItemValue(QStringLiteral("color"), QUrl::FullyDecoded);
@@ -131,6 +194,12 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
     QByteArray svg;
     {
         QMutexLocker lock(&mutex);
+        auto it = rendered.constFind(renderKey);
+        if (it != rendered.cend()) {
+            if (size)
+                *size = target;
+            return it.value();
+        }
         if (!sources.contains(name)) {
             QFile file(QStringLiteral(":/icons/%1.svg").arg(name));
             sources.insert(name, file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray());
@@ -140,7 +209,6 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
     svg.replace("currentColor", (color.isEmpty() ? QStringLiteral("#ffffff") : color).toUtf8());
     if (!stroke.isEmpty())
         svg.replace("stroke-width=\"2\"", QStringLiteral("stroke-width=\"%1\"").arg(stroke).toUtf8());
-    const QSize target = requestedSize.isValid() && !requestedSize.isEmpty() ? requestedSize : QSize(48, 48);
     QImage image(target, QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
     QSvgRenderer renderer(svg);
@@ -148,6 +216,12 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
     painter.setRenderHint(QPainter::Antialiasing);
     renderer.render(&painter);
     painter.end();
+    {
+        QMutexLocker lock(&mutex);
+        if (rendered.size() > 512)
+            rendered.clear();
+        rendered.insert(renderKey, image);
+    }
     if (size)
         *size = target;
     return image;

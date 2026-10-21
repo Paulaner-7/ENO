@@ -10,8 +10,8 @@ Item {
 
     // keywords: what the category list's search also finds it by.
     readonly property var allSections: [
-        { key: "account", file: "AccountSettings.qml", title: qsTr("Sync"), subtitle: qsTr("scancore.onl, your server, WebDAV or a folder"), icon: "cloud", tint: "sky",
-          keywords: "account sign in sign out sync scancore.onl website login server self host own database webdav nextcloud owncloud synology folder syncthing dropbox onedrive devices" },
+        { key: "account", file: "AccountSettings.qml", title: qsTr("Sync"), subtitle: qsTr("Google Drive, cloud folder, WebDAV or personal server"), icon: "cloud", tint: "sky",
+          keywords: "google drive gdrive icloud dropbox sync account cloud server self host webdav folder syncthing onedrive devices" },
         { key: "connections", file: "ConnectionsSettings.qml", title: qsTr("Connections"), subtitle: qsTr("AniList, MyAnimeList, Comick and imports"), icon: "link", tint: "emerald",
           keywords: "anilist myanimelist mal comick tracking tracker list discord rich presence status import mihon tachiyomi tachibk backup export xml bring library" },
         { key: "theme", file: "ThemeSettings.qml", title: qsTr("Theme"), subtitle: qsTr("Colours, background and transparency"), icon: "palette", tint: "violet",

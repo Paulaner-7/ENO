@@ -26,9 +26,15 @@ Item {
         function onFinished(result) { page.library = Router.keep(page.library, result) }
     }
 
+    property bool dirty: false
+    onVisibleChanged: if (visible && dirty) { dirty = false; refresh.restart() }
+
     Connections {
         target: Library
-        function onChanged() { refresh.restart() }
+        function onChanged() {
+            if (page.visible) refresh.restart()
+            else page.dirty = true
+        }
     }
     Timer {
         id: refresh
@@ -90,7 +96,12 @@ Item {
                     anchors.bottomMargin: 6
                     spacing: 10
                     ScButton {
-                        text: qsTr("Comics")
+                        text: qsTr("Anime")
+                        iconName: "tv"
+                        onClicked: Router.go("anime")
+                    }
+                    ScButton {
+                        text: qsTr("Manga")
                         iconName: "book-open"
                         onClicked: Router.go("comics")
                     }
@@ -98,11 +109,6 @@ Item {
                         text: qsTr("Novels")
                         iconName: "book-text"
                         onClicked: Router.go("novels")
-                    }
-                    ScButton {
-                        text: qsTr("Anime")
-                        iconName: "tv"
-                        onClicked: Router.go("anime")
                     }
                 }
             }
@@ -120,7 +126,7 @@ Item {
                 items: page.history.slice(1)
                 loading: page.historyTask ? page.historyTask.loading && page.history.length === 0 : false
                 subtitleFor: (it) => it.media === "anime" ? qsTr("Episode ") + (it.unitNumber || it.unitKey) : (it.unitTitle || "")
-                progressFor: (it) => it.completed ? 1 : (it.percent || 0)
+                progressFor: (it) => (it.completed && (it.percent >= 0.96 || (it.position && it.position.duration > 0 && it.position.seconds >= it.position.duration - 20))) ? 1 : (it.percent || 0)
                 onOpened: (it, cover) => Router.resume(it)
             }
 

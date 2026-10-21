@@ -29,9 +29,15 @@ Item {
 
     function search(text) { filter = text }
 
+    property bool dirty: false
+    onVisibleChanged: if (visible && dirty) { dirty = false; refresh.restart() }
+
     Connections {
         target: Library
-        function onChanged() { refresh.restart() }
+        function onChanged() {
+            if (page.visible) refresh.restart()
+            else page.dirty = true
+        }
     }
     Timer { id: refresh; interval: 300; onTriggered: page.task = Library.entries("") }
     Connections {

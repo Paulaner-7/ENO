@@ -57,6 +57,8 @@ public:
     Q_INVOKABLE QVariantMap links(const QString &seriesId) const;
     Q_INVOKABLE void link(const QString &seriesId, const QString &service, const QVariant &remoteId, const QString &title);
     Q_INVOKABLE void unlink(const QString &seriesId, const QString &service);
+    // Full AniList details: synopsis, score, tags, format, user tracking state.
+    Q_INVOKABLE sc::Task *anilistDetails(const QString &seriesId, const QString &media, const QString &title);
 
     // A chapter or episode of this series was finished (Library).
     static void unitFinished(const QString &seriesId);

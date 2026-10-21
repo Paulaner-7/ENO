@@ -8,6 +8,7 @@ import ScanCore
 Item {
     id: header
     property var series: ({})
+    property var anilist: null
     property string kicker: ""
     property var meta: []              // strings
     property string primaryText: qsTr("Start reading")
@@ -38,7 +39,7 @@ Item {
         Image {
             id: backdropSource
             anchors.fill: parent
-            source: header.series.banner ? App.image(header.series.banner) : (header.series.cover ? App.image(header.series.cover, header.coverReferer) : "")
+            source: header.series.banner ? App.image(header.series.banner) : (header.anilist && header.anilist.banner ? App.image(header.anilist.banner) : (header.series.cover ? App.image(header.series.cover, header.coverReferer) : ""))
             sourceSize.width: 320
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
@@ -149,20 +150,32 @@ Item {
                 model: header.meta.filter(m => !!m)
                 Rectangle {
                     required property var modelData
+                    readonly property bool isRating: String(modelData).startsWith("★ ")
                     height: 26
-                    width: metaText.implicitWidth + 18
+                    width: metaRow.implicitWidth + 18
                     radius: 13
-                    color: Theme.alpha(Theme.text, 0.07)
+                    color: isRating ? Theme.alpha(Theme.warning, 0.12) : Theme.alpha(Theme.text, 0.07)
                     border.width: 1
-                    border.color: Theme.alpha(Theme.text, 0.06)
-                    Text {
-                        id: metaText
+                    border.color: isRating ? Theme.alpha(Theme.warning, 0.3) : Theme.alpha(Theme.text, 0.06)
+                    Row {
+                        id: metaRow
                         anchors.centerIn: parent
-                        text: modelData
-                        color: Theme.textMuted
-                        font.family: Theme.fontSans
-                        font.pixelSize: Theme.textXs + 1
-                        font.weight: Font.Medium
+                        spacing: 5
+                        Icon {
+                            visible: isRating
+                            name: "star"
+                            size: 13
+                            color: Theme.warning
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: isRating ? String(modelData).slice(2) : modelData
+                            color: isRating ? Theme.text : Theme.textMuted
+                            font.family: Theme.fontSans
+                            font.pixelSize: Theme.textXs + 1
+                            font.weight: isRating ? Font.SemiBold : Font.Medium
+                        }
                     }
                 }
             }

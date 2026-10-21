@@ -124,15 +124,16 @@ Item {
                         spacing: 12
                         Image {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: App.icon("scancore-mark", Theme.text)
-                            sourceSize: Qt.size(30, 30)
+                            source: Theme.dark ? "qrc:/branding/eno-symbol-dark.png" : "qrc:/branding/eno-symbol-light.png"
                             width: 30
                             height: 30
                             fillMode: Image.PreserveAspectFit
+                            smooth: true
+                            mipmap: true
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: page.year + qsTr(" in SCANCORE")
+                            text: page.year + qsTr(" in ENO")
                             color: Theme.text
                             font.family: Theme.fontDisplay
                             font.pixelSize: Theme.text2xl

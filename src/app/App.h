@@ -47,6 +47,8 @@ public:
     // does. Does nothing elsewhere.
     Q_INVOKABLE void moveToBackground() const;
     Q_INVOKABLE void openFolder(const QString &path) const;
+    Q_INVOKABLE QVariantList googleDriveAccounts() const;
+    Q_INVOKABLE QString googleDrivePath() const;
     // A file dialog's address as a path to show or store.
     Q_INVOKABLE QString localPath(const QUrl &url) const { return url.isLocalFile() ? url.toLocalFile() : url.toString(); }
     Q_INVOKABLE void copy(const QString &text) const;

@@ -12,9 +12,9 @@ Rectangle {
 
     readonly property var tabs: [
         { key: "home", label: qsTr("Home"), icon: "house" },
-        { key: "comics", label: qsTr("Comics"), icon: "book-open" },
-        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
+        { key: "comics", label: qsTr("Manga"), icon: "book-open" },
+        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "more", label: qsTr("More"), icon: "ellipsis" }
     ]

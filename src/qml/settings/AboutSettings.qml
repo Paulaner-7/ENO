@@ -59,15 +59,14 @@ SettingsPane {
                     color: Theme.dark ? "#000000" : "#141416"
                     border.width: 1
                     border.color: Theme.borderStrong
-                    // The mark is twice as wide as it is tall.
-                    Icon {
+                    Image {
                         anchors.centerIn: parent
-                        name: "scancore-mark"
-                        size: 32
-                        height: 16
-                        sourceSize: Qt.size(64 * Screen.devicePixelRatio, 32 * Screen.devicePixelRatio)
+                        height: 38
+                        width: Math.round(height * (592 / 792))
                         fillMode: Image.PreserveAspectFit
-                        color: "#ffffff"
+                        source: "qrc:/branding/eno-symbol-dark.png"
+                        smooth: true
+                        mipmap: true
                     }
                 }
                 Column {

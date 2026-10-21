@@ -10,6 +10,7 @@ ApplicationWindow {
     minimumWidth: 360
     minimumHeight: 560
     visible: true
+    visibility: App.startAction.screenshot ? Window.Windowed : Window.FullScreen
     title: "ENO"
     // Clear only when the window has an alpha channel to show through.
     color: Customize.translucentWindow ? "transparent" : Theme.base
@@ -65,6 +66,8 @@ ApplicationWindow {
 
 
     Component.onCompleted: {
+        if (!App.startAction.screenshot)
+            window.showFullScreen()
         Theme.compact = Qt.binding(() => window.width < 720)
         Router.shell = shell
         const start = App.startAction
@@ -206,7 +209,8 @@ ApplicationWindow {
             const props = { url: entry.sourceUrl, summary: entry, autoResume: true }
             if (entry.media === "anime") {
                 const extra = entry.extra || {}
-                push("pages/AnimeDetails.qml", { anilistId: extra.anilistId || 0, summary: entry, autoResume: true })
+                const aid = extra.anilistId || entry.anilistId || (entry.id ? parseInt(String(entry.id).split(":")[2]) : 0)
+                push("pages/AnimeDetails.qml", { anilistId: aid, summary: entry, autoResume: true })
             } else if (entry.media === "novel") {
                 push("pages/NovelDetails.qml", props)
             } else {
@@ -231,72 +235,75 @@ ApplicationWindow {
         anchors.topMargin: parent.SafeArea.margins.top
         anchors.bottomMargin: parent.SafeArea.margins.bottom
         enabled: !window.immersiveOpen
-        opacity: window.immersiveOpen ? 0 : 1
-        scale: window.immersiveOpen ? 0.985 : 1
-        visible: opacity > 0
-        Behavior on opacity { NumberAnimation { duration: Motion.normal } }
-        Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
+        visible: !window.immersiveOpen || immersive.busy
         // Disabling drops focus; take it back when the reader closes.
         onEnabledChanged: if (enabled) forceActiveFocus()
         Keys.onEscapePressed: (event) => event.accepted = shell.back()
 
-        Shadow {
-            target: sidebar
-            visible: sidebar.visible && sidebar.floating
-            lift: 0.5
-        }
-        Sidebar {
-            id: sidebar
-            visible: window.sidebarShown
-            style: window.navStyle
-            side: window.navSide
-            width: visible ? implicitWidth : 0
-            x: side === "right" ? parent.width - width - window.navInset : window.navInset
-            y: window.navInset
-            height: parent.height - 2 * window.navInset
-            current: shell.section
-            onNavigate: (name) => shell.goSection(name)
-            onOpenPalette: commandPalette.open()
-        }
-
+        // Everything the dock floats over. The dock samples this for its glass.
         Item {
-            id: content
-            anchors.left: window.sidebarShown && window.navSide === "left" ? sidebar.right : parent.left
-            anchors.right: window.sidebarShown && window.navSide === "right" ? sidebar.left : parent.right
-            anchors.top: dock.visible && window.navSide === "top" ? dock.bottom : parent.top
-            anchors.bottom: Theme.compact ? tabBar.top : dock.visible && window.navSide === "bottom" ? dock.top : parent.bottom
-            anchors.topMargin: dock.visible && window.navSide === "top" ? 6 : 0
-            anchors.bottomMargin: dock.visible && window.navSide === "bottom" ? 6 : 0
-            clip: true
+            id: stage
+            anchors.fill: parent
 
-            Repeater {
-                id: sectionRepeater
-                model: ["home", "comics", "novels", "anime", "library", "history", "activity", "downloads", "settings"]
-                delegate: Loader {
-                    id: sectionLoader
-                    required property string modelData
-                    readonly property string key: modelData
-                    readonly property bool current: shell.section === key
-                    anchors.fill: parent
-                    active: shell.visited[key] === true
-                    visible: opacity > 0.001
-                    opacity: current ? 1 : 0
-                    z: current ? 1 : 0
-                    transform: Translate { y: sectionLoader.current ? 0 : 14; Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
-                    Behavior on opacity { NumberAnimation { duration: sectionLoader.current ? Motion.slow : Motion.fast; easing.type: Easing.OutCubic } }
+            Shadow {
+                target: sidebar
+                visible: sidebar.visible && sidebar.floating
+                lift: 0.5
+            }
+            Sidebar {
+                id: sidebar
+                visible: window.sidebarShown
+                style: window.navStyle
+                side: window.navSide
+                width: visible ? implicitWidth : 0
+                x: side === "right" ? parent.width - width - window.navInset : window.navInset
+                y: window.navInset
+                height: parent.height - 2 * window.navInset
+                current: shell.section
+                onNavigate: (name) => shell.goSection(name)
+                onOpenPalette: commandPalette.open()
+            }
 
-                    sourceComponent: PageStack {
-                        initial: {
-                            switch (sectionLoader.key) {
-                            case "home": return "pages/HomePage.qml"
-                            case "comics": return "pages/ComicsPage.qml"
-                            case "novels": return "pages/NovelsPage.qml"
-                            case "anime": return "pages/AnimePage.qml"
-                            case "library": return "pages/LibraryPage.qml"
-                            case "history": return "pages/HistoryPage.qml"
-                            case "activity": return "pages/ActivityPage.qml"
-                            case "downloads": return "pages/DownloadsPage.qml"
-                            default: return "pages/SettingsPage.qml"
+            Item {
+                id: content
+                anchors.left: window.sidebarShown && window.navSide === "left" ? sidebar.right : parent.left
+                anchors.right: window.sidebarShown && window.navSide === "right" ? sidebar.left : parent.right
+                anchors.top: parent.top
+                // The bottom dock floats over the page rather than sitting on
+                // a shelf, so its glass has something to frost.
+                anchors.bottom: Theme.compact ? tabBar.top : parent.bottom
+                anchors.topMargin: dock.visible && window.navSide === "top" ? dock.height + 18 : 0
+                clip: true
+
+                Repeater {
+                    id: sectionRepeater
+                    model: ["home", "comics", "novels", "anime", "library", "history", "activity", "downloads", "settings"]
+                    delegate: Loader {
+                        id: sectionLoader
+                        required property string modelData
+                        readonly property string key: modelData
+                        readonly property bool current: shell.section === key
+                        anchors.fill: parent
+                        active: shell.visited[key] === true
+                        visible: current
+                        opacity: current ? 1 : 0
+                        z: current ? 1 : 0
+                        transform: Translate { y: sectionLoader.current ? 0 : 10; Behavior on y { enabled: sectionLoader.current; NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
+                        Behavior on opacity { enabled: sectionLoader.current; NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
+
+                        sourceComponent: PageStack {
+                            initial: {
+                                switch (sectionLoader.key) {
+                                case "home": return "pages/HomePage.qml"
+                                case "comics": return "pages/ComicsPage.qml"
+                                case "novels": return "pages/NovelsPage.qml"
+                                case "anime": return "pages/AnimePage.qml"
+                                case "library": return "pages/LibraryPage.qml"
+                                case "history": return "pages/HistoryPage.qml"
+                                case "activity": return "pages/ActivityPage.qml"
+                                case "downloads": return "pages/DownloadsPage.qml"
+                                default: return "pages/SettingsPage.qml"
+                                }
                             }
                         }
                     }
@@ -324,6 +331,7 @@ ApplicationWindow {
         width: Math.min(implicitWidth, parent.width - 24)
         height: implicitHeight
         current: shell.section
+        backdropItem: stage
         onNavigate: (name) => shell.goSection(name)
         onOpenPalette: commandPalette.open()
     }

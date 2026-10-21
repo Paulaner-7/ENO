@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QRegularExpression>
 #include <QSettings>
+#include <algorithm>
 
 namespace sc {
 
@@ -41,7 +42,33 @@ const char *kMediaFields = R"(
   trailer { id site thumbnail }
   nextAiringEpisode { airingAt timeUntilAiring episode }
   studios(isMain: true) { nodes { name } }
-  relations { edges { relationType node { id type format title { romaji english } coverImage { large } } } }
+  relations {
+    edges {
+      relationType
+      node {
+        id
+        type
+        format
+        title { romaji english userPreferred }
+        coverImage { large }
+        startDate { year month day }
+        relations {
+          edges {
+            relationType
+            node {
+              id
+              type
+              format
+              title { romaji english userPreferred }
+              coverImage { large }
+              startDate { year month day }
+            }
+          }
+        }
+      }
+    }
+  }
+  mediaListEntry { id status score(format: POINT_10_DECIMAL) progress }
 )";
 
 QJsonObject graphql(const QString &query, const QJsonObject &variables, const QString &cacheKey, qint64 ttl) {
@@ -49,9 +76,14 @@ QJsonObject graphql(const QString &query, const QJsonObject &variables, const QS
         if (auto cached = Database::cacheGet(cacheKey))
             return QJsonDocument::fromJson(*cached).object();
     Response response;
+    Headers headers{{"Accept", "application/json"}};
+    const auto account = Database::pref(QStringLiteral("tracker.anilist")).toMap();
+    const auto token = account.value("token").toString();
+    if (!token.isEmpty())
+        headers.append({"Authorization", "Bearer " + token.toUtf8()});
     try {
         response = Http::postJson(kAniList, QJsonDocument(QJsonObject{{"query", query}, {"variables", variables}}).toJson(),
-                                  {{"Accept", "application/json"}});
+                                  headers);
     } catch (const Error &) {
         if (!cacheKey.isEmpty())
             if (auto stale = Database::cacheGet(cacheKey, true))
@@ -145,7 +177,15 @@ QVariantMap card(const QJsonObject &m) {
                     {"genres", m.value("genres").toVariant()},
                     {"isAdult", m.value("isAdult").toBool()},
                     {"nextEpisode", next.value("episode").toInt()},
-                    {"nextAiringAt", qint64(next.value("airingAt").toDouble())}};
+                    {"nextAiringAt", qint64(next.value("airingAt").toDouble())},
+                    {"url", QStringLiteral("https://anilist.co/anime/%1").arg(m.value("id").toInt())}};
+    const auto entry = m.value("mediaListEntry").toObject();
+    if (!entry.isEmpty()) {
+        map.insert(QStringLiteral("hasUserEntry"), true);
+        map.insert(QStringLiteral("userStatus"), entry.value("status").toString());
+        map.insert(QStringLiteral("userScore"), entry.value("score").toDouble());
+        map.insert(QStringLiteral("userProgress"), entry.value("progress").toInt());
+    }
     return map;
 }
 
@@ -169,7 +209,7 @@ int releasedCount(const QJsonObject &media) {
 QJsonObject mediaObject(int id) {
     const auto data = graphql(QStringLiteral("query ($id: Int) { Media(id: $id, type: ANIME) { %1 } }")
                                   .arg(QString::fromLatin1(kMediaFields)),
-                              {{"id", id}}, QStringLiteral("anilist:media:%1").arg(id), 6 * 3600);
+                              {{"id", id}}, QStringLiteral("anilist:media:v3:%1").arg(id), 6 * 3600);
     const auto media = data.value("Media").toObject();
     if (media.isEmpty())
         throw Error(QStringLiteral("Anime not found."), 404);
@@ -350,17 +390,85 @@ Task *Anime::media(int anilistId) {
         const auto trailer = m.value("trailer").toObject();
         if (trailer.value("site").toString() == QLatin1String("youtube"))
             map.insert("trailer", QStringLiteral("https://www.youtube.com/watch?v=%1").arg(trailer.value("id").toString()));
+        struct RelatedItem {
+            int anilistId = 0;
+            QString relation;
+            QString title;
+            QString format;
+            QString cover;
+            int year = 0;
+            qint64 sortKey = 9999999999LL;
+        };
+
+        QHash<int, RelatedItem> relatedMap;
+
+        auto processNode = [&](const QJsonObject &node, const QString &relation, bool direct) {
+            if (node.value(QStringLiteral("type")).toString() != QLatin1String("ANIME"))
+                return;
+            const int id = node.value(QStringLiteral("id")).toInt();
+            if (id <= 0 || id == anilistId)
+                return;
+            const auto formatStr = node.value(QStringLiteral("format")).toString();
+            if (formatStr == QLatin1String("MUSIC"))
+                return;
+
+            const auto dateObj = node.value(QStringLiteral("startDate")).toObject();
+            const int y = dateObj.value(QStringLiteral("year")).toInt();
+            const int m = dateObj.value(QStringLiteral("month")).toInt();
+            const int d = dateObj.value(QStringLiteral("day")).toInt();
+            qint64 key = 9999999999LL;
+            if (y > 0)
+                key = static_cast<qint64>(y) * 10000 + (m > 0 ? m : 1) * 100 + (d > 0 ? d : 1);
+
+            if (!relatedMap.contains(id)) {
+                RelatedItem item;
+                item.anilistId = id;
+                item.relation = direct ? relation : QString();
+                item.title = title(node);
+                item.format = formatLabel(formatStr);
+                item.cover = node.value(QStringLiteral("coverImage")).toObject().value(QStringLiteral("large")).toString();
+                item.year = y;
+                item.sortKey = key;
+                relatedMap.insert(id, item);
+            } else if (direct && relatedMap[id].relation.isEmpty()) {
+                relatedMap[id].relation = relation;
+            }
+        };
+
+        for (const auto &e1 : m.value(QStringLiteral("relations")).toObject().value(QStringLiteral("edges")).toArray()) {
+            const auto edge1 = e1.toObject();
+            const auto node1 = edge1.value(QStringLiteral("node")).toObject();
+            const auto relType1 = edge1.value(QStringLiteral("relationType")).toString().replace('_', ' ').toLower();
+
+            processNode(node1, relType1, true);
+
+            for (const auto &e2 : node1.value(QStringLiteral("relations")).toObject().value(QStringLiteral("edges")).toArray()) {
+                const auto edge2 = e2.toObject();
+                const auto node2 = edge2.value(QStringLiteral("node")).toObject();
+                const auto relType2 = edge2.value(QStringLiteral("relationType")).toString().replace('_', ' ').toLower();
+                processNode(node2, relType2, false);
+            }
+        }
+
+        auto sortedList = relatedMap.values();
+        std::sort(sortedList.begin(), sortedList.end(), [](const RelatedItem &a, const RelatedItem &b) {
+            if (a.sortKey != b.sortKey)
+                return a.sortKey < b.sortKey;
+            return a.title < b.title;
+        });
+
         QVariantList relations;
-        for (const auto &e : m.value("relations").toObject().value("edges").toArray()) {
-            const auto edge = e.toObject();
-            const auto node = edge.value("node").toObject();
-            if (node.value("type").toString() != QLatin1String("ANIME"))
-                continue;
-            relations.append(QVariantMap{{"anilistId", node.value("id").toInt()},
-                                         {"relation", edge.value("relationType").toString().replace('_', ' ').toLower()},
-                                         {"title", title(node)},
-                                         {"format", formatLabel(node.value("format").toString())},
-                                         {"cover", node.value("coverImage").toObject().value("large").toString()}});
+        relations.reserve(sortedList.size());
+        for (const auto &item : sortedList) {
+            relations.append(QVariantMap{
+                {QStringLiteral("anilistId"), item.anilistId},
+                {QStringLiteral("relation"), item.relation},
+                {QStringLiteral("title"), item.title},
+                {QStringLiteral("format"), item.format},
+                {QStringLiteral("cover"), item.cover},
+                {QStringLiteral("year"), item.year > 0 ? QVariant(item.year) : QVariant()},
+                {QStringLiteral("sortKey"), item.sortKey}
+            });
         }
         map.insert("relations", relations);
         return map;

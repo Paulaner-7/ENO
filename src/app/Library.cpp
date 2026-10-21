@@ -231,8 +231,13 @@ void Library::recordProgress(const QVariantMap &series, const QVariantMap &unit,
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(series_id, unit_key) DO UPDATE SET
             unit_title = excluded.unit_title, unit_number = excluded.unit_number, unit_url = excluded.unit_url,
-            position = excluded.position, percent = MAX(excluded.percent, CASE WHEN excluded.completed THEN 1 ELSE 0 END),
-            completed = MAX(progress.completed, excluded.completed), updated_at = excluded.updated_at
+            position = CASE
+                WHEN excluded.completed OR excluded.percent >= progress.percent OR progress.position IS NULL THEN excluded.position
+                ELSE progress.position
+            END,
+            percent = MAX(progress.percent, excluded.percent),
+            completed = MAX(progress.completed, excluded.completed),
+            updated_at = excluded.updated_at
     )"),
                    {seriesId, key, unit.value(QStringLiteral("title")).toString(),
                     unit.value(QStringLiteral("number")).toString(), unit.value(QStringLiteral("url")).toString(),

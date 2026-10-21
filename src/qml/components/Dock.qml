@@ -1,15 +1,21 @@
 import QtQuick
 import QtQuick.Controls.Basic
+import QtQuick.Effects
 import ScanCore
 
 // Navigation as a floating dock along the top or bottom of the window: every
 // section as an icon that grows under the pointer, with its name above (or
 // below) it, a highlight that slides to the current one, and search and
-// settings at the ends.
-Rectangle {
+// settings at the ends. Over a page the dock is liquid glass: a live, blurred
+// capture of what passes underneath, washed with the theme colour and edged
+// with a light rim.
+Item {
     id: dock
     property string current: "home"
     property string side: "bottom"
+    // The page behind the dock, sampled for the glass. When unset, the dock
+    // falls back to an opaque panel.
+    property Item backdropItem: null
     signal navigate(string section)
     signal openPalette()
 
@@ -17,9 +23,9 @@ Rectangle {
         { key: "search", label: qsTr("Search"), icon: "search" },
         { key: "divider" },
         { key: "home", label: qsTr("Home"), icon: "house" },
-        { key: "comics", label: qsTr("Comics"), icon: "book-open" },
-        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
+        { key: "comics", label: qsTr("Manga"), icon: "book-open" },
+        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "history", label: qsTr("History"), icon: "history" },
         { key: "activity", label: qsTr("Activity"), icon: "activity" },
@@ -28,12 +34,92 @@ Rectangle {
         { key: "settings", label: qsTr("Settings"), icon: "settings" }
     ]
 
+    readonly property bool glass: backdropItem !== null
+    readonly property real radius: height / 2
+
     implicitWidth: row.implicitWidth + 16
     implicitHeight: 60
-    radius: height / 2
-    color: Theme.layered ? Theme.sidebar : Theme.alpha(Theme.surface, 0.97)
-    border.width: 1
-    border.color: Theme.borderStrong
+
+    // Opaque panel, for windows with nothing to frost.
+    Rectangle {
+        anchors.fill: parent
+        radius: dock.radius
+        visible: !dock.glass
+        color: Theme.layered ? Theme.sidebar : Theme.alpha(Theme.surface, 0.97)
+        border.width: 1
+        border.color: Theme.borderStrong
+    }
+
+    // Liquid glass: the page behind is captured, blurred, tinted and lifted
+    // with a specular edge; the mask rounds the whole composition.
+    Item {
+        id: glassLayer
+        anchors.fill: parent
+        visible: dock.glass
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskSource: glassMask
+        }
+
+        ShaderEffectSource {
+            id: frost
+            visible: false
+            live: dock.glass && dock.visible
+            sourceItem: dock.backdropItem
+            sourceRect: {
+                if (!dock.backdropItem) return Qt.rect(0, 0, 0, 0)
+                const p = dock.mapToItem(dock.backdropItem, 0, 0)
+                return Qt.rect(p.x, p.y, dock.width, dock.height)
+            }
+        }
+        MultiEffect {
+            anchors.fill: parent
+            source: frost
+            blurEnabled: true
+            blur: 1
+            blurMax: 100
+            saturation: Theme.dark ? 1.1 : 1.25
+        }
+        // Theme wash over the frosted page.
+        Rectangle {
+            anchors.fill: parent
+            color: Theme.alpha(Theme.dark ? "#101114" : "#ffffff", Theme.dark ? 0.42 : 0.5)
+        }
+        // Sheen: light catching the top of the glass, shade pooling below.
+        Rectangle {
+            anchors.fill: parent
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Theme.alpha("#ffffff", Theme.dark ? 0.14 : 0.6) }
+                GradientStop { position: 0.42; color: Theme.alpha("#ffffff", 0) }
+                GradientStop { position: 1.0; color: Theme.alpha(Theme.dark ? "#000000" : "#9aa0b4", Theme.dark ? 0.18 : 0.12) }
+            }
+        }
+        // Rim.
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            radius: dock.radius
+            border.width: 1
+            border.color: Theme.alpha("#ffffff", Theme.dark ? 0.2 : 0.75)
+        }
+    }
+    Rectangle {
+        id: glassMask
+        visible: false
+        layer.enabled: true
+        anchors.fill: parent
+        radius: dock.radius
+        color: "black"
+    }
+
+    // The dock floats over the page: clicks, wheel and buttons land on the
+    // bar itself, never on what is underneath.
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+        onWheel: (wheel) => wheel.accepted = true
+    }
 
     // Sliding highlight behind the current section.
     Rectangle {

@@ -140,6 +140,7 @@ private slots:
         QCOMPARE(comics::chapterLabel(QStringLiteral("en"), QStringLiteral("3"), QStringLiteral("Start")), QStringLiteral("Chapter 3: Start"));
         QCOMPARE(comics::chapterLabel(QStringLiteral("es"), QStringLiteral("3")), QString::fromUtf8("Capítulo 3"));
         QCOMPARE(comics::chapterLabel(QStringLiteral("es-la"), QStringLiteral("4.5"), QStringLiteral("Fin")), QString::fromUtf8("Capítulo 4.5: Fin"));
+        QCOMPARE(comics::chapterLabel(QStringLiteral("it"), QStringLiteral("12")), QStringLiteral("Capitolo 12"));
         // Unknown languages fall back to English.
         QCOMPARE(comics::chapterLabel(QStringLiteral("xx"), QStringLiteral("1")), QStringLiteral("Chapter 1"));
     }
@@ -210,6 +211,44 @@ private slots:
         QCOMPARE(novels::Registry::forUrl(QStringLiteral("https://novelas.test/libro"))->key(), QStringLiteral("novelas"));
     }
 
+    void manifestSmartMerge() {
+        Manifest::load(QString());
+        const auto builtIn = Manifest::current();
+        QVERIFY(!builtIn.isEmpty());
+        QVERIFY(builtIn.value("enoExclusive").toArray().contains(QStringLiteral("comics")));
+
+        // An upstream refresh: new version, vanilla comic sources, and fixed
+        // novel sources. ENO must keep only MangaWorld for comics.
+        const auto upstream = QJsonDocument(QJsonObject{
+            {"version", 999},
+            {"comics", QJsonArray{QJsonObject{{"key", "asura"}, {"engine", "asura"},
+                                              {"base", "https://asurascans.com"}, {"hosts", QJsonArray{"asurascans.com"}}}}},
+            {"novels", QJsonArray{QJsonObject{{"key", "novelfull"}, {"engine", "novelfull"},
+                                              {"base", "https://upstream.test"}, {"hosts", QJsonArray{"upstream.test"}}},
+                                  QJsonObject{{"key", "novelas"}, {"engine", "novelfull"},
+                                              {"base", "https://novelas.test"}, {"hosts", QJsonArray{"novelas.test"}}}}}})
+                                .toJson();
+        QVERIFY(Manifest::loadData(upstream));
+        const auto applied = Manifest::current();
+        QCOMPARE(applied.value("version").toInt(), 999);
+
+        const auto comics = applied.value("comics").toArray();
+        QCOMPARE(comics.size(), 1);
+        QCOMPARE(comics[0].toObject().value("key").toString(), QStringLiteral("mangaworld"));
+
+        // Novels: the upstream entry wins for a shared key, upstream-only
+        // entries are added, and ENO-only sources are kept.
+        QHash<QString, QString> bases;
+        for (const auto &value : applied.value("novels").toArray()) {
+            const auto o = value.toObject();
+            bases.insert(o.value("key").toString(), o.value("base").toString());
+        }
+        QCOMPARE(bases.value(QStringLiteral("novelfull")), QStringLiteral("https://upstream.test"));
+        QCOMPARE(bases.value(QStringLiteral("novelas")), QStringLiteral("https://novelas.test"));
+        for (const auto &value : builtIn.value("novels").toArray())
+            QVERIFY(bases.contains(value.toObject().value("key").toString()));
+    }
+
     void challengeDetection() {
         Response page;
         page.status = 200;
@@ -277,6 +316,32 @@ private slots:
         QCOMPARE(pages.size(), 2);
         QCOMPARE(pages[0].url, QStringLiteral("https://cdn1.intomanga.com/i/m/dfc7ecb5-aaaa/c/ddab755f-b5a2/o/32dfc965-0001.jpg"));
         QVERIFY(comics::InMangaSource::parsePages("<select id=\"PageList\"></select>", QStringLiteral("https://x"), QStringLiteral("y")).isEmpty());
+    }
+
+    void mangaWorld() {
+        const QString base = QStringLiteral("https://www.mangaworld.mx");
+        const auto cards = comics::MangaWorldSource::parseCards(fixture("mangaworld-search.html"), base);
+        QCOMPARE(cards.size(), 1);
+        QCOMPARE(cards[0].title, QStringLiteral("Fairy Tail"));
+        QCOMPARE(cards[0].url, QStringLiteral("https://www.mangaworld.mx/manga/785/fairy-tail"));
+        QCOMPARE(cards[0].cover, QStringLiteral("https://cdn.mangaworld.mx/mangas/5f79078355b2325c6be650bb.jpg?1"));
+        QCOMPARE(cards[0].type, QStringLiteral("Manga"));
+        QCOMPARE(cards[0].author, QStringLiteral("MASHIMA Hiro"));
+        QCOMPARE(cards[0].genres, QStringLiteral("Azione, Avventura"));
+
+        const auto chapters = comics::MangaWorldSource::parseChapters(fixture("mangaworld-chapters.html"),
+                                                                      base + QStringLiteral("/manga/785/fairy-tail"));
+        QCOMPARE(chapters.size(), 2);
+        QCOMPARE(chapters[0].number, QStringLiteral("544"));
+        QCOMPARE(chapters[1].number, QStringLiteral("545"));
+        QCOMPARE(chapters[1].title, QStringLiteral("Capitolo 545"));
+        QCOMPARE(chapters[1].slug, QStringLiteral("aaa"));
+        QCOMPARE(chapters[1].released, QStringLiteral("2026-10-18"));
+
+        const auto panels = comics::MangaWorldSource::parsePanels(fixture("mangaworld-pages.html"),
+                                                                  base + QStringLiteral("/manga/785/fairy-tail/read/aaa"));
+        QCOMPARE(panels.size(), 2);
+        QCOMPARE(panels[1].url, QStringLiteral("https://cdn.mangaworld.mx/chapters/x/2.png"));
     }
 
     void manhwaWeb() {
