@@ -12,12 +12,10 @@ SettingsPane {
     subtitle: qsTr("Tracking and imports")
     iconName: "link"
 
-    property bool pastingToken: false
-    property var malTask: null
-    property var comickTask: null
     property var importTask: null
     property string importing: ""
     property var matchTask: null
+    property var exportTask: null
     property bool showAllWaiting: false
     readonly property var waiting: Importer.unmatched
 
@@ -37,136 +35,48 @@ SettingsPane {
 
     SettingsGroup {
         title: qsTr("Tracking")
-        note: Trackers.anilistAvailable || Trackers.malAvailable || Trackers.comickAvailable
-            ? qsTr("Finishing a chapter or episode moves the series forward on your list. Anime are matched by their AniList entry and ")
-              + "comics and novels by title; link one by hand from its page."
-            : qsTr("This copy of SCANCORE was built without AniList, MyAnimeList and Comick ids, so tracking is off. Official downloads have them.")
+        note: qsTr("Finishing a chapter or episode moves the series forward on every tracker you connect. Anime are matched by their AniList entry, comics and novels by their catalogue entry or title; link one by hand from its page.")
 
+        // The catalogues the Comics, Novels and Anime pages browse and search.
         SettingRow {
-            visible: Trackers.anilistAvailable
-            iconName: "list"
-            iconTint: Theme.dark ? "#3db4f2" : "#0b7fc0"
-            title: "AniList"
-            description: Trackers.anilist.name ? qsTr("Connected as ") + Trackers.anilist.name
-                : pane.pastingToken ? qsTr("Sign in on the page that opened, then paste the token it shows.")
-                : qsTr("Keep your AniList lists up to date.")
-            Row {
-                spacing: 8
-                ScButton {
-                    visible: !Trackers.anilist.name
-                    variant: pane.pastingToken ? "ghost" : "primary"
-                    text: pane.pastingToken ? qsTr("Open again") : qsTr("Connect")
-                    onClicked: {
-                        Trackers.anilistSignIn()
-                        pane.pastingToken = true
-                    }
-                }
-                ScButton {
-                    visible: !!Trackers.anilist.name
-                    text: qsTr("Disconnect")
-                    variant: "ghost"
-                    onClicked: Trackers.signOut("anilist")
-                }
-            }
+            iconName: "compass"
+            title: qsTr("Comics catalogue")
+            description: qsTr("What the Comics page shows and searches. None searches your sources directly.")
+            CataloguePicker { media: "comic" }
         }
-        // The token AniList shows after signing in.
-        Item {
-            visible: Trackers.anilistAvailable && pane.pastingToken && !Trackers.anilist.name
-            width: parent.width
-            height: tokenRow.height + 20
-            Row {
-                id: tokenRow
-                x: 62
-                width: parent.width - x - 16
-                spacing: 8
-                property var task: null
-                InlineField {
-                    id: tokenField
-                    width: parent.width - useToken.width - 8
-                    placeholderText: qsTr("Paste the token")
-                    echoMode: TextInput.Password
-                    onAccepted: useToken.clicked()
-                }
-                ScButton {
-                    id: useToken
-                    variant: "primary"
-                    text: qsTr("Use token")
-                    loading: tokenRow.task !== null && tokenRow.task.loading
-                    enabled: tokenField.text.trim().length > 0
-                    onClicked: {
-                        tokenRow.task = Trackers.anilistUseToken(tokenField.text)
-                        tokenRow.task.finished.connect((r) => {
-                            tokenField.text = ""
-                            pane.pastingToken = false
-                            Router.toast(qsTr("Connected to AniList as ") + r.name, "success")
-                        })
-                        tokenRow.task.failed.connect((error) => Router.toast(error, "error"))
-                    }
-                }
-            }
+        SettingRow {
+            iconName: "compass"
+            title: qsTr("Novels catalogue")
+            description: qsTr("What the Novels page shows and searches.")
+            CataloguePicker { media: "novel" }
         }
         SettingRow {
             visible: Trackers.malAvailable
-            iconName: "bookmark"
-            iconTint: Theme.dark ? "#6d8fe0" : "#2e51a2"
-            title: "MyAnimeList"
-            description: Trackers.mal.name ? qsTr("Connected as ") + Trackers.mal.name
-                : pane.malTask && pane.malTask.loading ? qsTr("Waiting for you to sign in on the page that opened…")
-                : qsTr("Keep your MyAnimeList lists up to date.")
-            Row {
-                spacing: 8
-                ScButton {
-                    visible: !Trackers.mal.name
-                    variant: "primary"
-                    text: pane.malTask && pane.malTask.loading ? qsTr("Cancel") : qsTr("Connect")
-                    onClicked: {
-                        if (pane.malTask && pane.malTask.loading) {
-                            pane.malTask.cancel()
-                            return
-                        }
-                        pane.malTask = Trackers.malSignIn()
-                        pane.malTask.finished.connect((r) => Router.toast(qsTr("Connected to MyAnimeList as ") + r.name, "success"))
-                        pane.malTask.failed.connect((error) => { if (error !== "Cancelled") Router.toast(error, "error") })
-                    }
-                }
-                ScButton {
-                    visible: !!Trackers.mal.name
-                    text: qsTr("Disconnect")
-                    variant: "ghost"
-                    onClicked: Trackers.signOut("mal")
-                }
-            }
+            iconName: "compass"
+            title: qsTr("Anime catalogue")
+            description: qsTr("Whose lists the Anime page shows. Episodes, the schedule and search come from AniList either way.")
+            CataloguePicker { media: "anime" }
         }
-        SettingRow {
-            visible: Trackers.comickAvailable
-            iconName: "book-open"
-            iconTint: Theme.dark ? "#a78bfa" : "#7c3aed"
-            title: qsTr("Comick")
-            description: Trackers.comick.name ? qsTr("Connected as ") + Trackers.comick.name
-                : pane.comickTask && pane.comickTask.loading ? qsTr("Waiting for you to allow SCANCORE on the page that opened…")
-                : qsTr("Keep your Comick library up to date, and bring it into SCANCORE.")
-            Row {
-                spacing: 8
-                ScButton {
-                    visible: !Trackers.comick.name
-                    variant: "primary"
-                    text: pane.comickTask && pane.comickTask.loading ? qsTr("Cancel") : qsTr("Connect")
-                    onClicked: {
-                        if (pane.comickTask && pane.comickTask.loading) {
-                            pane.comickTask.cancel()
-                            return
-                        }
-                        pane.comickTask = Trackers.comickSignIn()
-                        pane.comickTask.finished.connect((r) => Router.toast(qsTr("Connected to Comick as ") + r.name, "success"))
-                        pane.comickTask.failed.connect((error) => { if (error !== "Cancelled") Router.toast(error, "error") })
-                    }
-                }
-                ScButton {
-                    visible: !!Trackers.comick.name
-                    text: qsTr("Disconnect")
-                    variant: "ghost"
-                    onClicked: Trackers.signOut("comick")
-                }
+        Repeater {
+            model: Trackers.services
+            SettingRow {
+                id: trackerRow
+                required property var modelData
+                readonly property var look: ({
+                    anilist: ["list", Theme.dark ? "#3db4f2" : "#0b7fc0", qsTr("Keep your AniList lists up to date.")],
+                    mal: ["bookmark", Theme.dark ? "#6d8fe0" : "#2e51a2", qsTr("Keep your MyAnimeList lists up to date.")],
+                    comick: ["book-open", Theme.dark ? "#a78bfa" : "#7c3aed", qsTr("Keep your Comick library up to date, and bring it into SCANCORE.")],
+                    kitsu: ["heart", Theme.dark ? "#f87171" : "#e0533b", qsTr("Comics, novels and anime on Kitsu.")],
+                    mangaupdates: ["book-open", Theme.dark ? "#fb923c" : "#c2410c", qsTr("Your MangaUpdates reading list, for comics and novels.")],
+                    shikimori: ["list", Theme.dark ? "#94a3b8" : "#475569", qsTr("Comics, novels and anime on Shikimori.")],
+                    bangumi: ["list", Theme.dark ? "#f472b6" : "#db2777", qsTr("Comics, novels and anime on Bangumi.")],
+                    simkl: ["play", Theme.dark ? "#a3a3a3" : "#262626", qsTr("Anime on Simkl.")]
+                }[modelData.key] || ["link", Theme.textMuted, ""])
+                iconName: look[0]
+                iconTint: look[1]
+                title: modelData.key === "comick" ? qsTr("Comick") : modelData.label
+                description: connector.status || look[2]
+                TrackerConnect { id: connector; service: trackerRow.modelData.key }
             }
         }
     }
@@ -197,18 +107,40 @@ SettingsPane {
 
     SettingsGroup {
         title: qsTr("Bring your library")
-        note: qsTr("Anime come in with the episodes you watched. Comics and novels come in when one of your sources has them, ")
-            + "with the chapters you read; the others wait below until they are found."
+        note: qsTr("Anime come in with the episodes you watched. Comics and novels come in with the chapters you read when one of your sources has them; the others wait below until they are found.")
         SettingRow {
             iconName: "book-open"
-            title: qsTr("Mihon or Tachiyomi backup")
-            description: qsTr("A .tachibk file from More → Backup and restore.")
+            title: qsTr("Mihon, Tachiyomi or Aniyomi backup")
+            description: qsTr("A .tachibk file from More → Backup and restore. Series from an extension you have here come back exactly as they were.")
             ScButton {
                 text: qsTr("Choose file")
                 iconName: "folder-open"
                 loading: pane.importing === "mihon" && pane.importTask !== null && pane.importTask.loading
                 enabled: !(pane.importTask && pane.importTask.loading)
                 onClicked: mihonDialog.open()
+            }
+        }
+        SettingRow {
+            iconName: "book-text"
+            title: qsTr("LNReader backup")
+            description: qsTr("A backup .zip from LNReader's More → Backup. Novels from a plugin you have here come back exactly as they were.")
+            ScButton {
+                text: qsTr("Choose file")
+                iconName: "folder-open"
+                loading: pane.importing === "lnreader" && pane.importTask !== null && pane.importTask.loading
+                enabled: !(pane.importTask && pane.importTask.loading)
+                onClicked: lnreaderDialog.open()
+            }
+        }
+        SettingRow {
+            iconName: "download"
+            title: qsTr("Back up for Mihon")
+            description: qsTr("Saves the comics you read from extensions as a .tachibk file Mihon or Tachiyomi can restore.")
+            ScButton {
+                text: qsTr("Save file")
+                iconName: "download"
+                loading: pane.exportTask !== null && pane.exportTask.loading
+                onClicked: mihonSaveDialog.open()
             }
         }
         SettingRow {
@@ -272,8 +204,27 @@ SettingsPane {
     FileDialog {
         id: mihonDialog
         fileMode: FileDialog.OpenFile
-        nameFilters: [qsTr("Mihon or Tachiyomi backup (*.tachibk *.proto.gz)"), qsTr("All files (*)")]
+        nameFilters: [qsTr("Mihon, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)"), qsTr("All files (*)")]
         onAccepted: pane.imported(Importer.importMihon(selectedFile), "mihon")
+    }
+    FileDialog {
+        id: lnreaderDialog
+        fileMode: FileDialog.OpenFile
+        nameFilters: [qsTr("LNReader backup (*.zip)"), qsTr("All files (*)")]
+        onAccepted: pane.imported(Importer.importLNReader(selectedFile), "lnreader")
+    }
+    FileDialog {
+        id: mihonSaveDialog
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "tachibk"
+        currentFile: "scancore.tachibk"
+        nameFilters: [qsTr("Mihon or Tachiyomi backup (*.tachibk *.proto.gz)")]
+        onAccepted: {
+            pane.exportTask = Importer.exportMihon(selectedFile)
+            pane.exportTask.finished.connect((r) => Router.toast(qsTr("Saved %1 series").arg(r.exported)
+                + (r.skipped > 0 ? qsTr(" · %1 from built-in sources left out").arg(r.skipped) : ""), "success"))
+            pane.exportTask.failed.connect((error) => Router.toast(error, "error"))
+        }
     }
     FileDialog {
         id: malDialog
@@ -355,25 +306,5 @@ SettingsPane {
         confirmText: qsTr("Forget all")
         destructive: true
         onConfirmed: Importer.forgetAll()
-    }
-
-    // A small single-line input for a row.
-    component InlineField: TextField {
-        implicitHeight: 38
-        leftPadding: 14
-        rightPadding: 14
-        color: Theme.text
-        placeholderTextColor: Theme.textFaint
-        selectionColor: Theme.alpha(Theme.accent, 0.35)
-        font.family: Theme.fontSans
-        font.pixelSize: Theme.textMd
-        selectByMouse: true
-        verticalAlignment: TextInput.AlignVCenter
-        background: Rectangle {
-            radius: height / 2
-            color: parent.activeFocus ? Theme.surface : Theme.surface2
-            border.width: 1
-            border.color: parent.activeFocus ? Theme.alpha(Theme.accent, 0.55) : Theme.border
-        }
     }
 }

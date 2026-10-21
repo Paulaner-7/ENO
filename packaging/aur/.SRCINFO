@@ -12,6 +12,7 @@ pkgbase = scancore
 	depends = qt6-base
 	depends = qt6-declarative
 	depends = qt6-imageformats
+	depends = qt6-speech
 	depends = qt6-svg
 	depends = qt6-webengine
 	optdepends = qt6-wayland: native Wayland platform integration

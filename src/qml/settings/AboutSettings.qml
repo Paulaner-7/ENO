@@ -45,13 +45,15 @@ SettingsPane {
 
         Flow {
             id: card
+            // The buttons go under the name when beside it would squeeze it.
+            readonly property bool stacked: Theme.compact || width - updateButtons.wanted - 16 < 300
             x: 20
             y: 20
             width: parent.width - 40
             spacing: 16
             Row {
                 spacing: 16
-                width: Theme.compact ? card.width : Math.max(0, card.width - updateButtons.width - 16)
+                width: card.stacked ? card.width : Math.max(0, card.width - updateButtons.width - 16)
                 Rectangle {
                     width: 56
                     height: 56
@@ -112,17 +114,23 @@ SettingsPane {
                     }
                 }
             }
-            Row {
+            // Wraps under the name on phones and in a narrow pane, so
+            // "Update" and "Check for updates" never run out of the card.
+            Flow {
                 id: updateButtons
+                readonly property real wanted: (updateNow.visible ? updateNow.implicitWidth + spacing : 0) + checkNow.implicitWidth
                 visible: !Updater.managedByFlatpak
+                width: card.stacked ? card.width : wanted
                 spacing: 8
                 ScButton {
+                    id: updateNow
                     visible: Updater.state === "available" || Updater.state === "ready"
                     variant: "primary"
                     text: Updater.state === "ready" ? qsTr("Restart to update") : Updater.canInstall ? qsTr("Update") : qsTr("Release notes")
                     onClicked: Updater.canInstall ? (Updater.state === "ready" ? Updater.install() : Updater.download()) : App.openUrl(Updater.pageUrl)
                 }
                 ScButton {
+                    id: checkNow
                     text: qsTr("Check for updates")
                     iconName: "refresh-cw"
                     loading: Updater.state === "checking"
@@ -148,8 +156,13 @@ SettingsPane {
         SettingRow { iconName: "globe"; title: "scancore.onl"; description: qsTr("The SCANCORE website"); clickable: true; external: true; onClicked: App.openUrl("https://scancore.onl") }
         SettingRow { iconName: "message-circle"; title: qsTr("Discord"); description: qsTr("Questions, feedback and updates"); clickable: true; external: true; onClicked: App.openUrl("https://scancore.onl/discord") }
         SettingRow { iconName: "triangle-alert"; title: qsTr("Report a problem"); description: qsTr("Opens GitHub Issues"); clickable: true; external: true; onClicked: App.openUrl("https://github.com/medium-gh/scancore/issues/new/choose") }
+        SettingRow { iconName: "file-text"; title: qsTr("Crash reports and diagnostics"); description: qsTr("To send to the developer when something goes wrong"); clickable: true; onClicked: crashReports.showAll() }
         SettingRow { iconName: "sparkles"; title: qsTr("Welcome tour"); description: qsTr("See the introduction again"); clickable: true; onClicked: Router.shell.showWelcome() }
+        SettingRow { iconName: "file-text"; title: qsTr("Licences"); description: qsTr("The open-source software inside SCANCORE"); clickable: true; onClicked: licences.start() }
     }
+
+    LicencesDialog { id: licences }
+    CrashReportsDialog { id: crashReports }
 
     SettingsGroup {
         visible: !Theme.compact
@@ -198,7 +211,7 @@ SettingsPane {
         width: parent.width
         leftPadding: 4
         wrapMode: Text.Wrap
-        text: qsTr("MIT licence · github.com/medium-gh/scancore. Fonts: DM Sans, Space Grotesk, Literata (OFL). Icons: Lucide (ISC). HTML parsing: lexbor (Apache 2.0).")
+        text: qsTr("MIT licence · github.com/medium-gh/scancore. Fonts: DM Sans, Space Grotesk, Literata (OFL). Icons: Lucide (ISC). HTML parsing: lexbor (Apache 2.0). Video player: mpv and FFmpeg (LGPL), built by tools/libmpv/build.sh.")
         color: Theme.textFaint
         font.family: Theme.fontSans
         font.pixelSize: Theme.textXs + 1

@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Comics, novels and anime in one fast, native app.</b><br>
-  Read manhwa, manga, webtoons and web novels and watch anime from dozens of sites,<br>
+  A reader and player with built-in trackers, for the sources you choose,<br>
   with your library, history and downloads kept on your own device.
 </p>
 
@@ -37,7 +37,8 @@
 ## Why SCANCORE
 
 - **Native and fast.** Written in C++20 with Qt Quick, so it renders on the GPU and starts quickly. There is no Electron and no embedded web UI.
-- **Works the moment you open it.** The sources are built in. There are no extension repositories to find or add.
+- **Your sources, your choice.** SCANCORE runs no extension repository. It reads your files, a few official and public catalogues, a bundled pack of built-in sources (which can be switched off) and the sources you add yourself.
+- **Trackers built in.** AniList, MyAnimeList and Comick keep your lists in step as you read and watch, and their catalogues are there to browse.
 - **Three kinds of media, one library.** Comics, novels and anime share the same library, history, downloads and search.
 - **Local first.** No account and no server needed. Everything lives in one SQLite file you can back up.
 - **Smooth.** Covers fly into their details page, sections and pages glide, readers scroll with easing. Animation speed is adjustable, and a "Reduce motion" switch turns all of it off.
@@ -46,21 +47,20 @@
 ## Features
 
 ### Comics
-- Search **Asura Scans, Webtoon, MangaDex, Flame Comics, HiveToons, Vortex Scans, Qi Manga, ThunderScans and MangaRead** at once, ranked by how well each title matches.
+- Search **every source you use at once**, ranked by how well each title matches, or browse **Comick's catalogue** and open a title from whichever source has it.
 - **Vertical strip** for webtoons and manhwa, or **page by page** for manga, left-to-right or right-to-left.
 - Adjustable strip width (Ctrl + scroll), panel gaps, a progress rail, and very tall strips that stay sharp. In page mode, swipe or drag to turn pages.
 - The next chapter is fetched ahead of time, and your exact place is remembered in every chapter.
 - Latest-updates feed across sources, and your recent searches one click away. Paste a series link to open it directly.
 
 ### Novels
-- **Royal Road** discovery shelves (top rated, rising stars, trending, new and completed) plus search across the NovelFull family: NovelFull, AllNovelFull, ReadNovelFull, FreeWebNovel, LibRead and more.
-- An optional **extended pack** (desktop) adds about 130 more searchable novel sites through [lightnovel-crawler](https://github.com/dipu-bd/lightnovel-crawler).
+- **Royal Road** discovery shelves (top rated, rising stars, trending, new and completed), EPUB books on your device, and search across every novel source you use.
 - A reader you can tune: **serif, sans or grotesk** type, size, line spacing, column width, justification, and **app, paper, sepia, dark and black** themes.
 
 ### Anime
 - **AniList**-powered trending, seasonal, popular and top lists, a rotating spotlight, search with genre, year, format and status filters, and a 7-day **airing schedule**.
 - Details with episode thumbnails and titles, related entries and recommendations.
-- Episodes play inside the app, with **resume**, **auto-next** (with a countdown you can set) and **AniSkip** intro, ending and recap skipping, automatic or on a button.
+- Episodes play inside the app from the sources you add, with **resume**, **auto-next** (with a countdown you can set) and **AniSkip** intro, ending and recap skipping, automatic or on a button.
 
 ### Library and everything else
 - **Library** with new-chapter checks in the background, desktop notifications and four ways to sort.
@@ -156,28 +156,23 @@ The bundle contains SCANCORE; Flatpak downloads the KDE runtime and Qt WebEngine
 
 ## Sources
 
-SCANCORE reads only what sites show publicly. It does not bypass paywalls, logins or locked chapters, and it does not host any content.
+SCANCORE is a reader. It hosts no content and runs no extension repository. It reads only what sites show publicly and does not bypass paywalls, logins or locked chapters.
 
-Site addresses, availability and template options live in [`sources/manifest.json`](sources/manifest.json). The app ships with a copy and checks this repository for a newer one, so when a site moves domain or breaks, it can be fixed for everyone **without a new release**. The manifest is data only and never contains code.
+| Kind | Built in |
+| --- | --- |
+| Comics | Files on this device (folders of images, CBZ, CBR, 7z, PDF), Webtoon, MangaDex; Comick's catalogue for browsing |
+| Novels | EPUB books on this device, Royal Road |
+| Anime | AniList metadata, ani.zip episode details, AniSkip |
 
-| Kind | Built in | Optional |
-| --- | --- | --- |
-| Comics | Asura Scans, Webtoon, MangaDex, Flame Comics, HiveToons, Vortex Scans, Qi Manga, ThunderScans, MangaRead; in Spanish: MangaDex (Español), ManhwaWeb, InManga, LeerCapitulo, MangaOni | — |
-| Novels | Royal Road, NovelFull, NovelFull.com, AllNovelFull, ReadNovelFull, FreeWebNovel, LibRead | About 130 more sites via the extended pack (desktop) |
-| Anime | AniList metadata, ani.zip episode details, AniSkip, ReAnime player | — |
+Besides these, SCANCORE includes a **bundled pack** of built-in comic and novel sources. It is kept apart from the rest of the app on purpose (`src/sources/bundled`, `sources/bundled.json`): it can be switched off remotely, left out with the `SCANCORE_WITH_BUNDLED_SOURCES` build option, or removed in a single commit, because the app mainly depends on its built-in trackers and on the extensions you add, not on the pack. Everything else comes from sources you add yourself. SCANCORE 2.0 runs the extensions people already use: Mihon and Tachiyomi extensions for comics, LNReader plugins for novels and Aniyomi extensions for anime, from repositories you choose. SCANCORE asks you to trust each extension's signing key before it runs.
 
-To check every built-in source against the live sites:
-
-```bash
-./build/debug/tests/scancore_probe comics "solo leveling"
-./build/debug/tests/scancore_probe novels "lord of the mysteries"
-```
+Rights holders: see [TAKEDOWN.md](TAKEDOWN.md).
 
 ## Build from source
 
 ### Desktop (Linux, Windows, macOS)
 
-Requirements: CMake 3.28+, Ninja, a C++20 compiler (GCC 13+, Clang 17+ or MSVC 2022), and **Qt 6.9 or newer** with Qt Quick, Qt Quick Controls, Qt SVG, Qt Image Formats and **Qt WebEngine** (for the anime player; optional). [lexbor](https://github.com/lexbor/lexbor), the HTML parser, is downloaded automatically.
+Requirements: CMake 3.28+, Ninja, a C++20 compiler (GCC 13+, Clang 17+ or MSVC 2022), and **Qt 6.9 or newer** with Qt Quick, Qt Quick Controls, Qt SVG, Qt Image Formats and **Qt WebEngine** (for the anime player; optional). [lexbor](https://github.com/lexbor/lexbor), the HTML parser, is downloaded automatically. A JDK 17 or newer, if installed, also builds the extension host (`host/`, with its Gradle wrapper) for development and its tests; without one the app builds without it.
 
 ```bash
 git clone https://github.com/medium-gh/scancore.git && cd scancore
@@ -223,7 +218,7 @@ Pushing a tag such as `v1.2.0` runs [the release workflow](.github/workflows/rel
 
 ```
 src/core           HTTP (per-site limits, cancellation), HTML parsing, SQLite, image cache, background tasks
-src/sources        comic and novel adapters, the lightnovel-crawler bridge, manifest loading
+src/sources        built-in comic and novel sources, files on this device, manifest loading
 src/app            services used by the interface: Comics, Novels, Anime, Library, Downloads,
                    Account, Updater, Extensions and App
 src/qml            the interface: theme and motion tokens, components, pages, phone layout
@@ -244,9 +239,8 @@ Join the [SCANCORE Discord](https://scancore.onl/discord) for questions, feedbac
 
 Issues and pull requests are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) has the build, test and source-adapter details. Questions and ideas go in [Discussions](https://github.com/medium-gh/scancore/discussions), bug reports in [Issues](https://github.com/medium-gh/scancore/issues), and chat on [Discord](https://scancore.onl/discord). Release notes are in [CHANGELOG.md](CHANGELOG.md).
 
-- **A site moved or broke?** Most fixes are a one-line change to [`sources/manifest.json`](sources/manifest.json): the domain, `enabled` or a template option. Bump `version` so installed apps pick it up.
-- **New site on a known template** (WordPress MangaReader, Madara, Iken, the NovelFull family)? Add a manifest entry with the matching `engine`.
-- **New kind of site?** Add an engine in `src/sources/comics` or `src/sources/novels`, register it in `createSource`, and add an offline parser test in `tests/`.
+- **A bug or a feature?** Open an issue first for anything larger than a small fix.
+- **Sources** for scan sites are not accepted as pull requests (see [Sources](#sources)).
 - Run `ctest` and the live probe before opening a pull request.
 
 ## FAQ
@@ -272,13 +266,25 @@ On desktop, use the **Open browser check** button (or the globe next to the sour
 <details>
 <summary><b>Can I read in Spanish or another language?</b></summary>
 
-The interface is in English, Spanish, French, Brazilian Portuguese and Indonesian (Settings → Interface → Language, or the first screen). For content, comics come in Spanish from MangaDex (Español), ManhwaWeb, InManga, LeerCapitulo and MangaOni, and the extended novel pack adds Spanish, French, Portuguese, Indonesian and other novel sites. Settings → Sources shows each source's language and can keep "All sources" to one language. More languages need sites that work with SCANCORE's engines; suggestions are welcome in [Discussions](https://github.com/medium-gh/scancore/discussions).
+Yes. The interface is in eighteen languages besides English (Settings → Interface → Language, or the first screen), and SCANCORE turns on the sources in your language by default; Settings → Sources → Source languages adds others. "Read from" finds a series under its name in your language, and when no source in your language has it, offers to look in another.
 </details>
 
 <details>
-<summary><b>Why do some anime episodes not play?</b></summary>
+<summary><b>How do I add extensions?</b></summary>
 
-Episodes come from the ReAnime player. Brand-new or obscure episodes may not be there yet. The player shows a message rather than a broken video.
+Settings → Extensions → Add repository, or tap a repository link (scancore://, tachiyomi://, mihon://, aniyomi:// and lnreader:// links open in SCANCORE). Comic, anime and novel extensions work on Android and desktop; on desktop SCANCORE downloads a small Java runtime for comic and anime extensions the first time.
+</details>
+
+<details>
+<summary><b>Can I bring my Mihon library, and take it back?</b></summary>
+
+Settings → Connections imports a Mihon or Tachiyomi backup (series land on the same extension source when it is installed), a public AniList list, a MyAnimeList export or a Comick library. **Back up for Mihon** saves the comics you read from extensions as a backup Mihon restores.
+</details>
+
+<details>
+<summary><b>Where do episodes come from?</b></summary>
+
+From the anime sources you add. SCANCORE itself has AniList's catalogue, schedule and details, and plays what your sources provide. The player shows a message rather than a broken video when a source has no episode.
 </details>
 
 <details>
@@ -291,8 +297,8 @@ Settings → About → *Install updates automatically*. You can also turn off up
 
 SCANCORE is released under the [MIT licence](LICENSE).
 
-Fonts: DM Sans, Space Grotesk and Literata (SIL Open Font Licence). Icons: [Lucide](https://lucide.dev) (ISC). HTML parsing: [lexbor](https://github.com/lexbor/lexbor) (Apache 2.0). Optional novel pack: [lightnovel-crawler](https://github.com/dipu-bd/lightnovel-crawler) (GPL-3.0, downloaded separately at your request).
+Fonts: DM Sans, Space Grotesk and Literata (SIL Open Font Licence). Icons: [Lucide](https://lucide.dev) (ISC). HTML parsing: [lexbor](https://github.com/lexbor/lexbor) (Apache 2.0). Video player: [mpv](https://mpv.io) and FFmpeg (LGPL). The extension host and the rest are listed, with their licences, in Settings → About → Licences and [host/NOTICE.md](host/NOTICE.md).
 
 ## Disclaimer
 
-SCANCORE does not host any content. It is a reader for websites that are publicly available, and its developers are not affiliated with them. Support the creators and official releases of the series you enjoy.
+SCANCORE does not host any content. Its bundled sources are a separable pack. Extensions you add are other people's code, run at your choice. SCANCORE's developers are not affiliated with any site or extension. Support the creators and official releases of the series you enjoy.

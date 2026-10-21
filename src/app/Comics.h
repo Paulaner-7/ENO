@@ -25,27 +25,58 @@ public:
 
     // {comics: [...], providers: [{source, label, ok, count, error}]}
     Q_INVOKABLE sc::Task *search(const QString &query, const QString &source = QStringLiteral("all"));
-    // Titles from Comick's catalogue, which knows far more series (and their
-    // other names) than any one site: {comics: [{hid, title, titles, cover,
-    // type, status, year, ...}], providers: []}.
+    // Titles from the comic catalogue the user chose (Comick, AniList or
+    // MyAnimeList), which knows far more series and their other
+    // names than any one source: {comics: [{catalog, catalogId, hid, title,
+    // titles, cover, type, status, year, ids, ...}], catalog, label}.
     Q_INVOKABLE sc::Task *catalog(const QString &query);
-    // Comick's ranked shelves: {trending, popular, newest, completed}.
+    // That catalogue's shelves: {catalog, label, shelves: [{key, items}]}.
     Q_INVOKABLE sc::Task *catalogFeeds(bool mature = false);
     // Where a catalogue title can be read: the series on SCANCORE's sources
-    // listed under any of its names. {matches: [{source, sourceLabel, url,
-    // title, cover}]}
-    Q_INVOKABLE sc::Task *resolve(const QVariantMap &item);
+    // listed under any of its names, content language first, without
+    // taken-down ones. {matches: [{source, sourceLabel, language, preferred,
+    // url, title, cover}], contentLanguage}
+    // Finds a catalogue title on the sources: those "All sources" searches,
+    // or with `language`, every source in that language (built-in ones
+    // switched off for their language too).
+    // Only built-in sources by default: one tap must not wait on every
+    // installed extension. `scope` "extensions": every installed extension,
+    // in any language (moving a series); a source key: that source alone
+    // (an extension the reader picked).
+    Q_INVOKABLE sc::Task *resolve(const QVariantMap &item, const QString &language = QString(), const QString &scope = QString());
+    // Whether an extension for comics is installed and on.
+    Q_INVOKABLE bool hasExtensions() const;
+    Q_INVOKABLE bool isExtension(const QString &sourceKey) const;
+    // Languages other than the content language that have comic sources:
+    // [{value, label, count}], English first, then most sources first.
+    Q_INVOKABLE QVariantList otherLanguages() const;
     // {series: {...}, chapters: [...], offline: bool, error?: string}
     Q_INVOKABLE sc::Task *series(const QString &url, const QVariantMap &summary = {});
     // {panels: [{url, width, height}], referer, offline}
     Q_INVOKABLE sc::Task *panels(const QString &chapterUrl, const QString &seriesId = QString(),
                                  const QString &unitKey = QString());
+    // One source by itself, a page at a time: "popular", "latest" or
+    // "search" (with `query` and the states of its filters).
+    // {items: [...], hasNextPage}
+    Q_INVOKABLE sc::Task *browse(const QString &source, const QString &listing, int page,
+                                 const QString &query = QString(), const QVariantList &filters = {});
+    // Its search filters as its extension describes them: [{type, name,
+    // values, state, filters}] (header, separator, select, text, checkbox,
+    // tristate, sort, group).
+    Q_INVOKABLE sc::Task *filters(const QString &source);
     // {updates: [...], providers: [...]}
     Q_INVOKABLE sc::Task *latest(int limit = 40);
 
     Q_INVOKABLE QString imageReferer(const QString &url) const;
+    // The series' page on its site, for "Open on the website".
+    Q_INVOKABLE sc::Task *webUrl(const QString &url);
     // Warms the image cache for the first pages of an upcoming chapter.
     Q_INVOKABLE void prefetch(const QVariantList &panels, const QString &referer, int count = 6);
+
+    // Catalogue helpers shared with Novels (blocking).
+    static QVariantMap catalogShelves(const QString &media, bool mature);
+    static QVariantMap catalogSearch(const QString &media, const QString &query, bool mature);
+    static QStringList catalogNames(const QVariantMap &item);
 
     // Chapter list as library units ({key, number, title, url, released}).
     static QVariantList fetchUnits(const QString &url);

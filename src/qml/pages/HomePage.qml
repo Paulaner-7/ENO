@@ -7,11 +7,17 @@ import ScanCore
 Item {
     id: page
 
-    property var historyTask: Library.history("", 24)
+    property var historyTask: Library.continueItems("", 24)
     property var libraryTask: Library.entries("")
-    property var latestTask: Comics.latest(30)
-    property var animeTask: Anime.home()
-    property var novelsTask: Novels.discover()
+    // A section removed in Edit page loads nothing.
+    readonly property bool comicsOn: (PageLayout.revision, !PageLayout.isRemoved("home", "comics"))
+    readonly property bool animeOn: (PageLayout.revision, !PageLayout.isRemoved("home", "anime"))
+    readonly property bool novelsOn: (PageLayout.revision, !PageLayout.isRemoved("home", "novels"))
+    // Only a change to the added shelves rebuilds them (not moving one).
+    readonly property string extrasJson: (PageLayout.revision, JSON.stringify(PageLayout.extras("home")))
+    property var latestTask: comicsOn ? Comics.latest(30) : null
+    property var animeTask: animeOn ? Anime.home() : null
+    property var novelsTask: novelsOn ? Novels.discover() : null
 
     // The last results, kept while a refresh runs.
     property var history: []
@@ -40,9 +46,24 @@ Item {
         id: refresh
         interval: 400
         onTriggered: {
-            page.historyTask = Library.history("", 24)
+            page.historyTask = Library.continueItems("", 24)
             page.libraryTask = Library.entries("")
+            Story.refreshCards()
         }
+    }
+
+    ReadFromDialog { id: storyReadFrom }
+    Component.onCompleted: Story.refreshCards()
+
+    // Edit page: arrange the sections (PageLayout).
+    property bool editing: false
+    PageArranger {
+        id: layout
+        page: "home"
+        column: column
+        editing: page.editing
+        removable: true
+        defaults: ["greeting", "resume", "continue", "story", "updates", "comics", "anime", "novels"]
     }
 
     function greeting() {
@@ -58,130 +79,326 @@ Item {
         Column {
             id: column
             width: parent.width
-            spacing: 38
+            spacing: Theme.sectionGap
 
+            // Edit page, at the top right whatever comes first.
             Item {
                 width: parent.width
-                height: Theme.compact ? 110 : 150
-                Column {
-                    id: heading
-                    x: Theme.gutter
-                    anchors.bottom: parent.bottom
-                    spacing: 6
-                    Text {
-                        text: Qt.formatDate(new Date(), "dddd, d MMMM")
-                        color: Theme.textFaint
-                        font.family: Theme.fontSans
-                        font.pixelSize: Theme.textSm
-                        font.weight: Font.Medium
-                        font.capitalization: Font.AllUppercase
-                        font.letterSpacing: 1.2
-                    }
-                    Text {
-                        text: page.greeting()
-                        color: Theme.text
-                        font.family: Theme.fontDisplay
-                        font.pixelSize: Theme.compact ? 32 : 42
-                        font.weight: Font.Bold
-                        font.letterSpacing: -1
-                    }
-                }
-                // Only when it fits beside the greeting (not on landscape phones).
-                Row {
-                    id: quickLinks
-                    visible: !Theme.compact && heading.width + width + 3 * Theme.gutter <= parent.width
+                height: editButton.height
+                IconButton {
+                    id: editButton
                     anchors.right: parent.right
-                    anchors.rightMargin: Theme.gutter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 6
-                    spacing: 10
-                    ScButton {
-                        text: qsTr("Anime")
-                        iconName: "tv"
-                        onClicked: Router.go("anime")
+                    anchors.rightMargin: Theme.gutter - 6
+                    y: 12
+                    iconName: "layout-dashboard"
+                    tip: qsTr("Edit page")
+                    active: page.editing
+                    onClicked: page.editing = !page.editing
+                }
+            }
+
+            PageSection {
+                arranger: layout
+                key: "greeting"
+                label: qsTr("Greeting")
+                Column {
+                    width: parent.width
+                    spacing: 18
+                    Item {
+                        width: parent.width
+                        height: Theme.compact ? 70 : 110
+                        Column {
+                            id: heading
+                            x: Theme.gutter
+                            anchors.bottom: parent.bottom
+                            spacing: 6
+                            Text {
+                                text: Qt.formatDate(new Date(), "dddd, d MMMM")
+                                color: Theme.textFaint
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textSm
+                                font.weight: Font.Medium
+                                font.capitalization: Font.AllUppercase
+                                font.letterSpacing: 1.2
+                            }
+                            Text {
+                                text: page.greeting()
+                                color: Theme.text
+                                font.family: Theme.fontDisplay
+                                font.pixelSize: Theme.compact ? 32 : 42
+                                font.weight: Font.Bold
+                                font.letterSpacing: -1
+                            }
+                        }
+                        // Only when it fits beside the greeting (not on landscape phones).
+                        Row {
+                            id: quickLinks
+                            visible: !Theme.compact && heading.width + width + 3 * Theme.gutter <= parent.width
+                            anchors.right: parent.right
+                            anchors.rightMargin: Theme.gutter
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 6
+                            spacing: 10
+                            ScButton {
+                                text: qsTr("Anime")
+                                iconName: "tv"
+                                onClicked: Router.go("anime")
+                            }
+                            ScButton {
+                                text: qsTr("Manga")
+                                iconName: "book-open"
+                                onClicked: Router.go("comics")
+                            }
+                            ScButton {
+                                text: qsTr("Novels")
+                                iconName: "book-text"
+                                onClicked: Router.go("novels")
+                            }
+                        }
                     }
-                    ScButton {
-                        text: qsTr("Manga")
-                        iconName: "book-open"
-                        onClicked: Router.go("comics")
-                    }
-                    ScButton {
-                        text: qsTr("Novels")
-                        iconName: "book-text"
-                        onClicked: Router.go("novels")
+                    // December to 7 January: the year's Wrapped.
+                    Rectangle {
+                        id: wrappedBanner
+                        readonly property int year: Router.wrappedYear()
+                        visible: year > 0 && Number(App.settings.wrappedDismissed) !== year
+                        x: Theme.gutter
+                        width: parent.width - 2 * Theme.gutter
+                        height: visible ? Math.max(76, bannerText.height + 32) : 0
+                        radius: Theme.radiusXl
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0; color: "#3b1d8f" }
+                            GradientStop { position: 0.6; color: "#7a1f5c" }
+                            GradientStop { position: 1; color: "#b4361f" }
+                        }
+                        TapHandler { onTapped: Router.openWrapped(wrappedBanner.year) }
+                        Image {
+                            id: bannerMark
+                            x: 18
+                            anchors.verticalCenter: parent.verticalCenter
+                            source: App.icon("sparkles", "#ffffff")
+                            sourceSize: Qt.size(26, 26)
+                            width: 26
+                            height: 26
+                        }
+                        Column {
+                            id: bannerText
+                            anchors.left: bannerMark.right
+                            anchors.leftMargin: 14
+                            anchors.right: bannerClose.left
+                            anchors.rightMargin: 8
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 2
+                            Text {
+                                width: parent.width
+                                wrapMode: Text.Wrap
+                                text: qsTr("Your %1 Wrapped is here").arg(wrappedBanner.year)
+                                color: "white"
+                                font.family: Theme.fontDisplay
+                                font.pixelSize: Theme.textXl
+                                font.weight: Font.Bold
+                            }
+                            Text {
+                                width: parent.width
+                                wrapMode: Text.Wrap
+                                text: qsTr("Your year in comics, novels and anime")
+                                color: Qt.rgba(1, 1, 1, 0.8)
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textSm
+                            }
+                        }
+                        IconButton {
+                            id: bannerClose
+                            anchors.right: parent.right
+                            anchors.rightMargin: 8
+                            anchors.verticalCenter: parent.verticalCenter
+                            iconName: "x"
+                            iconColor: "white"
+                            tip: qsTr("Not now")
+                            onClicked: App.setSetting("wrappedDismissed", wrappedBanner.year)
+                        }
                     }
                 }
             }
 
             // The latest of them, large.
-            Loader {
-                width: parent.width
-                active: page.history.length > 0
-                visible: active
-                sourceComponent: ResumeCard { entry: page.history[0] }
+            PageSection {
+                arranger: layout
+                key: "resume"
+                label: qsTr("Last read or watched")
+                shown: page.history.length > 0
+                Loader {
+                    width: parent.width
+                    active: page.history.length > 0
+                    visible: active
+                    sourceComponent: ResumeCard { entry: page.history[0] }
+                }
             }
 
-            Shelf {
-                title: qsTr("Continue")
-                items: page.history.slice(1)
-                loading: page.historyTask ? page.historyTask.loading && page.history.length === 0 : false
-                subtitleFor: (it) => it.media === "anime" ? qsTr("Episode ") + (it.unitNumber || it.unitKey) : (it.unitTitle || "")
-                progressFor: (it) => (it.completed && (it.percent >= 0.96 || (it.position && it.position.duration > 0 && it.position.seconds >= it.position.duration - 20))) ? 1 : (it.percent || 0)
-                onOpened: (it, cover) => Router.resume(it)
+            PageSection {
+                arranger: layout
+                key: "continue"
+                label: qsTr("Continue")
+                Shelf {
+                    title: qsTr("Continue")
+                    items: page.history.slice(1)
+                    loading: page.historyTask ? page.historyTask.loading && page.history.length === 0 : false
+                    subtitleFor: (it) => it.media === "anime" ? qsTr("Episode ") + (it.unitNumber || it.unitKey) : (it.unitTitle || "")
+                    progressFor: (it) => (it.completed && (it.percent >= 0.96 || (it.position && it.position.duration > 0 && it.position.seconds >= it.position.duration - 20))) ? 1 : (it.percent || 0)
+                    onOpened: (it, cover) => Router.resume(it)
+                }
             }
 
-            Shelf {
-                title: qsTr("New in your library")
-                items: page.updates
-                badgeFor: (it) => "+" + it.newUnits
-                subtitleFor: (it) => it.latestTitle || ""
-                onOpened: (it, cover) => Router.openSeries(it, cover)
+            // An anime season finished: where its comic or novel goes on.
+            PageSection {
+                arranger: layout
+                key: "story"
+                label: qsTr("Continue the story")
+                shown: Story.cards.length > 0
+                Column {
+                    width: parent.width
+                    spacing: 14
+                    visible: Story.cards.length > 0
+                    Text {
+                        x: Theme.gutter
+                        text: qsTr("Continue the story")
+                        color: Theme.text
+                        font.family: Theme.fontDisplay
+                        font.pixelSize: Theme.textXl
+                        font.weight: Font.DemiBold
+                    }
+                    ListView {
+                        WheelScroll {}
+                        width: parent.width
+                        height: Theme.compact ? 132 : 144
+                        orientation: ListView.Horizontal
+                        leftMargin: Theme.gutter
+                        rightMargin: Theme.gutter
+                        spacing: 12
+                        clip: true
+                        boundsBehavior: Flickable.StopAtBounds
+                        model: Story.cards
+                        delegate: StoryCard {
+                            required property var modelData
+                            entry: modelData
+                            onOpen: (e) => {
+                                if (e.seriesId) Router.openSeries(Library.seriesRow(e.seriesId), null)
+                                else if (e.entry) storyReadFrom.start(e.entry)
+                            }
+                        }
+                    }
+                }
             }
 
-            Shelf {
-                title: qsTr("Latest comic chapters")
-                actionText: qsTr("More")
-                onAction: Router.go("comics")
-                items: page.latestTask && page.latestTask.ok ? page.latestTask.result.updates : []
-                loading: page.latestTask ? page.latestTask.loading : false
-                error: page.latestTask && !page.latestTask.loading ? page.latestTask.error : ""
-                onRetry: page.latestTask = Comics.latest(30)
-                subtitleFor: (it) => (it.chapterTitle || "") + (it.publishedAt ? " · " + App.relativeTime(it.publishedAt) : "")
-                onOpened: (it, cover) => Router.openSeries(it, cover)
-            }
-
-            Shelf {
-                title: qsTr("Trending anime")
-                actionText: qsTr("Browse")
-                onAction: Router.go("anime")
-                items: page.animeTask && page.animeTask.ok ? page.animeTask.result.trending : []
-                loading: page.animeTask ? page.animeTask.loading : false
-                error: page.animeTask && !page.animeTask.loading ? page.animeTask.error : ""
-                onRetry: page.animeTask = Anime.home()
-                subtitleFor: (it) => [it.format, it.year].filter(Boolean).join(" · ")
-                onOpened: (it, cover) => Router.openSeries(it, cover)
-            }
-
-            Repeater {
-                model: page.novelsTask && page.novelsTask.ok ? page.novelsTask.result.shelves.slice(0, 2) : []
-                delegate: Shelf {
-                    required property var modelData
-                    title: modelData.title + qsTr(" novels")
-                    subtitle: modelData.source
-                    items: modelData.books
-                    subtitleFor: (it) => it.author || it.genres.slice(0, 2).join(", ")
+            PageSection {
+                arranger: layout
+                key: "updates"
+                label: qsTr("New in your library")
+                Shelf {
+                    title: qsTr("New in your library")
+                    items: page.updates
+                    badgeFor: (it) => "+" + it.newUnits
+                    subtitleFor: (it) => it.latestTitle || ""
                     onOpened: (it, cover) => Router.openSeries(it, cover)
                 }
             }
-            Shelf {
-                visible: page.novelsTask && (page.novelsTask.loading || page.novelsTask.error.length > 0)
-                title: qsTr("Novels")
-                loading: page.novelsTask ? page.novelsTask.loading : false
-                error: page.novelsTask && !page.novelsTask.loading ? page.novelsTask.error : ""
-                onRetry: page.novelsTask = Novels.discover()
+
+            PageSection {
+                arranger: layout
+                key: "comics"
+                label: qsTr("Latest comic chapters")
+                Shelf {
+                    title: qsTr("Latest comic chapters")
+                    actionText: qsTr("More")
+                    onAction: Router.go("comics")
+                    items: page.latestTask && page.latestTask.ok ? page.latestTask.result.updates : []
+                    loading: page.latestTask ? page.latestTask.loading : false
+                    error: page.latestTask && !page.latestTask.loading ? page.latestTask.error : ""
+                    onRetry: page.latestTask = Comics.latest(30)
+                    subtitleFor: (it) => (it.chapterTitle || "") + (it.publishedAt ? " · " + App.relativeTime(it.publishedAt) : "")
+                    onOpened: (it, cover) => Router.openSeries(it, cover)
+                }
+            }
+
+            PageSection {
+                arranger: layout
+                key: "anime"
+                label: qsTr("Trending anime")
+                Shelf {
+                    title: qsTr("Trending anime")
+                    actionText: qsTr("Browse")
+                    onAction: Router.go("anime")
+                    items: page.animeTask && page.animeTask.ok ? page.animeTask.result.trending : []
+                    loading: page.animeTask ? page.animeTask.loading : false
+                    error: page.animeTask && !page.animeTask.loading ? page.animeTask.error : ""
+                    onRetry: page.animeTask = Anime.home()
+                    subtitleFor: (it) => [it.format, it.year].filter(Boolean).join(" · ")
+                    onOpened: (it, cover) => Router.openSeries(it, cover)
+                }
+            }
+
+            PageSection {
+                arranger: layout
+                key: "novels"
+                label: qsTr("Novels")
+                Column {
+                    readonly property bool hasContent: page.novelsTask !== null
+                    width: parent.width
+                    spacing: Theme.sectionGap
+                    Repeater {
+                        model: page.novelsTask && page.novelsTask.ok ? page.novelsTask.result.shelves.slice(0, 2) : []
+                        delegate: Shelf {
+                            required property var modelData
+                            title: modelData.title + qsTr(" novels")
+                            subtitle: modelData.source
+                            items: modelData.books
+                            subtitleFor: (it) => it.author || it.genres.slice(0, 2).join(", ")
+                            onOpened: (it, cover) => Router.openSeries(it, cover)
+                        }
+                    }
+                    Shelf {
+                        visible: page.novelsTask && (page.novelsTask.loading || page.novelsTask.error.length > 0)
+                        title: qsTr("Novels")
+                        loading: page.novelsTask ? page.novelsTask.loading : false
+                        error: page.novelsTask && !page.novelsTask.loading ? page.novelsTask.error : ""
+                        onRetry: page.novelsTask = Novels.discover()
+                    }
+                }
+            }
+
+            // Shelves of an extension's own listings, added in Edit page.
+            Repeater {
+                model: JSON.parse(page.extrasJson)
+                PageSection {
+                    id: extraSection
+                    required property var modelData
+                    arranger: layout
+                    key: modelData.key
+                    label: modelData.label
+                    readonly property var service: modelData.media === "anime" ? Anime : modelData.media === "novel" ? Novels : Comics
+                    property var task: service.browse(modelData.source, modelData.listing, 1)
+                    Shelf {
+                        title: extraSection.modelData.label
+                        items: extraSection.task && extraSection.task.ok ? extraSection.task.result.items : []
+                        loading: extraSection.task ? extraSection.task.loading : false
+                        error: extraSection.task && !extraSection.task.loading ? extraSection.task.error : ""
+                        actionText: qsTr("More")
+                        onAction: Router.openSource(extraSection.modelData.source)
+                        onRetry: extraSection.task = extraSection.service.browse(extraSection.modelData.source, extraSection.modelData.listing, 1)
+                        onOpened: (it, cover) => Router.openSeries(it, cover)
+                    }
+                }
             }
         }
     }
 
     BackToTop { flick: flick }
+    EditPageBar {
+        editing: page.editing
+        arrangers: [layout]
+        canAdd: true
+        onDone: page.editing = false
+        onAdd: addSection.open()
+    }
+    AddSectionSheet { id: addSection; arranger: layout }
 }

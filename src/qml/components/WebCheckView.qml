@@ -8,7 +8,15 @@ WebEngineView {
     id: view
     property string startUrl
     backgroundColor: "white"
-    url: startUrl
+    // The user agent the extension met the check with, so the clearance
+    // works for it; SCANCORE's again once the window closes.
+    onStartUrlChanged: {
+        profile.httpUserAgent = App.siteAgent(startUrl)
+        url = startUrl
+    }
+    Component.onDestruction: profile.httpUserAgent = App.defaultAgent()
     settings.javascriptCanOpenWindows: false
     onNewWindowRequested: (request) => { /* stay in this view */ }
+    // Before startUrl is set: shares cookies and the user agent.
+    Component.onCompleted: App.prepareWeb()
 }

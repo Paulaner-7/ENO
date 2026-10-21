@@ -1,0 +1,4 @@
+{"items": [
+  {"url": "/series/1", "title": "Fixture One", "cover": "/img/cover-1.png"},
+  {"url": "/series/2", "title": "Fixture Two", "cover": "/img/cover-2.png"}
+], "next": "true"}

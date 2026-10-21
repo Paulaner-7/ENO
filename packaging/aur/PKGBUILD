@@ -7,7 +7,7 @@ arch=('x86_64')
 url='https://github.com/medium-gh/scancore'
 license=('MIT')
 # Qt WebEngine (Arch's has the H.264 codec) is the anime player.
-depends=('gcc-libs' 'glibc' 'qt6-base' 'qt6-declarative' 'qt6-imageformats' 'qt6-svg' 'qt6-webengine')
+depends=('gcc-libs' 'glibc' 'qt6-base' 'qt6-declarative' 'qt6-imageformats' 'qt6-speech' 'qt6-svg' 'qt6-webengine')
 optdepends=(
   'qt6-wayland: native Wayland platform integration'
 )

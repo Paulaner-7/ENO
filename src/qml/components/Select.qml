@@ -3,9 +3,13 @@ import QtQuick.Controls.Basic
 import ScanCore
 
 // Dropdown. model: [{value, label}] ; bind `value`, handle `picked`.
+// On phones the choices open as a sheet from the bottom, titled `title`
+// (or the accessible name).
 ComboBox {
     id: control
     property var value
+    property string title: Accessible.name
+    readonly property bool sheet: Theme.compact
     signal picked(var value)
 
     textRole: "label"
@@ -50,48 +54,109 @@ ComboBox {
         id: option
         required property var modelData
         required property int index
+        readonly property bool chosen: control.currentIndex === option.index
         width: ListView.view ? ListView.view.width : 200
-        height: 34
+        height: control.sheet ? 48 : 34
         hoverEnabled: true
-        contentItem: Text {
-            text: option.modelData.label
-            color: Theme.text
-            font.family: Theme.fontSans
-            font.pixelSize: Theme.textSm
-            font.weight: control.currentIndex === option.index ? Font.DemiBold : Font.Normal
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
+        contentItem: Item {
+            Text {
+                anchors.left: parent.left
+                anchors.right: tick.left
+                anchors.rightMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+                text: option.modelData.label
+                color: Theme.text
+                font.family: Theme.fontSans
+                font.pixelSize: control.sheet ? Theme.textMd : Theme.textSm
+                font.weight: option.chosen ? Font.DemiBold : Font.Normal
+                elide: Text.ElideRight
+            }
+            Icon {
+                id: tick
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                visible: control.sheet && option.chosen
+                width: visible ? 18 : 0
+                name: "check"
+                size: 18
+                color: Theme.accent
+            }
         }
+        leftPadding: control.sheet ? 16 : 12
+        rightPadding: control.sheet ? 16 : 12
         background: Rectangle {
-            radius: Theme.radiusSm
-            color: option.hovered ? Theme.surface3 : "transparent"
+            radius: control.sheet ? Theme.radiusMd : Theme.radiusSm
+            color: option.pressed ? Theme.surface3 : option.chosen && control.sheet ? Theme.surface2
+                : option.hovered ? Theme.surface3 : "transparent"
         }
     }
     popup: Popup {
-        y: control.height + 6
-        width: Math.max(control.width, 180)
-        implicitHeight: Math.min(contentItem.implicitHeight + 12, 360)
-        padding: 6
+        id: menu
+        readonly property real safeBottom: control.sheet && parent ? parent.SafeArea.margins.bottom : 0
+        parent: control.sheet ? Overlay.overlay : control
+        x: 0
+        y: control.sheet ? (parent ? parent.height - height : 0) : control.height + 6
+        width: control.sheet ? (parent ? parent.width : 400) : Math.max(control.width, 180)
+        implicitHeight: control.sheet
+            ? Math.min(contentItem.implicitHeight + topPadding + bottomPadding, (parent ? parent.height : 800) * 0.75)
+            : Math.min(contentItem.implicitHeight + 12, 360)
+        padding: control.sheet ? 10 : 6
+        topPadding: control.sheet ? (control.title.length ? 64 : 28) : 6
+        bottomPadding: control.sheet ? 14 + safeBottom : 6
+        modal: control.sheet
+        dim: control.sheet
         transformOrigin: Item.Top
-        enter: Transition {
+        Overlay.modal: Rectangle { color: Theme.overlay }
+        enter: control.sheet ? riseIn : dropIn
+        exit: control.sheet ? riseOut : dropOut
+        property Transition dropIn: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast }
                 NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: Motion.normal; easing.type: Easing.OutCubic }
             }
         }
-        exit: Transition { NumberAnimation { property: "opacity"; to: 0; duration: Motion.instant } }
+        property Transition dropOut: Transition { NumberAnimation { property: "opacity"; to: 0; duration: Motion.instant } }
+        property Transition riseIn: Transition {
+            NumberAnimation { property: "y"; from: menu.parent ? menu.parent.height : 800; duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+        }
+        property Transition riseOut: Transition {
+            NumberAnimation { property: "y"; to: menu.parent ? menu.parent.height : 800; duration: Motion.normal; easing.type: Easing.InCubic }
+        }
         contentItem: ListView {
             clip: true
             implicitHeight: contentHeight
             model: control.popup.visible ? control.delegateModel : null
             currentIndex: control.highlightedIndex
+            spacing: control.sheet ? 2 : 0
+            boundsBehavior: Flickable.StopAtBounds
             ScrollIndicator.vertical: ScrollIndicator {}
         }
         background: Rectangle {
             radius: Theme.radiusMd
+            topLeftRadius: control.sheet ? Theme.radiusXl : Theme.radiusMd
+            topRightRadius: control.sheet ? Theme.radiusXl : Theme.radiusMd
+            bottomLeftRadius: control.sheet ? 0 : Theme.radiusMd
+            bottomRightRadius: control.sheet ? 0 : Theme.radiusMd
             color: Theme.surface
-            border.width: 1
+            border.width: control.sheet ? 0 : 1
             border.color: Theme.borderStrong
+            Rectangle {
+                visible: control.sheet
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: 10
+                width: 36; height: 4; radius: 2
+                color: Theme.alpha(Theme.text, 0.2)
+            }
+            Text {
+                visible: control.sheet && control.title.length > 0
+                x: 26
+                y: 28
+                text: control.title
+                color: Theme.text
+                font.family: Theme.fontDisplay
+                font.pixelSize: Theme.textLg
+                font.weight: Font.DemiBold
+            }
         }
     }
 }

@@ -191,8 +191,10 @@ Column {
         font.pixelSize: Theme.textSm
     }
 
+    // The first reviews until asked for more (up to 100 load).
+    property int shownItems: 20
     Repeater {
-        model: reviews.state === "ready" ? reviews.items : []
+        model: reviews.state === "ready" ? reviews.items.slice(0, reviews.shownItems) : []
         Rectangle {
             id: card
             required property var modelData
@@ -243,5 +245,11 @@ Column {
                 }
             }
         }
+    }
+    ScButton {
+        visible: reviews.state === "ready" && reviews.items.length > reviews.shownItems
+        variant: "ghost"
+        text: qsTr("Show more reviews (%1)").arg(reviews.items.length - reviews.shownItems)
+        onClicked: reviews.shownItems += 40
     }
 }

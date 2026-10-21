@@ -26,6 +26,8 @@ Item {
           keywords: "player next episode autoplay countdown skip intro ending recap" },
         { key: "library", file: "LibrarySettings.qml", title: qsTr("Library"), subtitle: qsTr("New chapters and notifications"), icon: "library", tint: "green",
           keywords: "updates new chapters check notifications tray background" },
+        { key: "privacy", file: "PrivacySettings.qml", title: qsTr("Privacy"), subtitle: qsTr("Incognito mode and the app lock"), icon: "lock", tint: "rose",
+          keywords: "incognito private history lock pin password fingerprint face biometric security" },
         { key: "sources", file: "SourcesSettings.qml", title: qsTr("Sources"), subtitle: qsTr("The sites SCANCORE reads from"), icon: "globe", tint: "amber",
           keywords: "sites nsfw manifest novel pack extensions" },
         { key: "storage", file: "StorageSettings.qml", title: qsTr("Storage"), subtitle: qsTr("Cache, downloads and backups"), icon: "hard-drive", tint: "mono",
@@ -50,7 +52,7 @@ Item {
 
     // One line under each category on the phone list.
     function summary(key) {
-        App.settings
+        App.dependOn(App.settings)
         switch (key) {
         case "theme": {
             const theme = { system: qsTr("System"), light: qsTr("Light"), dark: qsTr("Dark"), black: qsTr("Black"), custom: qsTr("Custom") }[App.settings.theme] || qsTr("Dark")
@@ -70,14 +72,17 @@ Item {
         case "anime":
             return qsTr("Auto-next ") + (App.settings.autoNext !== false ? "on" : "off") + qsTr(" · Auto-skip ")
                 + (App.settings.autoSkip === true || App.settings.autoSkipEndings === true ? "on" : "off")
+        case "privacy":
+            App.dependOn(Lock.enabled)
+            return [App.settings.incognito === true ? qsTr("Incognito on") : qsTr("Incognito off"),
+                    Lock.enabled ? qsTr("locked with a PIN") : qsTr("no app lock")].join(" · ")
         case "library": {
             const hours = App.settings.libraryCheckHours
             return hours > 0 ? qsTr("Checks for new chapters every ") + (hours === 1 ? "hour" : hours === 24 ? "day" : hours + qsTr(" hours")) : qsTr("Update checks off")
         }
         case "connections": {
-            Trackers.anilist
-            const on = [Trackers.anilist.name ? "AniList" : "", Trackers.mal.name ? "MyAnimeList" : "", Trackers.comick.name ? qsTr("Comick") : "",
-                        Presence.available && App.settings.discordPresence === true ? qsTr("Discord") : ""].filter(s => s)
+            const on = Trackers.services.filter(s => s.connected).map(s => s.key === "comick" ? qsTr("Comick") : s.label).concat([
+                        Presence.available && App.settings.discordPresence === true ? qsTr("Discord") : ""]).filter(s => s)
             return on.length ? on.join(" · ") + qsTr(" connected") : qsTr("Tracking and imports")
         }
         case "sources": return qsTr("Source list version ") + App.manifestVersion
@@ -315,6 +320,14 @@ Item {
                                 font.weight: Font.Bold
                             }
                             Icon { anchors.centerIn: parent; visible: !Account.signedIn; name: "user-round"; size: 20; color: page.tint("sky") }
+                            // The profile photo; the letter shows until it loads, or without one.
+                            Cover {
+                                anchors.fill: parent
+                                readonly property string url: String(Account.user.avatar || "")
+                                visible: Account.signedIn && url.length > 0 && ready
+                                source: Account.signedIn && url.length > 0 ? (url.startsWith("/") ? Account.site + url : url) : ""
+                                radius: 23
+                            }
                         }
                         Column {
                             x: 74
@@ -354,7 +367,7 @@ Item {
                 }
 
                 Repeater {
-                    model: [["theme", "interface", "keyboard"], ["reading", "anime", "library"], ["connections", "sources", "storage"], ["about"]]
+                    model: [["theme", "interface", "keyboard"], ["reading", "anime", "library"], ["connections", "sources", "storage"], ["privacy", "about"]]
                     SettingsGroup {
                         required property var modelData
                         Repeater {

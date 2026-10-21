@@ -42,7 +42,8 @@ Parser tests are offline (`tests/tst_parsing.cpp`). To check every built-in sour
 | --- | --- |
 | A site moved domain, broke, or should be disabled | [`sources/manifest.json`](sources/manifest.json): the domain, `enabled` or a template option. Bump the manifest `version` so installed apps pick it up without a new release. |
 | A new site on a known template (WordPress MangaReader, Madara, Iken, NovelFull family) | A new entry in `sources/manifest.json` with the matching `engine` |
-| A new kind of comic or novel site | An engine in `src/sources/comics` or `src/sources/novels`, registered in `createSource`, plus an offline parser test in `tests/` |
+| A new kind of comic or novel site | An engine in `src/sources/bundled/comics` or `src/sources/bundled/novels`, registered in `createSource`, plus an offline parser test with its fixture in `tests/fixtures/`. The bundled sources are one separable pack ([its README](src/sources/bundled/README.md)): `-DSCANCORE_WITH_BUNDLED_SOURCES=OFF` builds without them |
+| Extensions (repositories, the Kotlin host) | `src/extensions`, `host/` ([host/NOTICE.md](host/NOTICE.md) for third-party code) |
 | Anime metadata, episodes, skip times, player links | `src/app/Anime.cpp` |
 | Interface | `src/qml` (pages in `pages/`, shared pieces in `components/`, colours and sizes in `theme/`) |
 | Networking, database, image cache | `src/core` |
@@ -54,7 +55,13 @@ Optional manifest fields for comic and novel entries:
 | `language` | The content's language as a short code (`"es"`, `"pt"`); default `"en"`. Shown in Settings → Sources and on the comic source chips, and used by the "All sources" language setting. |
 | `urlTag` | For a source that shares a host with another (MangaDex in English and in Spanish): its links carry `#<urlTag>`, so a link opens on the source that made it. Leave it out otherwise; adding it to an existing source changes its ids. |
 | `minVersion` | The oldest app version that may load the entry, for entries that need new code. Older apps that know this field skip the entry; 1.4.0 and older do not know it. |
-| `options` | Engine options, such as `"languages": ["es", "es-la"]` for `mangadex`. |
+| `options` | Engine options, such as `"languages": ["es", "es-la"]` for `mangadex` or `"edition": "es"` for `webtoon`. |
+
+`SCANCORE_PROBE_MANIFEST=/path/to/trial.json scancore_probe comics "query" <key>` checks entries before they go into the manifest. Sources are added only for public pages: nothing behind a login, a paywall or image encryption.
+
+## Translations
+
+Every string in the interface is wrapped in `qsTr()` and translated in each `i18n/scancore_*.ts`. After changing strings, run `cmake --build --preset debug --target update_translations` and fill in the new entries in every language; a new string should not ship untranslated. A new licence goes into `resources/licenses/` and `components.json` there.
 
 For a source change, include the URL of a series that shows the problem and what you expected to see.
 

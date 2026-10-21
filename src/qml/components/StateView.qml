@@ -16,6 +16,16 @@ Item {
     signal retry()
 
     implicitHeight: compact ? 120 : 320
+
+    // Once the reader passed this site's check, try again by itself.
+    Connections {
+        target: App
+        enabled: root.verifyUrl.length > 0
+        function onSiteChecked(url) {
+            const host = (u) => u.replace(/^https?:\/\//, "").replace(/[\/:].*$/, "")
+            if (host(url) === host(root.verifyUrl)) root.retry()
+        }
+    }
     visible: loading || error.length > 0 || empty
 
     Spinner {
@@ -70,7 +80,7 @@ Item {
             spacing: 8
             visible: root.error.length > 0
             ScButton {
-                visible: root.verifyUrl.length > 0 && App.platform !== "android"
+                visible: root.verifyUrl.length > 0
                 variant: "primary"
                 text: qsTr("Open browser check")
                 iconName: "globe"

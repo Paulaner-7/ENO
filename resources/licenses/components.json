@@ -1,0 +1,188 @@
+[
+ {
+  "name": "SCANCORE",
+  "use": "The app",
+  "licence": "MIT",
+  "file": "MIT.txt"
+ },
+ {
+  "name": "Qt 6",
+  "use": "Interface, network, storage, speech, web views",
+  "licence": "LGPL-3.0",
+  "file": "LGPL-3.0-only.txt"
+ },
+ {
+  "name": "lexbor",
+  "use": "HTML parsing",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "DM Sans, Space Grotesk, Literata",
+  "use": "Fonts",
+  "licence": "OFL-1.1",
+  "file": "OFL-1.1.txt"
+ },
+ {
+  "name": "Lucide",
+  "use": "Icons",
+  "licence": "ISC",
+  "file": "ISC.txt"
+ },
+ {
+  "name": "mpv, FFmpeg and their libraries",
+  "use": "Video player (libmpv); each library's notice is listed below when the build carries it",
+  "licence": "LGPL-2.1-or-later",
+  "file": "LGPL-2.1-only.txt"
+ },
+ {
+  "name": "Anime4K",
+  "use": "Sharpening and upscaling shaders for anime (player)",
+  "licence": "MIT",
+  "file": "Anime4K.txt"
+ },
+ {
+  "name": "Mihon and Tachiyomi source API",
+  "use": "Comic extensions (extension host)",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "Aniyomi source API and extensions-lib",
+  "use": "Anime extensions (extension host)",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "Suwayomi-Server AndroidCompat",
+  "use": "Android stand-ins for extensions on desktop",
+  "licence": "MPL-2.0",
+  "file": "MPL-2.0.txt"
+ },
+ {
+  "name": "Kotlin, kotlinx.coroutines, kotlinx.serialization",
+  "use": "Extension host",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "OkHttp, Okio",
+  "use": "Extension host networking",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "Brotli",
+  "use": "Extension host networking",
+  "licence": "MIT",
+  "file": "MIT.txt"
+ },
+ {
+  "name": "Jsoup",
+  "use": "Extension host HTML",
+  "licence": "MIT",
+  "file": "MIT.txt"
+ },
+ {
+  "name": "RxJava, Injekt",
+  "use": "Extension host",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "AndroidX Preference",
+  "use": "Extension settings on Android",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "QuickJS, quickjs-java",
+  "use": "JavaScript in extensions on Android",
+  "licence": "MIT / Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "Mozilla Rhino",
+  "use": "JavaScript in extensions on desktop",
+  "licence": "MPL-2.0",
+  "file": "MPL-2.0.txt"
+ },
+ {
+  "name": "dex2jar, apksig, AOSP android.jar stubs",
+  "use": "Loading extensions on desktop",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "apk-parser",
+  "use": "Reading extension packages",
+  "licence": "BSD-2-Clause",
+  "file": "BSD-2-Clause.txt"
+ },
+ {
+  "name": "multiplatform-settings, webp-imageio, sqlite-jdbc",
+  "use": "Extension host on desktop",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "TwelveMonkeys ImageIO",
+  "use": "Images in the desktop extension host",
+  "licence": "BSD-3-Clause",
+  "file": "BSD-3-Clause.txt"
+ },
+ {
+  "name": "ICU4J",
+  "use": "Text in the desktop extension host",
+  "licence": "Unicode-3.0",
+  "file": "Unicode-3.0.txt"
+ },
+ {
+  "name": "SLF4J",
+  "use": "Extension host logging",
+  "licence": "MIT",
+  "file": "MIT.txt"
+ },
+ {
+  "name": "OpenJDK runtime",
+  "use": "The desktop Extensions runtime (a separate download)",
+  "licence": "GPL-2.0 with Classpath Exception",
+  "file": "GPL-2.0-only.txt"
+ },
+ {
+  "name": "OpenJDK Classpath Exception",
+  "use": "With the OpenJDK runtime",
+  "licence": "Classpath-exception-2.0",
+  "file": "Classpath-exception-2.0.txt"
+ },
+ {
+  "name": "Novel plugin libraries",
+  "use": "Libraries LNReader plugins use (cheerio, dayjs and others)",
+  "licence": "MIT and others",
+  "file": "plugin-libraries.txt"
+ },
+ {
+  "name": "lightnovel-crawler",
+  "use": "The optional novel pack (a separate download)",
+  "licence": "GPL-3.0",
+  "file": "GPL-3.0-only.txt"
+ },
+ {
+  "name": "Open extension sources",
+  "use": "Site structure the built-in sources follow",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "FreeType",
+  "use": "Subtitle fonts in the video player",
+  "licence": "FTL",
+  "file": "FTL.txt"
+ },
+ {
+  "name": "zlib",
+  "use": "Compression in the video player",
+  "licence": "Zlib",
+  "file": "Zlib.txt"
+ }
+]

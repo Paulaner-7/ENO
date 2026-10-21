@@ -1,0 +1,7 @@
+{"error":false,"message":"","data":{"items":[
+ {"_id":7603,"title":"Solo Leveling","slug":"solo-leveling","cover":"/2025/11/5c2efcd42cd5e.webp","subtitle":"Solo Leveling","alt_titles":[],
+  "synonyms":[{"text":"Solo Leveling","lang":"es"},{"text":"I Level Up Alone","lang":"en"},{"text":"ソロレベリング","lang":"jp"}],"types":[87]},
+ {"_id":49183,"title":"Solo Leveling: Ragnarok","slug":"solo-leveling-ragnarok","cover":"/2025/12/65c10b5d72c8c.webp","subtitle":"Solo Leveling: Ragnarok (novel)","alt_titles":[],"synonyms":[],"types":[214]},
+ {"_id":1,"title":"Solo Leveling dj","slug":"solo-leveling-dj","cover":"https://cdn.example/x.webp","alt_titles":[],"synonyms":[],"types":[207]},
+ {"_id":2,"title":"","slug":"no-title","types":[14]}
+],"pagination":{"total":4,"per_page":12,"current_page":1,"total_pages":1,"has_next":false}}}

@@ -9,12 +9,13 @@
     <name>Medium Dev</name>
   </developer>
   <description>
-    <p>SCANCORE brings comics, web novels and anime together in a native desktop app. Browse public sources, keep a personal library and reading history, and download chapters for offline reading.</p>
+    <p>SCANCORE brings comics, web novels and anime together in a native desktop app. Read from your files and the sources you choose, keep a personal library and reading history, and download chapters for offline reading.</p>
     <p>Your library and settings stay on your device. An optional account can sync library and reading progress with scancore.onl.</p>
     <p>SCANCORE is also available for Android, with a phone-focused interface and touch controls.</p>
     <ul>
       <li>Read manga, manhwa, webtoons and novels with adjustable reading controls.</li>
-      <li>Browse anime and play supported episodes inside the app.</li>
+      <li>Browse anime on AniList and play episodes from your sources inside the app.</li>
+      <li>Keep AniList, MyAnimeList and Comick up to date as you read and watch.</li>
       <li>Track series in one library, with history, progress and chapter downloads.</li>
       <li>Use light, dark and black themes, keyboard shortcuts and backup and restore.</li>
     </ul>
@@ -51,6 +52,90 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.7.1" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#271--2026-10-21</url>
+      <description>
+        <p>Android status bar icons follow SCANCORE's theme instead of the phone's light or dark mode.</p>
+      </description>
+    </release>
+    <release version="2.7.0" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#270--2026-10-21</url>
+      <description>
+        <p>Anime keeps working while AniList is down, with Kitsu and ani.zip standing in. Sharper comic pages and webtoons, a full screen button in the player, and an image cache that keeps what you are reading.</p>
+      </description>
+    </release>
+    <release version="2.3.5" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#235--2026-10-21</url>
+      <description>
+        <p>Extension anime plays again, including servers that disguise their videos as pictures, and AniZone loads on desktop.</p>
+      </description>
+    </release>
+    <release version="2.3.4" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#234--2026-10-21</url>
+      <description>
+        <p>The anime spotlight can be swiped: the slide follows your finger and a quick flick changes the title.</p>
+      </description>
+    </release>
+    <release version="2.3.3" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#233--2026-10-21</url>
+      <description>
+        <p>On phones the readers' top bar no longer slides over the status bar when it hides, both readers draw under the status bar with their controls below it, and the novel's title gets its own row under the reader's buttons.</p>
+      </description>
+    </release>
+    <release version="2.3.2" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#232--2026-10-21</url>
+      <description>
+        <p>Settings → Sources opens and scrolls quickly again, listing the built-in sources a dozen at a time with a search, and other long lists (source chips, Add a section, moving several series, Library health, comments and reviews) only build what is on screen.</p>
+      </description>
+    </release>
+    <release version="2.3.1" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#231--2026-10-21</url>
+      <description>
+        <p>Read from looks a title up on the built-in sources only and asks your extensions one at a time when you pick one; its list scrolls and opens from the bottom on phones. Buttons and choices no longer spill out of their cards on phones, a startup crash on systems whose Qt hashes through OpenSSL 3 is fixed, and the cookies of scancore.onl and your sync server are never shared with extensions.</p>
+      </description>
+    </release>
+    <release version="2.3.0" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#230--2026-10-21</url>
+      <description>
+        <p>One story across comic, novel and anime: a series page shows its other forms with your progress, anime pages say where the comic or novel goes on after each season (suggested and voted on by readers), and Home offers to continue the story. Upcoming shows what comes out next in your library, Library health finds sources that stopped and series saved twice, and Kitsu, MangaUpdates and Bangumi join the trackers. Titles can be looked up on your extensions, and Home sections can be removed or added from extensions.</p>
+      </description>
+    </release>
+    <release version="2.2.1" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#221--2026-10-21</url>
+      <description>
+        <p>Adding a second repository no longer closes SCANCORE, and repository links work in every form (GitHub pages, owner/name, raw folders, LNReader plugin lists, several at once). AniList connects inside the app, watching updates trackers reliably, Continue watching shows the right episode and leaves out planned and finished series, and crash reports can be shared.</p>
+      </description>
+    </release>
+    <release version="2.2.0" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#220--2026-10-21</url>
+      <description>
+        <p>SCANCORE Wrapped for your year in comics, novels and anime; live progress between your devices and Continue on another device; anime downloads; casting to Chromecasts and smart TVs; opening episodes in another player; subtitle style and Anime4K sharpening; an e-ink mode; SCANCORE's own video player in the Flatpak; and the interface in Polish, Thai, Filipino and Hindi.</p>
+      </description>
+    </release>
+    <release version="2.1.1" date="2026-10-21">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#211--2026-10-21</url>
+      <description>
+        <p>Keiyoushi extensions run again, Cloudflare checks pass by themselves as in Mihon (with one tap at most when a site insists), repositories can be added without installing anything and extensions install in the background, installed extensions can be searched, and opening a check no longer closes SCANCORE on some Linux computers.</p>
+      </description>
+    </release>
+    <release version="2.1.0" date="2026-10-20">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#210--2026-10-20</url>
+      <description>
+        <p>Move series to another source, update rules and automatic downloads, chapter bookmarks and filters, incognito mode and an app lock, a colour filter, split spreads, tap zones and volume keys in the comic reader, exact restores of Aniyomi and LNReader backups, themes that carry your whole look, AVIF images, and faster long novel chapters.</p>
+      </description>
+    </release>
+    <release version="2.0.1" date="2026-10-20">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#201--2026-10-20</url>
+      <description>
+        <p>"Read from" on Windows finds series under the other names a source lists them by again, and Kakao Page joins the Korean comic sources with every episode it shows without an account.</p>
+      </description>
+    </release>
+    <release version="2.0.0" date="2026-10-20">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#200--2026-10-20</url>
+      <description>
+        <p>Comics, novels and anime from the extensions you already use, a built-in video player, pages you arrange yourself, the interface in fourteen more languages and sources in your language, including official webtoon editions in eight languages. A library per media with categories and favourites, notifications, read aloud for novels, full-screen reading, backups for Mihon, a licences screen and a much faster app.</p>
+      </description>
+    </release>
     <release version="1.5.0" date="2026-10-19">
       <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#150--2026-10-19</url>
       <description>

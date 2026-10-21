@@ -9,9 +9,13 @@ Item {
     property var entry: ({})
     readonly property bool anime: entry.media === "anime"
     readonly property bool isFinished: entry.completed && (entry.percent >= 0.96 || (entry.position && entry.position.duration > 0 && entry.position.seconds >= entry.position.duration - 20))
-    readonly property real percent: isFinished ? 1 : (entry.percent || 0)
-    readonly property string unitLine: anime ? qsTr("Episode ") + (entry.unitNumber || entry.unitKey || "")
-                                             : (entry.unitTitle || "")
+    readonly property real percent: (entry.completed || isFinished) ? 1 : (entry.percent || 0)
+    // A finished episode: the next one is what continues.
+    readonly property real unitNumber: Number(entry.unitNumber)
+    readonly property bool upNext: anime && (entry.completed || isFinished) && unitNumber > 0
+    readonly property string unitLine: upNext ? qsTr("Up next: episode %1").arg(Math.floor(unitNumber) + 1)
+                                       : anime ? qsTr("Episode ") + (entry.unitNumber || entry.unitKey || "")
+                                       : (entry.unitTitle || "")
 
     width: parent ? parent.width : 800
     implicitHeight: Theme.compact ? 148 : 176
@@ -158,7 +162,7 @@ Item {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: card.isFinished ? qsTr("Finished") : Math.round(card.percent * 100) + "%"
+                    text: card.upNext ? "" : (card.isFinished || card.entry.completed) ? qsTr("Finished") : Math.round(card.percent * 100) + "%"
                     color: Theme.textFaint
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textXs + 1

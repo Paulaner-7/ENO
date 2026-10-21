@@ -1,7 +1,10 @@
 #include "ComicSource.h"
 
-#include "Engines.h"
+#ifdef SCANCORE_BUNDLED_SOURCES
+#include "sources/bundled/comics/Engines.h"
+#endif
 
+#include <QHash>
 #include <QRegularExpression>
 
 #include <algorithm>
@@ -14,8 +17,8 @@ QVariantMap Summary::toMap() const {
 }
 
 QVariantMap Chapter::toMap() const {
-    return {{"number", number}, {"title", title}, {"url", url},
-            {"thumbnail", thumbnail}, {"slug", slug}, {"released", released}};
+    return {{"number", number}, {"title", title},       {"url", url},          {"thumbnail", thumbnail},
+            {"slug", slug},     {"released", released}, {"scanlator", scanlator}};
 }
 
 QVariantMap LatestItem::toMap() const {
@@ -53,6 +56,11 @@ QString Source::chapterLabel(const QString &number, const QString &title) const 
 }
 
 std::unique_ptr<Source> createSource(const SourceConfig &config) {
+#ifndef SCANCORE_BUNDLED_SOURCES
+    // Built without the bundled sources: extensions and files only.
+    Q_UNUSED(config)
+    return nullptr;
+#else
     const auto &e = config.engine;
     if (e == QLatin1String("asura"))
         return std::make_unique<AsuraSource>(config);
@@ -82,7 +90,20 @@ std::unique_ptr<Source> createSource(const SourceConfig &config) {
         return std::make_unique<LeerCapituloSource>(config);
     if (e == QLatin1String("mangaworld"))
         return std::make_unique<MangaWorldSource>(config);
+    if (e == QLatin1String("dongman"))
+        return std::make_unique<DongmanSource>(config);
+    if (e == QLatin1String("kakaopage"))
+        return std::make_unique<KakaoPageSource>(config);
+    if (e == QLatin1String("naver"))
+        return std::make_unique<NaverSource>(config);
+    if (e == QLatin1String("zonatmo"))
+        return std::make_unique<ZonaTmoSource>(config);
+    if (e == QLatin1String("olympus"))
+        return std::make_unique<OlympusSource>(config);
+    if (e == QLatin1String("zerocomics"))
+        return std::make_unique<ZeroComicsSource>(config);
     return nullptr;
+#endif
 }
 
 QString str(const QJsonValue &value) {
@@ -114,10 +135,19 @@ QString chapterNumberFrom(const QString &text) {
 }
 
 QString chapterLabel(const QString &language, const QString &number, const QString &title) {
-    const bool spanish = language == QLatin1String("es") || language.startsWith(QLatin1String("es-"));
-    const bool italian = language == QLatin1String("it") || language.startsWith(QLatin1String("it-"));
-    const auto word = spanish ? QString::fromUtf8("Capítulo") : italian ? QStringLiteral("Capitolo") : QStringLiteral("Chapter");
-    return title.isEmpty() ? QStringLiteral("%1 %2").arg(word, number) : QStringLiteral("%1 %2: %3").arg(word, number, title);
+    // "%1" is the number, in the source's language (English for the rest).
+    static const QHash<QString, QString> words{
+        {QStringLiteral("es"), QString::fromUtf8("Capítulo %1")}, {QStringLiteral("pt"), QString::fromUtf8("Capítulo %1")},
+        {QStringLiteral("fr"), QStringLiteral("Chapitre %1")},    {QStringLiteral("it"), QStringLiteral("Capitolo %1")},
+        {QStringLiteral("de"), QStringLiteral("Kapitel %1")},     {QStringLiteral("pl"), QString::fromUtf8("Rozdział %1")},
+        {QStringLiteral("ru"), QString::fromUtf8("Глава %1")},    {QStringLiteral("tr"), QString::fromUtf8("Bölüm %1")},
+        {QStringLiteral("vi"), QString::fromUtf8("Chương %1")},   {QStringLiteral("th"), QString::fromUtf8("ตอนที่ %1")},
+        {QStringLiteral("ar"), QString::fromUtf8("الفصل %1")},    {QStringLiteral("ko"), QString::fromUtf8("%1화")},
+        {QStringLiteral("ja"), QString::fromUtf8("第%1話")},      {QStringLiteral("zh"), QString::fromUtf8("第%1话")},
+    };
+    const auto base = language.section(QLatin1Char('-'), 0, 0).section(QLatin1Char('_'), 0, 0).toLower();
+    const auto label = words.value(base, QStringLiteral("Chapter %1")).arg(number);
+    return title.isEmpty() ? label : QStringLiteral("%1: %2").arg(label, title);
 }
 
 void sortChapters(QList<Chapter> &chapters) {

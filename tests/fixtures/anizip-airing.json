@@ -1,0 +1,76 @@
+{
+ "mappings": {
+  "anilist_id": 190327,
+  "mal_id": 61469
+ },
+ "episodes": {
+  "1": {
+   "airDate": "2026-03-19",
+   "airDateUtc": "2026-03-19T07:00:00Z",
+   "title": {
+    "ja": "スティール・ボール・ラン",
+    "en": "Steel Ball Run",
+    "x-jat": "Steel Ball Run"
+   }
+  },
+  "2": {
+   "airDate": "2026-09-25",
+   "airDateUtc": "2026-09-25T07:00:00Z",
+   "title": {
+    "ja": "マウンテン・ティムへの依頼",
+    "en": "The Sheriff`s Request to Mountain Tim",
+    "x-jat": "Mountain Tim e no Irai"
+   }
+  },
+  "3": {
+   "airDate": "2026-10-02",
+   "airDateUtc": "2026-10-02T07:00:00Z",
+   "title": {
+    "ja": "砂漠で生まれたならず者",
+    "en": "The Desert-Born Outlaws",
+    "x-jat": "Sabaku de Umareta Narazumono"
+   }
+  },
+  "4": {
+   "airDate": "2026-10-09",
+   "airDateUtc": "2026-10-09T07:00:00Z",
+   "title": {
+    "ja": "悪魔の手のひら",
+    "en": "The Devil`s Palm",
+    "x-jat": "Akuma no Tenohira"
+   }
+  },
+  "5": {
+   "airDate": "2026-10-16",
+   "airDateUtc": "2026-10-16T07:00:00Z",
+   "title": {
+    "ja": "遠い国から来たテロリスト",
+    "en": "The Terrorist from a Faraway Country",
+    "x-jat": "Tooi Kuni kara Kita Terrorist"
+   }
+  },
+  "6": {
+   "airDate": "2026-10-23",
+   "airDateUtc": "2026-10-23T07:00:00Z",
+   "title": {
+    "ja": "ジャイロ・ツェペリの宿命",
+    "en": "Gyro Zeppeli`s Destiny",
+    "x-jat": "Gyro Zeppeli no Shukumei"
+   }
+  },
+  "7": {
+   "airDate": "2026-10-30",
+   "airDateUtc": "2026-10-30T07:00:00Z",
+   "title": {
+    "en": null
+   }
+  },
+  "8": {
+   "airDate": "2026-11-06",
+   "airDateUtc": "2026-11-06T07:00:00Z",
+   "title": {
+    "en": null
+   }
+  }
+ }
+}

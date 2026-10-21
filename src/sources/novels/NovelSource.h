@@ -3,6 +3,7 @@
 #include "core/Html.h"
 #include "core/Http.h"
 
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QList>
 #include <QStringList>
@@ -45,6 +46,12 @@ struct Shelf {
     QList<Book> books;
 };
 
+// One page of a source's own lists (see Source::browse).
+struct Listing {
+    QList<Book> items;
+    bool hasNextPage = false;
+};
+
 struct SourceConfig {
     QString key;
     QString label;
@@ -76,6 +83,29 @@ public:
     virtual QList<Block> chapter(const QString &url, QString &title) = 0;
     virtual QList<Shelf> discover() { return {}; }
     virtual bool hasDiscover() const { return false; }
+
+    // A source's own lists, a page at a time (plugins): "popular",
+    // "latest" or "search" (with `query` and the states of its filters, in
+    // the shape comics' filters use).
+    virtual bool canBrowse() const { return false; }
+    virtual bool hasLatestListing() const { return false; }
+    virtual Listing browse(const QString &listing, int page, const QString &query, const QJsonArray &filters) {
+        Q_UNUSED(listing)
+        Q_UNUSED(page)
+        Q_UNUSED(query)
+        Q_UNUSED(filters)
+        return {};
+    }
+    virtual QJsonArray filters() { return {}; }
+    // Settings the source offers ([{key, type, title, summary, value, values,
+    // entries}], as comics' extensions); setPreference stores one.
+    virtual QJsonArray preferences() { return {}; }
+    virtual void setPreference(const QString &key, const QJsonValue &value) {
+        Q_UNUSED(key)
+        Q_UNUSED(value)
+    }
+    // What cover requests send as Referer (empty: none).
+    virtual QString imageReferer() const { return {}; }
 
 protected:
     Response page(const QString &url);

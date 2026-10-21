@@ -1,6 +1,8 @@
 #include "NovelSource.h"
 
-#include "Engines.h"
+#ifdef SCANCORE_BUNDLED_SOURCES
+#include "sources/bundled/novels/Engines.h"
+#endif
 
 #include <QRegularExpression>
 #include <QSet>
@@ -28,11 +30,18 @@ Response Source::page(const QString &url) {
 }
 
 std::unique_ptr<Source> createSource(const SourceConfig &config) {
+#ifndef SCANCORE_BUNDLED_SOURCES
+    Q_UNUSED(config)
+    return nullptr;
+#else
     if (config.engine == QLatin1String("royalroad"))
         return std::make_unique<RoyalRoad>(config);
     if (config.engine == QLatin1String("novelfull") || config.engine == QLatin1String("freewebnovel"))
         return std::make_unique<NovelFull>(config);
+    if (config.engine == QLatin1String("wtrlab"))
+        return std::make_unique<WtrLab>(config);
     return nullptr;
+#endif
 }
 
 QString imgSrc(const HtmlNode &img, const QString &base) {

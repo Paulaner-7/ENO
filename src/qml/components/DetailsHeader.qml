@@ -204,6 +204,23 @@ Item {
                 iconName: header.saved ? "bookmark-check" : "bookmark"
                 onClicked: header.toggleSaved()
             }
+            // Where a saved series sits in the library, and favourites.
+            Select {
+                visible: header.saved && !!header.series.id
+                implicitWidth: 168
+                model: Router.libraryCategories(header.series.media)
+                value: { App.dependOn(Library.revision); return header.saved ? (Library.category(header.series.id) || "reading") : "reading" }
+                onPicked: (v) => Library.setCategory(header.series.id, v)
+            }
+            IconButton {
+                id: heart
+                visible: header.saved && !!header.series.id
+                readonly property bool on: { App.dependOn(Library.revision); return header.saved && Library.isFavourite(header.series.id) }
+                iconName: "heart"
+                iconColor: on ? Theme.danger : Theme.textMuted
+                tip: on ? qsTr("Remove from favourites") : qsTr("Add to favourites")
+                onClicked: Library.setFavourite(header.series.id, !on)
+            }
         }
         Text {
             visible: header.primaryDetail.length > 0

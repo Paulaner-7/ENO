@@ -20,7 +20,8 @@ Item {
             to: 360
             duration: 900
             loops: Animation.Infinite
-            running: spinner.visible
+            // E-ink: a still arc (every frame would flash the screen).
+            running: spinner.visible && !Theme.eink
         }
         ShapePath {
             strokeColor: spinner.color

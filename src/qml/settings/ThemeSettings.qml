@@ -506,16 +506,15 @@ SettingsPane {
         SettingRow {
             iconName: "shield-check"
             title: qsTr("Theme file")
-            description: pane.custom ? qsTr("Save this theme, or use one someone shared.") : qsTr("Use a theme someone shared.")
+            description: qsTr("Save your whole look (colours, background, layout, arranged pages and reader colours) to share, or use a theme someone shared.")
             Row {
                 spacing: 8
                 ScButton {
-                    visible: pane.custom
                     text: qsTr("Export…")
                     iconName: "download"
                     onClicked: exportDialog.open()
                 }
-                ScButton { text: qsTr("Import…"); variant: pane.custom ? "ghost" : "secondary"; onClicked: importDialog.open() }
+                ScButton { text: qsTr("Import…"); variant: "ghost"; onClicked: importDialog.open() }
             }
         }
     }
@@ -561,7 +560,8 @@ SettingsPane {
         nameFilters: [qsTr("SCANCORE theme (*.sct)")]
         selectedFile: (Theme.customTheme.name || "scancore-theme").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-").toLowerCase() + ".sct"
         onAccepted: {
-            const theme = Object.assign({}, Theme.customTheme, { accent: Theme.customAccent ? String(Theme.accent).slice(0, 7) : "" })
+            const theme = Object.assign({}, pane.custom ? Theme.customTheme : {},
+                                        { accent: Theme.customAccent ? String(Theme.accent).slice(0, 7) : "", look: Router.currentLook() })
             pane.watch(Customize.exportTheme(theme, selectedFile), (name) => qsTr("Saved ") + name)
         }
     }

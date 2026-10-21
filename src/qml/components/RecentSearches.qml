@@ -18,7 +18,8 @@ Column {
         App.setSetting(key, [t].concat(items.filter(x => String(x).toLowerCase() !== lower)).slice(0, 8))
     }
 
-    visible: items.length > 0
+    readonly property bool hasContent: items.length > 0
+    visible: hasContent
     width: parent ? parent.width : 400
     spacing: 10
 

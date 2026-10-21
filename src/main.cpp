@@ -1,18 +1,24 @@
 #include "app/Account.h"
 #include "app/Activity.h"
 #include "app/App.h"
+#include "app/Profiler.h"
 #include "app/Customize.h"
+#include "app/Extensions.h"
 #include "app/Images.h"
+#include "app/MpvPlayer.h"
 #include "app/Presence.h"
+#include "app/CrashLog.h"
 #include "app/SingleInstance.h"
 #include "app/Sync.h"
 #include "app/Updater.h"
-#include "app/WebBridge.h"
 #include "core/Cookies.h"
 #include "core/Database.h"
 #include "core/Http.h"
 #include "core/ImageCache.h"
+#include "extensions/Manager.h"
 #include "sources/Manifest.h"
+#include "sources/anime/Registry.h"
+#include "sources/catalogue/Catalogue.h"
 #include "sources/comics/Registry.h"
 #include "sources/local/Local.h"
 #include "sources/novels/Registry.h"
@@ -28,21 +34,27 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #endif
+#include <QCryptographicHash>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QFontDatabase>
 #include <QIcon>
+#include <QOpenGLContext>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QScreen>
 #include <QStandardPaths>
 #include <QTimer>
+
+#include <stdexcept>
 #include <QUrl>
 #include <QtCore/private/qabstractanimation_p.h>
 #include <cmath>
 
 #ifdef SCANCORE_HAVE_WEBENGINE
+#include <QtWebEngineCore/qtwebenginecoreglobal.h>
 #include <QtWebEngineQuick/QtWebEngineQuick>
 #endif
 #ifdef SCANCORE_HAVE_PDF
@@ -64,15 +76,18 @@ void loadFonts() {
     QGuiApplication::setFont(font);
 }
 
-#ifdef Q_OS_MACOS
-// Finder opens files (a .sct theme, a comic) with an event, not arguments.
+#if defined(Q_OS_MACOS) || defined(Q_OS_ANDROID)
+// Finder opens files (a .sct theme, a comic) with an event, not arguments;
+// links SCANCORE answers (scancore://, a repository's one-tap link) come the
+// same way on macOS and Android.
 class FileOpenFilter : public QObject {
 public:
     using QObject::QObject;
     bool eventFilter(QObject *watched, QEvent *event) override {
         if (event->type() != QEvent::FileOpen)
             return QObject::eventFilter(watched, event);
-        const auto target = static_cast<QFileOpenEvent *>(event)->file();
+        const auto *open = static_cast<QFileOpenEvent *>(event);
+        const auto target = open->file().isEmpty() ? open->url().toString() : open->file();
         QTimer::singleShot(0, App::instance(), [target] { emit App::instance()->openRequested(target); });
         return true;
     }
@@ -124,9 +139,56 @@ void openStorage() {
     const qint64 cacheMb = std::max<qint64>(128, Database::pref(QStringLiteral("setting.imageCacheMB"), 1024).toLongLong());
     ImageCache::init(cache + QStringLiteral("/images"), cacheMb * 1024 * 1024);
     registerPdf();
+#ifdef SCANCORE_MAL_CLIENT_ID
+    catalogue::setMalClientId(QStringLiteral(SCANCORE_MAL_CLIENT_ID));
+#endif
     Manifest::load(data + QStringLiteral("/manifest.json"));
+    ext::Manager::setStorage(data + QStringLiteral("/extensions"));
     comics::Registry::rebuild();
     novels::Registry::rebuild();
+    anime::Registry::rebuild();
+}
+
+// The video player (libmpv's render API) draws with OpenGL, so the
+// interface does too: Linux and Android do already; Windows and macOS would
+// pick Direct3D and Metal, so OpenGL is asked for where it works. Without
+// it, or with another graphics API chosen (QSG_RHI_BACKEND, the software
+// renderer), anime from extensions cannot play and the web players remain.
+void chooseGraphicsApi() {
+    const auto backend = qEnvironmentVariable("QSG_RHI_BACKEND");
+    if (QQuickWindow::sceneGraphBackend() == QLatin1String("software") || QGuiApplication::platformName() == QLatin1String("offscreen") ||
+        (!backend.isEmpty() && backend != QLatin1String("opengl"))) {
+        MpvPlayer::setSceneSupported(false);
+        return;
+    }
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
+    QOpenGLContext probe;
+    if (!probe.create()) {
+        qWarning("No OpenGL: videos from anime extensions cannot play here.");
+        MpvPlayer::setSceneSupported(false);
+        return;
+    }
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+#endif
+}
+
+// Installed, removed, trusted or switched extensions change the sources:
+// the registries are rebuilt once a burst of changes settles.
+void watchExtensions() {
+    static QTimer *rebuild = [] {
+        auto *timer = new QTimer(App::instance());
+        timer->setSingleShot(true);
+        timer->setInterval(150);
+        QObject::connect(timer, &QTimer::timeout, App::instance(), [] {
+            comics::Registry::rebuild();
+            novels::Registry::rebuild();
+            anime::Registry::rebuild();
+            emit App::instance()->manifestChanged();
+            Extensions::instance()->notifyExtensionsChanged();
+        });
+        return timer;
+    }();
+    ext::Manager::setChangedCallback([] { QMetaObject::invokeMethod(rebuild, qOverload<>(&QTimer::start)); });
 }
 
 void configureHighRefreshRate(QQuickWindow *window) {
@@ -162,15 +224,37 @@ void configureHighRefreshRate(QQuickWindow *window) {
 
 } // namespace
 
+// Development hook: SCANCORE_PROFILE=1 logs how long start-up takes, step
+// by step, up to the first frame on screen.
+static QElapsedTimer g_startClock;
+static void startStep(const char *step) {
+    static const bool on = qEnvironmentVariableIsSet("SCANCORE_PROFILE");
+    if (on)
+        qInfo("start-up: %-22s %5lld ms", step, g_startClock.elapsed());
+}
+
 int main(int argc, char *argv[]) {
+    g_startClock.start();
+    // Where Qt hashes through OpenSSL 3 (Arch's own Qt, for one), every hash
+    // loads OpenSSL's default provider and unloads it when done; the last
+    // unload frees it while another thread may be using it (decoding the
+    // TLS certificates for a request), and the app crashed at startup. A
+    // hash kept for the whole run (never destroyed, not even at exit, when
+    // worker threads may still be hashing) holds one load, so it is never
+    // freed.
+    [[maybe_unused]] static const auto *providerHold = new QCryptographicHash(QCryptographicHash::Sha256);
 #ifdef SCANCORE_HAVE_WEBENGINE
 #ifdef Q_OS_LINUX
     // Chromium's GPU compositor shares textures with Qt Quick through GBM;
     // where GBM is unavailable it falls back to Vulkan, and some Mesa drivers
     // then crash on import. Compositing the player in software avoids that
-    // and video still decodes on the GPU. Users can override the flags.
+    // and video still decodes on the GPU. WebGL took the same Vulkan path
+    // and crashed the app in Mesa (Intel with an NVIDIA laptop GPU), and
+    // Cloudflare's browser check draws with WebGL, so no Cloudflare site
+    // could be passed there; without Vulkan Chromium uses GL, as it does
+    // where GBM works. Users can override the flags.
     if (qEnvironmentVariableIsEmpty("QTWEBENGINE_CHROMIUM_FLAGS"))
-        qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu-compositing");
+        qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu-compositing --disable-features=Vulkan");
     // A global MANGOHUD=1 injects MangoHud's Vulkan layer into Chromium's
     // in-process GPU thread, which then aborts with "free(): invalid
     // pointer" shortly after startup. Set DISABLE_MANGOHUD=0 to keep it.
@@ -179,6 +263,11 @@ int main(int argc, char *argv[]) {
 #endif
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QtWebEngineQuick::initialize();
+    // The engine's own Chromium version, so sites see one browser (see
+    // Http::chromeUserAgent): before anything is requested or the extension
+    // host starts with it.
+    if (const int major = QByteArray(qWebEngineChromiumVersion()).split('.').value(0).toInt(); major > 0)
+        sc::Http::setUserAgent(sc::Http::chromeUserAgent(major));
 #endif
 #ifdef SCANCORE_HAVE_WEBVIEW
 #ifdef Q_OS_WIN
@@ -195,7 +284,8 @@ int main(int argc, char *argv[]) {
     using Application = QApplication;
 #endif
     Application app(argc, argv);
-#ifdef Q_OS_MACOS
+    startStep("application");
+#if defined(Q_OS_MACOS) || defined(Q_OS_ANDROID)
     app.installEventFilter(new FileOpenFilter(&app));
 #endif
     Application::setOrganizationName(QStringLiteral("ENO"));
@@ -207,6 +297,20 @@ int main(int argc, char *argv[]) {
     if (qEnvironmentVariableIsSet("SCANCORE_PRETEND_VERSION"))
         Application::setApplicationVersion(qEnvironmentVariable("SCANCORE_PRETEND_VERSION"));
     Application::setDesktopFileName(QStringLiteral("com.mediumdev.scancore"));
+    // Crash reports (Settings → About), and the recent log they carry.
+    sc::crashlog::install();
+    // Development hook: SCANCORE_CRASH_TEST=segv|abort|throw crashes on
+    // purpose a few seconds after starting, to check the reports.
+    if (const auto test = qEnvironmentVariable("SCANCORE_CRASH_TEST"); !test.isEmpty())
+        QTimer::singleShot(4000, [test] {
+            qWarning("Crash test: %s", qPrintable(test));
+            if (test == QLatin1String("abort"))
+                qFatal("Crash test");
+            if (test == QLatin1String("throw"))
+                throw std::runtime_error("crash test");
+            volatile int *nowhere = nullptr;
+            *nowhere = 1;
+        });
     // On macOS the Dock uses the bundle icon (.icns), so the system applies its own
     // Liquid Glass treatment; a runtime pixmap would override it with an opaque image.
 #ifndef Q_OS_MACOS
@@ -234,13 +338,19 @@ int main(int argc, char *argv[]) {
 
     QQuickStyle::setStyle(QStringLiteral("Basic"));
     loadFonts();
+    startStep("fonts");
 
     try {
         openStorage();
+        startStep("storage and sources");
+        watchExtensions();
+        Extensions::instance()->startHost();
     } catch (const Error &e) {
         qCritical().noquote() << e.message();
         return 1;
     }
+
+    chooseGraphicsApi();
 
 #ifndef Q_OS_ANDROID
     // A see-through window needs an alpha channel from the start.
@@ -250,7 +360,6 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    installWebBridge();
     Account::instance();
     Activity::instance();
     Sync::instance();
@@ -268,7 +377,6 @@ int main(int argc, char *argv[]) {
         if (!key.isEmpty() && !appState->settings().contains(key))
             appState->setSetting(key, Database::pref(QStringLiteral("setting.") + key));
     }
-
 #ifndef Q_OS_ANDROID
     QSystemTrayIcon tray(QApplication::windowIcon());
     QMenu trayMenu;
@@ -288,11 +396,16 @@ int main(int argc, char *argv[]) {
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);
+    startStep("before the interface");
     engine.loadFromModule("ScanCore", "Main");
     if (engine.rootObjects().isEmpty())
         return 1;
+    startStep("interface created");
     if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
         configureHighRefreshRate(window);
+        QObject::connect(window, &QQuickWindow::frameSwapped, window, [] { startStep("first frame"); },
+                         Qt::SingleShotConnection);
+        Profiler::instance()->attach(window);
         QObject::connect(appState, &App::activateRequested, window, [window] {
             if (window->visibility() == QWindow::Hidden || window->visibility() == QWindow::Minimized)
                 window->setVisibility(QWindow::Windowed);
@@ -322,6 +435,7 @@ int main(int argc, char *argv[]) {
     Updater::instance()->startAutomatic();
 
     QObject::connect(&app, &Application::aboutToQuit, [] {
+        Extensions::instance()->stopHost();
         CancelScope::cancelAll();
         CookieJar::shared().save();
         try {

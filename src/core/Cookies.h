@@ -22,6 +22,13 @@ public:
     void load(const QString &path);
     void save() const;
 
+    // SCANCORE's own site and the sync server set in Settings → Sync (and
+    // their subdomains). Their cookies carry the account's session: they are
+    // never handed to extensions, plugins or browser checks.
+    static bool isProtected(const QUrl &url);
+    // Reads the sync server again (after it changes).
+    static void refreshProtected();
+
 private:
     using QNetworkCookieJar::QNetworkCookieJar;
     mutable std::recursive_mutex m_mutex;

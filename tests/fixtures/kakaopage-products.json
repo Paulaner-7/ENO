@@ -1,0 +1,63 @@
+{
+  "result_code": 0,
+  "result": {
+    "series_item": {
+      "title": "나 혼자만 레벨업"
+    },
+    "has_next": true,
+    "list": [
+      {
+        "cursor_index": 1,
+        "item": {
+          "product_id": 51085177,
+          "title": "나 혼자만 레벨업 동영상 프롤로그",
+          "thumbnail": "r0y7S/hyjahn3zfQ/jNS8GVbnFOHuTZprXrmKE0",
+          "is_free": true,
+          "age_grade": 0,
+          "slide_type": "SD01",
+          "hidden": false,
+          "start_sale_dt": "2018-04-13T12:57:26+09:00"
+        }
+      },
+      {
+        "cursor_index": 3,
+        "item": {
+          "product_id": 50896822,
+          "title": "프롤로그",
+          "thumbnail": "Ie7QF/hyjahVunTT/lfg6clZOuXhg4KT2VUQQek",
+          "is_free": true,
+          "age_grade": 0,
+          "slide_type": "SD03",
+          "hidden": false,
+          "start_sale_dt": "2018-03-04T21:59:57+09:00"
+        }
+      },
+      {
+        "cursor_index": 4,
+        "item": {
+          "product_id": 50896826,
+          "title": "나 혼자만 레벨업 1화",
+          "thumbnail": "jKFd0/hyksIEr0hH/wOLbi6T0apwGurrgG1BRHk",
+          "is_free": true,
+          "age_grade": 0,
+          "slide_type": "SD03",
+          "hidden": false,
+          "start_sale_dt": "2018-03-04T21:59:57+09:00"
+        }
+      },
+      {
+        "cursor_index": 7,
+        "item": {
+          "product_id": 50899938,
+          "title": "나 혼자만 레벨업 4화",
+          "thumbnail": "8zWYz/hyjahu7ce3/z208mn6c4GMkHy87rznDy0",
+          "is_free": false,
+          "age_grade": 0,
+          "slide_type": "SD03",
+          "hidden": false,
+          "start_sale_dt": "2018-03-04T21:59:57+09:00"
+        }
+      }
+    ]
+  }
+}

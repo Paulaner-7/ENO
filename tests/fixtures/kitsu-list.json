@@ -1,0 +1,656 @@
+{
+ "data": [
+  {
+   "id": "12",
+   "type": "anime",
+   "attributes": {
+    "canonicalTitle": "One Piece",
+    "titles": {
+     "en": "One Piece",
+     "en_jp": "One Piece",
+     "ja_jp": "ONE PIECE"
+    },
+    "abbreviatedTitles": [
+     "ワンピース"
+    ],
+    "synopsis": "Gol D. Roger was known as the \"Pirate King,\" the strongest and most infamous being to have sailed the Grand Line. The capture and death of Roger by the World Government brought a change throughout the world. His last words before his death revealed the existence of the greatest treasure in the world",
+    "subtype": "TV",
+    "status": "current",
+    "episodeCount": null,
+    "episodeLength": 24,
+    "startDate": "1999-10-20",
+    "averageRating": "84.0",
+    "userCount": 324885,
+    "nsfw": false,
+    "nextRelease": "2026-10-25T09:30:00.000+09:00",
+    "youtubeVideoId": "CmTeYj2FmRc",
+    "posterImage": {
+     "tiny": "https://media.kitsu.app/anime/poster_images/12/tiny.jpg",
+     "large": "https://media.kitsu.app/anime/poster_images/12/large.jpg",
+     "small": "https://media.kitsu.app/anime/poster_images/12/small.jpg",
+     "medium": "https://media.kitsu.app/anime/poster_images/12/medium.jpg",
+     "original": "https://media.kitsu.app/anime/poster_images/12/original.png"
+    },
+    "coverImage": {
+     "tiny": "https://media.kitsu.app/anime/12/cover_image/tiny-cd1b0729d5c15400bfa2441ea3751e86.jpeg",
+     "large": "https://media.kitsu.app/anime/12/cover_image/large-3e72f400a87b5241780c5082f0582611.jpeg",
+     "small": "https://media.kitsu.app/anime/12/cover_image/small-8d0cbc39cac65d5d7c4db5f5b3742ae7.jpeg",
+     "original": "https://media.kitsu.app/anime/12/cover_image/21ecb556255bd46b95aea4779d19789f.jpg"
+    }
+   },
+   "relationships": {
+    "categories": {
+     "data": [
+      {
+       "type": "categories",
+       "id": "11"
+      },
+      {
+       "type": "categories",
+       "id": "170"
+      },
+      {
+       "type": "categories",
+       "id": "150"
+      },
+      {
+       "type": "categories",
+       "id": "52"
+      },
+      {
+       "type": "categories",
+       "id": "157"
+      },
+      {
+       "type": "categories",
+       "id": "156"
+      },
+      {
+       "type": "categories",
+       "id": "191"
+      },
+      {
+       "type": "categories",
+       "id": "46"
+      },
+      {
+       "type": "categories",
+       "id": "71"
+      },
+      {
+       "type": "categories",
+       "id": "30"
+      },
+      {
+       "type": "categories",
+       "id": "175"
+      },
+      {
+       "type": "categories",
+       "id": "218"
+      },
+      {
+       "type": "categories",
+       "id": "198"
+      },
+      {
+       "type": "categories",
+       "id": "49"
+      },
+      {
+       "type": "categories",
+       "id": "167"
+      },
+      {
+       "type": "categories",
+       "id": "73"
+      },
+      {
+       "type": "categories",
+       "id": "129"
+      },
+      {
+       "type": "categories",
+       "id": "128"
+      },
+      {
+       "type": "categories",
+       "id": "47"
+      },
+      {
+       "type": "categories",
+       "id": "160"
+      },
+      {
+       "type": "categories",
+       "id": "243"
+      }
+     ]
+    },
+    "mappings": {
+     "data": [
+      {
+       "type": "mappings",
+       "id": "1175"
+      },
+      {
+       "type": "mappings",
+       "id": "254544"
+      }
+     ]
+    },
+    "animeProductions": {}
+   }
+  },
+  {
+   "id": "210",
+   "type": "anime",
+   "attributes": {
+    "canonicalTitle": "Detective Conan",
+    "titles": {
+     "ar": "المحقق كونان",
+     "en": "Detective Conan",
+     "ca_es": "Detectiu Conan",
+     "da_dk": "Mesterdetektiven Conan",
+     "de_de": "Detektiv Conan",
+     "en_ar": "Al Mohackek Conan",
+     "en_jp": "Meitantei Conan",
+     "en_us": "Case Closed",
+     "es_es": "El Detective Conan",
+     "fi_fi": "Salapollisi Conan",
+     "fr_fr": "Détective Conan",
+     "id_id": "Detektif Conan",
+     "ja_jp": "名探偵コナン",
+     "ko_kr": "명탐정 코난",
+     "pl_pl": "Detektyw Conan",
+     "pt_pt": "Detetive Conan",
+     "ro_ro": "Detectivul Conan",
+     "ru_ru": "Детектив Конан",
+     "sv_se": "Mästerdetektiven Conan",
+     "vi_vn": "Thám tử lừng danh Conan",
+     "zh_tw": "名偵探柯南"
+    },
+    "abbreviatedTitles": [
+     "Case Closed: One Truth Prevails"
+    ],
+    "synopsis": "Shinichi Kudou, a great mystery expert at only seventeen, is already well known for having solved several challenging cases. One day, when Shinichi sees two suspicious men and decides to follow them, he inadvertently becomes witness to a disturbing illegal activity. When the men catch Shinichi, they",
+    "subtype": "TV",
+    "status": "current",
+    "episodeCount": null,
+    "episodeLength": 25,
+    "startDate": "1996-01-08",
+    "averageRating": "81.72",
+    "userCount": 35727,
+    "nsfw": false,
+    "nextRelease": "2026-10-24T18:00:00.000+09:00",
+    "youtubeVideoId": "iR2l9M0KzuQ",
+    "posterImage": {
+     "tiny": "https://media.kitsu.app/anime/poster_images/210/tiny.jpg",
+     "large": "https://media.kitsu.app/anime/poster_images/210/large.jpg",
+     "small": "https://media.kitsu.app/anime/poster_images/210/small.jpg",
+     "medium": "https://media.kitsu.app/anime/poster_images/210/medium.jpg",
+     "original": "https://media.kitsu.app/anime/poster_images/210/original.jpg"
+    },
+    "coverImage": {
+     "tiny": "https://media.kitsu.app/anime/cover_images/210/tiny.jpg",
+     "large": "https://media.kitsu.app/anime/cover_images/210/large.jpg",
+     "small": "https://media.kitsu.app/anime/cover_images/210/small.jpg",
+     "original": "https://media.kitsu.app/anime/cover_images/210/original.jpg"
+    }
+   },
+   "relationships": {
+    "categories": {
+     "data": [
+      {
+       "type": "categories",
+       "id": "54"
+      },
+      {
+       "type": "categories",
+       "id": "164"
+      },
+      {
+       "type": "categories",
+       "id": "81"
+      },
+      {
+       "type": "categories",
+       "id": "144"
+      },
+      {
+       "type": "categories",
+       "id": "160"
+      },
+      {
+       "type": "categories",
+       "id": "159"
+      },
+      {
+       "type": "categories",
+       "id": "201"
+      },
+      {
+       "type": "categories",
+       "id": "85"
+      },
+      {
+       "type": "categories",
+       "id": "48"
+      },
+      {
+       "type": "categories",
+       "id": "157"
+      },
+      {
+       "type": "categories",
+       "id": "190"
+      },
+      {
+       "type": "categories",
+       "id": "234"
+      }
+     ]
+    },
+    "mappings": {
+     "data": [
+      {
+       "type": "mappings",
+       "id": "5615"
+      },
+      {
+       "type": "mappings",
+       "id": "256977"
+      }
+     ]
+    },
+    "animeProductions": {}
+   }
+  },
+  {
+   "id": "856",
+   "type": "anime",
+   "attributes": {
+    "canonicalTitle": "Crayon Shin-chan",
+    "titles": {
+     "en": "Shin Chan",
+     "en_jp": "Crayon Shin-chan",
+     "ja_jp": "クレヨンしんちゃん"
+    },
+    "abbreviatedTitles": [
+     "Crayon Shin-chan"
+    ],
+    "synopsis": "Just because an anime features a young protagonist does not necessarily mean that it is an appropriate series to show your children. Young Shinnosuke, or Shin-chan for short, is a very creative young boy that lives with his eccentric parents, Misae and Hiroshi, as well as his Prima Donna younger sis",
+    "subtype": "TV",
+    "status": "current",
+    "episodeCount": null,
+    "episodeLength": 21,
+    "startDate": "1992-04-13",
+    "averageRating": "78.12",
+    "userCount": 6719,
+    "nsfw": false,
+    "nextRelease": "2026-10-23T19:30:00.000+09:00",
+    "youtubeVideoId": "HBS3amqv1tA",
+    "posterImage": {
+     "tiny": "https://media.kitsu.app/anime/poster_images/856/tiny.jpg",
+     "large": "https://media.kitsu.app/anime/poster_images/856/large.jpg",
+     "small": "https://media.kitsu.app/anime/poster_images/856/small.jpg",
+     "medium": "https://media.kitsu.app/anime/poster_images/856/medium.jpg",
+     "original": "https://media.kitsu.app/anime/poster_images/856/original.jpg"
+    },
+    "coverImage": null
+   },
+   "relationships": {
+    "categories": {
+     "data": [
+      {
+       "type": "categories",
+       "id": "81"
+      },
+      {
+       "type": "categories",
+       "id": "3"
+      },
+      {
+       "type": "categories",
+       "id": "162"
+      },
+      {
+       "type": "categories",
+       "id": "160"
+      },
+      {
+       "type": "categories",
+       "id": "172"
+      },
+      {
+       "type": "categories",
+       "id": "169"
+      },
+      {
+       "type": "categories",
+       "id": "239"
+      }
+     ]
+    },
+    "mappings": {
+     "data": [
+      {
+       "type": "mappings",
+       "id": "2367"
+      },
+      {
+       "type": "mappings",
+       "id": "256976"
+      }
+     ]
+    },
+    "animeProductions": {}
+   }
+  }
+ ],
+ "included": [
+  {
+   "id": "11",
+   "type": "categories",
+   "attributes": {
+    "title": "Pirate"
+   }
+  },
+  {
+   "id": "170",
+   "type": "categories",
+   "attributes": {
+    "title": "Slavery"
+   }
+  },
+  {
+   "id": "150",
+   "type": "categories",
+   "attributes": {
+    "title": "Action"
+   }
+  },
+  {
+   "id": "52",
+   "type": "categories",
+   "attributes": {
+    "title": "Fantasy World"
+   }
+  },
+  {
+   "id": "157",
+   "type": "categories",
+   "attributes": {
+    "title": "Adventure"
+   }
+  },
+  {
+   "id": "156",
+   "type": "categories",
+   "attributes": {
+    "title": "Fantasy"
+   }
+  },
+  {
+   "id": "191",
+   "type": "categories",
+   "attributes": {
+    "title": "Special Squads"
+   }
+  },
+  {
+   "id": "46",
+   "type": "categories",
+   "attributes": {
+    "title": "Swordplay"
+   }
+  },
+  {
+   "id": "71",
+   "type": "categories",
+   "attributes": {
+    "title": "Absurdist Humour"
+   }
+  },
+  {
+   "id": "30",
+   "type": "categories",
+   "attributes": {
+    "title": "Martial Arts"
+   }
+  },
+  {
+   "id": "175",
+   "type": "categories",
+   "attributes": {
+    "title": "Crime"
+   }
+  },
+  {
+   "id": "218",
+   "type": "categories",
+   "attributes": {
+    "title": "Navy"
+   }
+  },
+  {
+   "id": "198",
+   "type": "categories",
+   "attributes": {
+    "title": "War"
+   }
+  },
+  {
+   "id": "49",
+   "type": "categories",
+   "attributes": {
+    "title": "Past"
+   }
+  },
+  {
+   "id": "167",
+   "type": "categories",
+   "attributes": {
+    "title": "Friendship"
+   }
+  },
+  {
+   "id": "73",
+   "type": "categories",
+   "attributes": {
+    "title": "Slapstick"
+   }
+  },
+  {
+   "id": "129",
+   "type": "categories",
+   "attributes": {
+    "title": "Stereotypes"
+   }
+  },
+  {
+   "id": "128",
+   "type": "categories",
+   "attributes": {
+    "title": "Plot Continuity"
+   }
+  },
+  {
+   "id": "47",
+   "type": "categories",
+   "attributes": {
+    "title": "Super Power"
+   }
+  },
+  {
+   "id": "160",
+   "type": "categories",
+   "attributes": {
+    "title": "Comedy"
+   }
+  },
+  {
+   "id": "243",
+   "type": "categories",
+   "attributes": {
+    "title": "Shounen"
+   }
+  },
+  {
+   "id": "54",
+   "type": "categories",
+   "attributes": {
+    "title": "Earth"
+   }
+  },
+  {
+   "id": "164",
+   "type": "categories",
+   "attributes": {
+    "title": "Romance"
+   }
+  },
+  {
+   "id": "81",
+   "type": "categories",
+   "attributes": {
+    "title": "Japan"
+   }
+  },
+  {
+   "id": "144",
+   "type": "categories",
+   "attributes": {
+    "title": "Asia"
+   }
+  },
+  {
+   "id": "159",
+   "type": "categories",
+   "attributes": {
+    "title": "Thriller"
+   }
+  },
+  {
+   "id": "201",
+   "type": "categories",
+   "attributes": {
+    "title": "Detective"
+   }
+  },
+  {
+   "id": "85",
+   "type": "categories",
+   "attributes": {
+    "title": "Tokyo"
+   }
+  },
+  {
+   "id": "48",
+   "type": "categories",
+   "attributes": {
+    "title": "Present"
+   }
+  },
+  {
+   "id": "190",
+   "type": "categories",
+   "attributes": {
+    "title": "Cops"
+   }
+  },
+  {
+   "id": "234",
+   "type": "categories",
+   "attributes": {
+    "title": "Mystery"
+   }
+  },
+  {
+   "id": "3",
+   "type": "categories",
+   "attributes": {
+    "title": "Elementary School"
+   }
+  },
+  {
+   "id": "162",
+   "type": "categories",
+   "attributes": {
+    "title": "Ecchi"
+   }
+  },
+  {
+   "id": "172",
+   "type": "categories",
+   "attributes": {
+    "title": "School Life"
+   }
+  },
+  {
+   "id": "169",
+   "type": "categories",
+   "attributes": {
+    "title": "Slice of Life"
+   }
+  },
+  {
+   "id": "239",
+   "type": "categories",
+   "attributes": {
+    "title": "Kids"
+   }
+  },
+  {
+   "id": "1175",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "myanimelist/anime",
+    "externalId": "21"
+   }
+  },
+  {
+   "id": "254544",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "anilist/anime",
+    "externalId": "21"
+   }
+  },
+  {
+   "id": "5615",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "myanimelist/anime",
+    "externalId": "235"
+   }
+  },
+  {
+   "id": "256977",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "anilist/anime",
+    "externalId": "235"
+   }
+  },
+  {
+   "id": "2367",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "myanimelist/anime",
+    "externalId": "966"
+   }
+  },
+  {
+   "id": "256976",
+   "type": "mappings",
+   "attributes": {
+    "externalSite": "anilist/anime",
+    "externalId": "966"
+   }
+  }
+ ],
+ "links": {
+  "next": "https://kitsu.io/api/edge/anime?page%5Boffset%5D=3"
+ }
+}

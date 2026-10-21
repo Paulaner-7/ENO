@@ -12,17 +12,21 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   flatpak:
     name: Build and upload Flatpak bundle
+    # Pre-releases (v2.0.0-beta.1) get no Flatpak.
+    if: ${{ !contains(github.event.inputs.tag || github.ref_name, '-') }}
     runs-on: ubuntu-24.04
     steps:
-      # v1.0.0 predates the upstream copy of this manifest. Keeping the
-      # manifest on main also lets a manual run add the bundle to that release.
+      # The manifest on main (or, run by hand, on the branch it is run from),
+      # so a manual run can add a bundle to an older release with today's
+      # manifest fixes.
       - uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'main' }}
 
       - name: Set release version
         shell: bash
@@ -31,13 +35,50 @@ jobs:
           echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
           echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
 
+      # A tag whose commit passed a complete test build on pre-release: the
+      # Release workflow publishes that build's Flatpak (the same rule as its
+      # "Test build of this commit" step), so nothing is built here.
+      - name: Test build of this commit
+        id: tested
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA=$(gh api "repos/$GITHUB_REPOSITORY/commits/$RELEASE_TAG" -q .sha)
+          RUN=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/release.yml/runs?branch=pre-release&event=push&status=success&head_sha=$SHA" \
+                  -q '.workflow_runs[0].id // empty')
+          [ -n "$RUN" ] || exit 0
+          HAVE=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/artifacts?per_page=100" -q '[.artifacts[] | select(.expired | not) | .name] | join(" ")')
+          for NAME in scancore-Windows scancore-macOS scancore-AppImage scancore-Android scancore-Flatpak; do
+            case " $HAVE " in *" $NAME "*) ;; *) exit 0 ;; esac
+          done
+          echo "The Release workflow publishes test build $RUN's Flatpak."
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
       - name: Install Flatpak build tools
+        if: steps.tested.outputs.published != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y flatpak flatpak-builder python3-yaml
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+      # Run by hand for an older release: build that tag with this manifest.
+      - name: Pin the requested release
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          python3 - <<'PY'
+          import os, yaml
+          path = "com.mediumdev.scancore.yml"
+          m = yaml.safe_load(open(path))
+          app = next(mod for mod in m["modules"] if mod["name"] == "scancore")
+          for s in app["sources"]:
+              if s.get("url") == "https://github.com/medium-gh/scancore.git":
+                  s["tag"] = os.environ["RELEASE_TAG"]
+          yaml.safe_dump(m, open(path, "w"), sort_keys=False)
+          PY
+
       - name: Check manifest release pin
+        if: steps.tested.outputs.published != 'true'
         run: |
           APP_TAG=$(python3 -c 'import yaml; m=yaml.safe_load(open("com.mediumdev.scancore.yml")); print(next(s["tag"] for mod in m["modules"] if mod["name"] == "scancore" for s in mod["sources"] if s.get("url") == "https://github.com/medium-gh/scancore.git"))')
           if [ "$APP_TAG" != "$RELEASE_TAG" ]; then
@@ -47,6 +88,7 @@ jobs:
           fi
 
       - name: Build Flatpak bundle
+        if: steps.tested.outputs.published != 'true'
         run: |
           flatpak-builder --user --force-clean --install-deps-from=flathub \
             --repo=repo flatpak-build com.mediumdev.scancore.yml
@@ -55,6 +97,7 @@ jobs:
             repo "dist/SCANCORE-$VERSION-linux-x86_64.flatpak" com.mediumdev.scancore master
 
       - name: Upload to GitHub release
+        if: steps.tested.outputs.published != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

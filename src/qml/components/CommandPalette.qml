@@ -43,8 +43,12 @@ Popup {
               run: () => App.setSetting("theme", Theme.dark ? "light" : "dark") },
             { icon: "sparkles", label: Motion.reduced ? qsTr("Turn animations back on") : qsTr("Reduce motion"),
               run: () => App.setSetting("reducedMotion", !Motion.reduced) },
-            { icon: "refresh-cw", label: qsTr("Check the library for new chapters"), run: () => checkLibrary() }
+            { icon: "refresh-cw", label: qsTr("Check the library for new chapters"), run: () => checkLibrary() },
+            { icon: "venetian-mask", label: App.settings.incognito === true ? qsTr("Turn incognito off") : qsTr("Turn incognito on"),
+              run: () => Router.setIncognito(App.settings.incognito !== true) }
         ]
+        if (Lock.enabled)
+            commands.push({ icon: "lock", label: qsTr("Lock SCANCORE"), run: () => Lock.lockNow() })
         if (Account.signedIn)
             commands.push({ icon: "cloud", label: qsTr("Sync with scancore.onl"), run: () => Account.sync() })
         if (App.platform !== "android")
@@ -160,6 +164,7 @@ Popup {
         }
 
         ListView {
+            WheelScroll {}
             id: list
             width: parent.width
             height: root.height - input.height

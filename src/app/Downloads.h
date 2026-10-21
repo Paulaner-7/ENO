@@ -1,16 +1,19 @@
 #pragma once
 
+#include "core/Http.h"
 #include "core/Task.h"
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QHash>
 #include <QSet>
 #include <QTimer>
 
 namespace sc {
 
-// Offline copies of comic chapters (images) and novel chapters (text), kept
-// in the app data folder and processed two at a time.
+// Offline copies of comic chapters (images), novel chapters (text) and anime
+// episodes (video, with subtitles), kept in the app data folder and
+// processed two at a time.
 class Downloads : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -41,6 +44,10 @@ public:
     Q_INVOKABLE void resetFolder();
     Q_INVOKABLE QString sizeOnDisk() const;
 
+    // A downloaded episode as the player takes a video ({url, subtitles,
+    // audio, skips, mpvArgs}), or an empty map.
+    Q_INVOKABLE QVariantMap localVideo(const QString &seriesId, const QString &unitKey) const;
+
     static QVariantList localPanels(const QString &seriesId, const QString &unitKey);
     static QVariantMap localNovelChapter(const QString &seriesId, const QString &unitKey);
     static QString unitFolder(const QString &seriesId, const QString &unitKey);
@@ -56,11 +63,13 @@ private:
     explicit Downloads(QObject *parent = nullptr);
 
     void pump();
-    void runJob(const QVariantMap &row);
+    void runJob(const QVariantMap &row, const CancelFlag &flag);
     void notify();
 
     int m_revision = 0;
     QSet<int> m_running;
+    // Each running download's cancel flag (removing one stops it).
+    QHash<int, CancelFlag> m_flags;
     QTimer m_throttle;
 };
 

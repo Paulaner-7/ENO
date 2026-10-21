@@ -50,6 +50,7 @@ Item {
     }
 
     ListView {
+        WheelScroll {}
         id: list
         anchors.fill: parent
         model: page.rows
@@ -82,11 +83,16 @@ Item {
                     value: page.media
                     onPicked: (v) => page.media = v
                 }
-                SearchField {
+                OutsideList {
+                    view: list
+                    outside: page
                     width: Theme.compact ? parent.width : 260
-                    placeholderText: qsTr("Search history")
-                    text: page.filter
-                    onTextChanged: page.filter = text
+                    height: 40
+                    SearchField {
+                        width: parent.width
+                        placeholderText: qsTr("Search history")
+                        onTextChanged: page.filter = text
+                    }
                 }
             }
             StateView {

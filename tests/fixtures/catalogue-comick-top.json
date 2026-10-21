@@ -1,0 +1,21 @@
+{
+  "trending": {
+    "7": [
+      {"hid": "aa11", "slug": "first-title", "title": "First Title", "country": "kr", "status": 1, "year": 2020,
+       "last_chapter": 120, "bayesian_rating": "8.71", "desc": "A test comic.", "content_rating": "safe",
+       "md_titles": [{"title": "Primer Título"}, {"title": "First Title"}],
+       "md_covers": [{"b2key": "cover-one.png"}]},
+      {"hid": "bb22", "slug": "adult-title", "title": "Adult Title", "country": "jp", "status": 2,
+       "content_rating": "erotica", "md_titles": [], "md_covers": []}
+    ],
+    "30": []
+  },
+  "rank": [
+    {"hid": "cc33", "slug": "ranked", "title": "Ranked", "country": "cn", "status": 4, "last_chapter": 12.5,
+     "md_covers": [{"b2key": "ranked.webp"}]}
+  ],
+  "news": [],
+  "completions": [
+    {"hid": "dd44", "slug": "done", "title": "Done", "country": "jp", "status": 2}
+  ]
+}

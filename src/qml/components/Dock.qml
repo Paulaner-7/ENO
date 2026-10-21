@@ -30,6 +30,7 @@ Item {
         { key: "history", label: qsTr("History"), icon: "history" },
         { key: "activity", label: qsTr("Activity"), icon: "activity" },
         { key: "downloads", label: qsTr("Downloads"), icon: "download" },
+        { key: "notifications", label: qsTr("Notifications"), icon: "bell" },
         { key: "divider" },
         { key: "settings", label: qsTr("Settings"), icon: "settings" }
     ]

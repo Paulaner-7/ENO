@@ -9,12 +9,20 @@ AbstractButton {
     id: card
     property var item: ({})
     property string coverUrl: item.cover || ""
-    property string referer: ""
+    // Library and history entries carry no referer: their source gives it
+    // (sites that refuse covers without one, and extensions, which fetch
+    // covers themselves).
+    property string referer: item.referer
+        || (item.sourceUrl
+            ? (item.media === "comic" ? Comics.imageReferer(item.sourceUrl) : item.media === "novel" ? Novels.imageReferer(item.sourceUrl) : "") : "")
     property string title: item.title || ""
     property string subtitle: ""
     property string badge: ""
     property real progress: -1
-    property int index: 0
+    // Picked in a selection (the library's Select).
+    property bool marked: false
+    // Place in the entrance's stagger.
+    property int order: 0
     property bool animateIn: true
     property real coverRatio: 1.5
     readonly property alias coverItem: cover
@@ -28,7 +36,7 @@ AbstractButton {
 
     onClicked: opened(item, cover)
 
-    // Entrance: rise and fade in, staggered by index.
+    // Entrance: rise and fade in, staggered by order.
     opacity: 0
     transform: Translate { id: rise; y: 14 }
     Component.onCompleted: {
@@ -41,7 +49,7 @@ AbstractButton {
     }
     SequentialAnimation {
         id: entrance
-        PauseAnimation { duration: Motion.stagger(card.index % 24) }
+        PauseAnimation { duration: Motion.stagger(card.order % 24) }
         ParallelAnimation {
             NumberAnimation { target: card; property: "opacity"; to: 1; duration: Motion.slow; easing.type: Easing.OutCubic }
             NumberAnimation { target: rise; property: "y"; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
@@ -71,6 +79,8 @@ AbstractButton {
                 referer: card.referer
                 title: card.title
                 radius: Theme.radiusMd
+                // A saved series whose site moved its pictures.
+                onFailedChanged: if (failed && card.item.id && card.item.progressAt !== undefined) Library.refreshCover(card.item.id)
                 zoom: card.hovered ? 1.06 : 1
                 Behavior on zoom { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
                 scale: card.pressed ? 0.975 : 1
@@ -81,8 +91,27 @@ AbstractButton {
                 anchors.fill: cover
                 radius: Theme.radiusMd
                 color: "transparent"
-                border.width: card.visualFocus ? 2 : 1
-                border.color: card.visualFocus ? Theme.accent : Theme.alpha(Theme.text, 0.06)
+                border.width: card.visualFocus || card.marked ? 2 : 1
+                border.color: card.visualFocus || card.marked ? Theme.accent : Theme.alpha(Theme.text, 0.06)
+            }
+
+            // Selected: a wash and a check in the corner.
+            Rectangle {
+                visible: card.marked
+                anchors.fill: cover
+                radius: Theme.radiusMd
+                color: Theme.alpha(Theme.accent, 0.22)
+            }
+            Rectangle {
+                visible: card.marked
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.margins: 8
+                width: 24
+                height: 24
+                radius: 12
+                color: Theme.accent
+                Icon { anchors.centerIn: parent; name: "check"; size: 14; color: Theme.accentInk }
             }
 
             Rectangle {

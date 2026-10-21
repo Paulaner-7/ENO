@@ -172,6 +172,42 @@ SettingsPane {
     }
 
     SettingsGroup {
+        title: qsTr("Pages")
+        note: qsTr("Home, Comics, Novels and Anime each have an Edit page button: move, hide and restyle their sections there.")
+        SettingRow {
+            iconName: "rows-3"
+            title: qsTr("Spacing")
+            description: qsTr("The room between a page's sections.")
+            Segmented {
+                options: [{ value: "compact", label: qsTr("Compact") }, { value: "default", label: qsTr("Default") }, { value: "spacious", label: qsTr("Spacious") }]
+                value: App.settings.pageSpacing || "default"
+                onPicked: (v) => App.setSetting("pageSpacing", v)
+            }
+        }
+        SettingRow {
+            iconName: "square"
+            title: qsTr("Corners")
+            description: qsTr("How round covers, cards, buttons and panels are.")
+            Segmented {
+                options: [{ value: "square", label: qsTr("Square") }, { value: "subtle", label: qsTr("Subtle") },
+                          { value: "default", label: qsTr("Default") }, { value: "round", label: qsTr("Round") }]
+                value: App.settings.roundness || "default"
+                onPicked: (v) => App.setSetting("roundness", v)
+            }
+        }
+        SettingRow {
+            iconName: "rotate-ccw"
+            title: qsTr("Page arrangements")
+            description: qsTr("Put every page's sections back in their first order and look.")
+            ScButton {
+                text: qsTr("Reset all")
+                variant: "ghost"
+                onClicked: ["home", "comics", "comics-top", "novels", "novels-top", "anime"].forEach(p => PageLayout.reset(p))
+            }
+        }
+    }
+
+    SettingsGroup {
         title: qsTr("Motion")
         SettingRow {
             iconName: "gauge"
@@ -186,10 +222,41 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: App.platform !== "android"
+            iconName: "move-vertical"
+            title: qsTr("Scroll speed")
+            description: qsTr("How far the mouse wheel and touchpad move pages.")
+            Segmented {
+                options: [{ value: 0.7, label: qsTr("Slow") }, { value: 1, label: qsTr("Default") },
+                          { value: 1.5, label: qsTr("Fast") }, { value: 2.2, label: qsTr("Faster") }]
+                value: Number(App.settings.scrollSpeed) || 1
+                onPicked: (v) => App.setSetting("scrollSpeed", v)
+            }
+        }
+        SettingRow {
             iconName: "sparkles"
             title: qsTr("Reduce motion")
             description: qsTr("Turns off page transitions, hover lifts, animated backgrounds and other animations.")
             Toggle { checked: App.settings.reducedMotion === true; onToggled: App.setSetting("reducedMotion", checked) }
+        }
+        SettingRow {
+            iconName: "book-open"
+            title: qsTr("E-ink screen")
+            description: qsTr("For Boox, Kobo and other e-paper devices: black on white, no animation, comics in pages and novels turned page by page with a tap on the sides.")
+            Toggle {
+                checked: App.settings.eink === true
+                onToggled: {
+                    App.setSetting("eink", checked)
+                    if (checked) App.setSetting("readerMode", "paged")
+                }
+            }
+        }
+        SettingRow {
+            visible: App.settings.eink === true
+            iconName: "square"
+            title: qsTr("Flash on page turns")
+            description: qsTr("A moment of black when a comic page turns clears the last page's ghost.")
+            Toggle { checked: App.settings.einkFlash !== false; onToggled: App.setSetting("einkFlash", checked) }
         }
     }
 

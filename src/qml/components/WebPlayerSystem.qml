@@ -383,11 +383,25 @@ Item {
         return String(address).replace(/^[a-z]+:\/\//i, "").replace(/[\/?#].*$/, "").toLowerCase()
     }
 
-    onUrlChanged: {
-        taps = 0
-        if (!url) return
+    // Phones: video with sound, and the player's own full screen. The page
+    // loads once the web view is prepared for them.
+    property bool ready: direct
+    Component.onCompleted: if (!direct) App.prepareWebPlayer()
+    Connections {
+        target: App
+        enabled: !root.ready
+        function onWebPlayerPrepared() { root.ready = true }
+    }
+
+    function load() {
+        if (!url || !ready) return
         if (direct) web.url = url
         else web.loadHtml(wrapper(url), "https://reanime.to/")
+    }
+    onReadyChanged: load()
+    onUrlChanged: {
+        taps = 0
+        load()
     }
 
     Connections {

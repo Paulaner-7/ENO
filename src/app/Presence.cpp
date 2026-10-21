@@ -141,6 +141,11 @@ void Presence::send(int opcode, const QJsonObject &payload) {
 }
 
 void Presence::show(const QString &media, const QString &title, const QString &unit) {
+    // Incognito: nothing shows on Discord either.
+    if (App::instance()->incognito()) {
+        clear();
+        return;
+    }
     if (m_current.value("title").toString() != title || m_current.value("media").toString() != media)
         m_startedAt = QDateTime::currentSecsSinceEpoch();
     m_current = {{"media", media}, {"title", title}, {"unit", unit}};

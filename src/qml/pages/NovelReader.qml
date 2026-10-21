@@ -4,7 +4,9 @@ import QtQuick.Window
 import ScanCore
 
 // Full-window novel reader with adjustable typography, reading themes,
-// remembered position and the next chapter loaded ahead.
+// remembered position and the next chapter loaded ahead. Reads aloud with the
+// system's voices (Speech), following the spoken paragraph, and can scroll
+// by itself.
 Rectangle {
     id: reader
     property var series: ({})
@@ -24,15 +26,30 @@ Rectangle {
     property bool finished: false
 
     readonly property var themes: Theme.readingThemes
-    readonly property var look: themes[App.settings.novelTheme] || themes.app
+    readonly property var look: Theme.readingLook(App.settings.novelTheme)
     readonly property int fontSize: App.settings.novelSize || 19
     readonly property real lineHeight: App.settings.novelLineHeight || 1.5
-    readonly property int columnWidth: Math.min(width - 64, App.settings.novelWidth || 720)
+    readonly property int margin: App.settings.novelMargin === undefined ? 32 : App.settings.novelMargin
+    readonly property int columnWidth: Math.min(width - 2 * margin, App.settings.novelWidth || 720)
     readonly property string fontFamily: App.settings.novelFont || Theme.fontSerif
+    readonly property int fontWeight: App.settings.novelWeight || Font.Normal
+    readonly property real paragraphSpacing: App.settings.novelParagraphSpacing === undefined ? 0.9 : App.settings.novelParagraphSpacing
+    readonly property bool indent: App.settings.novelIndent === true
+
+    // Reading aloud: the paragraph being spoken (-1 for the title), and
+    // whether the next chapter should carry on when this one ends.
+    property bool speaking: false
+    property int spokenBlock: -2
+    property bool speakNext: false
+    // Scrolling by itself, at novelAutoScrollSpeed pixels a second.
+    property bool autoScrolling: false
 
     // Drawn under the phone's status bar in the reading theme's colour; the
     // bars and text are padded by the inset instead.
     readonly property bool edgeToEdge: true
+    // Hidden bars wait above the top edge: never let them show outside.
+    clip: true
+    readonly property bool systemBarsDark: Theme.isDark(look.bg)
     readonly property real insetTop: SafeArea.margins.top
     readonly property real insetBottom: SafeArea.margins.bottom
 
@@ -40,8 +57,14 @@ Rectangle {
     focus: true
     Behavior on color { ColorAnimation { duration: Motion.slow } }
 
+    // The chapter's text fades in (the list's header plays it).
+    signal reveal()
+
     function load(i) {
         savePosition(true)
+        // A chapter picked by hand stops the voice; the end of one read
+        // aloud carries on into the next (speakNext).
+        if (speaking) stopSpeaking()
         index = i
         finished = false
         const p = Library.progressMap(series.id)[chapters[i].key]
@@ -51,10 +74,10 @@ Rectangle {
         task = ahead ? nextTask : Novels.chapter(chapters[i].url, series.id)
         nextTask = null
         nextFor = -1
-        flick.scrollTo(0, false)
+        flick.positionViewAtBeginning()
         barsShown = true
         if (task.done) Qt.callLater(arrived)
-        contentReveal.restart()
+        reveal()
         Presence.show("novel", series.title || "", chapters[i].title || "")
     }
 
@@ -63,6 +86,7 @@ Rectangle {
         Activity.setMedia("novel")
     }
     Component.onDestruction: {
+        Speech.stop()
         Activity.setMedia("")
         Presence.clear()
         savePosition(true)
@@ -77,29 +101,101 @@ Rectangle {
     // chapter that fits on one screen as read.
     function arrived() {
         if (blocks.length === 0) return
-        // The column places its blocks later; their positions are needed now.
-        body.forceLayout()
-        if (resumePosition && resumePosition.block !== undefined) {
-            const item = blockRepeater.itemAt(Math.min(resumePosition.block, blockRepeater.count - 1))
-            if (item) flick.scrollTo(item.y + body.y - 80, false)
-        }
+        // The list places its paragraphs later; their positions are needed now.
+        flick.forceLayout()
+        if (resumePosition && resumePosition.block !== undefined)
+            goToBlock(resumePosition.block)
         resumePosition = null
         if (flick.contentHeight - flick.height <= 4) {
             finished = true
             savePosition(true)
         }
+        if (speakNext) {
+            speakNext = false
+            startSpeaking(-1)
+        }
     }
 
-    function firstVisibleBlock() {
-        const y = flick.contentY - body.y + 80
-        let lo = 0, hi = blockRepeater.count - 1, found = 0
-        while (lo <= hi) {
-            const mid = (lo + hi) >> 1
-            const it = blockRepeater.itemAt(mid)
-            if (!it) break
-            if (it.y <= y) { found = mid; lo = mid + 1 } else hi = mid - 1
+    // Queues the chapter from block `from` (-1: from its title). The whole
+    // chapter goes at once, so a phone's engine reads on in the background.
+    function startSpeaking(from) {
+        Speech.stop()
+        Speech.configure(App.settings.ttsVoice || "", Number(App.settings.ttsRate) || 1, Number(App.settings.ttsPitch) || 1)
+        if (from < 0) {
+            const title = (task && task.ok && task.result.title) ? task.result.title : (unit.title || "")
+            if (title) Speech.enqueue(title, -1)
+            from = 0
         }
-        return found
+        for (let i = from; i < blocks.length; ++i)
+            if (blocks[i].kind !== "break" && blocks[i].text) Speech.enqueue(blocks[i].text, i)
+        speaking = true
+        autoScrolling = false
+    }
+    function stopSpeaking() {
+        speaking = false
+        speakNext = false
+        spokenBlock = -2
+        Speech.stop()
+    }
+    function lastSpokenBlock() {
+        for (let i = blocks.length - 1; i >= 0; --i)
+            if (blocks[i].kind !== "break" && blocks[i].text) return i
+        return -1
+    }
+
+    Connections {
+        target: Speech
+        function onStarted(tag) {
+            if (!reader.speaking) return
+            reader.spokenBlock = tag
+            if (tag >= 0 && App.settings.ttsFollow !== false) {
+                const item = flick.itemAtIndex(tag)
+                // Keep it in the upper third, without jumping for every line.
+                if (!item || item.y < flick.contentY + 80 || item.y + item.height > flick.contentY + flick.height - 80)
+                    flick.showBlock(tag, flick.height * 0.25, !!item)
+            }
+        }
+        function onFinished(tag) {
+            if (!reader.speaking || tag !== reader.lastSpokenBlock()) return
+            reader.speaking = false
+            reader.spokenBlock = -2
+            reader.finished = true
+            reader.savePosition(true)
+            if (App.settings.ttsContinue !== false && reader.hasNext) {
+                reader.load(reader.index + 1)
+                reader.speakNext = true
+                if (reader.task && reader.task.done) Qt.callLater(reader.arrived)
+            }
+        }
+        function onFailed(message) {
+            reader.speaking = false
+            reader.spokenBlock = -2
+            Router.toast(message, "error")
+        }
+    }
+
+    FrameAnimation {
+        running: reader.autoScrolling && !flick.moving && !flick.dragging
+        onTriggered: {
+            if (flick.atYEnd) {
+                reader.autoScrolling = false
+                return
+            }
+            flick.contentY += (Number(App.settings.novelAutoScrollSpeed) || 40) * frameTime
+        }
+    }
+
+    // Paragraph `i` just under the bar at the top.
+    function goToBlock(i) { flick.showBlock(Math.max(0, Math.min(i, blocks.length - 1)), 80, false) }
+
+    // The paragraph just under the bar at the top (the title counts as 0).
+    function firstVisibleBlock() {
+        // indexAt misses the gaps between paragraphs; look a little lower.
+        for (let dy = 80; dy < 240; dy += 20) {
+            const i = flick.indexAt(flick.width / 2, flick.contentY + dy)
+            if (i >= 0) return i
+        }
+        return 0
     }
 
     Timer {
@@ -109,8 +205,7 @@ Rectangle {
     }
     function commitPosition() {
         if (!series.id || !unit.key || blocks.length === 0) return
-        const max = Math.max(1, flick.contentHeight - flick.height)
-        const percent = finished ? 1 : Math.min(1, Math.max(0, flick.contentY / max))
+        const percent = finished ? 1 : flick.progress
         Library.recordProgress(series, unit, { type: "text", block: firstVisibleBlock(), percent: percent }, percent, finished || percent > 0.97)
     }
     function savePosition(force) {
@@ -133,9 +228,8 @@ Rectangle {
         return keys.length ? " (" + keys[0] + ")" : ""
     }
 
-    function toggleFullScreen() {
-        Window.window.visibility === Window.FullScreen ? Window.window.showNormal() : Window.window.showFullScreen()
-    }
+    function toggleFullScreen() { fullScreen.toggle() }
+    ReaderWindow { id: fullScreen }
 
     // The keys come from Settings → Keyboard (see Keymap), as in the comic
     // reader; scrolling keys only while the reader has focus.
@@ -152,53 +246,92 @@ Rectangle {
     }
     Shortcut { sequences: Keymap.sequences("reader.next"); onActivated: if (reader.hasNext) reader.load(reader.index + 1) }
     Shortcut { sequences: Keymap.sequences("reader.prev"); onActivated: if (reader.hasPrev) reader.load(reader.index - 1) }
-    Shortcut { sequences: Keymap.sequences("reader.first"); onActivated: flick.scrollTo(0) }
-    Shortcut { sequences: Keymap.sequences("reader.last"); onActivated: flick.scrollTo(flick.contentHeight) }
+    Shortcut { sequences: Keymap.sequences("reader.first"); onActivated: flick.positionViewAtBeginning() }
+    Shortcut { sequences: Keymap.sequences("reader.last"); onActivated: flick.positionViewAtEnd() }
     Shortcut { sequences: Keymap.sequences("reader.fullscreen"); onActivated: reader.toggleFullScreen() }
     Shortcut { sequences: Keymap.sequences("reader.wider"); onActivated: App.setSetting("novelSize", Math.min(34, reader.fontSize + 1)) }
     Shortcut { sequences: Keymap.sequences("reader.narrower"); onActivated: App.setSetting("novelSize", Math.max(13, reader.fontSize - 1)) }
 
-    SmoothFlickable {
+    // The chapter as a list of its paragraphs, so only those near the
+    // screen exist: a chapter of thousands of paragraphs opens and scrolls
+    // as fast as a short one. Positions are by paragraph (block).
+    ListView {
         id: flick
         anchors.fill: parent
-        contentHeight: body.y + body.height + 120 + reader.insetBottom
-        wheelStep: 110
+        model: reader.blocks
+        clip: true
+        spacing: reader.fontSize * reader.paragraphSpacing
+        cacheBuffer: Math.max(1200, height * 2)
+        boundsBehavior: Flickable.StopAtBounds
+        maximumFlickVelocity: 4500
+        flickDeceleration: 3500
+        reuseItems: true
         ScrollBar.vertical: ScScrollBar {}
+        // Where an eased scroll is heading (contentY when none is running).
+        readonly property real target: wheel.ease.running ? wheel.target : contentY
+        // How far through the chapter, from 0 to 1 (contentY starts at
+        // originY, which moves as paragraph heights become known).
+        readonly property real progress: {
+            const max = contentHeight - height
+            return max > 0 ? Math.min(1, Math.max(0, (contentY - originY) / max)) : 1
+        }
+        function scrollTo(y, animated) { wheel.scrollTo(y, animated) }
+        // Paragraph `i` at `offset` pixels below the top of the screen.
+        function showBlock(i, offset, animated) {
+            const item = itemAtIndex(i)
+            if (!item) {
+                positionViewAtIndex(i, ListView.Beginning)
+                contentY = Math.max(originY, contentY - offset)
+                return
+            }
+            scrollTo(item.y - offset, animated)
+        }
+        WheelScroll { id: wheel; wheelStep: 110 }
 
-        // Phone: a tap toggles the bar. On the flickable, which takes
-        // touches before anything behind it.
+        // Phone: a tap toggles the bar. On the list, which takes touches
+        // before anything behind it. E-ink: the sides turn a page at once
+        // (no scrolling to redraw), the middle toggles the bar.
         TapHandler {
-            enabled: App.platform === "android"
-            onSingleTapped: reader.barsShown = !reader.barsShown
+            enabled: App.platform === "android" || Theme.eink
+            onSingleTapped: (point) => {
+                const x = point.position.x
+                if (Theme.eink && x < flick.width / 3) flick.scrollTo(flick.contentY - flick.height * 0.92, false)
+                else if (Theme.eink && x > flick.width * 2 / 3) flick.scrollTo(flick.contentY + flick.height * 0.92, false)
+                else reader.barsShown = !reader.barsShown
+            }
         }
 
         onContentYChanged: {
             const delta = contentY - reader.lastY
             if (Math.abs(delta) > 6) {
-                reader.barsShown = delta < 0 || contentY < 60
+                reader.barsShown = delta < 0 || contentY - originY < 60
                 reader.lastY = contentY
             }
             reader.savePosition(false)
-            const max = contentHeight - height
-            if (max > 0 && contentY / max > 0.6 && reader.hasNext && reader.nextFor !== reader.index + 1) {
+            if (progress > 0.6 && reader.hasNext && reader.nextFor !== reader.index + 1) {
                 reader.nextFor = reader.index + 1
                 reader.nextTask = Novels.chapter(reader.chapters[reader.index + 1].url, reader.series.id)
             }
-            if (max > 0 && contentY >= max - 4 && reader.blocks.length > 0) {
+            if (atYEnd && reader.blocks.length > 0) {
                 reader.finished = true
                 reader.savePosition(true)
             }
         }
 
-        Column {
+        header: Column {
             id: body
             x: (flick.width - width) / 2
-            y: 110 + reader.insetTop
             width: reader.columnWidth
-            spacing: reader.fontSize * 0.9
+            topPadding: 110 + (topBar.twoRows ? 46 : 0) + reader.insetTop
+            bottomPadding: flick.spacing
+            spacing: reader.fontSize * reader.paragraphSpacing
 
             opacity: 1
             transform: Translate { id: bodyShift; y: 0 }
+            Connections {
+                target: reader
+                function onReveal() { contentReveal.restart() }
+            }
             ParallelAnimation {
                 id: contentReveal
                 NumberAnimation { target: body; property: "opacity"; from: 0; to: 1; duration: Motion.slow; easing.type: Easing.OutCubic }
@@ -226,52 +359,68 @@ Rectangle {
                 wrapMode: Text.Wrap
                 bottomPadding: reader.fontSize * 0.6
             }
+        }
 
-            Repeater {
-                id: blockRepeater
-                model: reader.blocks
-                delegate: Item {
-                    required property var modelData
-                    width: body.width
-                    height: modelData.kind === "break" ? reader.fontSize * 1.6 : text.implicitHeight
-                    Text {
-                        id: text
-                        visible: modelData.kind !== "break"
-                        width: parent.width
-                        leftPadding: modelData.kind === "quote" ? 22 : 0
-                        text: modelData.html
-                        textFormat: Text.StyledText
-                        color: reader.look.text
-                        font.family: modelData.kind === "heading" ? Theme.fontDisplay : reader.fontFamily
-                        font.pixelSize: modelData.kind === "heading" ? Math.round(reader.fontSize * 1.2) : reader.fontSize
-                        font.weight: modelData.kind === "heading" ? Font.DemiBold : Font.Normal
-                        font.italic: modelData.kind === "quote"
-                        lineHeight: reader.lineHeight
-                        wrapMode: Text.Wrap
-                        horizontalAlignment: App.settings.novelJustify === true ? Text.AlignJustify : Text.AlignLeft
-                        Rectangle {
-                            visible: modelData.kind === "quote"
-                            width: 3
-                            height: parent.height
-                            radius: 2
-                            color: reader.look.muted
-                            opacity: 0.5
-                        }
-                    }
-                    Text {
-                        visible: modelData.kind === "break"
-                        anchors.centerIn: parent
-                        text: "⁂"
+        delegate: Item {
+            required property var modelData
+            required property int index
+            // ListView puts every delegate at x 0; the column is centred inside.
+            width: flick.width
+            height: block.height
+            Item {
+                id: block
+                x: (parent.width - width) / 2
+                width: reader.columnWidth
+                height: modelData.kind === "break" ? reader.fontSize * 1.6 : text.implicitHeight
+                // The paragraph being read aloud.
+                Rectangle {
+                    visible: reader.spokenBlock === index
+                    anchors.fill: parent
+                    anchors.margins: -Math.round(reader.fontSize * 0.35)
+                    radius: Theme.radiusSm
+                    color: Theme.alpha(String(reader.look.text).slice(0, 7), 0.08)
+                }
+                Text {
+                    id: text
+                    visible: modelData.kind !== "break"
+                    width: parent.width
+                    leftPadding: modelData.kind === "quote" ? 22 : 0
+                    text: (reader.indent && modelData.kind === "paragraph" ? "\u2003" : "") + modelData.html
+                    textFormat: Text.StyledText
+                    color: reader.look.text
+                    font.family: modelData.kind === "heading" ? Theme.fontDisplay : reader.fontFamily
+                    font.pixelSize: modelData.kind === "heading" ? Math.round(reader.fontSize * 1.2) : reader.fontSize
+                    font.weight: modelData.kind === "heading" ? Font.DemiBold : reader.fontWeight
+                    font.italic: modelData.kind === "quote"
+                    lineHeight: reader.lineHeight
+                    wrapMode: Text.Wrap
+                    horizontalAlignment: App.settings.novelJustify === true ? Text.AlignJustify : Text.AlignLeft
+                    Rectangle {
+                        visible: modelData.kind === "quote"
+                        width: 3
+                        height: parent.height
+                        radius: 2
                         color: reader.look.muted
-                        font.pixelSize: reader.fontSize
+                        opacity: 0.5
                     }
                 }
+                Text {
+                    visible: modelData.kind === "break"
+                    anchors.centerIn: parent
+                    text: "⁂"
+                    color: reader.look.muted
+                    font.pixelSize: reader.fontSize
+                }
             }
+        }
 
-            Item { width: 1; height: 40 }
-
+        footer: Item {
+            width: flick.width
+            height: buttons.height + 40 + 120 + reader.insetBottom
             Row {
+                id: buttons
                 visible: reader.blocks.length > 0
+                y: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 12
                 ScButton {
@@ -288,50 +437,100 @@ Rectangle {
                 }
             }
         }
+    }
 
-        Column {
+    Column {
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: 260
+        spacing: 14
+        visible: reader.task !== null && (reader.task.loading || !reader.task.ok)
+        Spinner {
             anchors.horizontalCenter: parent.horizontalCenter
-            y: 260
-            spacing: 14
-            visible: reader.task !== null && (reader.task.loading || !reader.task.ok)
-            Spinner {
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: reader.task !== null && reader.task.loading
-                color: reader.look.muted
-                size: 28
-            }
-            Text {
-                width: Math.min(420, reader.width - 48)
-                visible: reader.task !== null && !reader.task.loading && !reader.task.ok
-                text: reader.task ? reader.task.error : ""
-                color: reader.look.text
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.Wrap
-                font.family: Theme.fontSans
-                font.pixelSize: Theme.textMd
-            }
-            ScButton {
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: reader.task !== null && !reader.task.loading && !reader.task.ok
-                text: qsTr("Try again")
-                iconName: "refresh-cw"
-                onClicked: reader.load(reader.index)
-            }
+            visible: reader.task !== null && reader.task.loading
+            color: reader.look.muted
+            size: 28
+        }
+        Text {
+            width: Math.min(420, reader.width - 48)
+            visible: reader.task !== null && !reader.task.loading && !reader.task.ok
+            text: reader.task ? reader.task.error : ""
+            color: reader.look.text
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textMd
+        }
+        ScButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: reader.task !== null && !reader.task.loading && !reader.task.ok
+            text: qsTr("Try again")
+            iconName: "refresh-cw"
+            onClicked: reader.load(reader.index)
         }
     }
 
     // Desktop: the bar returns when the mouse moves near the top.
     PointerMotion {
-        onMoved: (position) => { if (position.y < 90 + reader.insetTop) reader.barsShown = true }
+        onMoved: (position) => { if (position.y < 90 + (topBar.twoRows ? 46 : 0) + reader.insetTop) reader.barsShown = true }
     }
 
-    // The status bar area keeps the reading theme's colour.
+    // Dimmer than the screen allows, for reading in the dark.
     Rectangle {
-        z: 1
+        anchors.fill: parent
+        color: "black"
+        opacity: Math.min(0.8, Number(App.settings.novelDim) || 0)
+        visible: opacity > 0
+    }
+
+    // While reading aloud: back a paragraph, stop, on a paragraph.
+    Rectangle {
+        z: 2
+        visible: reader.speaking
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 24 + reader.insetBottom
+        width: speechRow.width + 16
+        height: 52
+        radius: 26
+        color: Theme.alpha(String(reader.look.chrome).slice(0, 7), 0.96)
+        border.width: 1
+        border.color: Theme.alpha(String(reader.look.text).slice(0, 7), 0.12)
+        Row {
+            id: speechRow
+            anchors.centerIn: parent
+            spacing: 4
+            IconButton {
+                iconName: "skip-back"
+                iconColor: reader.look.text
+                tip: qsTr("Previous paragraph")
+                onClicked: reader.startSpeaking(Math.max(-1, reader.spokenBlock - 1))
+            }
+            IconButton {
+                iconName: "pause"
+                iconColor: reader.look.text
+                tip: qsTr("Stop reading aloud")
+                onClicked: reader.stopSpeaking()
+            }
+            IconButton {
+                iconName: "skip-forward"
+                iconColor: reader.look.text
+                tip: qsTr("Next paragraph")
+                enabled: reader.spokenBlock < reader.lastSpokenBlock()
+                onClicked: reader.startSpeaking(reader.spokenBlock + 1)
+            }
+        }
+    }
+
+    // The status bar area keeps the reading theme's colour (the bar's while
+    // it is shown). It is drawn over the top bar, which slides away under
+    // it instead of across the phone's clock and icons.
+    Rectangle {
+        z: 3
         width: parent.width
         height: reader.insetTop
         visible: height > 0
-        color: reader.look.bg
+        color: reader.barsShown ? Theme.alpha(reader.look.chrome, 0.94) : reader.look.bg
+        Behavior on color { ColorAnimation { duration: Motion.slow } }
     }
 
     // Reading progress along the top edge.
@@ -339,7 +538,7 @@ Rectangle {
         z: 2
         y: reader.insetTop
         height: 2
-        width: parent.width * Math.min(1, Math.max(0, flick.contentY / Math.max(1, flick.contentHeight - flick.height)))
+        width: parent.width * flick.progress
         color: Theme.accent
         opacity: 0.8
     }
@@ -348,65 +547,96 @@ Rectangle {
         id: topBar
         z: 1
         width: parent.width
-        height: 64 + reader.insetTop
+        // Phones: the buttons leave the title no room, so it gets a row of
+        // its own under them (as in the comic reader).
+        readonly property bool twoRows: reader.width - novelActions.width - 110 < 140
+        readonly property real rowY: reader.insetTop + 32
+        height: 64 + (twoRows ? 46 : 0) + reader.insetTop
         y: reader.barsShown ? 0 : -height
         color: Theme.alpha(reader.look.chrome, 0.94)
         Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
         Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.alpha(reader.look.text, 0.08) }
 
-        Row {
+        IconButton {
+            id: closeButton
             x: 16
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: reader.insetTop / 2
-            spacing: 12
-            IconButton {
-                iconName: "arrow-left"
-                iconColor: reader.look.text
-                tip: qsTr("Close (Esc)")
-                onClicked: reader.exit()
+            y: topBar.rowY - height / 2
+            iconName: "arrow-left"
+            iconColor: reader.look.text
+            tip: qsTr("Close (Esc)")
+            onClicked: reader.exit()
+        }
+        Column {
+            x: topBar.twoRows ? 24 : closeButton.x + closeButton.width + 12
+            y: topBar.twoRows ? reader.insetTop + 60 : topBar.rowY - height / 2
+            width: topBar.twoRows ? topBar.width - 48 : Math.max(0, reader.width - 90 - novelActions.width)
+            Text {
+                text: reader.series.title || ""
+                color: reader.look.text
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.textMd
+                font.weight: Font.DemiBold
+                width: Math.min(implicitWidth, parent.width)
+                elide: Text.ElideRight
             }
-            Column {
-                anchors.verticalCenter: parent.verticalCenter
-                Text {
-                    text: reader.series.title || ""
-                    color: reader.look.text
-                    font.family: Theme.fontSans
-                    font.pixelSize: Theme.textMd
-                    font.weight: Font.DemiBold
-                    width: Math.min(implicitWidth, reader.width - 90 - novelActions.width)
-                    elide: Text.ElideRight
-                }
-                Text {
-                    text: (reader.index + 1) + qsTr(" of ") + reader.chapters.length + " · " + (reader.unit.title || "")
-                        + (reader.task && reader.task.ok && reader.task.result.offline ? qsTr(" · Downloaded") : "")
-                    color: reader.look.muted
-                    font.family: Theme.fontSans
-                    font.pixelSize: Theme.textSm
-                    width: Math.min(implicitWidth, reader.width - 90 - novelActions.width)
-                    elide: Text.ElideRight
-                }
+            Text {
+                text: (reader.index + 1) + qsTr(" of ") + reader.chapters.length + " · " + (reader.unit.title || "")
+                    + (reader.task && reader.task.ok && reader.task.result.offline ? qsTr(" · Downloaded") : "")
+                    + (App.settings.incognito === true ? qsTr(" · Incognito") : "")
+                color: reader.look.muted
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.textSm
+                width: Math.min(implicitWidth, parent.width)
+                elide: Text.ElideRight
             }
         }
         Row {
             id: novelActions
             anchors.right: parent.right
             anchors.rightMargin: 16
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: reader.insetTop / 2
-            spacing: 4
-            IconButton { iconName: "chevron-left"; iconColor: reader.look.text; enabled: reader.hasPrev; tip: qsTr("Previous chapter") + reader.keyHint("reader.prev"); onClicked: reader.load(reader.index - 1) }
-            IconButton { iconName: "chevron-right"; iconColor: reader.look.text; enabled: reader.hasNext; tip: qsTr("Next chapter") + reader.keyHint("reader.next"); onClicked: reader.load(reader.index + 1) }
-            IconButton { iconName: "list"; iconColor: reader.look.text; tip: qsTr("Chapters"); onClicked: chapterPopup.open() }
+            y: topBar.rowY - height / 2
+            // Phones: smaller buttons, no gaps, so all fit beside the close button.
+            readonly property int button: reader.width < 420 ? 32 : 34
+            spacing: reader.width < 420 ? 0 : 4
+            IconButton { diameter: novelActions.button; iconName: "chevron-left"; iconColor: reader.look.text; enabled: reader.hasPrev; tip: qsTr("Previous chapter") + reader.keyHint("reader.prev"); onClicked: reader.load(reader.index - 1) }
+            IconButton { diameter: novelActions.button; iconName: "chevron-right"; iconColor: reader.look.text; enabled: reader.hasNext; tip: qsTr("Next chapter") + reader.keyHint("reader.next"); onClicked: reader.load(reader.index + 1) }
+            IconButton { diameter: novelActions.button; iconName: "list"; iconColor: reader.look.text; tip: qsTr("Chapters"); onClicked: chapterPopup.open() }
             IconButton {
+                diameter: novelActions.button
                 visible: !String(reader.series.sourceUrl || "").startsWith("file:")
                 iconName: "message-circle"
                 iconColor: reader.look.text
                 tip: qsTr("Comments")
                 onClicked: comments.open()
             }
-            IconButton { iconName: "type"; iconColor: reader.look.text; tip: qsTr("Text settings"); onClicked: typePopup.open() }
+            ContinueOn {
+                diameter: novelActions.button
+                seriesId: reader.series.id || ""
+                iconColor: reader.look.text
+                save: () => reader.savePosition(true)
+            }
             IconButton {
-                iconName: Window.window && Window.window.visibility === Window.FullScreen ? "minimize" : "maximize"
+                diameter: novelActions.button
+                iconName: reader.speaking ? "pause" : "volume-2"
+                iconColor: reader.speaking ? Theme.accent : reader.look.text
+                enabled: Speech.available && reader.blocks.length > 0
+                tip: !Speech.available ? qsTr("No voices are installed on this device")
+                    : reader.speaking ? qsTr("Stop reading aloud") : qsTr("Read aloud from here")
+                onClicked: reader.speaking ? reader.stopSpeaking()
+                    : reader.startSpeaking(flick.contentY - flick.originY < 40 ? -1 : reader.firstVisibleBlock())
+            }
+            IconButton {
+                diameter: novelActions.button
+                iconName: "move-vertical"
+                iconColor: reader.autoScrolling ? Theme.accent : reader.look.text
+                enabled: reader.blocks.length > 0 && !reader.speaking
+                tip: reader.autoScrolling ? qsTr("Stop scrolling") : qsTr("Scroll by itself")
+                onClicked: reader.autoScrolling = !reader.autoScrolling
+            }
+            IconButton { diameter: novelActions.button; iconName: "type"; iconColor: reader.look.text; tip: qsTr("Text settings"); onClicked: typePopup.open() }
+            IconButton {
+                diameter: novelActions.button
+                iconName: fullScreen.fullScreen ? "minimize" : "maximize"
                 iconColor: reader.look.text
                 tip: qsTr("Full screen") + reader.keyHint("reader.fullscreen")
                 onClicked: reader.toggleFullScreen()
@@ -426,7 +656,7 @@ Rectangle {
     Popup {
         id: chapterPopup
         x: parent.width - width - 16
-        y: 70 + reader.insetTop
+        y: 70 + (topBar.twoRows ? 46 : 0) + reader.insetTop
         width: Math.min(360, parent.width - 32)
         height: Math.min(parent.height - 120, 600)
         padding: 6
@@ -463,59 +693,157 @@ Rectangle {
     Popup {
         id: typePopup
         x: parent.width - width - 16
-        y: 70 + reader.insetTop
+        y: 70 + (topBar.twoRows ? 46 : 0) + reader.insetTop
         width: Math.min(340, parent.width - 32)
         padding: 20
         background: Rectangle { radius: Theme.radiusLg; color: Theme.surface; border.width: 1; border.color: Theme.borderStrong }
         enter: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast }
-                NumberAnimation { property: "y"; from: 58 + reader.insetTop; to: 70 + reader.insetTop; duration: Motion.normal; easing.type: Easing.OutCubic }
+                NumberAnimation { property: "y"; from: 58 + (topBar.twoRows ? 46 : 0) + reader.insetTop; to: 70 + (topBar.twoRows ? 46 : 0) + reader.insetTop; duration: Motion.normal; easing.type: Easing.OutCubic }
             }
         }
-        contentItem: Column {
-            spacing: 14
-            Text { text: "Theme"; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.capitalization: Font.AllUppercase; font.letterSpacing: 1 }
-            Row {
-                spacing: 10
-                Repeater {
-                    model: ["app", "paper", "sepia", "dark", "black"]
-                    Rectangle {
-                        required property string modelData
-                        width: 48
-                        height: 48
-                        radius: 24
-                        color: reader.themes[modelData].bg
-                        border.width: (App.settings.novelTheme || "app") === modelData ? 2 : 1
-                        border.color: (App.settings.novelTheme || "app") === modelData ? Theme.accent : Theme.borderStrong
-                        Text {
-                            anchors.centerIn: parent
-                            text: "Aa"
-                            color: reader.themes[modelData].text
-                            font.family: Theme.fontSerif
-                            font.pixelSize: 15
-                        }
-                        MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: App.setSetting("novelTheme", modelData) }
-                    }
+        contentItem: Flickable {
+            implicitHeight: Math.min(options.implicitHeight, reader.height - 140 - (topBar.twoRows ? 46 : 0) - reader.insetTop)
+            contentHeight: options.implicitHeight
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            WheelScroll {}
+            ScrollBar.vertical: ScScrollBar {}
+            ReaderOptions {
+                id: options
+                width: parent.width
+                reader: reader
+            }
+        }
+    }
+
+    ColorPicker {
+        id: bgPicker
+        title: qsTr("Page colour")
+        onChanged: (c) => App.setSetting("novelCustomBg", String(c).slice(0, 7))
+    }
+    ColorPicker {
+        id: textPicker
+        title: qsTr("Text colour")
+        onChanged: (c) => App.setSetting("novelCustomText", String(c).slice(0, 7))
+    }
+
+    // Everything in the text panel, as a column of labelled controls.
+    component OptionLabel: Text {
+        color: Theme.textMuted
+        font.family: Theme.fontSans
+        font.pixelSize: Theme.textXs
+        font.capitalization: Font.AllUppercase
+        font.letterSpacing: 1
+    }
+    component OptionSwitch: Row {
+        property alias checked: toggle.checked
+        property alias text: label.text
+        signal toggled(bool checked)
+        spacing: 10
+        Toggle { id: toggle; onToggled: parent.toggled(checked) }
+        Text { id: label; anchors.verticalCenter: parent.verticalCenter; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
+    }
+
+    component ReaderOptions: Column {
+        id: opts
+        property Item reader
+        spacing: 12
+
+        OptionLabel { text: qsTr("Theme") }
+        Flow {
+            width: parent.width
+            spacing: 10
+            Repeater {
+                model: ["app", "paper", "sepia", "dark", "black", "custom"]
+                Rectangle {
+                    required property string modelData
+                    readonly property var colors: Theme.readingLook(modelData)
+                    width: 44
+                    height: 44
+                    radius: 22
+                    color: colors.bg
+                    border.width: (App.settings.novelTheme || "app") === modelData ? 2 : 1
+                    border.color: (App.settings.novelTheme || "app") === modelData ? Theme.accent : Theme.borderStrong
+                    Text { anchors.centerIn: parent; text: "Aa"; color: parent.colors.text; font.family: Theme.fontSerif; font.pixelSize: 15 }
+                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: App.setSetting("novelTheme", parent.modelData) }
                 }
             }
-            Text { text: "Font"; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.capitalization: Font.AllUppercase; font.letterSpacing: 1 }
-            Segmented {
-                options: [{ value: "Literata", label: qsTr("Serif") }, { value: "DM Sans", label: qsTr("Sans") }, { value: "Space Grotesk", label: qsTr("Grotesk") }]
-                value: reader.fontFamily
-                onPicked: (v) => App.setSetting("novelFont", v)
-            }
-            Text { text: "Size · " + reader.fontSize; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.capitalization: Font.AllUppercase; font.letterSpacing: 1 }
-            ScSlider { width: parent.width; from: 13; to: 34; stepSize: 1; value: reader.fontSize; onMoved: App.setSetting("novelSize", value) }
-            Text { text: "Line spacing · " + reader.lineHeight.toFixed(2); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.capitalization: Font.AllUppercase; font.letterSpacing: 1 }
-            ScSlider { width: parent.width; from: 1.2; to: 2.4; stepSize: 0.05; value: reader.lineHeight; onMoved: App.setSetting("novelLineHeight", value) }
-            Text { text: "Width · " + reader.columnWidth; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.capitalization: Font.AllUppercase; font.letterSpacing: 1 }
-            ScSlider { width: parent.width; from: 480; to: 1200; stepSize: 10; value: App.settings.novelWidth || 720; onMoved: App.setSetting("novelWidth", value) }
-            Row {
-                spacing: 10
-                Toggle { checked: App.settings.novelJustify === true; onToggled: App.setSetting("novelJustify", checked) }
-                Text { anchors.verticalCenter: parent.verticalCenter; text: "Justify text"; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-            }
         }
+        Row {
+            visible: App.settings.novelTheme === "custom"
+            spacing: 8
+            ScButton { compact: true; text: qsTr("Page colour"); onClicked: { bgPicker.edit(Theme.readingLook("custom").bg); bgPicker.open() } }
+            ScButton { compact: true; text: qsTr("Text colour"); onClicked: { textPicker.edit(Theme.readingLook("custom").text); textPicker.open() } }
+        }
+
+        OptionLabel { text: qsTr("Font") }
+        Select {
+            width: parent.width
+            // The app's own three first, then every font on this device.
+            model: [{ value: "Literata", label: qsTr("Literata (serif)") }, { value: "DM Sans", label: qsTr("DM Sans (sans)") },
+                    { value: "Space Grotesk", label: "Space Grotesk" }]
+                .concat(Qt.fontFamilies().filter(f => ["Literata", "DM Sans", "Space Grotesk"].indexOf(f) < 0 && !f.startsWith("."))
+                .map(f => ({ value: f, label: f })))
+            value: opts.reader.fontFamily
+            onPicked: (v) => App.setSetting("novelFont", v)
+        }
+        Segmented {
+            options: [{ value: 300, label: qsTr("Light") }, { value: 400, label: qsTr("Regular") }, { value: 500, label: qsTr("Medium") }, { value: 600, label: qsTr("Bold") }]
+            value: opts.reader.fontWeight
+            onPicked: (v) => App.setSetting("novelWeight", v)
+        }
+
+        OptionLabel { text: qsTr("Size · %1").arg(opts.reader.fontSize) }
+        ScSlider { width: parent.width; from: 13; to: 40; stepSize: 1; value: opts.reader.fontSize; onMoved: App.setSetting("novelSize", value) }
+        OptionLabel { text: qsTr("Line spacing · %1").arg(opts.reader.lineHeight.toFixed(2)) }
+        ScSlider { width: parent.width; from: 1.1; to: 2.6; stepSize: 0.05; value: opts.reader.lineHeight; onMoved: App.setSetting("novelLineHeight", Math.round(value * 100) / 100) }
+        OptionLabel { text: qsTr("Paragraph spacing · %1").arg(opts.reader.paragraphSpacing.toFixed(1)) }
+        ScSlider { width: parent.width; from: 0; to: 2.5; stepSize: 0.1; value: opts.reader.paragraphSpacing; onMoved: App.setSetting("novelParagraphSpacing", Math.round(value * 10) / 10) }
+        OptionLabel { text: qsTr("Width · %1").arg(opts.reader.columnWidth) }
+        ScSlider { width: parent.width; from: 400; to: 1400; stepSize: 10; value: App.settings.novelWidth || 720; onMoved: App.setSetting("novelWidth", value) }
+        OptionLabel { text: qsTr("Side margins · %1").arg(opts.reader.margin) }
+        ScSlider { width: parent.width; from: 8; to: 120; stepSize: 2; value: opts.reader.margin; onMoved: App.setSetting("novelMargin", value) }
+        OptionSwitch { text: qsTr("Justify text"); checked: App.settings.novelJustify === true; onToggled: (c) => App.setSetting("novelJustify", c) }
+        OptionSwitch { text: qsTr("Indent paragraphs"); checked: opts.reader.indent; onToggled: (c) => App.setSetting("novelIndent", c) }
+        OptionLabel { text: qsTr("Dim the page · %1%").arg(Math.round((Number(App.settings.novelDim) || 0) * 100)) }
+        ScSlider { width: parent.width; from: 0; to: 0.8; stepSize: 0.05; value: Number(App.settings.novelDim) || 0; onMoved: App.setSetting("novelDim", Math.round(value * 100) / 100) }
+        OptionLabel { text: qsTr("Auto-scroll speed · %1").arg(Number(App.settings.novelAutoScrollSpeed) || 40) }
+        ScSlider { width: parent.width; from: 10; to: 200; stepSize: 5; value: Number(App.settings.novelAutoScrollSpeed) || 40; onMoved: App.setSetting("novelAutoScrollSpeed", value) }
+
+        OptionLabel { text: qsTr("Read aloud") }
+        Text {
+            visible: !Speech.available
+            width: parent.width
+            text: qsTr("No voices are installed on this device. Add one in the system's text-to-speech settings.")
+            color: Theme.textMuted
+            wrapMode: Text.Wrap
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+        }
+        Select {
+            visible: Speech.available && Speech.voices.length > 0
+            width: parent.width
+            model: [{ value: "", label: qsTr("System voice") }].concat(Speech.voices.map(v => ({ value: v.id, label: v.name + " · " + v.language })))
+            value: App.settings.ttsVoice || ""
+            onPicked: (v) => { App.setSetting("ttsVoice", v); if (opts.reader.speaking) opts.reader.startSpeaking(opts.reader.spokenBlock) }
+        }
+        OptionLabel { visible: Speech.available; text: qsTr("Voice speed · %1×").arg(Number(App.settings.ttsRate || 1).toFixed(2)) }
+        ScSlider {
+            visible: Speech.available
+            width: parent.width; from: 0.5; to: 3; stepSize: 0.05; value: Number(App.settings.ttsRate) || 1
+            onMoved: App.setSetting("ttsRate", Math.round(value * 100) / 100)
+            onPressedChanged: if (!pressed && opts.reader.speaking) opts.reader.startSpeaking(opts.reader.spokenBlock)
+        }
+        OptionLabel { visible: Speech.available; text: qsTr("Voice pitch · %1×").arg(Number(App.settings.ttsPitch || 1).toFixed(2)) }
+        ScSlider {
+            visible: Speech.available
+            width: parent.width; from: 0.5; to: 2; stepSize: 0.05; value: Number(App.settings.ttsPitch) || 1
+            onMoved: App.setSetting("ttsPitch", Math.round(value * 100) / 100)
+            onPressedChanged: if (!pressed && opts.reader.speaking) opts.reader.startSpeaking(opts.reader.spokenBlock)
+        }
+        OptionSwitch { visible: Speech.available; text: qsTr("Go on to the next chapter"); checked: App.settings.ttsContinue !== false; onToggled: (c) => App.setSetting("ttsContinue", c) }
+        OptionSwitch { visible: Speech.available; text: qsTr("Keep the spoken paragraph on screen"); checked: App.settings.ttsFollow !== false; onToggled: (c) => App.setSetting("ttsFollow", c) }
     }
 }

@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Controls.Basic
 import ScanCore
 
-// A titled horizontal row of covers with smooth arrow and wheel scrolling.
+// A titled horizontal row of covers with smooth arrow and wheel scrolling,
+// or a grid. Inside a PageSection it follows the user's look for it.
 Column {
     id: shelf
     property string title
@@ -10,7 +11,14 @@ Column {
     property var items: []
     property bool loading: false
     property string error: ""
-    property int cardWidth: Math.round((Theme.compact ? 118 : 156) * Theme.coverScale)
+    // PageLayout's look for this shelf ({style, size, count, subtitles,
+    // progress}); null outside an arranged page.
+    property var look: null
+    readonly property bool grid: !!look && look.style === "grid"
+    readonly property real lookScale: !look ? 1 : look.size === "small" ? 0.8 : look.size === "large" ? 1.25 : 1
+    readonly property var shownItems: look && look.count > 0 ? items.slice(0, look.count) : items
+    readonly property bool hasContent: loading || error.length > 0 || items.length > 0 || (headerExtra !== null && opacity > 0)
+    property int cardWidth: Math.round((Theme.compact ? 118 : 156) * Theme.coverScale * lookScale)
     property real coverRatio: 1.5
     property string actionText: ""
     property var subtitleFor: (item) => ""
@@ -30,7 +38,7 @@ Column {
 
     spacing: 14
     width: parent ? parent.width : 800
-    visible: loading || error.length > 0 || items.length > 0 || (headerExtra !== null && opacity > 0)
+    visible: hasContent
 
     Item {
         width: parent.width
@@ -75,13 +83,13 @@ Column {
                 onClicked: shelf.action()
             }
             IconButton {
-                visible: !Theme.compact
+                visible: !Theme.compact && !shelf.grid
                 iconName: "chevron-left"
                 enabled: list.contentX > 1
                 onClicked: list.scrollBy(-list.width * 0.8)
             }
             IconButton {
-                visible: !Theme.compact
+                visible: !Theme.compact && !shelf.grid
                 iconName: "chevron-right"
                 enabled: list.contentX < list.contentWidth - list.width - 1
                 onClicked: list.scrollBy(list.width * 0.8)
@@ -96,13 +104,38 @@ Column {
         sourceComponent: shelf.headerExtra
     }
 
+    // Grid: every card at once, wrapped.
+    Flow {
+        visible: shelf.grid && !shelf.loading && shelf.error.length === 0
+        x: Theme.gutter
+        width: parent.width - 2 * Theme.gutter
+        spacing: 18
+        Repeater {
+            model: shelf.grid ? shelf.shownItems : []
+            delegate: CoverCard {
+                required property var modelData
+                required property int index
+                width: shelf.cardWidth
+                height: shelf.cardWidth * shelf.coverRatio + 84
+                item: modelData
+                order: index
+                animateIn: !shelf.settled
+                coverRatio: shelf.coverRatio
+                subtitle: shelf.look && !shelf.look.subtitles ? "" : shelf.subtitleFor(modelData)
+                badge: shelf.badgeFor(modelData)
+                progress: shelf.look && !shelf.look.progress ? -1 : shelf.progressFor(modelData)
+                onOpened: (it, cover) => shelf.opened(it, cover)
+            }
+        }
+    }
+
     Item {
         width: parent.width
-        height: shelf.items.length > 0 ? (shelf.cardWidth * shelf.coverRatio + 84) : (shelf.headerExtra !== null ? 48 : 0)
-        visible: height > 0
+        visible: (!shelf.grid || shelf.loading || shelf.error.length > 0) && height > 0
+        height: shelf.items.length > 0 || shelf.loading || shelf.error.length > 0 ? (shelf.cardWidth * shelf.coverRatio + 84) : (shelf.headerExtra !== null ? 48 : 0)
 
         Text {
-            visible: shelf.items.length === 0 && !shelf.loading && shelf.error.length === 0 && shelf.headerExtra !== null
+            visible: !shelf.grid && shelf.items.length === 0 && !shelf.loading && shelf.error.length === 0 && shelf.headerExtra !== null
             anchors.left: parent.left
             anchors.leftMargin: Theme.gutter
             anchors.verticalCenter: parent.verticalCenter
@@ -115,14 +148,14 @@ Column {
         ListView {
             id: list
             anchors.fill: parent
-            visible: shelf.items.length > 0 && !shelf.loading && shelf.error.length === 0
+            visible: !shelf.grid && shelf.items.length > 0 && !shelf.loading && shelf.error.length === 0
             orientation: ListView.Horizontal
             flickableDirection: Flickable.HorizontalFlick
             leftMargin: Theme.gutter
             rightMargin: Theme.gutter
             spacing: 18
             clip: true
-            model: shelf.items
+            model: shelf.grid ? [] : shelf.shownItems
             boundsBehavior: Flickable.StopAtBounds
             flickDeceleration: 4000
             reuseItems: true
@@ -168,12 +201,12 @@ Column {
                 width: shelf.cardWidth
                 height: list.height
                 item: modelData
-                index: list.scrolled ? 0 : index
+                order: list.scrolled ? 0 : index
                 animateIn: !shelf.settled
                 coverRatio: shelf.coverRatio
-                subtitle: shelf.subtitleFor(modelData)
+                subtitle: shelf.look && !shelf.look.subtitles ? "" : shelf.subtitleFor(modelData)
                 badge: shelf.badgeFor(modelData)
-                progress: shelf.progressFor(modelData)
+                progress: shelf.look && !shelf.look.progress ? -1 : shelf.progressFor(modelData)
                 onOpened: (it, cover) => shelf.opened(it, cover)
             }
         }

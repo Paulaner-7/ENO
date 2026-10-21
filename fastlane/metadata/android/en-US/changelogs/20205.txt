@@ -1,0 +1,6 @@
+• Move series to another source, one or many at a time
+• Update rules, automatic downloads, delete once read
+• Chapter bookmarks, filters, group filter and select
+• Incognito mode and an app lock with fingerprint
+• Reader colour filter, split spreads, tap zones, volume keys
+• Exact Aniyomi and LNReader backup restores; AVIF images

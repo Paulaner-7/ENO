@@ -1,0 +1,16 @@
+{
+  "name": "scancore-plugin-vendor",
+  "private": true,
+  "description": "Libraries LNReader plugins import, bundled for SCANCORE's plugin runtime (resources/plugins/vendor.js). Same versions LNReader ships.",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild entry.js --bundle --format=iife --target=es2016 --minify --legal-comments=eof --metafile=meta.json --outfile=../../resources/plugins/vendor.js && node licenses.js meta.json"
+  },
+  "devDependencies": {
+    "@noble/ciphers": "2.2.0",
+    "cheerio": "1.0.0-rc.12",
+    "dayjs": "1.11.21",
+    "esbuild": "0.25.10",
+    "htmlparser2": "12.0.0"
+  }
+}

@@ -1,6 +1,7 @@
 #include "Account.h"
 
 #include "Library.h"
+#include "Live.h"
 #include "Sync.h"
 #include "core/Cookies.h"
 #include "core/Database.h"
@@ -462,12 +463,14 @@ QString Account::setSite(const QString &address) {
                             (url.scheme() != QLatin1String("https") && url.scheme() != QLatin1String("http"))))
         return QStringLiteral("Enter the server's address, like http://192.168.1.20:8787 or https://sync.example.com.");
     Database::setPref(QStringLiteral("account.site"), text == kDefaultSite ? QString() : text);
+    CookieJar::refreshProtected();
     emit changed();
     return {};
 }
 
 void Account::scheduleSync() {
-    if (!signedIn() || !active())
+    // Progress that live sync just brought in is not a change to send.
+    if (!signedIn() || !active() || Live::applying())
         return;
     if (m_syncing) {
         m_dirty = true;
@@ -482,6 +485,8 @@ void Account::scheduleSync() {
     const qint64 sinceLast = QDateTime::currentMSecsSinceEpoch() - m_lastSyncEnded;
     m_soon.start(int(std::clamp(kMinGap - sinceLast, kQuiet, kMinGap)));
 }
+
+QString Account::siteBase() { return siteUrl(); }
 
 Account *Account::instance() {
     static auto *account = [] {
@@ -563,33 +568,35 @@ Task *Account::signupOptions() {
     });
 }
 
+QVariantMap Account::call(const QByteArray &method, const QString &path, const QVariantMap &body) {
+    if (!path.startsWith(QLatin1String("/api/")))
+        throw Error(QStringLiteral("Not a site address."));
+    Request request;
+    request.url = QUrl(siteUrl() + path);
+    request.method = method;
+    request.headers = apiHeaders();
+    request.timeoutMs = 20000;
+    if (method != "GET" && method != "DELETE")
+        request.body = QJsonDocument(QJsonObject::fromVariantMap(body)).toJson(QJsonDocument::Compact);
+    const auto response = Http::send(request);
+    const auto json = response.json().object();
+    if (!response.ok()) {
+        auto message = json.value("error").toString();
+        if (message.isEmpty())
+            message = json.value("problem").toObject().value("message").toString();
+        if (response.status == 401)
+            message = QStringLiteral("Sign in to %1 to do that.").arg(siteName());
+        if (response.status == 429)
+            message = QStringLiteral("Too many attempts. Wait a few minutes and try again.");
+        throw Error(message.isEmpty() ? QStringLiteral("%1 responded with HTTP %2.").arg(siteName()).arg(response.status)
+                                      : message,
+                    response.status);
+    }
+    return json.toVariantMap();
+}
+
 Task *Account::request(const QString &method, const QString &path, const QVariantMap &body) {
-    return Task::run([method = method.toUpper().toUtf8(), path, body]() -> QVariant {
-        if (!path.startsWith(QLatin1String("/api/")))
-            throw Error(QStringLiteral("Not a site address."));
-        Request request;
-        request.url = QUrl(siteUrl() + path);
-        request.method = method;
-        request.headers = apiHeaders();
-        request.timeoutMs = 20000;
-        if (method != "GET" && method != "DELETE")
-            request.body = QJsonDocument(QJsonObject::fromVariantMap(body)).toJson(QJsonDocument::Compact);
-        const auto response = Http::send(request);
-        const auto json = response.json().object();
-        if (!response.ok()) {
-            auto message = json.value("error").toString();
-            if (message.isEmpty())
-                message = json.value("problem").toObject().value("message").toString();
-            if (response.status == 401)
-                message = QStringLiteral("Sign in to %1 to do that.").arg(siteName());
-            if (response.status == 429)
-                message = QStringLiteral("Too many attempts. Wait a few minutes and try again.");
-            throw Error(message.isEmpty() ? QStringLiteral("%1 responded with HTTP %2.").arg(siteName()).arg(response.status)
-                                          : message,
-                        response.status);
-        }
-        return json.toVariantMap();
-    });
+    return Task::run([method = method.toUpper().toUtf8(), path, body]() -> QVariant { return call(method, path, body); });
 }
 
 QVariantList Account::passwordChecks(const QString &password) const {
@@ -891,7 +898,10 @@ Task *Account::sync() {
         const auto session = getJson(QStringLiteral("/api/auth/session"));
         if (session.value("user").isNull())
             throw Error(QStringLiteral("Your %1 session ended. Sign in again.").arg(siteName()), 401);
-        return importAll(session);
+        auto result = importAll(session);
+        // The profile as the website has it now (a new photo or name).
+        result.insert(QStringLiteral("user"), session.value("user").toObject().toVariantMap());
+        return result;
     });
     // Kept alive here rather than by QML: a page that starts a sync and
     // drops the task would otherwise let the garbage collector cancel it
@@ -905,6 +915,10 @@ Task *Account::sync() {
         // does not start another sync.
         if (task->ok()) {
             Database::setPref(QStringLiteral("account.lastSync"), Database::now());
+            const auto user = task->result().toMap().value(QStringLiteral("user")).toMap();
+            const QVariantMap fresh{{"username", user.value("username")}, {"email", user.value("email")}, {"avatar", user.value("avatarUrl")}};
+            if (!user.isEmpty() && signedIn() && fresh != m_user)
+                setUser(fresh);
             // What the sync brought in is not a change to send back; without
             // this every sync scheduled another a minute later.
             const bool dirty = m_dirty;

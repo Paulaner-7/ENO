@@ -110,6 +110,19 @@ bool Manifest::supports(const QJsonObject &entry) {
     return !needed.isNull() && QVersionNumber::fromString(appVersion()) >= needed;
 }
 
+bool Manifest::bundledEnabled() {
+#ifndef SCANCORE_BUNDLED_SOURCES
+    return false;
+#else
+    return current().value(QStringLiteral("bundled")).toObject().value(QStringLiteral("enabled")).toBool(true);
+#endif
+}
+
+QString Manifest::bundledReason() {
+    const auto reason = current().value(QStringLiteral("bundled")).toObject().value(QStringLiteral("reason")).toString();
+    return reason.isEmpty() ? QStringLiteral("Built-in sources are off. Add an extension repository in Settings → Extensions to keep reading.") : reason;
+}
+
 bool Manifest::apply(const QByteArray &json, bool persist) {
     const auto doc = QJsonDocument::fromJson(json);
     const auto object = doc.object();

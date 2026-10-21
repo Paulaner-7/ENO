@@ -11,7 +11,9 @@ Flickable {
 
     width: parent ? parent.width : 400
     height: flow.height
-    contentWidth: Theme.compact ? flow.childrenRect.width + 2 * padding : width
+    // The Flow's own size, not its childrenRect (reading that from a binding
+    // re-enters the layout: a binding loop).
+    contentWidth: Theme.compact ? flow.implicitWidth + 2 * padding : width
     contentHeight: height
     interactive: Theme.compact
     flickableDirection: Flickable.HorizontalFlick

@@ -62,7 +62,10 @@ AbstractButton {
             }
             Column {
                 anchors.verticalCenter: parent.verticalCenter
+                width: tile.width - 48
                 Text {
+                    width: parent.width
+                    elide: Text.ElideRight
                     text: tile.label
                     color: Theme.text
                     font.family: Theme.fontSans
@@ -70,6 +73,8 @@ AbstractButton {
                     font.weight: Font.DemiBold
                 }
                 Text {
+                    width: parent.width
+                    elide: Text.ElideRight
                     visible: text.length > 0
                     text: tile.detail
                     color: Theme.textFaint

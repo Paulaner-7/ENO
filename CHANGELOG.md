@@ -2,6 +2,168 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.7.1 — 2026-10-21
+
+- **Status bar icons match SCANCORE's theme on Android**: with the phone in light mode, the clock, battery and signal icons were dark on SCANCORE's dark screens and hard to see. They now follow the app's theme (light icons on dark, dark icons on light), including the navigation bar, and the readers and player choose by their own background (the novel reader by its reading theme).
+
+## 2.7.0 — 2026-10-21
+
+- **Anime works while AniList is down**: AniList switched off its service on 21 October, leaving the Anime page saying "Anime details are unavailable right now". SCANCORE now fills the page, anime details, search, episode lists and the schedule from Kitsu and ani.zip whenever AniList does not answer, with the same anime, so your library, progress and sync carry on. Recommendations come back when AniList does. When nothing can be reached, the page shows what it loaded last time, or says why.
+- **The MyAnimeList catalogue keeps working too**: its lists and its spotlight fall back the same way when MyAnimeList or AniList is down.
+- **A full screen button in the player**: SCANCORE's own video player has one at the end of its controls; on phones it turns the video to landscape.
+- **The spotlight's shade covers the whole picture while swiping**: on phones, a bright strip of the banner showed at the edge as you swiped.
+- **Sharper comic pages**: pages are decoded at exactly the size they appear on screen and drawn pixel for pixel, instead of being shrunk or stretched by the graphics card. Paged reading is noticeably crisper, and pages no longer go slightly soft between screen pixels while a strip scrolls.
+- **Crisper webtoons on large screens**: art narrower than the strip (most webtoons on a computer or a phone) is enlarged with a sharper filter, with cleaner lines and text.
+- **Pages sharpen after a resize or zoom**: widening the strip, resizing the window or zooming in decodes the page again at the new size, keeping the old picture until it is ready. Before, a widened strip stayed blurry.
+- **Lighter on memory**: paged reading no longer decodes the pages it reads ahead only to learn their shape, and pages use far less video memory.
+- **The image cache keeps what you are reading**: when it trims itself it now drops the images you looked at least recently, not the oldest downloads (pages you were still reading could go), and it writes to disk far less while you scroll.
+
+## 2.3.5 — 2026-10-21
+
+- **Extension anime plays again** ([#13](https://github.com/medium-gh/scancore/issues/13)): since 2.2.0 SCANCORE's player turned down most extension videos with "unrecognized file format". It now plays them.
+- **Servers that disguise their videos play**: some servers (such as HD-1 on AnimeKai, Anikoto, AniWave and Anichi) send each part of a video dressed up as a picture. SCANCORE now unwraps them on the way to the player, on every platform, and downloads of them play offline.
+- **AniZone loads** on desktop instead of failing with an error, and extensions that stream from a server of their own no longer stop about ten minutes into an episode.
+
+## 2.3.4 — 2026-10-21
+
+- **Swipe the anime spotlight**: swipe or drag sideways for the next or previous title, as in most apps. The slide follows your finger, a quick flick is enough, and a swipe that drifts a little no longer scrolls the page instead. (Swiping was meant to work before, but never changed the slide.)
+
+## 2.3.3 — 2026-10-21
+
+- **Reader controls stay out of the status bar**: on phones, the novel reader's top bar no longer slides up over the clock and icons when it hides as you scroll. Both readers now draw under the status bar and keep their controls below it.
+- **The novel's title is readable on phones**: it gets its own row under the reader's buttons instead of shrinking to "…".
+
+## 2.3.2 — 2026-10-21
+
+- **Settings → Sources is fast again**: it lists SCANCORE's built-in sources (extensions have their own page), those you have series on first, a dozen at a time with Show all and a search. With many extensions installed it used to build a row for each of their sources.
+- **Long lists elsewhere stay light**: the source chips on Comics and Novels, Anime's sources, Add a section, moving several series, Library health, chapter comments and reviews only build what is on screen or show the first ones with Show more.
+
+## 2.3.1 — 2026-10-21
+
+- **Read from opens faster**: a catalogue title is looked up on SCANCORE's built-in sources only, not on every installed extension, and each match shows as soon as its source answers. **My extensions** lists your extensions (recently used first, with a search) and looks on the one you pick; moving a series still asks everything, showing built-in matches first.
+- **The Read from list scrolls** when it is long, and opens as a sheet from the bottom on phones.
+- **Nothing spills out of its card on phones**: settings buttons beside long descriptions drop below them, wide choices stay inside, and the About, Activity and Sync buttons and tabs fit at 360 px.
+- **No more crashes at startup** on systems whose Qt hashes through OpenSSL 3 (such as Arch Linux).
+- **Your scancore.onl session stays yours**: the cookies of scancore.onl and your sync server are never shared with extensions, plugins or browser checks.
+- The welcome tour says adding a repository is optional: the built-in sources work without one.
+
+## 2.3.0 — 2026-10-21
+
+SCANCORE 2.3 "One story": comic, novel and anime as one story, and a library that looks after itself.
+
+- **The story elsewhere**: a series page shows its other forms side by side (the manhwa an anime adapts, the web novel behind it, every season) with how far you are in each, and opens them in one tap.
+- **Where the anime leaves off**: anime pages say where the comic or novel goes on after that season ("Manhwa continues from chapter 46"), and comic and novel pages say where each season ends, with a button to go there. Readers suggest and vote on these on scancore.onl; SCANCORE's own list starts it off.
+- **Continue the story** on Home: after you finish a season, or catch up on a comic whose novel is further ahead, a card shows where to go on.
+- **Upcoming**: one calendar for what comes out next in your library, anime episodes from their schedule and comic and novel chapters guessed from each series' rhythm (Library → Upcoming).
+- **Library health**: sources that stopped answering or updating are listed with a move to another source, and series saved twice on different sources can be merged, keeping everything you read in either. Library shows when something needs a look.
+- **Five more trackers**: Kitsu, MangaUpdates and Bangumi (and Shikimori and Simkl in builds with their ids) in Settings → Connections.
+- **Read a title from your extensions**: a search result or a series on a built-in source can be looked up on your installed extensions alone.
+- **Home is yours to shape**: remove sections you do not want (they no longer load) and add shelves of an extension's latest or popular titles.
+- Update checks can send one notification for everything they found (Settings → Library).
+- The Flatpak builds again with SCANCORE's own player.
+- Android: opening Sources no longer closes SCANCORE on phones without a working text-to-speech engine.
+
+## 2.2.1 — 2026-10-21
+
+- **Adding a second repository no longer closes SCANCORE.**
+- **Repository links work however you paste them**: a GitHub repository's page or just owner/name, a raw folder, jsDelivr, Codeberg or GitLab pages, or the link to an index.min.json, repo.json or LNReader plugin list (such as raw.githubusercontent.com/LNReader/lnreader-plugins/…/plugins.min.json). Paste several at once and they are added one after another.
+- **AniList connects inside SCANCORE**: sign in and allow it, and the account is connected; nothing to copy. When AniList, MyAnimeList or Comick signs SCANCORE out, you are told and can connect again in one tap.
+- **Watching updates your trackers reliably**: an episode counts as watched from 85%, in its last two minutes, once the ending starts, or when you go on to the next one.
+- **Continue watching and reading** show the episode or chapter you are really on, say which episode is next, and leave out series you only plan to watch, dropped or finished. Starting a planned series moves it to Watching or Reading.
+- **Crash reports**: if SCANCORE closes unexpectedly, the next start offers a report to copy, share or post on GitHub. Settings → About → Crash reports and diagnostics has past reports and a log to send for other problems.
+
+## 2.2.0 — 2026-10-21
+
+SCANCORE 2.2 "Together": your devices and your TV, in step.
+
+- **SCANCORE Wrapped**: your year in comics, novels and anime as a story across the whole window (time spent, chapters and episodes, the series you came back to most and your number one of each, the genres and author you read most, your busiest month and weekday, your longest streak, where your year started) and a card to save as a picture. Home shows it from 1 December to 7 January, and the year review opens it any time.
+- **Live progress between your devices**: signed in to scancore.onl (or a SCANCORE sync server 1.1), where you are in a chapter or episode reaches your other open devices within seconds, not at the next sync. **Continue on another device** in the readers and the player sends your exact page or second to one of them, which offers to continue there. Settings → Sync shows which devices are open now.
+- **Anime downloads**: download one episode, the next five or every unwatched one from an anime source (or the one playing) and watch without a connection, with its subtitles. Streams are kept as they are, up to 1080p, and a download that stopped goes on where it was.
+- **Cast to a TV**: Chromecasts and smart TVs (DLNA) on your Wi-Fi. SCANCORE passes the TV what the video needs, so episodes from extensions and your downloads play there too; the player follows the TV with play, pause, seek and next and keeps your progress.
+- **Open in another player**: mpv, VLC or IINA on computers, or MX Player, mpv, VLC and others on Android, with the video's headers, start position and subtitles.
+- **Subtitle style** (size, colour, outline, a dark box behind the lines) and **Anime4K sharpening** for lower-resolution episodes, in Settings → Anime.
+- **E-ink mode** for Boox, Kobo and other e-paper devices: black on white, no animation, comics in pages with a flash on page turns to clear ghosting, and novels turned page by page with a tap on the sides (Settings → Interface).
+- **The Flatpak plays anime from extensions** with SCANCORE's own player, like the other packages, instead of only web players.
+- **Four more interface languages**: Polski, ไทย, Filipino and हिन्दी (eighteen besides English).
+- Bookmarks and each series' chapter-list settings (sort, filters) now sync between devices too.
+- On phones, the player's bar has a menu for the new actions, and the readers' top bars fit on 360 px screens.
+
+## 2.1.1 — 2026-10-21
+
+- **Keiyoushi extensions work again.** Their current builds refused to start in SCANCORE ("CloudflareInterceptor must be present in default client") because SCANCORE's network setup was not exactly Mihon's; on desktop they also failed to load at all. Every one of them runs now, on Android and desktop.
+- **Cloudflare checks pass by themselves**, as in Mihon: when a site shows a check, SCANCORE passes it in a browser you do not see and loads the page, usually in a few seconds. SCANCORE now introduces itself as the browser it really is, which is what lets most checks through without a click.
+- When a site still wants you to tick the box, the check opens by itself while the page loads: one tap and it closes and the page carries on, nothing to try again. "Open browser check" appears on phones too, and every extension source has "Open the site" in Extensions (to pass a check or sign in), like Mihon's WebView.
+- Extensions that open the site in a web view of their own (Comix) no longer wait minutes for a check they cannot see: the first visit to a site in a session passes it first.
+- **Adding a repository** no longer has to install anything: "Add only" or "Add and install" the extensions in your language, which then install in the background while you use the app, with progress and a Stop button in Extensions.
+- **Search your installed extensions** by name, source or site. Typing in a search box on phones (Extensions, History, a series' chapters) no longer closes the keyboard after every letter.
+- On some Linux computers (Intel graphics with an NVIDIA laptop GPU) opening a Cloudflare check, or any page with 3D graphics, closed SCANCORE. It no longer does.
+
+## 2.1.0 — 2026-10-20
+
+SCANCORE 2.1 "Parity": what people coming from Mihon, Aniyomi and Kotatsu reach for first.
+
+- **Move a series to another source**: "Move to another source" on a comic's or novel's page finds it on your other sources (under every name its catalogue knows), shows the match first (chapters, newest, how many will count as read) and moves it with its library list, favourite, tracker links, bookmarks and progress, carried by chapter number. Select series in the library to move them together, and Settings → Sources moves every series of a source at once, including sources that are gone. "Keep the old one too" copies instead.
+- **Update rules**: choose which library lists are checked for new chapters, skip finished series, series with chapters left to read or series not started, and check by itself only on Wi-Fi and (Android) only while charging. New chapters of the lists you pick download by themselves, and "Delete chapters once read" clears a download when you finish the next chapter.
+- **Chapter tools**: bookmarks, a filter for one translation group, unread, downloaded and bookmarked filters and a sort order remembered per series, "mark previous as read", and Select to download, mark, bookmark or remove many chapters at once.
+- **Incognito mode and app lock** (Settings → Privacy): incognito keeps nothing of what you read or watch (no history, place, reading time, tracker updates or Discord status) and shows a badge while it is on. The app lock asks for a PIN when SCANCORE starts and after it has been away (right away, 1, 5 or 15 minutes); on Android fingerprint or face unlocks it too.
+- **Comic reader**: a colour filter (brightness, warmth, greyscale, invert), wide spreads split into their two halves in the Pages layout, tap zones (left and right, L shape, Kindle, edges or off, flippable) shown on screen when you change them, volume keys that turn pages on Android, and page bar colours you choose (unread pages very light, read pages grey and the page you are on black to start). On phones the series and chapter title have their own row under the buttons, and the page count in the Pages layout no longer lags a page behind.
+- **Backups**: Aniyomi backups restore onto the same anime extension exactly (episodes watched, the one part-way, bookmarks, list), or through AniList when the extension is not installed; LNReader backups restore novels onto the same plugin. Mihon backups now bring categories and bookmarks too.
+- **Themes carry your whole look**: a theme file holds light or dark, accent, navigation, spacing, corners, text and cover sizes, motion, the pages you arranged and the readers' colours, and any theme can be exported, not only a custom one. Older theme files still open.
+- **Phones**: dropdowns open as a sheet from the bottom, the first-run screen has a cleaner language picker and buttons, the library header takes four rows instead of seven, and Settings shows your scancore.onl profile photo.
+- **Long novel chapters** open and scroll quickly: only the paragraphs near the screen exist (a 6000-paragraph chapter opens three times faster).
+- **AVIF covers and pages** on Linux, in the Flatpak and on Android 12 and later.
+- A repository's GitHub page (for example github.com/keiyoushi/extensions) can be added as an extension repository; SCANCORE reads the repository's own files from it.
+- Taps no longer reach the tabs behind the first-run screen.
+
+Still to come: the interface in Polish, Thai, Filipino and Hindi, SCANCORE's video player in the Flatpak, AVIF on Windows and macOS, and bookmarks and per-series settings in sync.
+
+## 2.0.1 — 2026-10-20
+
+- **"Read from" on Windows** found a series only under the names the catalogue gives it, never under the other names a source lists it by, so a series a source lists under its Russian, Spanish or Korean name was missed. It is found again, as on the other systems.
+- **Kakao Page** for Korean comics: webtoons and manga with every episode it shows without an account (wait-for-free and paid episodes, and adult titles, need one and are left out). "Read from" opens a series there directly when AniList links to it.
+
+## 2.0.0 — 2026-10-20
+
+SCANCORE 2.0: comics, novels and anime from the extensions you already use, SCANCORE's own video player, pages you arrange yourself, the interface in fourteen languages, and sources in your language. Everything in 2.0.0-beta.1 below is in it, and since the beta:
+
+- **Korean webtoons**: Naver Webtoon, with every episode it shows without an account (paid previews and adult titles, which need one, are left out).
+- **Official WEBTOON in six more languages**: Spanish, French, German, Indonesian, Thai and Traditional Chinese, and Dongman Manhua in Simplified Chinese. They come with your content language like the other built-in sources.
+- **Much more Spanish**: ZonaTMO, Olympus Scanlation and LectorManga, and ten scanlation groups' own sites (House Of Otakus, InfraFandub, Inventario Oculto, MHScans, Monopoly Scan, Ragnarok Scanlation, RichtoScan, Uchuujin Projects, UnderTranslations, Yuri-Online), each checked from search to the last page image.
+- **"Read from" finds series under their translated names**: a source that lists a series as "Lector omnisciente" or "Torre de Dios" is now found from its English name, using the names the source and MangaDex know in your language. When AniList links a title to an official edition (WEBTOON in your language, Naver Webtoon), "Read from" opens that one directly. A spin-off that shares its series' name no longer stands in for the series.
+- **MangaDex in other languages was always English** in "Read from": its series show under their name in that language, which never matched the catalogue's. They match now, and a title with no name in your language shows its English name instead of a romanised one.
+- Chapter names SCANCORE makes up are in the source's language (Chapitre, Capítulo, Kapitel, Глава, 화, 話 and more).
+- **Back up for Mihon** (Settings → Connections): saves the comics you read from extensions, with their categories and the chapters you read, as a .tachibk file Mihon or Tachiyomi restore. Restoring a Mihon backup puts each series on the same extension source when it is installed, as Mihon does.
+- **Licences** (Settings → About): the open-source software inside SCANCORE and the full text of each licence.
+- Built-in sources can be switched off and back on for everyone without an update, and are a separate part of SCANCORE's code; extensions and your files keep working either way.
+
+Still to come: the interface in Polish, Thai, Filipino and Hindi, exact restores of Aniyomi and LNReader backups, and SCANCORE's video player in the Flatpak (the Flatpak plays anime in its web player). Kakao Webtoon and most Japanese publishers' sites protect their page images, so SCANCORE does not read them.
+
+## 2.0.0-beta.1 — 2026-10-20
+
+A test version of 2.0: comics, novels and anime from the extensions you already use, SCANCORE's own video player, pages you arrange yourself, ten more languages with sources in them, a library per media with categories, notifications, and a faster app everywhere. Export a backup before you install it (Settings → Storage → Back up everything).
+
+- **Arrange every page**: Home, Comics, Novels and Anime have an Edit page button. Drag sections (or move them with arrows on phones), hide the ones you do not use, and give each shelf its own look: a row or a grid, small to large cards, how many items, and whether details and progress bars show. The search bar, source chips, greeting and anime spotlight move and hide too. Settings → Interface → Pages sets the spacing between sections and how round corners are, and resets everything.
+- **SCANCORE in ten more languages**: Korean, Japanese, Chinese (simplified and traditional), Portuguese (Portugal), German, Italian, Russian, Turkish and Vietnamese, beside Spanish, French, Indonesian and Brazilian Portuguese.
+- **Sources in your language**: built-in comic sources for Brazilian Portuguese, Indonesian, French, Turkish, Thai and Vietnamese, and MangaDex in Portuguese, Indonesian, French, Russian, Turkish, Vietnamese, Arabic, Thai, Korean, Chinese, German, Italian and Polish. SCANCORE shows the sources in your language (Settings → Sources → Source languages adds others), and when none of them has a series, "Read from" offers to look for it in another language.
+- **Extensions for all three media**: add a comic, novel or anime extension repository from Settings or the first-run screen, or with one tap on a repository link (scancore://, tachiyomi://, mihon://, aniyomi:// and lnreader:// links open in SCANCORE). The new Extensions page installs, updates and removes extensions, asks before trusting a new signing key, and has each source's own settings. Comic and anime extensions run inside the app on Android; on desktop, SCANCORE downloads a small Java runtime for them the first time. Novel plugins run in SCANCORE itself on every system.
+- **Browse any source**: its popular and latest lists and its own search filters, with covers and downloads through the extension. Search shows each source's results as soon as they arrive instead of waiting for the slowest, and "Read from" finds a series on your extension sources too, without being held up by a stuck one. Sites that ask for a browser check open in a browser window (on Android, the system's web view) and continue afterwards.
+- **SCANCORE's own video player** for anime from extensions: hardware decoding, HLS streams, subtitles, switching servers without losing your place, the next episode starting by itself, resuming where you stopped, skipping openings and endings that the video marks, and Space, arrow and M keys. **Watch from** plays an anime from the AniList catalogue on one of your anime sources: SCANCORE picks the source when only one in your language has it, and asks otherwise.
+- **Catalogues and trackers**: Comics, Novels and Anime each browse the catalogue you choose (AniList, MyAnimeList or Comick for comics; AniList or MyAnimeList for anime), chosen on first run or in Settings → Connections, where AniList, MyAnimeList and Comick connect too. A series page says when a tracker could not find the series and links it in one tap. "Read from" lists sources in your content language first.
+- **Library per media**, each with Reading, Planned, Paused, Completed and Dropped, favourites, and a grid, compact or list view.
+- **Notifications**: new chapters, extension and app updates and announcements from scancore.onl are kept in a notification area with an unread count, and reach the system's notifications when SCANCORE is not on screen.
+- **Full-screen reading** that is remembered, without the status bar or the page bar.
+- **The comic reader's page bar your way**: always shown, only with the reader's controls (tap the page), or off, in thin, medium or thick (the reader's settings menu). Drag along it to move through the pages.
+- **Anime on Android start with sound and go full screen**: episodes from the built-in servers used to start muted, and the player's full screen button said full screen was not supported. It now turns the phone to landscape without the system bars, and Back leaves it. The full screen button above the player turns the phone too, even with auto-rotate off.
+- "Add to library" on an anime saves it and changes to "In library" at once; it said "Removed from your library" and stayed as it was. The library button, favourites and progress on comic and novel pages, and lists of sources and extensions, also update as soon as they change instead of when the page is opened again.
+- **Novels**: read aloud with your system's voices, and much more control over the page: fonts, weight, line and paragraph spacing, margins, indent, your own colours, dimming and auto-scroll. A built-in source for a machine-translated novel site (English).
+- **Faster**: SCANCORE starts about twice as fast, covers are drawn by one shader and grids create only what is on screen, sections no longer freeze the window the first time they open, and fitted comic pages shrink cleanly. Mouse wheels and touchpads scroll the same way everywhere, with a speed setting in Settings → Interface.
+- Covers and pages from servers that sent AVIF images show again: SCANCORE now asks only for formats it can show.
+- MangaDex says when every chapter of a series was taken down instead of showing an empty list.
+- Continue reading shows a series once, from the source you read it on last, and a saved cover that a site moved is fetched again. Episodes of one anime airing at the same time are one entry in the schedule (Ep 1–10).
+- Android: SCANCORE keeps running in the background for downloads, update checks and notifications, and offers to turn off battery restrictions for it.
+
+Not in this beta yet: Flatpak and package-manager builds (use the AppImage on Linux), restoring Mihon, Aniyomi and LNReader backups exactly, the licences screen, and the interface in Polish, Thai, Filipino and Hindi. The video player has been tested on Linux and in the Android emulator so far; on Windows, macOS and phones it is new in this beta.
+
 ## 1.5.0 — 2026-10-19
 
 Spanish comic sources, source languages, accent-proof title matching, episodes that open again from an anime's page, and search from the Android keyboard.

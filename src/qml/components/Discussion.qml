@@ -136,7 +136,7 @@ Column {
     }
 
     onActiveChanged: if (active && state === "loading") load()
-    onUnitChanged: { thread = null; comments = []; load() }
+    onUnitChanged: { thread = null; comments = []; shownRows = 30; load() }
     Component.onCompleted: load()
 
     // Composer
@@ -260,8 +260,10 @@ Column {
         font.pixelSize: Theme.textSm
     }
 
+    // The first comments until asked for more (a chapter can have 200).
+    property int shownRows: 30
     Repeater {
-        model: discussion.state === "ready" ? discussion.rows : []
+        model: discussion.state === "ready" ? discussion.rows.slice(0, discussion.shownRows) : []
         Column {
             required property var modelData
             readonly property var c: modelData.comment
@@ -364,5 +366,12 @@ Column {
             }
             Item { width: 1; height: 4 }
         }
+    }
+
+    ScButton {
+        visible: discussion.state === "ready" && discussion.rows.length > discussion.shownRows
+        variant: "ghost"
+        text: qsTr("Show more comments (%1)").arg(discussion.rows.length - discussion.shownRows)
+        onClicked: discussion.shownRows += 50
     }
 }

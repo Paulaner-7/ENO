@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, pre-release]
   pull_request:
 
 concurrency:
@@ -12,7 +12,7 @@ concurrency:
 env:
   QT_VERSION: 6.11.3
   # qtwebview: the anime player on Windows (WebView2) and macOS (WKWebView).
-  QT_MODULES: qtwebengine qtwebview qtwebchannel qtpositioning qtimageformats qtpdf
+  QT_MODULES: qtwebengine qtwebview qtwebchannel qtpositioning qtimageformats qtpdf qtspeech qtmultimedia
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build libgl1-mesa-dev libxkbcommon-dev libxkbcommon-x11-0 \
-            libxcb-cursor0 libfontconfig1-dev libnss3 libxcomposite1 libxdamage1 libxrandr2 libxtst6
+            libxcb-cursor0 libfontconfig1-dev libnss3 libxcomposite1 libxdamage1 libxrandr2 libxtst6 libmpv-dev
 
       - name: macOS packages
         if: runner.os == 'macOS'
@@ -47,6 +47,12 @@ jobs:
       - name: MSVC
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
+
+      # The extension host (host/) and its tests.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
       - name: Qt
         uses: jurplel/install-qt-action@v4
@@ -65,3 +71,19 @@ jobs:
         run: ctest --test-dir build --output-on-failure
         env:
           QT_QPA_PLATFORM: offscreen
+
+      # A test that ends in an exception loses its buffered output; the log
+      # file keeps what QTest wrote before it.
+      - name: Failed tests' logs
+        if: failure() && runner.os == 'Windows'
+        shell: bash
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          for t in scancore_tests scancore_extension_tests scancore_host_tests; do
+            exe=$(find build -name "$t.exe" | head -1)
+            [ -n "$exe" ] || continue
+            echo "=== $t"
+            "$exe" -o "$t.txt,txt" -v1 || true
+            cat "$t.txt" || true
+          done

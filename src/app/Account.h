@@ -30,6 +30,9 @@ class Account : public QObject {
 
 public:
     static Account *instance();
+    // The website the app talks to: scancore.onl, the user's own, or
+    // SCANCORE_SITE (development).
+    static QString siteBase();
     static Account *create(QQmlEngine *, QJSEngine *) { return instance(); }
 
     bool signedIn() const { return !m_user.isEmpty(); }
@@ -54,6 +57,8 @@ public:
     // A JSON request to the account's site with its session (comments and
     // reviews). Resolves to the response body; fails with the site's message.
     Q_INVOKABLE sc::Task *request(const QString &method, const QString &path, const QVariantMap &body = {});
+    // The same, blocking (on a worker thread); throws Error.
+    static QVariantMap call(const QByteArray &method, const QString &path, const QVariantMap &body = {});
     // Website rules, so the form can explain problems before submitting.
     Q_INVOKABLE QVariantList passwordChecks(const QString &password) const;
     Q_INVOKABLE QString usernameProblem(const QString &username) const;
@@ -61,6 +66,8 @@ public:
     // {libraryImported, historyImported, pushed, morePending}. While a sync
     // runs, returns that one.
     Q_INVOKABLE sc::Task *sync();
+    // Account sync rests while WebDAV or folder sync is on (see Sync).
+    bool active() const;
 
 signals:
     void changed();
@@ -76,8 +83,6 @@ private:
     // A sync soon after a change in the library or progress, but not more
     // than about once a minute.
     void scheduleSync();
-    // Account sync rests while WebDAV or folder sync is on (see Sync).
-    bool active() const;
     static QVariantMap importAll(const QJsonObject &session);
 
     QVariantMap m_user;

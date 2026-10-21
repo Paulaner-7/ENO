@@ -2,7 +2,9 @@ import QtQuick
 import ScanCore
 
 // Rounded cover art. Shows a soft placeholder while loading, then fades and
-// settles the image in.
+// settles the image in. The image is drawn by one shader straight from its
+// texture (crop, zoom and rounded corners in one pass), so a screen of
+// covers costs no offscreen buffers.
 Item {
     id: root
     property string source
@@ -12,15 +14,7 @@ Item {
     property real zoom: 1
     property color tint: Theme.surface2
     readonly property bool ready: image.status === Image.Ready
-    property int decodeWidth: 200
-    readonly property real aspect: width > 0 && height > 0 ? Math.round((height / width) * 20) / 20 : 1.5
-    readonly property int texW: Math.round(decodeWidth * Screen.devicePixelRatio)
-    readonly property int texH: Math.max(1, Math.round(texW * aspect))
-    readonly property int texRadius: aspect === 1 && width > 0 && radius * 2 >= width
-        ? Math.round(texW / 2)
-        : Math.round(texW * 0.0625)
-
-    clip: false
+    readonly property bool failed: image.status === Image.Error
 
     Rectangle {
         id: placeholder
@@ -48,16 +42,32 @@ Item {
         }
     }
 
+    // Only a texture source for the shader.
     Image {
         id: image
-        anchors.fill: parent
-        source: root.source ? App.image(root.source, root.referer) + "~" + root.texRadius : ""
-        sourceSize: Qt.size(root.texW, root.texH)
-        fillMode: Image.Stretch
+        visible: false
+        // Nothing loads before the cover has its size, so each image is
+        // decoded once, at the size it is shown.
+        source: root.source && root.width > 0 ? App.image(root.source, root.referer) : ""
+        sourceSize.width: Math.max(1, Math.ceil(root.width * Screen.devicePixelRatio * 1.15))
         asynchronous: true
         cache: true
         smooth: true
         mipmap: false
+    }
+
+    ShaderEffect {
+        id: effect
+        anchors.fill: parent
+        visible: root.ready && width > 0 && height > 0
+        readonly property real imageAspect: image.implicitHeight > 0 ? image.implicitWidth / image.implicitHeight : 1
+        readonly property real itemAspect: height > 0 ? width / height : 1
+        property variant source: image
+        property size size: Qt.size(width, height)
+        property size crop: imageAspect > itemAspect ? Qt.size(itemAspect / imageAspect, 1) : Qt.size(1, imageAspect / itemAspect)
+        property real radius: Math.min(root.radius, width / 2, height / 2)
+        property real zoom: root.zoom
+        fragmentShader: "qrc:/shaders/cover.frag.qsb"
         opacity: root.ready ? 1 : 0
         scale: (root.ready ? 1 : 1.03) * (root.zoom > 1 ? 1 + (root.zoom - 1) * 0.35 : 1)
         Behavior on opacity { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }

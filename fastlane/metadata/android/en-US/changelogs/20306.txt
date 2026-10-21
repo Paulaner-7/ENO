@@ -1,0 +1,5 @@
+• Adding a second repository no longer closes the app
+• Repository links work in any form, several at once
+• AniList connects inside the app; trackers update reliably
+• Continue watching shows the right episode
+• Crash reports you can share

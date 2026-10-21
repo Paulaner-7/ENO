@@ -19,6 +19,9 @@ QThreadPool &pool() {
     return *instance;
 }
 
+// The task whose work runs on this thread, for report().
+thread_local QPointer<Task> *t_current = nullptr;
+
 } // namespace
 
 Task::Task(QObject *parent) : QObject(parent), m_cancel(std::make_shared<std::atomic_bool>(false)) {}
@@ -34,6 +37,8 @@ Task *Task::run(Work work) {
         if (cancel->load())
             return;
         CancelScope scope(cancel);
+        auto current = guard;
+        t_current = &current;
         QVariant value;
         QString error;
         QString verifyUrl;
@@ -47,6 +52,7 @@ Task *Task::run(Work work) {
         } catch (const std::exception &e) {
             error = QString::fromUtf8(e.what());
         }
+        t_current = nullptr;
         if (cancel->load())
             return;
         if (!error.isEmpty() && status != 499)
@@ -68,6 +74,20 @@ Task *Task::resolved(const QVariant &value) {
     task->m_loading = false;
     task->m_result = value;
     return task;
+}
+
+void Task::report(const QVariant &value) {
+    if (!t_current)
+        return;
+    QMetaObject::invokeMethod(
+        QCoreApplication::instance(),
+        [guard = *t_current, value] {
+            if (guard && guard->m_loading) {
+                guard->m_partial = value;
+                emit guard->progressed(value);
+            }
+        },
+        Qt::QueuedConnection);
 }
 
 void Task::cancel() {

@@ -1,0 +1,11 @@
+{
+  "data": [
+    {"node": {"id": 3001, "title": "Mal Manhwa", "main_picture": {"medium": "https://img.test/m/3001.jpg", "large": "https://img.test/m/3001l.jpg"},
+      "alternative_titles": {"synonyms": ["Other Name"], "en": "Mal Manhwa EN", "ja": "マル"},
+      "media_type": "manhwa", "num_chapters": 222, "start_date": "2021-07-30", "status": "finished", "mean": 9.11,
+      "synopsis": "Synopsis.", "nsfw": "white"}, "ranking": {"rank": 1}},
+    {"node": {"id": 3002, "title": "Mal Light Novel", "main_picture": {"medium": "https://img.test/m/3002.jpg"},
+      "media_type": "light_novel", "num_chapters": 0, "start_date": "2009", "status": "currently_publishing", "nsfw": "gray"},
+     "ranking": {"rank": 2}}
+  ]
+}

@@ -1,0 +1,5 @@
+{"hosters": [
+  {"name": "Alpha", "url": "/hoster/alpha"},
+  {"name": "Beta", "url": "/hoster/beta", "lazy": true},
+  {"name": "Inline", "videos": [{"url": "/video/inline.mp4", "title": "Inline 480p", "resolution": 480}]}
+]}

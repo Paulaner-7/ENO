@@ -1,0 +1,74 @@
+name: Extensions runtime
+
+# The Extensions runtime the desktop app downloads to run Mihon extensions:
+# a Java trimmed with jlink and the extension host (host/), one zip per
+# system with a .sha256 beside it, kept as assets of an
+# "extensions-runtime-<host version>" pre-release (pre-releases are never
+# offered as app updates). The app asks for the version it was built with
+# (HOST_VERSION in host/desktop/.../Main.kt and hostVersion in
+# host/desktop/build.gradle.kts, kept equal).
+#
+# Run it by hand after the host changes in a way the app depends on, and
+# raise the host version when you do, or push the tag
+# extensions-runtime-<host version>.
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["extensions-runtime-*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Linux x64, os: ubuntu-22.04 }
+          - { name: Windows x64, os: windows-2022 }
+          - { name: macOS arm64, os: macos-14 }
+          - { name: macOS x64, os: macos-15-intel }
+    steps:
+      - uses: actions/checkout@v5
+      # Java 21: class-data sharing archives the app turns on (Java 19+).
+      # Java 17: the host's Gradle toolchain, which not every runner has.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+      - name: Build the runtime
+        working-directory: host
+        shell: bash
+        run: ./gradlew --console=plain :desktop:test :desktop:runtimeZip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-${{ matrix.os }}
+          path: host/desktop/build/distributions/*
+
+  publish:
+    needs: build
+    # What did build is still worth publishing.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Upload to the pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^val hostVersion = "\(.*\)"$/\1/p' host/desktop/build.gradle.kts)
+          tag="extensions-runtime-$version"
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --prerelease --title "Extensions runtime $version" \
+              --notes "The Java runtime and extension host SCANCORE downloads to run extensions on desktop. Not an app release."
+          gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY" --clobber

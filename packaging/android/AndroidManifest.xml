@@ -8,7 +8,25 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- In-app updates: open the downloaded APK in the system installer. -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Asking to run unrestricted in the background (library update
+         checks, downloads, reading aloud); the reader answers in the
+         system's own dialog. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Notifications for new chapters, announcements and updates
+         (Android 13+ asks the reader). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Fingerprint or face for the app lock. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!-- Casting: finding TVs and Chromecasts on the Wi-Fi (SSDP, mDNS). -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <!-- %%INSERT_PERMISSIONS -->
+    <!-- Reading novels aloud: Android 11+ only lets apps see the
+         text-to-speech engines they declare they look for. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
     <!-- %%INSERT_FEATURES -->
     <supports-screens
         android:anyDensity="true"
@@ -35,6 +53,18 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- One-tap "add repository" links from repository pages, and
+                 SCANCORE's own links. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="scancore" />
+                <data android:scheme="tachiyomi" />
+                <data android:scheme="mihon" />
+                <data android:scheme="aniyomi" />
+                <data android:scheme="lnreader" />
+            </intent-filter>
 
           <meta-data
                 android:name="android.app.lib_name"
@@ -43,7 +73,21 @@
           <meta-data
                 android:name="android.app.arguments"
                 android:value="-- %%INSERT_APP_ARGUMENTS%% --" />
+
+          <!-- Keep Qt's event loop running when SCANCORE leaves the screen
+               (Qt stops it by default), so library update checks,
+               downloads and announcements carry on in the background. -->
+          <meta-data
+                android:name="android.app.background_running"
+                android:value="true" />
         </activity>
+
+        <!-- Sites' browser checks, in Android's web view. -->
+        <activity
+            android:name="com.mediumdev.scancore.BrowserCheck"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation|density|uiMode"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

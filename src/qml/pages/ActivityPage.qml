@@ -356,9 +356,13 @@ Item {
                             value: page.metric
                             onPicked: (v) => App.setSetting("activityMetric", v)
                         }
+                        // Phones: the card's width, without icons, so it stays inside.
                         Segmented {
-                            options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics"), icon: "book-open" },
-                                      { value: "novel", label: qsTr("Novels"), icon: "book-text" }, { value: "anime", label: qsTr("Anime"), icon: "tv" }]
+                            fill: Theme.compact
+                            width: fill ? parent.width : implicitWidth
+                            options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics"), icon: Theme.compact ? "" : "book-open" },
+                                      { value: "novel", label: qsTr("Novels"), icon: Theme.compact ? "" : "book-text" },
+                                      { value: "anime", label: qsTr("Anime"), icon: Theme.compact ? "" : "tv" }]
                             value: page.media
                             onPicked: (v) => page.media = v
                         }
@@ -445,7 +449,7 @@ Item {
                     // The day under the pointer, or the legend.
                     Item {
                         width: parent.width
-                        height: 22
+                        height: Math.max(22, legend.visible ? legend.height : 0)
                         Text {
                             visible: heatHover.cell !== null
                             anchors.verticalCenter: parent.verticalCenter
@@ -468,9 +472,12 @@ Item {
                             width: parent.width
                             elide: Text.ElideRight
                         }
-                        Row {
+                        // Wraps on phones rather than running past the card.
+                        Flow {
+                            id: legend
                             visible: heatHover.cell === null
                             anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width
                             spacing: 18
                             Row {
                                 visible: page.media === ""

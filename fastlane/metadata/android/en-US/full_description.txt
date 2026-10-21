@@ -1,7 +1,7 @@
 <p>SCANCORE brings comics, web novels and anime together in one fast app. Everything runs on your phone: your library, history and settings stay there unless you choose to sync them.</p>
-<p><b>Comics</b> — manhwa, manga and webtoons from Asura, Webtoon, MangaDex and more, found through Comick's catalogue so you can search almost any series by any of its names. Read in a vertical strip or page by page, with two-page spreads, border trimming and zoom, and settings that each series can keep for itself.</p>
-<p><b>Novels</b> — Royal Road and the big web-novel sites, with a reader you can tune: fonts, spacing, paper and sepia themes.</p>
-<p><b>Anime</b> — trending, seasonal and top lists from AniList, a weekly schedule, and episodes that resume where you stopped, with skip buttons for intros and endings.</p>
+<p><b>Comics</b> — manhwa, manga and webtoons from Webtoon, MangaDex and the sources you add, found through Comick's catalogue so you can search almost any series by any of its names. Read in a vertical strip or page by page, with two-page spreads, border trimming and zoom, and settings that each series can keep for itself.</p>
+<p><b>Novels</b> — Royal Road and the novel sources you add, with a reader you can tune: fonts, spacing, paper and sepia themes.</p>
+<p><b>Anime</b> — trending, seasonal and top lists from AniList, a weekly schedule, and episodes from the sources you add that resume where you stopped, with skip buttons for intros and endings.</p>
 <p><b>Your files</b> — CBZ, CBR, 7z and PDF comics and EPUB books on your device.</p>
 <p><b>Everything else</b></p>
 <ul>
@@ -13,4 +13,4 @@
 <li>Themes with your own colours and background pictures, and a gallery of shared ones</li>
 <li>In English, Spanish, French, Brazilian Portuguese and Indonesian</li>
 </ul>
-<p>SCANCORE is free and open source (MIT). It hosts no content: it reads public websites the way a browser does.</p>
+<p>SCANCORE is free and open source (MIT). It hosts no content, ships no sources for scan sites and runs no extension repository.</p>

@@ -57,7 +57,7 @@ arch=('x86_64')
 url='https://github.com/{REPO}'
 license=('MIT')
 # Qt WebEngine (Arch's has the H.264 codec) is the anime player.
-depends=('gcc-libs' 'glibc' 'qt6-base' 'qt6-declarative' 'qt6-imageformats' 'qt6-svg' 'qt6-webengine')
+depends=('gcc-libs' 'glibc' 'qt6-base' 'qt6-declarative' 'qt6-imageformats' 'qt6-speech' 'qt6-svg' 'qt6-webengine')
 optdepends=(
   'qt6-wayland: native Wayland platform integration'
 )
@@ -107,6 +107,7 @@ def srcinfo(version, source_sha):
 	depends = qt6-base
 	depends = qt6-declarative
 	depends = qt6-imageformats
+	depends = qt6-speech
 	depends = qt6-svg
 	depends = qt6-webengine
 	optdepends = qt6-wayland: native Wayland platform integration

@@ -1,0 +1,135 @@
+#include "Package.h"
+
+#include <QJsonArray>
+#include <QRegularExpression>
+#include <QVersionNumber>
+
+namespace sc::ext {
+
+QString kindName(Kind kind) {
+    switch (kind) {
+    case Kind::Mihon: return QStringLiteral("mihon");
+    case Kind::Aniyomi: return QStringLiteral("aniyomi");
+    case Kind::LNReader: return QStringLiteral("lnreader");
+    }
+    return {};
+}
+
+std::optional<Kind> kindFrom(const QString &name) {
+    if (name == QLatin1String("mihon"))
+        return Kind::Mihon;
+    if (name == QLatin1String("aniyomi"))
+        return Kind::Aniyomi;
+    if (name == QLatin1String("lnreader"))
+        return Kind::LNReader;
+    return std::nullopt;
+}
+
+QString kindMedia(Kind kind) {
+    switch (kind) {
+    case Kind::Mihon: return QStringLiteral("comic");
+    case Kind::Aniyomi: return QStringLiteral("anime");
+    case Kind::LNReader: return QStringLiteral("novel");
+    }
+    return {};
+}
+
+QJsonObject Package::toJson() const {
+    QJsonArray list;
+    for (const auto &s : sources)
+        list.append(QJsonObject{{"id", s.id}, {"name", s.name}, {"lang", s.lang}, {"baseUrl", s.baseUrl}});
+    return {{"kind", kindName(kind)},
+            {"pkg", pkg},
+            {"name", name},
+            {"versionName", versionName},
+            {"versionCode", QString::number(versionCode)},
+            {"lib", lib},
+            {"lang", lang},
+            {"warning", int(warning)},
+            {"fileUrl", fileUrl},
+            {"iconUrl", iconUrl},
+            {"site", site},
+            {"torrent", torrent},
+            {"sources", list}};
+}
+
+Package Package::fromJson(const QJsonObject &o) {
+    Package p;
+    p.kind = kindFrom(o.value("kind").toString()).value_or(Kind::Mihon);
+    p.pkg = o.value("pkg").toString();
+    p.name = o.value("name").toString();
+    p.versionName = o.value("versionName").toString();
+    p.versionCode = o.value("versionCode").toString().toLongLong();
+    p.lib = o.value("lib").toString();
+    p.lang = o.value("lang").toString();
+    p.warning = ContentWarning(std::clamp(o.value("warning").toInt(), 0, 2));
+    p.fileUrl = o.value("fileUrl").toString();
+    p.iconUrl = o.value("iconUrl").toString();
+    p.site = o.value("site").toString();
+    p.torrent = o.value("torrent").toBool();
+    for (const auto &value : o.value("sources").toArray()) {
+        const auto s = value.toObject();
+        p.sources.append({s.value("id").toString(), s.value("name").toString(), s.value("lang").toString(),
+                          s.value("baseUrl").toString()});
+    }
+    return p;
+}
+
+QStringList Package::languages() const {
+    QStringList out;
+    for (const auto &s : sources)
+        if (!out.contains(s.lang))
+            out.append(s.lang);
+    return out;
+}
+
+QJsonObject Repository::toJson() const {
+    return {{"kind", kindName(kind)}, {"url", url},         {"name", name},      {"badge", badge},
+            {"website", website},     {"signingKey", signingKey}, {"listUrl", listUrl}};
+}
+
+Repository Repository::fromJson(const QJsonObject &o) {
+    Repository r;
+    r.kind = kindFrom(o.value("kind").toString()).value_or(Kind::Mihon);
+    r.url = o.value("url").toString();
+    r.name = o.value("name").toString();
+    r.badge = o.value("badge").toString();
+    r.website = o.value("website").toString();
+    r.signingKey = o.value("signingKey").toString();
+    r.listUrl = o.value("listUrl").toString();
+    return r;
+}
+
+QString normalizedFingerprint(const QString &fingerprint) {
+    static const QRegularExpression separators(QStringLiteral("[^0-9a-fA-F]"));
+    return QString(fingerprint).remove(separators).toLower();
+}
+
+QStringList supportedLibs(Kind kind) {
+    switch (kind) {
+    case Kind::Mihon: return {QStringLiteral("1.4"), QStringLiteral("1.5"), QStringLiteral("1.6")};
+    case Kind::Aniyomi: return {QStringLiteral("14"), QStringLiteral("16"), QStringLiteral("17")};
+    case Kind::LNReader: return {};
+    }
+    return {};
+}
+
+LibSupport libSupport(Kind kind, const QString &lib) {
+    if (kind == Kind::LNReader)
+        return LibSupport::Supported;
+    const auto supported = supportedLibs(kind);
+    const auto wanted = QVersionNumber::fromString(lib);
+    if (wanted.isNull())
+        return LibSupport::Unknown;
+    for (const auto &s : supported)
+        if (QVersionNumber::fromString(s).normalized() == wanted.normalized())
+            return LibSupport::Supported;
+    if (wanted > QVersionNumber::fromString(supported.last()))
+        return LibSupport::TooNew;
+    if (wanted < QVersionNumber::fromString(supported.first()))
+        return LibSupport::TooOld;
+    // Between two supported versions but not one of them.
+    return LibSupport::Unknown;
+}
+
+} // namespace sc::ext

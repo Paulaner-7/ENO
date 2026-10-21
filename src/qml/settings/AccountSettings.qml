@@ -15,9 +15,9 @@ SettingsPane {
     readonly property string active: Sync.kind !== "" ? Sync.kind : Account.customSite ? "server" : "folder"
     // The tab shown; starts on the one in use.
     property string view: active
-    readonly property var methods: (App.platform === "android" ? [] : [{ value: "folder", label: qsTr("Google Drive / Cartella"), icon: "folder-open" }]).concat([
-        { value: "webdav", label: "WebDAV", icon: "globe" },
-        { value: "server", label: qsTr("Server personale"), icon: "server" }
+    readonly property var methods: (App.platform === "android" ? [] : [{ value: "folder", label: qsTr("Google Drive / Cartella"), icon: Theme.compact ? "" : "folder-open" }]).concat([
+        { value: "webdav", label: "WebDAV", icon: Theme.compact ? "" : "globe" },
+        { value: "server", label: qsTr("Server personale"), icon: Theme.compact ? "" : "server" }
     ])
 
     readonly property string name: Account.user.username || Account.user.email || ""
@@ -36,10 +36,21 @@ SettingsPane {
         task.failed.connect((error) => Router.toast(error, "error"))
     }
 
-    Segmented {
-        options: pane.methods
-        value: pane.view
-        onPicked: (v) => pane.view = v
+    // Scrolls sideways when the tabs are wider than the pane.
+    Flickable {
+        width: parent.width
+        height: methodTabs.height
+        contentWidth: methodTabs.width
+        interactive: contentWidth > width
+        flickableDirection: Flickable.HorizontalFlick
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        Segmented {
+            id: methodTabs
+            options: pane.methods
+            value: pane.view
+            onPicked: (v) => pane.view = v
+        }
     }
 
     // ------------------------------------------------------------ accounts
@@ -595,7 +606,10 @@ SettingsPane {
         Repeater {
             model: devices
             Row {
+                id: deviceRow
                 required property var modelData
+                // Open right now, so live progress reaches it in seconds.
+                readonly property bool live: !modelData.self && Live.devices.some(d => d.id === modelData.id)
                 spacing: 10
                 Icon {
                     anchors.verticalCenter: parent.verticalCenter
@@ -612,9 +626,9 @@ SettingsPane {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    visible: !modelData.self && Number(modelData.updatedAt) > 0
-                    text: qsTr("· updated ") + App.relativeTime(Number(modelData.updatedAt))
-                    color: Theme.textFaint
+                    visible: deviceRow.live || (!modelData.self && Number(modelData.updatedAt) > 0)
+                    text: deviceRow.live ? qsTr("· open now") : qsTr("· updated ") + App.relativeTime(Number(modelData.updatedAt))
+                    color: deviceRow.live ? Theme.success : Theme.textFaint
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textSm
                 }

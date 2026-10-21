@@ -22,6 +22,133 @@ finish-args:
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
 modules:
+  # SCANCORE's own video player (anime from extensions): libmpv, LGPL
+  # throughout as in tools/libmpv/build.sh: FFmpeg without --enable-gpl and
+  # only decoders, demuxers and the network (H.264 included), dav1d, libass
+  # and libplacebo; mpv with -Dgpl=false.
+  - name: dav1d
+    buildsystem: meson
+    config-opts:
+      # Meson picks lib64 here, which is off the runtime's library and
+      # pkg-config paths (mpv then cannot find libplacebo).
+      - -Dlibdir=lib
+      - -Denable_tests=false
+      - -Denable_tools=false
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://downloads.videolan.org/pub/videolan/dav1d/1.5.4/dav1d-1.5.4.tar.xz
+        sha256: 686616b7c69eb88d44459391ab25cac13b6647a3b288835c5784e71c1514a5c5
+  - name: libass
+    config-opts:
+      - --disable-static
+      - --disable-libunibreak
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - '*.la'
+    sources:
+      - type: archive
+        url: https://github.com/libass/libass/releases/download/0.17.5/libass-0.17.5.tar.xz
+        sha256: 2dca25c0e0c837ddf00b52011b3f82cac1e4ddd3ad018227806b0c2288864acc
+  - name: libplacebo
+    buildsystem: meson
+    config-opts:
+      - -Dlibdir=lib
+      - -Dvulkan=disabled
+      - -Dopengl=enabled
+      - -Ddemos=false
+      - -Dlcms=disabled
+      - -Dlibdovi=disabled
+      - -Dshaderc=disabled
+      - -Dglslang=disabled
+      - -Dunwind=disabled
+      - -Dxxhash=disabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://code.videolan.org/videolan/libplacebo.git
+        tag: v7.360.1
+        commit: cee9b076f2c63104ccfd497fa79c39a867293ec4
+  - name: ffmpeg
+    config-opts:
+      - --enable-shared
+      - --disable-static
+      - --enable-pic
+      - --enable-version3
+      - --enable-openssl
+      - --enable-vaapi
+      - --enable-libdav1d
+      - --disable-vulkan
+      - --disable-doc
+      - --disable-programs
+      - --disable-muxers
+      - --disable-encoders
+      - --disable-devices
+      - --disable-avdevice
+      - --disable-decoders
+      - --enable-decoder=h264,hevc,vp8,vp9,av1,libdav1d,mpeg1video,mpeg2video,mpeg4,h263,msmpeg4v3,aac,aac_fixed,aac_latm,mp1,mp2,mp3,mp3float,opus,vorbis,ac3,eac3,dca,truehd,flac,alac,pcm_s16le,pcm_s16be,pcm_s24le,pcm_s32le,pcm_f32le,pcm_u8,pcm_alaw,pcm_mulaw,ass,ssa,srt,subrip,webvtt,mov_text,text,microdvd,hdmv_pgs_subtitle,dvb_subtitle,dvd_subtitle,png,mjpeg,bmp,webp,gif
+      - --disable-demuxers
+      - --enable-demuxer=hls,dash,mov,matroska,mpegts,flv,avi,mpegps,ogg,aac,mp3,ac3,eac3,flac,wav,h264,hevc,webvtt,ass,srt,microdvd,concat,data,image_png_pipe,image_jpeg_pipe,image_webp_pipe
+      - --disable-parsers
+      - --enable-parser=h264,hevc,vp8,vp9,av1,mpeg4video,mpegvideo,h263,aac,aac_latm,mpegaudio,ac3,dca,opus,vorbis,flac,dvbsub,dvdsub,png,mjpeg
+      - --disable-protocols
+      - --enable-protocol=file,http,https,tcp,tls,crypto,data,httpproxy,async,cache,subfile
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/ffmpeg
+    sources:
+      - type: archive
+        url: https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz
+        sha256: 8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e
+  - name: mpv
+    buildsystem: meson
+    config-opts:
+      - -Dlibdir=lib
+      - -Dlibmpv=true
+      - -Dcplayer=false
+      - -Dgpl=false
+      - -Dlua=disabled
+      - -Djavascript=disabled
+      - -Dmanpage-build=disabled
+      - -Dlibarchive=disabled
+      - -Dlcms2=disabled
+      - -Dvulkan=disabled
+      - -Dcdda=disabled
+      - -Ddvdnav=disabled
+      - -Dlibbluray=disabled
+      - -Drubberband=disabled
+      - -Duchardet=disabled
+      - -Dzimg=disabled
+      - -Dsdl2-audio=disabled
+      - -Dsdl2-video=disabled
+      - -Dsdl2-gamepad=disabled
+      - -Djack=disabled
+      - -Dopenal=disabled
+      - -Dlibavdevice=disabled
+      - -Djpeg=disabled
+      - -Dsixel=disabled
+      - -Dcaca=disabled
+      - -Dshaderc=disabled
+      - -Dspirv-cross=disabled
+      - -Ddvbin=disabled
+      - -Dvapoursynth=disabled
+      - -Dcplugins=disabled
+      - -Dsndio=disabled
+      - -Dvdpau=disabled
+      - -Doss-audio=disabled
+      - -Dwayland=disabled
+      - -Dpulse=enabled
+      - -Dpipewire=disabled
+    sources:
+      - type: archive
+        url: https://github.com/mpv-player/mpv/archive/refs/tags/v0.41.0.tar.gz
+        sha256: ee21092a5ee427353392360929dc64645c54479aefdb5babc5cfbb5fad626209
   - name: scancore
     buildsystem: cmake-ninja
     builddir: true
@@ -29,14 +156,17 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DSCANCORE_BUILD_TESTS=OFF
       - -DSCANCORE_WITH_NOVEL_PACK_INSTALLER=OFF
+      # No Gradle or JDK in the build sandbox: the desktop Extensions
+      # runtime is downloaded by the app, as in the other release builds.
+      - -DSCANCORE_WITH_EXTENSION_HOST=OFF
       - -DFETCHCONTENT_FULLY_DISCONNECTED=ON
       - -DFETCHCONTENT_SOURCE_DIR_LEXBOR=/run/build/scancore/lexbor
     sources:
       - type: git
         url: https://github.com/medium-gh/scancore.git
-        tag: v1.5.0
+        tag: v2.7.1
       - type: git
         url: https://github.com/lexbor/lexbor.git
-        tag: v2.7.0
+        tag: v2.7.1
         commit: de30a79397f8db1c22bce2fd5a792d84fd065762
         dest: lexbor

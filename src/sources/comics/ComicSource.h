@@ -2,6 +2,7 @@
 
 #include "core/Http.h"
 
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QList>
 #include <QString>
@@ -22,6 +23,9 @@ struct Summary {
     QString genres;
     QString views;
     QString source;
+    // The source's other names for it (other languages), for "Read from" to
+    // recognise a catalogue title shown under a translated name.
+    QStringList names;
     QVariantMap toMap() const;
 };
 
@@ -32,6 +36,8 @@ struct Chapter {
     QString thumbnail;
     QString slug;
     QString released;
+    // The group that translated it, when the source says.
+    QString scanlator;
     QVariantMap toMap() const;
 };
 
@@ -66,6 +72,13 @@ struct LatestItem {
     QVariantMap toMap() const;
 };
 
+// One page of a source's own listing (popular, latest, or a search with
+// filters).
+struct Listing {
+    QList<Summary> items;
+    bool hasNextPage = false;
+};
+
 // Settings for one source, read from sources/manifest.json. Domains,
 // availability and template options live there so they can change without
 // a new release.
@@ -85,6 +98,9 @@ struct SourceConfig {
     // Set when another source shares the host: this source's links end in
     // "#<urlTag>" so Registry::forUrl can tell them apart.
     QString urlTag;
+    // Off only because its language is not among the user's source
+    // languages: "Read from" can still look there when asked to.
+    bool languageOff = false;
 };
 
 class Source {
@@ -105,8 +121,26 @@ public:
     virtual std::optional<Details> details(const QString &) { return std::nullopt; }
     virtual QList<LatestItem> latest(int) { return {}; }
     virtual bool hasLatest() const { return false; }
+    // False when the series is listed but none of its chapters can be read
+    // here (taken down), so "Read from" leaves it out. One request at most.
+    virtual bool readable(const QString &) { return true; }
+    // This source's own link for a series page link from elsewhere (a
+    // tracker's "where to read"), or empty when it cannot tell.
+    virtual QString seriesLink(const QUrl &) const { return {}; }
     // Referer sent with image requests for this source.
     virtual QString imageReferer() const { return m_config.base + QLatin1Char('/'); }
+    // Other headers its images need.
+    virtual Headers imageHeaders() const { return {}; }
+
+    // Browsing one source by itself, a page at a time (extensions):
+    // "popular", "latest" or "search" (with `query` and `filters`).
+    virtual bool canBrowse() const { return false; }
+    virtual bool hasLatestListing() const { return false; }
+    virtual Listing browse(const QString &, int, const QString & = {}, const QJsonArray & = {}) { return {}; }
+    // Its search filters and settings, described as JSON by its host.
+    virtual QJsonArray filters() { return {}; }
+    virtual QJsonArray preferences() { return {}; }
+    virtual void setPreference(const QString &, const QJsonValue &) {}
 
 protected:
     Headers jsonHeaders() const;

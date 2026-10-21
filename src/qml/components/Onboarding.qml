@@ -3,14 +3,17 @@ import QtQuick.Controls.Basic
 import QtQuick.Shapes
 import ScanCore
 
-// First-run welcome: what SCANCORE does, a quick look-and-feel choice, an
-// optional scancore.onl account, and a few tips. Shown until finished or
+// First-run welcome: the interface language, what SCANCORE does, the tracker
+// to keep, extensions (a repository link, if the reader has one), a quick
+// look-and-feel choice, an optional scancore.onl account, and a few tips. Shown until finished or
 // skipped; Settings can show it again.
 Rectangle {
     id: root
     property int step: App.startAction.onboardingStep || 0
     property int direction: 1
-    readonly property int steps: 5
+    readonly property int steps: 7
+    // The account step, which has its own Continue.
+    readonly property int accountIndex: 5
     signal finished()
 
     color: Theme.base
@@ -26,7 +29,14 @@ Rectangle {
         leave.start()
     }
 
-    Keys.onRightPressed: if (step < steps - 1 && step !== 3) go(step + 1)
+    // Nothing behind the welcome (the tabs, the page) takes taps or wheels.
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+        onWheel: (wheel) => wheel.accepted = true
+    }
+
+    Keys.onRightPressed: if (step < steps - 1 && step !== accountIndex) go(step + 1)
     Keys.onLeftPressed: go(step - 1)
     Keys.onEscapePressed: finish()
 
@@ -76,7 +86,7 @@ Rectangle {
 
         Repeater {
             id: pages
-            model: [welcomeStep, mediaStep, styleStep, accountStep, doneStep]
+            model: [welcomeStep, mediaStep, trackerStep, extensionsStep, styleStep, accountStep, doneStep]
             delegate: Loader {
                 id: pageLoader
                 required property var modelData
@@ -105,10 +115,13 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.SafeArea.margins.bottom
-        height: 88
+        height: Theme.compact ? 112 : 88
 
+        // Phones give the dots a row of their own, well above the buttons;
+        // beside them the buttons would cover the last dots.
         Row {
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: Theme.compact ? 14 : (parent.height - height) / 2
             spacing: 8
             Repeater {
                 model: root.steps
@@ -125,32 +138,27 @@ Rectangle {
         }
         ScButton {
             anchors.left: parent.left
-            anchors.leftMargin: Theme.gutter
-            anchors.verticalCenter: parent.verticalCenter
-            visible: root.step > 0 && root.step < root.steps - 1
-            variant: "ghost"
-            text: qsTr("Back")
-            onClicked: root.go(root.step - 1)
+            anchors.leftMargin: Theme.gutter - (Theme.compact ? 12 : 0)
+            // Centred on the same line as the 36 px button opposite.
+            y: Theme.compact ? parent.height - 18 - 36 + (36 - height) / 2 : (parent.height - height) / 2
+            visible: root.step < root.steps - 1
+            variant: Theme.compact ? "plain" : "ghost"
+            compact: Theme.compact
+            text: root.step === 0 ? qsTr("Skip intro") : qsTr("Back")
+            onClicked: root.step === 0 ? root.finish() : root.go(root.step - 1)
         }
         ScButton {
             anchors.right: parent.right
             anchors.rightMargin: Theme.gutter
-            anchors.verticalCenter: parent.verticalCenter
+            y: Theme.compact ? parent.height - height - 18 : (parent.height - height) / 2
             visible: root.step < root.steps - 1
-            variant: root.step === 3 ? "ghost" : "primary"
-            text: root.step === 0 ? qsTr("Get started") : root.step === 3 ? qsTr("Skip for now") : qsTr("Continue")
+            variant: root.step === root.accountIndex ? "ghost" : "primary"
+            compact: Theme.compact
+            implicitHeight: Theme.compact ? 36 : 40
+            iconName: root.step === root.accountIndex ? "" : "chevron-right"
+            iconAfter: true
+            text: root.step === 0 ? qsTr("Get started") : root.step === root.accountIndex ? qsTr("Skip for now") : qsTr("Continue")
             onClicked: root.go(root.step + 1)
-        }
-        Text {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.gutter
-            anchors.bottom: parent.top
-            visible: root.step === 0
-            text: qsTr("Skip intro")
-            color: Theme.textFaint
-            font.family: Theme.fontSans
-            font.pixelSize: Theme.textSm
-            MouseArea { anchors.fill: parent; anchors.margins: -8; cursorShape: Qt.PointingHandCursor; onClicked: root.finish() }
         }
     }
 
@@ -259,11 +267,27 @@ Rectangle {
                 }
                 // The interface language comes first, so the rest of the
                 // intro is in it. It switches right away.
-                Row {
+                Column {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 10
-                    Icon { anchors.verticalCenter: parent.verticalCenter; name: "languages"; size: 18; color: Theme.textMuted }
+                    spacing: 8
+                    Row {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 6
+                        Icon { anchors.verticalCenter: parent.verticalCenter; name: "languages"; size: 14; color: Theme.textFaint }
+                        Text {
+                            text: qsTr("Language")
+                            color: Theme.textFaint
+                            font.family: Theme.fontSans
+                            font.pixelSize: Theme.textXs
+                            font.weight: Font.DemiBold
+                            font.capitalization: Font.AllUppercase
+                            font.letterSpacing: 1.5
+                        }
+                    }
                     Select {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: Math.min(root.width - 2 * Theme.gutter, 260)
+                        implicitHeight: 42
                         Accessible.name: qsTr("Language")
                         model: [{ value: "system", label: qsTr("System") }].concat(Customize.languages)
                         value: Customize.language
@@ -278,6 +302,7 @@ Rectangle {
     Component {
         id: mediaStep
         Flickable {
+            WheelScroll {}
             contentHeight: mediaColumn.height + 60
             clip: true
             Column {
@@ -288,7 +313,7 @@ Rectangle {
                 spacing: 28
                 Heading {
                     kicker: qsTr("Everything in one place")
-                    title: qsTr("Read and watch from dozens of sites at once")
+                    title: qsTr("Read and watch from the sources you choose")
                     body: qsTr("Search every source together, keep your place in every series, and download chapters for offline reading.")
                 }
                 Flow {
@@ -296,8 +321,8 @@ Rectangle {
                     spacing: 16
                     Repeater {
                         model: [
-                            { icon: "book-open", title: qsTr("Comics"), text: qsTr("Manhwa, manga and webtoons from Asura, Webtoon, MangaDex and more. Vertical strip or page by page.") },
-                            { icon: "book-text", title: qsTr("Novels"), text: qsTr("Royal Road and the big web-novel sites, with a reader you can tune: fonts, spacing, paper and sepia themes.") },
+                            { icon: "book-open", title: qsTr("Comics"), text: qsTr("Manhwa, manga and webtoons from Webtoon, MangaDex, your files and the sources you add. Vertical strip or page by page.") },
+                            { icon: "book-text", title: qsTr("Novels"), text: qsTr("Royal Road, your EPUB books and the sources you add, with a reader you can tune: fonts, spacing, paper and sepia themes.") },
                             { icon: "tv", title: qsTr("Anime"), text: qsTr("Trending, seasonal and top lists from AniList, a weekly schedule, and episodes that resume where you stopped.") }
                         ]
                         Rectangle {
@@ -342,7 +367,166 @@ Rectangle {
         }
     }
 
-    // 3. Look and feel, applied live.
+    // 3. Trackers: the catalogue each page browses, and the trackers to keep
+    // in step. Every connected tracker gets progress for every media.
+    Component {
+        id: trackerStep
+        Flickable {
+            WheelScroll {}
+            contentHeight: trackerColumn.height + 60
+            clip: true
+            Column {
+                id: trackerColumn
+                x: Theme.gutter
+                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
+                width: Math.min(parent.width - 2 * Theme.gutter, 640)
+                spacing: 24
+                Heading {
+                    kicker: qsTr("Trackers")
+                    title: qsTr("Browse and track your way")
+                    body: qsTr("Pick the catalogue each page browses and searches. Connected trackers follow what you finish, whichever you browse with.")
+                }
+                Column {
+                    spacing: 10
+                    Text { text: qsTr("Comics"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
+                    CataloguePicker { media: "comic" }
+                }
+                Column {
+                    spacing: 10
+                    Text { text: qsTr("Novels"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
+                    CataloguePicker { media: "novel" }
+                }
+                Column {
+                    spacing: 10
+                    visible: Trackers.malAvailable
+                    Text { text: qsTr("Anime"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
+                    CataloguePicker { media: "anime" }
+                }
+                Column {
+                    width: parent.width
+                    spacing: 4
+                    visible: Trackers.services.length > 0
+                    Text { text: qsTr("Keep your lists in step"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
+                    Repeater {
+                        // The three most used; the others are in Settings → Connections.
+                        model: Trackers.services.filter(t => ["anilist", "mal", "comick"].indexOf(t.key) >= 0).map(t => ({ service: t.key }))
+                        Item {
+                            required property var modelData
+                            width: trackerColumn.width
+                            height: Math.max(48, connector.height + 12)
+                            Column {
+                                anchors.left: parent.left
+                                anchors.right: connector.left
+                                anchors.rightMargin: 12
+                                anchors.verticalCenter: parent.verticalCenter
+                                Text { text: connector.label; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; font.weight: Font.DemiBold }
+                                Text {
+                                    width: parent.width
+                                    visible: text.length > 0
+                                    text: connector.status
+                                    color: Theme.textMuted
+                                    font.family: Theme.fontSans
+                                    font.pixelSize: Theme.textSm
+                                    wrapMode: Text.Wrap
+                                }
+                            }
+                            TrackerConnect {
+                                id: connector
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                service: modelData.service
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 4. Extensions: other people's sources, from a repository the reader
+    // already has a link to. Nothing is suggested.
+    Component {
+        id: extensionsStep
+        Flickable {
+            id: extensionsPage
+            WheelScroll {}
+            contentHeight: extensionsColumn.height + 60
+            clip: true
+            readonly property var repositories: { App.dependOn(Extensions.revision); return Extensions.repositories() }
+            Column {
+                id: extensionsColumn
+                x: Theme.gutter
+                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
+                width: Math.min(parent.width - 2 * Theme.gutter, 640)
+                spacing: 22
+                Heading {
+                    kicker: qsTr("Extensions")
+                    title: qsTr("Have a repository link?")
+                    body: qsTr("SCANCORE runs extensions made for Mihon and Tachiyomi. Paste a repository link and SCANCORE shows what it holds before adding anything. Extensions are other people's code, so you choose whether to trust each one.")
+                }
+                // Optional: the built-in sources work without any of this.
+                Rectangle {
+                    width: parent.width
+                    height: optionalText.implicitHeight + 24
+                    radius: Theme.radiusMd
+                    color: Theme.alpha(Theme.accent, 0.08)
+                    border.width: 1
+                    border.color: Theme.alpha(Theme.accent, 0.25)
+                    Icon {
+                        id: optionalIcon
+                        x: 14
+                        y: 13
+                        name: "info"
+                        size: 16
+                        color: Theme.accent
+                    }
+                    Text {
+                        id: optionalText
+                        anchors.left: optionalIcon.right
+                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 14
+                        y: 12
+                        text: qsTr("This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.")
+                        color: Theme.text
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textSm
+                        wrapMode: Text.Wrap
+                    }
+                }
+                Row {
+                    width: parent.width
+                    spacing: 10
+                    SearchField {
+                        id: linkField
+                        width: parent.width - addLink.width - 10
+                        placeholderText: qsTr("Repository link")
+                        onSubmitted: (text) => { if (text.trim()) Router.addRepository(text.trim()) }
+                    }
+                    ScButton {
+                        id: addLink
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Add")
+                        iconName: "plus"
+                        enabled: linkField.text.trim().length > 0
+                        onClicked: Router.addRepository(linkField.text.trim())
+                    }
+                }
+                Text {
+                    width: parent.width
+                    text: extensionsPage.repositories.length
+                        ? qsTr("Added: %1").arg(extensionsPage.repositories.map(r => r.name).join(", "))
+                        : qsTr("No link? Continue; the Extensions page on the Comics tab takes one any time.")
+                    color: extensionsPage.repositories.length ? Theme.success : Theme.textMuted
+                    font.family: Theme.fontSans
+                    font.pixelSize: Theme.textSm
+                    wrapMode: Text.Wrap
+                }
+            }
+        }
+    }
+
+    // 5. Look and feel, applied live.
     Component {
         id: styleStep
         Flickable {
@@ -420,7 +604,7 @@ Rectangle {
         }
     }
 
-    // 4. Account.
+    // 6. Account.
     Component {
         id: accountStep
         Flickable {
@@ -447,7 +631,7 @@ Rectangle {
                     x: Theme.compact ? Theme.gutter : Math.max(accountIntro.x + accountIntro.width + 48, parent.width / 2)
                     y: Theme.compact ? accountIntro.height + 24 : 0
                     width: Theme.compact ? parent.width - 2 * Theme.gutter : Math.min(400, parent.width - x - Theme.gutter)
-                    onDone: root.go(4)
+                    onDone: root.go(root.accountIndex + 1)
                 }
                 ScButton {
                     visible: Account.signedIn
@@ -455,13 +639,13 @@ Rectangle {
                     y: accountIntro.height + 24
                     variant: "primary"
                     text: qsTr("Continue")
-                    onClicked: root.go(4)
+                    onClicked: root.go(root.accountIndex + 1)
                 }
             }
         }
     }
 
-    // 5. Done.
+    // 7. Done.
     Component {
         id: doneStep
         Item {

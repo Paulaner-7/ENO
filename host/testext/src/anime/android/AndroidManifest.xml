@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The manifest of SCANCORE's test anime extension, shaped like an Aniyomi extension's. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mediumdev.scancore.testanime"
+    android:versionCode="2"
+    android:versionName="16.2">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+    <uses-feature android:name="tachiyomi.animeextension" />
+    <application android:label="@string/app_name" android:allowBackup="false">
+        <meta-data android:name="tachiyomi.animeextension.class" android:value=".TestAnimeSource;.TestClassicAnimeSource" />
+        <meta-data android:name="tachiyomi.animeextension.nsfw" android:value="0" />
+    </application>
+</manifest>

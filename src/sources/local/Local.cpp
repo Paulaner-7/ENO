@@ -17,6 +17,7 @@
 #include <QStandardPaths>
 #include <QUrl>
 #include <QtCore/private/qzipreader_p.h>
+#include <QtCore/private/qzipwriter_p.h>
 
 namespace sc::local {
 
@@ -287,6 +288,47 @@ QStringList zipEntries(const QString &archive) {
     for (const auto &entry : reader.fileInfoList())
         if (entry.isFile)
             out.append(entry.filePath);
+    return out;
+}
+
+QByteArray gzip(const QByteArray &data) {
+    // Qt deflates only into ZIP entries: one is written, and its stream and
+    // checksum become the gzip member.
+    QByteArray zip;
+    {
+        QBuffer buffer(&zip);
+        buffer.open(QIODevice::WriteOnly);
+        QZipWriter writer(&buffer);
+        writer.setCompressionPolicy(QZipWriter::AlwaysCompress);
+        writer.addFile(QStringLiteral("data"), data);
+        writer.close();
+    }
+    const auto u16 = [&](qsizetype at) { return quint32(uchar(zip[at])) | quint32(uchar(zip[at + 1])) << 8; };
+    if (zip.size() < 30 || u16(8) != 8)
+        return {};
+    const auto size = qsizetype(u16(18) | u16(20) << 16);
+    const auto at = 30 + qsizetype(u16(26)) + qsizetype(u16(28));
+    if (at + size > zip.size())
+        return {};
+    QByteArray out("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff", 10);
+    out += zip.mid(at, size);
+    out += zip.mid(14, 4); // CRC-32
+    out += zip.mid(22, 4); // size
+    return out;
+}
+
+QHash<QString, QByteArray> unzip(const QByteArray &zip, qint64 maxFile) {
+    QHash<QString, QByteArray> out;
+    QBuffer buffer;
+    buffer.setData(zip);
+    if (!buffer.open(QIODevice::ReadOnly))
+        return out;
+    QZipReader reader(&buffer);
+    if (!reader.isReadable() || reader.status() != QZipReader::NoError)
+        return out;
+    for (const auto &info : reader.fileInfoList())
+        if (info.isFile && info.size <= maxFile)
+            out.insert(info.filePath, reader.fileData(info.filePath));
     return out;
 }
 

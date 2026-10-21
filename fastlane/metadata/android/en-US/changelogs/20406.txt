@@ -1,0 +1,5 @@
+• Read from is faster: built-in sources first
+• My extensions: pick one extension to look on
+• Read from scrolls, and opens from the bottom
+• Buttons no longer spill out of cards on phones
+• Your scancore.onl session is never shared

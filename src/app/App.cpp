@@ -1,24 +1,43 @@
 #include "App.h"
 
+#include "WebBridge.h"
 #include "Images.h"
+#include "Announcements.h"
+#include "CrashLog.h"
 #include "Library.h"
+#include "Live.h"
+#include "Notifications.h"
+#include "Platform.h"
+#include "Profiler.h"
+#include "core/Cookies.h"
 #include "core/Database.h"
 #include "core/Http.h"
 #include "core/ImageCache.h"
+#include "extensions/ExtensionSource.h"
+#include "extensions/LineHost.h"
+#include "extensions/Manager.h"
+#include "core/Task.h"
+#include "core/Text.h"
 #include "sources/Manifest.h"
 #include "sources/comics/Registry.h"
 #include "sources/novels/Registry.h"
 
+#include <QUrlQuery>
+#include <QNetworkInformation>
 #include <QClipboard>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QGuiApplication>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLocale>
+#include <QNetworkCookie>
+#include <QPointer>
+#include <QQuickItem>
 #include <QQuickWindow>
 #include <QStandardPaths>
 #ifdef Q_OS_ANDROID
@@ -36,37 +55,129 @@ const QVariantMap kDefaults{
     {"theme", "dark"},
     {"accent", "mono"},
     {"reducedMotion", false},
+    // E-ink screens: black and white, no motion, a flash on comic page
+    // turns (einkFlash), novels paged by taps.
+    {"eink", false},
+    {"einkFlash", true},
     {"readerMode", "strip"},
     {"readerWidth", 820},
     {"readerGap", 0},
     {"readerDirection", "ltr"},
     {"readerSpread", "single"},
     {"readerCrop", false},
+    // true (always), "controls" (only with the reader's controls) or false.
     {"readerProgressBar", true},
+    // Its width in pixels: 3, 6 or 10.
+    {"readerProgressWidth", 3},
+    // Its colours: pages not read yet, pages read, the page you are on.
+    {"readerRailUnread", "#e4e4e7"},
+    {"readerRailRead", "#8b8b94"},
+    {"readerRailCurrent", "#000000"},
+    // Readers open in full screen (their full screen button sets it).
+    {"readerFullscreen", false},
     {"novelFont", "Literata"},
     {"novelSize", 19},
     {"novelLineHeight", 1.5},
     {"novelWidth", 720},
     {"novelTheme", "app"},
     {"novelJustify", false},
+    // More of the novel reader's typography and look.
+    {"novelWeight", 400},
+    {"novelParagraphSpacing", 0.9},
+    {"novelIndent", false},
+    {"novelMargin", 32},
+    {"novelDim", 0},
+    {"novelCustomBg", "#1b1a17"},
+    {"novelCustomText", "#e6dfd2"},
+    {"novelAutoScrollSpeed", 40},
+    // Reading aloud (Speech): voice id, speed and pitch multipliers, go on
+    // to the next chapter, keep the spoken paragraph on screen.
+    {"ttsVoice", ""},
+    {"ttsRate", 1},
+    {"ttsPitch", 1},
+    {"ttsContinue", true},
+    {"ttsFollow", true},
     {"autoNext", true},
+    // The video player's volume (0-130) and speed, kept between episodes.
+    {"playerVolume", 100},
+    // The player's subtitles (size, outline, colour, a box behind them) and
+    // Anime4K sharpening (off, fast, hq).
+    {"subtitleScale", 1.0},
+    {"subtitleOutline", 3},
+    {"subtitleColor", "#ffffff"},
+    {"subtitleBox", false},
+    {"animeSharpen", "off"},
+    {"playerSpeed", 1},
     {"autoSkip", false},
     {"animeSubLang", "it"},
     {"animeSubQuality", "high"},
     {"animeVideoQuality", "max"},
     {"libraryCheckHours", 2},
+    // Which saved series the check looks at, and when it runs by itself.
+    {"updateLists", QVariantList{"reading", "planned", "paused", "completed"}},
+    {"updateSkipFinished", true},
+    {"updateSkipUnread", false},
+    {"updateSkipNotStarted", false},
+    {"updateOnlyUnmetered", false},
+    {"updateOnlyCharging", false},
+    // New chapters of series on these lists download by themselves.
+    {"autoDownloadLists", QVariantList{}},
+    // A downloaded chapter is deleted once read.
+    {"deleteAfterRead", false},
+    // Comic reader: colour filter, wide pages, taps and volume keys (the
+    // reader's own settings may keep them per series).
+    {"readerBrightness", 1},
+    {"readerWarmth", 0},
+    {"readerGrey", false},
+    {"readerInvert", false},
+    {"readerSplitWide", false},
+    // "sides", "lshape", "kindle", "edge" or "off"; flipped by
+    // readerTapInvert ("none", "horizontal", "vertical", "both").
+    {"readerTapZones", "sides"},
+    {"readerTapInvert", "none"},
+    // Tap zones in the vertical strip too (on touch screens).
+    {"readerStripTaps", false},
+    {"readerVolumeKeys", false},
+    // Privacy: incognito (nothing recorded) and when the app lock asks
+    // again (minutes away, or -1 for only at start; see Lock).
+    {"incognito", false},
+    {"lockAfter", 1},
+    {"lockBiometric", true},
     {"notifyUpdates", true},
+    {"notifyDigest", false},
     {"showNsfwSources", false},
     {"imageCacheMB", 1024},
     {"closeToTray", false},
+    // Android: the one-time question about battery optimisation was asked.
+    {"batteryAsked", false},
+    {"notificationsAsked", false},
+    // Announcements from scancore.onl in the notification area.
+    {"announcements", true},
     {"checkAppUpdates", true},
     {"sidebarCollapsed", false},
+    // The year whose Wrapped banner on Home was closed (December to 7 January).
+    {"wrappedDismissed", 0},
     {"comicSource", "all"},
+    // The library: which media, category ("all", "favourites" or one of
+    // Router.libraryCategories) and view (grid, compact, list).
+    {"libraryMedia", "comic"},
+    {"libraryCategory", "all"},
+    {"libraryView", "grid"},
+    {"librarySort", "updates"},
     {"comickCatalog", true},
+    // The tracker catalogue each page browses and searches: comick,
+    // anilist, mal or none (novels: anilist, mal or none).
+    {"catalogComic", "comick"},
+    {"catalogNovel", "anilist"},
+    // Anime: anilist or mal (the Anime page's shelves).
+    {"catalogAnime", "anilist"},
     // Content language "All sources" searches; empty for every language.
     {"sourceLanguages", ""},
     {"onboarded", false},
     {"autoUpdate", true},
+    // Extension updates signed with a trusted key install by themselves.
+    {"autoUpdateExtensions", true},
+    {"scrollSpeed", 1},
     {"novelSource", "all"},
     {"downloadsPath", ""},
 };
@@ -77,8 +188,51 @@ App::App(QObject *parent) : QObject(parent) {
     m_settings = kDefaults;
     for (auto it = kDefaults.begin(); it != kDefaults.end(); ++it)
         m_settings.insert(it.key(), Database::pref(QStringLiteral("setting.") + it.key(), it.value()));
+    // Before 2.0 the only catalogue was Comick's, switched by comickCatalog.
+    if (!Database::pref(QStringLiteral("setting.catalogComic")).isValid() && m_settings.value("comickCatalog") == false)
+        m_settings.insert(QStringLiteral("catalogComic"), QStringLiteral("none"));
+    // The network's kind (metered, cellular) for "only on Wi-Fi" checks.
+    QNetworkInformation::loadDefaultBackend();
     m_libraryTimer.setSingleShot(false);
-    connect(&m_libraryTimer, &QTimer::timeout, this, [] { Library::instance()->checkUpdates(); });
+    connect(&m_libraryTimer, &QTimer::timeout, this, [] { Library::instance()->checkUpdates(true); });
+    platform::setSiteCheckDone([this](const QString &url) { emit siteChecked(url); });
+    connect(this, &App::siteChecked, this, [this](const QString &url) { answerReader(url, true); });
+    setClearanceSeen([this](const QString &domain) { emit siteCleared(domain); });
+    // Browser checks the desktop extension host asks SCANCORE to pass in a
+    // page nobody sees (Android's host has its own web view).
+    ext::LineHost::setAskHandler([this](const QString &method, const QJsonObject &params, ext::LineHost::Answer answer) {
+        if (method == QLatin1String("readerBrowserCheck")) {
+            QMetaObject::invokeMethod(
+                this, [this, url = params.value(QStringLiteral("url")).toString(), answer = std::move(answer)] { askReader(url, answer); },
+                Qt::QueuedConnection);
+            return;
+        }
+        if (method != QLatin1String("solveBrowserCheck"))
+            return answer(QJsonValue());
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [params, answer = std::move(answer)] {
+                solveBrowserCheck(QUrl(params.value(QStringLiteral("url")).toString()), params.value(QStringLiteral("userAgent")).toString(),
+                                  params.value(QStringLiteral("headers")).toObject(),
+                                  [answer](const QJsonArray &cookies) { answer(QJsonObject{{"cookies", cookies}}); });
+            },
+            Qt::QueuedConnection);
+    });
+    platform::setWebPlayerPrepared([this] { emit webPlayerPrepared(); });
+    platform::setVolumeKeyPressed([this](bool down) { emit volumeKey(down); });
+#ifdef Q_OS_ANDROID
+    // The reader may change it in the system's settings while away.
+    m_batteryRestricted = platform::batteryRestricted();
+    connect(qGuiApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state) {
+        if (state != Qt::ApplicationActive)
+            return;
+        const bool restricted = platform::batteryRestricted();
+        if (restricted != m_batteryRestricted) {
+            m_batteryRestricted = restricted;
+            emit batteryChanged();
+        }
+    });
+#endif
 }
 
 App *App::instance() {
@@ -115,6 +269,8 @@ bool App::webEngine() const {
 #endif
 }
 
+void App::prepareWeb() const { installWebBridge(); }
+
 QVariantMap App::startAction() const {
     return QJsonDocument::fromJson(qgetenv("SCANCORE_START")).object().toVariantMap();
 }
@@ -126,6 +282,18 @@ void App::setSetting(const QString &key, const QVariant &value) {
     Database::setPref(QStringLiteral("setting.") + key, value);
     if (key == QLatin1String("libraryCheckHours"))
         scheduleLibraryCheck();
+    if (key == QLatin1String("announcements")) {
+        if (value.toBool())
+            QMetaObject::invokeMethod(this, [] { Announcements::instance()->start(); }, Qt::QueuedConnection);
+        else
+            Announcements::instance()->stop();
+    }
+    // Built-in sources follow their language being switched on or off.
+    if (key == QLatin1String("builtinLanguages")) {
+        comics::Registry::rebuild();
+        novels::Registry::rebuild();
+        emit manifestChanged();
+    }
     if (key == QLatin1String("imageCacheMB")) {
         ImageCache::setBudget(std::max<qint64>(128, value.toLongLong()) * 1024 * 1024);
         // A smaller limit takes effect now, not at the next start.
@@ -165,6 +333,82 @@ void App::moveToBackground() const {
     });
 #endif
 }
+
+bool App::openSiteCheck(const QString &url, const QString &title, const QString &doneLabel) {
+    // Not SCANCORE's own site or the sync server: a check window there would
+    // hand the account's session to whoever asked for it.
+    if (CookieJar::isProtected(QUrl(url)))
+        return true;
+    return platform::openSiteCheck(url, title, doneLabel);
+}
+
+bool App::protectedSite(const QString &url) const { return CookieJar::isProtected(QUrl(url)); }
+
+void App::cancelSiteCheck(const QString &url) { answerReader(url, false); }
+
+// One window per site: requests that meet the same check wait on it together.
+// Not while SCANCORE is in the background, and not longer than 90 seconds.
+void App::askReader(const QString &url, std::function<void(const QJsonValue &)> answer) {
+    if (qGuiApp->applicationState() != Qt::ApplicationActive || CookieJar::isProtected(QUrl(url)))
+        return answer(QJsonObject{{"passed", false}});
+    const auto host = QUrl(url).host();
+    const bool open = m_readerChecks.contains(host);
+    m_readerChecks[host].append(std::move(answer));
+    if (open)
+        return;
+    emit browserCheckWanted(url);
+    QTimer::singleShot(90000, this, [this, url] { answerReader(url, false); });
+}
+
+void App::answerReader(const QString &url, bool passed) {
+    const auto host = QUrl(url).host();
+    const auto waiting = m_readerChecks.take(host);
+    if (waiting.isEmpty())
+        return;
+    QJsonArray cookies;
+    if (!CookieJar::isProtected(QUrl(url)))
+        for (const auto &cookie : CookieJar::shared().cookiesForUrl(QUrl(QStringLiteral("https://%1/").arg(host))))
+            cookies.append(QString::fromUtf8(cookie.toRawForm()));
+    const QJsonObject result{{"passed", passed}, {"cookies", cookies}};
+    for (const auto &answer : waiting)
+        answer(result);
+}
+
+QString App::siteAgent(const QString &url) const { return ext::ExtensionSource::checkAgent(url); }
+
+QString App::defaultAgent() const { return QString::fromUtf8(Http::userAgent()); }
+
+void App::finishSiteCheck(const QString &url) {
+    QPointer<App> self(this);
+    runInBackground([self, url] {
+        try {
+            ext::ExtensionSource::shareCookies(url);
+        } catch (const Error &) {
+            // The extension asks again if it still needs the check.
+        }
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [self, url] {
+                if (self)
+                    emit self->siteChecked(url);
+            },
+            Qt::QueuedConnection);
+    });
+}
+
+void App::askBatteryUnrestricted() const { platform::askBatteryUnrestricted(); }
+
+void App::prepareWebPlayer() const { platform::prepareWebPlayer(); }
+
+void App::setOrientation(const QString &mode) const { platform::setOrientation(mode); }
+
+void App::setBarIcons(bool darkScreen) const { platform::setBarIcons(darkScreen); }
+
+void App::setVolumeKeys(bool on) const { platform::setVolumeKeys(on); }
+
+bool App::profiling() const { return Profiler::enabled(); }
+
+void App::profilePlace(const QString &place) const { Profiler::instance()->setPlace(place); }
 
 void App::openFolder(const QString &path) const {
     QDir().mkpath(path);
@@ -271,6 +515,72 @@ bool App::saveWindowImage(QObject *window, const QString &path) const {
     return quick && quick->grabWindow().save(path);
 }
 
+QVariantList App::licences() const {
+    QFile list(QStringLiteral(":/licenses/components.json"));
+    QVariantList out;
+    if (list.open(QIODevice::ReadOnly))
+        out = QJsonDocument::fromJson(list.readAll()).toVariant().toList();
+    // licenses/<library>/<file>, copied from the libmpv build.
+    QDirIterator it(QStringLiteral(":/licenses/mpv"), QDir::Files, QDirIterator::Subdirectories);
+    QVariantList player;
+    while (it.hasNext()) {
+        const auto path = it.next();
+        const auto relative = path.mid(QStringLiteral(":/licenses/").size());
+        player.append(QVariantMap{{"name", relative.section(QLatin1Char('/'), 1, 1)},
+                                  {"use", QStringLiteral("Video player library")},
+                                  {"licence", relative.section(QLatin1Char('/'), -1)},
+                                  {"file", relative}});
+    }
+    std::sort(player.begin(), player.end(), [](const QVariant &a, const QVariant &b) {
+        return a.toMap().value("file").toString() < b.toMap().value("file").toString();
+    });
+    return out + player;
+}
+
+QString App::licenceText(const QString &file) const {
+    // Only the app's own licence files.
+    if (file.contains(QLatin1String("..")))
+        return {};
+    QFile text(QStringLiteral(":/licenses/") + file);
+    return text.open(QIODevice::ReadOnly) ? QString::fromUtf8(text.readAll()) : QString();
+}
+
+QVariantList App::builtinLanguages() const {
+    QHash<QString, int> counts;
+    const auto manifest = Manifest::current();
+    for (const auto *media : {"comics", "novels"})
+        for (const auto &value : manifest.value(QLatin1String(media)).toArray()) {
+            const auto o = value.toObject();
+            if (Manifest::supports(o) && o.value(QStringLiteral("enabled")).toBool(true))
+                ++counts[baseLanguage(o.value(QStringLiteral("language")).toString(QStringLiteral("en")))];
+        }
+    const auto on = sc::builtinLanguages();
+    QVariantList out;
+    for (auto it = counts.cbegin(); it != counts.cend(); ++it)
+        out.append(QVariantMap{{"value", it.key()}, {"label", languageName(it.key())}, {"count", it.value()}, {"on", on.contains(QStringLiteral("*")) || on.contains(it.key())}});
+    std::sort(out.begin(), out.end(), [](const QVariant &a, const QVariant &b) {
+        const auto x = a.toMap(), y = b.toMap();
+        if (x.value("on").toBool() != y.value("on").toBool())
+            return x.value("on").toBool();
+        return x.value("count").toInt() > y.value("count").toInt();
+    });
+    return out;
+}
+
+void App::stackAfter(QObject *item, QObject *sibling) const {
+    auto *a = qobject_cast<QQuickItem *>(item);
+    auto *b = qobject_cast<QQuickItem *>(sibling);
+    if (a && b && a != b && a->parentItem() == b->parentItem())
+        a->stackAfter(b);
+}
+
+void App::stackBefore(QObject *item, QObject *sibling) const {
+    auto *a = qobject_cast<QQuickItem *>(item);
+    auto *b = qobject_cast<QQuickItem *>(sibling);
+    if (a && b && a != b && a->parentItem() == b->parentItem())
+        a->stackBefore(b);
+}
+
 Task *App::checkForUpdate() {
     return Task::run([this]() -> QVariant {
         const auto doc = Http::getJson(QUrl(QStringLiteral("https://api.github.com/repos/medium-gh/scancore/releases/latest")),
@@ -280,8 +590,11 @@ Task *App::checkForUpdate() {
         if (tag.startsWith(QLatin1Char('v')))
             tag.remove(0, 1);
         const auto latest = QVersionNumber::fromString(tag);
-        const auto current = QVersionNumber::fromString(QCoreApplication::applicationVersion());
-        const bool available = !latest.isNull() && latest > current;
+        qsizetype suffix = 0;
+        const auto running = QCoreApplication::applicationVersion();
+        const auto current = QVersionNumber::fromString(running, &suffix);
+        // A pre-release (2.0.0-beta.1) is older than its release.
+        const bool available = !latest.isNull() && (latest > current || (latest == current && suffix < running.size()));
         const auto url = release.value("html_url").toString();
         if (available)
             QMetaObject::invokeMethod(this, [this, tag, url] { emit updateAvailable(tag, url); });
@@ -354,24 +667,73 @@ void App::scheduleLibraryCheck() {
 }
 
 void App::startBackgroundWork() {
-    connect(Library::instance(), &Library::updatesFound, this, [this](int count, const QStringList &titles) {
-        if (!m_settings.value(QStringLiteral("notifyUpdates")).toBool())
-            return;
-        const auto body = titles.size() == 1
-                              ? QStringLiteral("%1 has %2 new chapter%3.").arg(titles.first()).arg(count).arg(count == 1 ? "" : "s")
-                              : QStringLiteral("%1 new chapters in %2 series.").arg(count).arg(titles.size());
-        notify(QStringLiteral("New chapters"), body);
+    // New chapters reach the notification area (and the system's
+    // notifications) from Library::checkUpdates itself; a new SCANCORE
+    // from here.
+    connect(this, &App::updateAvailable, this, [](const QString &version, const QString &url) {
+        Notifications::post({QStringLiteral("app"), QStringLiteral("app:") + version, tr("SCANCORE %1 is available").arg(version),
+                             tr("See what is new and update."), QVariantMap{{"url", url}}, true});
     });
+    // Announcements from scancore.onl, live while online.
+    QTimer::singleShot(6000, this, [] { Announcements::instance()->start(); });
+    // Live progress with the account's other open apps.
+    QTimer::singleShot(5000, this, [] { Live::instance()->update(); });
     scheduleLibraryCheck();
     QTimer::singleShot(4000, this, [this] {
         refreshSources();
         if (m_settings.value(QStringLiteral("libraryCheckHours")).toInt() > 0)
-            Library::instance()->checkUpdates();
+            Library::instance()->checkUpdates(true);
         runInBackground([] {
             ImageCache::trim();
             Database::cachePrune();
         });
     });
+    // Repositories are read again twice a day (a conditional request each,
+    // so usually a few bytes), and trusted updates installed.
+    const auto checkExtensions = [this] {
+        const bool install = m_settings.value(QStringLiteral("autoUpdateExtensions")).toBool();
+        runInBackground([install] {
+            ext::Manager::refreshAll();
+            if (install)
+                ext::Manager::installTrustedUpdates();
+            // What is still waiting (new signing keys, or automatic
+            // updates off).
+            const int waiting = int(ext::Manager::updates().size());
+            if (waiting > 0)
+                Notifications::post({QStringLiteral("extensions"), QStringLiteral("extensions:updates"),
+                                     waiting == 1 ? tr("An extension update is ready") : tr("%1 extension updates are ready").arg(waiting),
+                                     tr("Open Extensions to update them."), QVariantMap{{"page", "extensions"}}, false});
+        });
+    };
+    QTimer::singleShot(20000, this, checkExtensions);
+    auto *extensionTimer = new QTimer(this);
+    extensionTimer->setInterval(12 * 3600 * 1000);
+    connect(extensionTimer, &QTimer::timeout, this, checkExtensions);
+    extensionTimer->start();
+}
+
+} // namespace sc
+
+namespace sc {
+
+QVariantList App::crashReports() const { return crashlog::reports(); }
+QString App::crashReport(const QString &file) const { return crashlog::read(file); }
+QStringList App::unseenCrashReports() const { return crashlog::unseen(); }
+void App::markCrashReportSeen(const QString &file) { crashlog::markSeen(file); }
+void App::removeCrashReport(const QString &file) { crashlog::remove(file); }
+QString App::diagnostics() const { return crashlog::diagnostics(); }
+bool App::shareText(const QString &text, const QString &subject) const { return platform::shareText(text, subject); }
+
+QString App::reportIssueUrl(const QString &text) const {
+    // GitHub takes links of about 8 KB: the report's start (what happened
+    // and the backtrace); the rest is pasted.
+    const auto title = text.section(QLatin1Char('\n'), 0, 0).contains(QLatin1String("crash")) ? QStringLiteral("Crash: ") +
+            text.section(QStringLiteral("What: "), 1).section(QLatin1Char('\n'), 0, 0)
+                                                                                         : QStringLiteral("Problem report");
+    auto body = QStringLiteral("What I was doing:\n\n\n```\n%1\n```").arg(text.left(5000));
+    QUrl url(QStringLiteral("https://github.com/medium-gh/scancore/issues/new"));
+    url.setQuery(QUrlQuery{{QStringLiteral("title"), title}, {QStringLiteral("body"), body}});
+    return url.toString(QUrl::FullyEncoded);
 }
 
 } // namespace sc

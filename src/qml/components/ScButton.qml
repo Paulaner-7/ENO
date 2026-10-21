@@ -2,19 +2,21 @@ import QtQuick
 import QtQuick.Controls.Basic
 import ScanCore
 
-// Text button. variant: "primary" | "secondary" | "ghost" | "danger".
+// Text button. variant: "primary" | "secondary" | "ghost" | "plain" | "danger".
+// iconAfter puts the icon after the text (an arrow on "Continue").
 AbstractButton {
     id: control
     property string variant: "secondary"
     property string iconName
     property bool loading: false
     property bool compact: false
+    property bool iconAfter: false
 
     readonly property color fill: variant === "primary" ? Theme.accent
         : variant === "secondary" ? Theme.surface2
         : variant === "danger" ? Theme.alpha(Theme.danger, 0.14) : "transparent"
     readonly property color ink: variant === "primary" ? Theme.accentInk
-        : variant === "danger" ? Theme.danger : Theme.text
+        : variant === "danger" ? Theme.danger : variant === "plain" ? Theme.textMuted : Theme.text
 
     implicitHeight: compact ? 30 : 38
     implicitWidth: Math.max(implicitHeight, row.implicitWidth + (compact ? 22 : 30))
@@ -55,7 +57,8 @@ AbstractButton {
         Row {
             id: row
             anchors.centerIn: parent
-            spacing: 8
+            spacing: control.iconAfter ? 6 : 8
+            layoutDirection: control.iconAfter ? Qt.RightToLeft : Qt.LeftToRight
             Spinner {
                 visible: control.loading
                 size: 14

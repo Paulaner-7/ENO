@@ -117,7 +117,12 @@ void Updater::check(bool quiet) {
         if (tag.startsWith(QLatin1Char('v')))
             tag.remove(0, 1);
         const auto latest = QVersionNumber::fromString(tag);
-        const auto current = QVersionNumber::fromString(QCoreApplication::applicationVersion());
+        qsizetype suffix = 0;
+        const auto running = QCoreApplication::applicationVersion();
+        const auto current = QVersionNumber::fromString(running, &suffix);
+        // A pre-release (2.0.0-beta.1) is older than its release; GitHub's
+        // latest release is never a pre-release.
+        const bool prerelease = suffix < running.size();
         m_version = tag;
         m_notes = release.value("body").toString();
         m_pageUrl = release.value("html_url").toString();
@@ -129,7 +134,7 @@ void Updater::check(bool quiet) {
                 m_size = qint64(asset.value("size").toDouble());
             }
         }
-        if (latest.isNull() || latest <= current) {
+        if (latest.isNull() || latest < current || (latest == current && !prerelease)) {
             setState(m_quiet ? QStringLiteral("idle") : QStringLiteral("current"));
             return;
         }

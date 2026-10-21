@@ -3,24 +3,37 @@ import QtQuick.Controls.Basic
 import ScanCore
 
 // Anime details: AniList metadata, episodes with thumbnails and progress,
-// related entries and recommendations.
+// related entries and recommendations. An anime opened from an extension's
+// source (sourceUrl) shows what that source lists instead: its details, its
+// episodes, or its seasons.
 Item {
     id: page
     property int anilistId: 0
     property var summary: ({})
     property bool autoResume: false
     property string url: ""
+    property string sourceUrl: ""
+    readonly property bool fromSource: sourceUrl.length > 0
 
-    property var mediaTask: Anime.media(anilistId)
-    property var episodesTask: Anime.episodes(anilistId)
-    property var recsTask: Anime.recommendations(anilistId)
+    // A MyAnimeList title (the anime catalogue) opens as its AniList entry.
+    property var malTask: !fromSource && anilistId === 0 && summary.idMal ? Anime.anilistIdFor(summary.idMal) : null
+    Connections {
+        target: page.malTask
+        function onFinished(id) { page.anilistId = id }
+    }
+    property var mediaTask: fromSource || anilistId === 0 ? null : Anime.media(anilistId)
+    property var episodesTask: fromSource ? Anime.sourceAnime(sourceUrl, summary) : anilistId === 0 ? null : Anime.episodes(anilistId)
+    property var recsTask: fromSource || anilistId === 0 ? null : Anime.recommendations(anilistId)
 
-    readonly property var media: mediaTask && mediaTask.ok ? mediaTask.result : Object.assign({}, summary, { anilistId: anilistId })
-    readonly property var series: Anime.seriesFor(media)
-    readonly property string seriesId: Anime.seriesId(anilistId)
-    readonly property var episodes: episodesTask && episodesTask.ok ? episodesTask.result : []
-    readonly property var progress: { Library.revision; return Library.progressMap(seriesId) }
-    readonly property bool saved: { Library.revision; return Library.isSaved(seriesId) }
+    readonly property var media: fromSource ? (episodesTask && episodesTask.ok ? episodesTask.result.series : summary)
+                               : mediaTask && mediaTask.ok ? mediaTask.result : Object.assign({ anilistId: anilistId }, summary)
+    readonly property var series: fromSource ? media : Anime.seriesFor(media)
+    readonly property string seriesId: fromSource ? (summary.id || media.id || "") : Anime.seriesId(anilistId)
+    readonly property var episodes: !episodesTask || !episodesTask.ok ? [] : fromSource ? episodesTask.result.episodes : episodesTask.result
+    readonly property var seasons: fromSource && episodesTask && episodesTask.ok ? episodesTask.result.seasons : []
+    readonly property bool hasSources: { App.dependOn(Extensions.revision); return Anime.sources().some(s => s.enabled) }
+    readonly property var progress: { App.dependOn(Library.revision); return Library.progressMap(seriesId) }
+    readonly property bool saved: { App.dependOn(Library.revision); return Library.isSaved(seriesId) }
     property bool descending: false
     // Episodes, Reviews or Discussion.
     property string tab: "episodes"
@@ -38,7 +51,7 @@ Item {
     onDescendingChanged: range = 0
 
     readonly property var resumeInfo: {
-        Library.revision
+        App.dependOn(Library.revision)
         if (episodes.length === 0) return { index: 0, label: qsTr("Watch"), detail: "" }
         const last = Library.lastProgress(seriesId)
         if (last && last.unitKey) {
@@ -52,6 +65,30 @@ Item {
         }
         return { index: 0, label: qsTr("Watch episode 1"), detail: "" }
     }
+
+    // Episodes can be downloaded when they play from an anime source with
+    // SCANCORE's own player: {source, animeUrl?}, or null.
+    readonly property var downloadSource: {
+        App.dependOn(Downloads.revision)
+        if (!Anime.nativePlayerAvailable) return null
+        if (fromSource) return (media.source || summary.source) ? { source: media.source || summary.source } : null
+        const p = Anime.provider(anilistId)
+        return p.source ? { source: p.source, animeUrl: p.url } : null
+    }
+    readonly property var downloadStates: { App.dependOn(Downloads.revision); return seriesId ? Downloads.states(seriesId) : ({}) }
+    function download(list) {
+        if (!downloadSource || list.length === 0) return
+        Downloads.enqueue(Object.assign({}, series, { id: seriesId }), list.map(ep => ({
+            key: ep.key, title: ep.title, url: ep.url || "",
+            download: Object.assign({}, downloadSource, fromSource ? { episodeUrl: ep.url } : { number: Number(ep.number) })
+        })))
+        Router.toast(list.length === 1 ? qsTr("Downloading episode %1").arg(list[0].number) : qsTr("Downloading %1 episodes").arg(list.length), "info")
+    }
+    // Not watched to the end and not downloaded yet.
+    function unwatched() {
+        return episodes.filter(e => !(progress[e.key] && progress[e.key].completed) && !downloadStates[e.key])
+    }
+    ActionMenu { id: downloadMenu }
 
     function watch(i) {
         if (i < 0 || i >= episodes.length) return
@@ -114,10 +151,10 @@ Item {
 
             DetailsHeader {
                 id: header
-                series: Object.assign({}, page.media, { author: (page.media.studios || []).join(", ") })
+                series: Object.assign({}, page.media, { author: page.fromSource ? ((page.media.extra || {}).author || "") : (page.media.studios || []).join(", ") })
                 anilist: page.media
-                kicker: qsTr("Anime") + (page.media.format ? " · " + page.media.format : "")
-                meta: [
+                kicker: qsTr("Anime") + (page.fromSource ? " · " + (page.media.sourceLabel || "") : page.media.format ? " · " + page.media.format : "")
+                meta: page.fromSource ? [page.media.status, page.seasons.length ? page.seasons.length + qsTr(" seasons") : page.episodes.length ? page.episodes.length + qsTr(" episodes") : ""] : [
                     page.media.status,
                     page.media.year,
                     page.media.episodes ? page.media.episodes + qsTr(" episodes") : (page.media.released ? page.media.released + qsTr(" episodes so far") : ""),
@@ -131,9 +168,17 @@ Item {
                 saved: page.saved
                 onPrimary: page.watch(page.resumeInfo.index)
                 onToggleSaved: {
-                    if (page.saved) Library.remove(page.seriesId)
-                    else Library.save(page.series)
-                    Router.toast(page.saved ? qsTr("Added to your library") : qsTr("Removed from your library"), page.saved ? "success" : "info")
+                    if (!page.saved && !page.series.id) {
+                        // A MyAnimeList title is saved as its AniList entry.
+                        Router.toast(page.malTask && page.malTask.loading ? qsTr("Still looking this anime up. Try again in a moment.")
+                                                                        : qsTr("AniList has no entry for this anime yet, so it cannot be saved."))
+                    } else if (page.saved) {
+                        Library.remove(page.seriesId)
+                        Router.toast(qsTr("Removed from your library"))
+                    } else {
+                        Library.save(page.series)
+                        Router.toast(qsTr("Added to your library"), "success")
+                    }
                 }
                 IconButton {
                     visible: !!page.media.trailer
@@ -143,19 +188,60 @@ Item {
                     onClicked: App.openUrl(page.media.trailer)
                 }
                 IconButton {
+                    visible: !page.fromSource && page.hasSources
+                    iconName: "server"
+                    filled: true
+                    tip: qsTr("Watch from")
+                    onClicked: watchFrom.start(page.media, false)
+                }
+                IconButton {
+                    visible: !page.fromSource
                     iconName: "external-link"
                     filled: true
                     tip: qsTr("Open on AniList")
                     onClicked: App.openUrl("https://anilist.co/anime/" + page.anilistId)
                 }
                 IconButton {
-                    visible: !!Trackers.anilist.name || !!Trackers.mal.name || !!Trackers.comick.name
+                    visible: Trackers.anyConnected
                     iconName: "link"
                     filled: true
                     tip: qsTr("Tracking")
                     onClicked: tracking.open()
                 }
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
+            }
+
+            Segmented {
+                x: Theme.gutter
+                // Reviews and discussions are kept by AniList title.
+                visible: !page.fromSource
+                options: [{ value: "episodes", label: qsTr("Episodes") },
+                          { value: "reviews", label: qsTr("Reviews") },
+                          { value: "discussion", label: qsTr("Discussion") }]
+                value: page.tab
+                onPicked: (v) => page.tab = v
+            }
+            Loader {
+                x: Theme.gutter
+                width: parent.width - 2 * Theme.gutter
+                active: page.tab === "reviews"
+                visible: active
+                sourceComponent: Reviews {
+                    media: "anime"
+                    anilistId: page.anilistId
+                    title: page.media.title || ""
+                }
+            }
+            Loader {
+                x: Theme.gutter
+                width: parent.width - 2 * Theme.gutter
+                active: page.tab === "discussion"
+                visible: active
+                sourceComponent: Discussion {
+                    media: "anime"
+                    anilistId: page.anilistId
+                    title: page.media.title || ""
+                }
             }
 
             Item {
@@ -175,6 +261,19 @@ Item {
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.gutter - 6
                     anchors.verticalCenter: parent.verticalCenter
+                    IconButton {
+                        id: downloadButton
+                        visible: page.downloadSource !== null
+                        iconName: "download"
+                        tip: qsTr("Download episodes")
+                        onClicked: {
+                            const left = page.unwatched()
+                            downloadMenu.openAt(downloadButton, 0, downloadButton.height, [
+                                { text: qsTr("Next %1 unwatched").arg(Math.min(5, left.length)), icon: "download", enabled: left.length > 0, run: () => page.download(left.slice(0, 5)) },
+                                { text: qsTr("All %1 unwatched").arg(left.length), icon: "download", enabled: left.length > 0, run: () => page.download(left) }
+                            ])
+                        }
+                    }
                     IconButton {
                         iconName: "check"
                         tip: qsTr("Mark all as watched")
@@ -269,6 +368,29 @@ Item {
                                     color: Theme.alpha("#000000", 0.65)
                                     Text { id: epNum; anchors.centerIn: parent; text: "EP " + ep.modelData.number; color: "white"; font.family: Theme.fontSans; font.pixelSize: 11; font.weight: Font.Bold }
                                 }
+                                // Download: start it, see it go, or delete it.
+                                IconButton {
+                                    readonly property var job: page.downloadStates[ep.modelData.key] || null
+                                    visible: page.downloadSource !== null || job !== null
+                                    anchors.right: parent.right
+                                    anchors.top: parent.top
+                                    anchors.margins: 4
+                                    diameter: 32
+                                    iconSize: 16
+                                    iconName: !job ? "download" : job.status === "done" ? "check" : job.status === "failed" ? "triangle-alert" : job.status === "running" ? "loader-circle" : "clock"
+                                    iconColor: "white"
+                                    background: Rectangle { radius: 16; color: Theme.alpha("#000000", 0.6) }
+                                    tip: !job ? qsTr("Download")
+                                        : job.status === "done" ? qsTr("Downloaded: delete")
+                                        : job.status === "failed" ? qsTr("Download failed: try again")
+                                        : job.status === "running" && job.total > 0 ? Math.floor(job.done / job.total * 100) + "%" + qsTr(": stop")
+                                        : qsTr("Waiting: stop")
+                                    onClicked: {
+                                        if (!job) page.download([ep.modelData])
+                                        else if (job.status === "failed") page.download([ep.modelData])
+                                        else Downloads.removeUnit(page.seriesId, ep.modelData.key)
+                                    }
+                                }
                                 Rectangle {
                                     visible: ep.state !== null
                                     anchors.left: parent.left
@@ -297,7 +419,8 @@ Item {
                             }
                             Text {
                                 width: ep.width
-                                text: ep.modelData.airDate ? App.relativeTime(ep.modelData.airDate) : ""
+                                text: ep.modelData.airDate ? App.relativeTime(ep.modelData.airDate)
+                                    : ep.modelData.released ? App.relativeTime(ep.modelData.released) : ep.modelData.filler ? qsTr("Filler") : ""
                                 color: Theme.textFaint
                                 font.family: Theme.fontSans
                                 font.pixelSize: Theme.textXs
@@ -310,12 +433,31 @@ Item {
             StateView {
                 width: parent.width
                 height: visible ? 220 : 0
-                task: page.episodesTask
-                empty: page.episodesTask && page.episodesTask.ok && page.episodes.length === 0
+                // Only on the episodes tab (StateView shows itself when needed).
+                task: page.tab !== "episodes" ? null : page.malTask && !page.malTask.ok ? page.malTask : page.episodesTask
+                empty: page.tab === "episodes" && page.episodesTask && page.episodesTask.ok && page.episodes.length === 0 && page.seasons.length === 0
                 emptyTitle: qsTr("No episodes yet")
-                emptyText: page.media.nextEpisode ? qsTr("Episode ") + page.media.nextEpisode + qsTr(" airs ") + App.relativeTime(page.media.nextAiringAt) + "." : qsTr("This anime has not aired yet.")
+                emptyText: page.fromSource ? qsTr("The source lists no episodes for it.")
+                    : page.media.nextEpisode ? qsTr("Episode ") + page.media.nextEpisode + qsTr(" airs ") + App.relativeTime(page.media.nextAiringAt) + "." : qsTr("This anime has not aired yet.")
                 emptyIcon: "calendar"
-                onRetry: page.episodesTask = Anime.episodes(page.anilistId)
+                onRetry: page.episodesTask = page.fromSource ? Anime.sourceAnime(page.sourceUrl, page.summary) : Anime.episodes(page.anilistId)
+            }
+
+            // A source that splits the anime: each season opens on its own.
+            Shelf {
+                title: qsTr("Seasons")
+                items: page.seasons
+                subtitleFor: (it) => it.season >= 0 ? qsTr("Season %1").arg(it.season) : ""
+                onOpened: (it, cover) => Router.openSeries(it, cover)
+            }
+
+            // Its comic and novel, and where it leaves off in them.
+            StoryPanel {
+                width: parent.width
+                seriesId: page.seriesId
+                media: "anime"
+                title: page.media.title || ""
+                anilistId: page.fromSource ? 0 : page.anilistId
             }
 
             Shelf {
@@ -348,6 +490,8 @@ Item {
     }
 
     BackToTop { flick: flick }
+
+    WatchFromDialog { id: watchFrom }
 
     TrackingDialog {
         id: tracking

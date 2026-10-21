@@ -105,6 +105,116 @@ const char *const kMigrations[] = {
     UPDATE library SET changed_at = added_at;
     CREATE TABLE library_removed (series_id TEXT PRIMARY KEY, removed_at INTEGER NOT NULL);
     )",
+    // 3: extensions (2.0). Repositories the user added, with the last index
+    // read from each; installed extensions and the key that signed them;
+    // extensions trusted by hand; each extension source's switch, health
+    // and settings.
+    R"(
+    CREATE TABLE ext_repos (
+        url TEXT PRIMARY KEY,
+        kind TEXT NOT NULL,
+        info TEXT NOT NULL,
+        packages TEXT,
+        etag TEXT,
+        modified TEXT,
+        refreshed_at INTEGER,
+        error TEXT,
+        added_at INTEGER NOT NULL
+    );
+    CREATE TABLE ext_installed (
+        kind TEXT NOT NULL,
+        pkg TEXT NOT NULL,
+        package TEXT NOT NULL,
+        repo_url TEXT,
+        signers TEXT,
+        path TEXT NOT NULL,
+        installed_at INTEGER NOT NULL,
+        PRIMARY KEY (kind, pkg)
+    );
+    CREATE TABLE ext_trust (
+        kind TEXT NOT NULL,
+        pkg TEXT NOT NULL,
+        version_code INTEGER NOT NULL,
+        signer TEXT NOT NULL,
+        PRIMARY KEY (kind, pkg)
+    );
+    CREATE TABLE ext_sources (
+        key TEXT PRIMARY KEY,
+        enabled INTEGER NOT NULL DEFAULT 1,
+        error TEXT,
+        error_at INTEGER,
+        ok_at INTEGER
+    );
+    CREATE TABLE ext_prefs (
+        source_key TEXT NOT NULL,
+        key TEXT NOT NULL,
+        value TEXT,
+        PRIMARY KEY (source_key, key)
+    );
+    )",
+    // 4: favourites in the library (2.0), beside its categories (reading,
+    // planned, paused, completed, dropped).
+    R"(
+    ALTER TABLE library ADD COLUMN favourite INTEGER NOT NULL DEFAULT 0;
+    )",
+    // 5: the notification area (2.0): new chapters, announcements, updates.
+    // action is JSON ({seriesId} | {url} | {page}); key replaces an earlier
+    // notification about the same thing.
+    R"(
+    CREATE TABLE notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        kind TEXT NOT NULL,
+        key TEXT UNIQUE,
+        title TEXT NOT NULL,
+        body TEXT,
+        action TEXT,
+        created_at INTEGER NOT NULL,
+        read_at INTEGER
+    );
+    CREATE INDEX notifications_created ON notifications(created_at);
+    )",
+    // 6: chapter tools (2.1): who translated a chapter, bookmarked
+    // chapters, and each series' own settings (chapter sort and filters,
+    // reader options) as JSON.
+    R"(
+    ALTER TABLE units ADD COLUMN scanlator TEXT;
+    CREATE TABLE bookmarks (
+        series_id TEXT NOT NULL,
+        unit_key TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        PRIMARY KEY (series_id, unit_key)
+    );
+    CREATE TABLE series_settings (series_id TEXT PRIMARY KEY, value TEXT NOT NULL);
+    )",
+    // 7: bookmarks and series settings in sync (2.2): when a bookmark was
+    // taken off, and when a series' settings last changed, so the latest
+    // change on any device wins.
+    R"(
+    CREATE TABLE bookmarks_removed (
+        series_id TEXT NOT NULL,
+        unit_key TEXT NOT NULL,
+        removed_at INTEGER NOT NULL,
+        PRIMARY KEY (series_id, unit_key)
+    );
+    ALTER TABLE series_settings ADD COLUMN changed_at INTEGER NOT NULL DEFAULT 0;
+    )",
+    // 8: anime downloads (2.2): where an episode's video comes from
+    // ({source, episodeUrl, animeUrl, number}).
+    R"(
+    ALTER TABLE downloads ADD COLUMN extra TEXT;
+    )",
+    // 9: source health (2.3): how each library series' last update checks
+    // went, for "this source has not answered for a week" and moves.
+    R"(
+    CREATE TABLE series_health (
+        series_id TEXT PRIMARY KEY,
+        last_ok INTEGER,
+        failing_since INTEGER,
+        failures INTEGER NOT NULL DEFAULT 0,
+        last_new INTEGER,
+        problem TEXT
+    );
+    )",
 };
 
 QSqlDatabase connection() {

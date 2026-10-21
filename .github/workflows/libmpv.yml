@@ -1,0 +1,97 @@
+name: libmpv
+
+# The video player's libmpv for the desktop release builds, built by
+# tools/libmpv/build.sh (LGPL throughout). Each system's result is kept as
+# an artifact, libmpv-<target>, holding build/libmpv/<target>/:
+#   linux-x86_64     built on the AppImage's Ubuntu, against its system
+#                    libraries
+#   windows-x64      cross-built with mingw-w64 in an Arch Linux container
+#                    (the toolchain the script is tested with)
+#   macos-universal  arm64 + x86_64
+# The release workflow calls it; a push that changes the script runs it too,
+# so a broken build shows before a release tag.
+
+on:
+  workflow_call:
+  push:
+    branches: ["**"]
+    paths:
+      - tools/libmpv/**
+      - .github/workflows/libmpv.yml
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: build/libmpv/linux-x86_64
+          key: libmpv-linux-x86_64-ubuntu-22.04-${{ hashFiles('tools/libmpv/build.sh') }}
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build nasm pkg-config python3-jinja2 libass-dev libfreetype-dev \
+            libfribidi-dev libharfbuzz-dev libfontconfig-dev libva-dev libdrm-dev libegl-dev libgl-dev \
+            libpulse-dev libasound2-dev libx11-dev libxext-dev libxss-dev libxpresent-dev libxrandr-dev
+          pipx install meson
+          tools/libmpv/build.sh linux-x86_64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libmpv-linux-x86_64
+          path: |
+            build/libmpv/linux-x86_64/include
+            build/libmpv/linux-x86_64/licenses
+            build/libmpv/linux-x86_64/lib/libmpv.so*
+          if-no-files-found: error
+
+  windows:
+    name: Windows
+    runs-on: ubuntu-24.04
+    container: archlinux:base-devel
+    steps:
+      - name: Tools
+        run: pacman -Syu --noconfirm --needed git mingw-w64-gcc meson ninja nasm python-jinja pkgconf
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: build/libmpv/windows-x64
+          key: libmpv-windows-x64-${{ hashFiles('tools/libmpv/build.sh') }}
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: tools/libmpv/build.sh windows-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libmpv-windows-x64
+          path: |
+            build/libmpv/windows-x64/include
+            build/libmpv/windows-x64/licenses
+            build/libmpv/windows-x64/bin/libmpv-2.dll
+            build/libmpv/windows-x64/lib/mpv.def
+          if-no-files-found: error
+
+  macos:
+    name: macOS
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: build/libmpv/macos-universal
+          key: libmpv-macos-universal-${{ hashFiles('tools/libmpv/build.sh') }}
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          brew install meson ninja nasm pkgconf
+          python3 -m pip install --break-system-packages jinja2
+          tools/libmpv/build.sh macos-universal
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libmpv-macos-universal
+          path: build/libmpv/macos-universal
+          if-no-files-found: error

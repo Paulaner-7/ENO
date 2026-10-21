@@ -51,13 +51,31 @@ Rectangle {
                 variant: "primary"
                 text: qsTr("Done")
                 iconName: "check"
-                onClicked: {
-                    Router.toast("Try again now; " + page.host + qsTr(" should load."), "success")
-                    Router.back()
-                }
+                onClicked: page.finish()
             }
         }
     }
+
+    // Extensions that read this site get the cookies too; pages waiting on
+    // it try again (App.siteChecked, and Main.qml says so).
+    property bool finished: false
+    // Closed without passing: a request waiting on it gives up.
+    Component.onDestruction: if (!finished) App.cancelSiteCheck(page.url)
+    function finish() {
+        if (finished) return
+        finished = true
+        App.finishSiteCheck(page.url)
+        Router.back()
+    }
+    // The site's clearance arrived: the check is passed, no need for Done.
+    Connections {
+        target: App
+        function onSiteCleared(domain) {
+            if (page.host === domain || page.host.endsWith("." + domain)) clearedDelay.restart()
+        }
+    }
+    // A moment for the site's own page to load behind the check.
+    Timer { id: clearedDelay; interval: 1200; onTriggered: page.finish() }
 
     Loader {
         id: loader

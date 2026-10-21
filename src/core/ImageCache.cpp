@@ -31,6 +31,26 @@ QMutex g_inflightMutex;
 QWaitCondition g_inflightDone;
 QHash<QString, int> g_inflight;
 
+QMutex g_writersMutex;
+QHash<QString, ImageCache::Writer> g_writers;
+QHash<QString, ImageCache::RefererWriter> g_refererWriters;
+
+ImageCache::RefererWriter refererWriterFor(const QString &referer) {
+    const auto colon = referer.indexOf(QLatin1Char(':'));
+    if (colon <= 0 || referer.startsWith(QLatin1String("http")))
+        return {};
+    QMutexLocker lock(&g_writersMutex);
+    return g_refererWriters.value(referer.left(colon));
+}
+
+ImageCache::Writer writerFor(const QString &url) {
+    const auto colon = url.indexOf(QLatin1Char(':'));
+    if (colon <= 0)
+        return {};
+    QMutexLocker lock(&g_writersMutex);
+    return g_writers.value(url.left(colon));
+}
+
 QString pathFor(const QString &url) {
     const auto hash = QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Sha1).toHex();
     return QStringLiteral("%1/%2/%3").arg(g_dir, QString::fromLatin1(hash.left(2)), QString::fromLatin1(hash));
@@ -41,9 +61,12 @@ QByteArray readFile(const QString &path) {
     if (!file.open(QIODevice::ReadOnly))
         return {};
     auto data = file.readAll();
+    // Touched so trimming keeps recently viewed images; a day is close
+    // enough for that, and spares a write for every cover drawn.
+    const auto now = QDateTime::currentDateTime();
+    if (file.fileTime(QFileDevice::FileModificationTime).secsTo(now) > 24 * 3600)
+        file.setFileTime(now, QFileDevice::FileModificationTime);
     file.close();
-    // Touch so trimming keeps recently viewed images.
-    file.setFileTime(QDateTime::currentDateTime(), QFileDevice::FileModificationTime);
     return data;
 }
 
@@ -56,6 +79,16 @@ void ImageCache::init(const QString &dir, qint64 budgetBytes) {
 }
 
 void ImageCache::setBudget(qint64 bytes) { g_budget = bytes; }
+
+void ImageCache::setSchemeWriter(const QString &scheme, Writer writer) {
+    QMutexLocker lock(&g_writersMutex);
+    g_writers.insert(scheme, std::move(writer));
+}
+
+void ImageCache::setRefererWriter(const QString &scheme, RefererWriter writer) {
+    QMutexLocker lock(&g_writersMutex);
+    g_refererWriters.insert(scheme, std::move(writer));
+}
 
 QByteArray ImageCache::fetch(const QString &url, const QString &referer) {
     if (url.startsWith(QLatin1String("pdfpage:")))
@@ -86,12 +119,28 @@ QByteArray ImageCache::fetch(const QString &url, const QString &referer) {
         g_inflightDone.wakeAll();
     });
 
+    QDir().mkpath(QFileInfo(path).absolutePath());
+    if (const auto writer = writerFor(url)) {
+        writer(url, path);
+        auto data = readFile(path);
+        if (data.isEmpty())
+            throw Error(QStringLiteral("Image unavailable."), 502);
+        return data;
+    }
+    if (const auto writer = refererWriterFor(referer)) {
+        writer(url, referer, path);
+        auto data = readFile(path);
+        if (data.isEmpty())
+            throw Error(QStringLiteral("Image unavailable."), 502);
+        return data;
+    }
+
     Request request;
     request.url = QUrl(url);
     request.lane = Lane::Images;
     request.timeoutMs = 30000;
     request.maxBytes = 48 * 1024 * 1024;
-    request.headers = {{"Accept", "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"}};
+    request.headers = {{"Accept", Http::ImageAccept}};
     if (!referer.isEmpty())
         request.headers.append(QPair<QByteArray, QByteArray>("Referer", referer.toUtf8()));
     Response response;

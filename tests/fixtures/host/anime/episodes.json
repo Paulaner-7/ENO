@@ -1,0 +1,4 @@
+{"episodes": [
+  {"url": "/episode/2", "name": "Episode 2", "number": 2, "date": "2026-02-01"},
+  {"url": "/episode/1", "name": "Episode 1", "number": 1, "date": "2026-01-25", "filler": true}
+]}

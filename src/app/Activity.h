@@ -43,8 +43,9 @@ public:
     // longestStreak, since, days: [{day, comic: {seconds, units}, novel,
     // anime, app}]}.
     Q_INVOKABLE sc::Task *summary();
-    // A year in review: totals, top series, busiest month and weekday,
-    // longest streak.
+    // A year in review: totals, top series (overall and per media), genres,
+    // the author read most, the first series finished, busiest month and
+    // weekday, longest streak. Wrapped and the year card show it.
     Q_INVOKABLE sc::Task *year(int year);
     // Saves a picture of the year (grabToImage) as a PNG, for sharing.
     Q_INVOKABLE bool saveImage(const QImage &image, const QUrl &file) const;

@@ -12,15 +12,24 @@ AbstractButton {
     property bool selecting: false
     property bool selected: false
     property bool canDownload: true
+    property bool bookmarked: false
     signal toggleRead()
     signal requestDownload()
     signal removeDownload()
+    // A right click or a long press: more actions, at (x, y) in the row.
+    signal menuRequested(real x, real y)
 
     readonly property bool done: progress ? progress.completed === true : false
     readonly property real percent: progress ? (progress.percent || 0) : 0
 
     height: 54
     hoverEnabled: true
+    onPressAndHold: if (!selecting) menuRequested(width / 2, height / 2)
+
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: (point) => { if (!row.selecting) row.menuRequested(point.position.x, point.position.y) }
+    }
 
     background: Rectangle {
         x: Theme.gutter - 12
@@ -60,12 +69,20 @@ AbstractButton {
             Behavior on x { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
             Text {
                 width: parent.width
+                leftPadding: row.bookmarked ? 20 : 0
                 text: row.unit.title || (qsTr("Chapter ") + (row.unit.number || ""))
                 color: row.done ? Theme.textFaint : Theme.text
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textMd
                 font.weight: row.current ? Font.DemiBold : Font.Normal
                 elide: Text.ElideRight
+                Icon {
+                    visible: row.bookmarked
+                    anchors.verticalCenter: parent.verticalCenter
+                    name: "bookmark"
+                    size: 14
+                    color: Theme.accent
+                }
             }
             Row {
                 spacing: 8
@@ -90,6 +107,7 @@ AbstractButton {
                     text: {
                         const parts = []
                         if (row.unit.released) parts.push(App.relativeTime(row.unit.released))
+                        if (row.unit.scanlator) parts.push(row.unit.scanlator)
                         if (row.done) parts.push(qsTr("Read"))
                         return parts.join(" · ")
                     }

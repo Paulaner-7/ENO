@@ -1,0 +1,347 @@
+#include "Platform.h"
+
+#ifdef Q_OS_ANDROID
+#include "core/Cookies.h"
+#include "core/Http.h"
+#include "core/Task.h"
+#include "extensions/ExtensionSource.h"
+#include "extensions/LineHost.h"
+
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QJniEnvironment>
+#include <QJniObject>
+#include <QNetworkCookie>
+#include <QUrl>
+#endif
+
+namespace sc::platform {
+
+namespace {
+
+std::function<void(const QString &)> g_siteCheckDone;
+std::function<void()> g_webPlayerPrepared;
+std::function<void(bool)> g_volumeKey;
+
+#ifdef Q_OS_ANDROID
+constexpr auto kBrowserCheckClass = "com/mediumdev/scancore/BrowserCheck";
+constexpr auto kPowerClass = "com/mediumdev/scancore/Power";
+constexpr auto kNotifyClass = "com/mediumdev/scancore/Notify";
+constexpr auto kWebPlayerClass = "com/mediumdev/scancore/WebPlayer";
+constexpr auto kScreenClass = "com/mediumdev/scancore/Screen";
+constexpr auto kVolumeKeysClass = "com/mediumdev/scancore/VolumeKeys";
+constexpr auto kImagesClass = "com/mediumdev/scancore/Images";
+constexpr auto kExternalPlayerClass = "com/mediumdev/scancore/ExternalPlayer";
+constexpr auto kMulticastClass = "com/mediumdev/scancore/Multicast";
+constexpr auto kShareClass = "com/mediumdev/scancore/Share";
+
+void jniVolumeKey(JNIEnv *, jclass, jboolean down) {
+    QMetaObject::invokeMethod(
+        QCoreApplication::instance(),
+        [down] {
+            if (g_volumeKey)
+                g_volumeKey(down);
+        },
+        Qt::QueuedConnection);
+}
+
+bool registerVolumeKeys() {
+    static const bool registered = [] {
+        const JNINativeMethod methods[] = {
+            {"nativeKey", "(Z)V", reinterpret_cast<void *>(jniVolumeKey)},
+        };
+        QJniEnvironment env;
+        return env.registerNativeMethods(kVolumeKeysClass, methods, 1);
+    }();
+    return registered;
+}
+
+QString javaString(JNIEnv *env, jstring s) {
+    if (!s)
+        return {};
+    const jchar *chars = env->GetStringChars(s, nullptr);
+    QString out(reinterpret_cast<const QChar *>(chars), env->GetStringLength(s));
+    env->ReleaseStringChars(s, chars);
+    return out;
+}
+
+// "a=1; b=2" from Android's cookie store, for the site's host.
+void jniSiteCheckDone(JNIEnv *env, jclass, jstring jurl, jstring jcookies) {
+    const auto url = javaString(env, jurl);
+    const auto header = javaString(env, jcookies);
+    const QUrl site(url);
+    QList<QNetworkCookie> cookies;
+    // The web view keeps the real expiry; a month here is enough to carry
+    // a check's pass (they last hours to days).
+    const auto expires = QDateTime::currentDateTimeUtc().addDays(30);
+    for (const auto &part : header.split(QLatin1Char(';'), Qt::SkipEmptyParts)) {
+        const auto eq = part.indexOf(QLatin1Char('='));
+        if (eq <= 0)
+            continue;
+        QNetworkCookie cookie(part.left(eq).trimmed().toUtf8(), part.mid(eq + 1).trimmed().toUtf8());
+        cookie.setDomain(QLatin1Char('.') + site.host());
+        cookie.setPath(QStringLiteral("/"));
+        cookie.setExpirationDate(expires);
+        cookies.append(cookie);
+    }
+    if (!cookies.isEmpty()) {
+        CookieJar::shared().setCookiesFromUrl(cookies, site);
+        CookieJar::shared().save();
+    }
+    // Pages try again once extensions have the cookies too.
+    runInBackground([url] {
+        try {
+            ext::ExtensionSource::shareCookies(url);
+        } catch (const Error &) {
+            // The extension asks again if it still needs the check.
+        }
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [url] {
+                if (g_siteCheckDone)
+                    g_siteCheckDone(url);
+            },
+            Qt::QueuedConnection);
+    });
+}
+
+void jniWebPlayerPrepared(JNIEnv *, jclass) {
+    QMetaObject::invokeMethod(
+        QCoreApplication::instance(),
+        [] {
+            if (g_webPlayerPrepared)
+                g_webPlayerPrepared();
+        },
+        Qt::QueuedConnection);
+}
+
+bool registerWebPlayer() {
+    static const bool registered = [] {
+        const JNINativeMethod methods[] = {
+            {"nativePrepared", "()V", reinterpret_cast<void *>(jniWebPlayerPrepared)},
+        };
+        QJniEnvironment env;
+        return env.registerNativeMethods(kWebPlayerClass, methods, 1);
+    }();
+    return registered;
+}
+
+bool registerBrowserCheck() {
+    static const bool registered = [] {
+        const JNINativeMethod methods[] = {
+            {"nativeDone", "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(jniSiteCheckDone)},
+        };
+        QJniEnvironment env;
+        return env.registerNativeMethods(kBrowserCheckClass, methods, 1);
+    }();
+    return registered;
+}
+#endif
+
+} // namespace
+
+void setSiteCheckDone(std::function<void(const QString &)> done) { g_siteCheckDone = std::move(done); }
+
+void setVolumeKeyPressed(std::function<void(bool)> pressed) { g_volumeKey = std::move(pressed); }
+
+QImage decodeImage(const QByteArray &data) {
+#ifdef Q_OS_ANDROID
+    QJniEnvironment env;
+    jbyteArray bytes = env->NewByteArray(jsize(data.size()));
+    if (!bytes)
+        return {};
+    env->SetByteArrayRegion(bytes, 0, jsize(data.size()), reinterpret_cast<const jbyte *>(data.constData()));
+    // [width, height, then ARGB pixels] or null.
+    const auto answer = QJniObject::callStaticObjectMethod(kImagesClass, "decode", "([B)[I", bytes);
+    env->DeleteLocalRef(bytes);
+    const auto result = answer.object<jintArray>();
+    if (env.checkAndClearExceptions() || !result)
+        return {};
+    const jsize length = env->GetArrayLength(result);
+    if (length < 2)
+        return {};
+    jint size[2];
+    env->GetIntArrayRegion(result, 0, 2, size);
+    QImage image;
+    if (size[0] > 0 && size[1] > 0 && qint64(size[0]) * size[1] == length - 2) {
+        // Android's ARGB ints are QImage's ARGB32 in memory.
+        image = QImage(size[0], size[1], QImage::Format_ARGB32);
+        if (!image.isNull())
+            for (int y = 0; y < size[1]; ++y)
+                env->GetIntArrayRegion(result, 2 + y * size[0], size[0], reinterpret_cast<jint *>(image.scanLine(y)));
+    }
+    return image;
+#else
+    Q_UNUSED(data)
+    return {};
+#endif
+}
+
+void setVolumeKeys(bool on) {
+#ifdef Q_OS_ANDROID
+    if (!registerVolumeKeys())
+        return;
+    QJniObject::callStaticMethod<void>(kVolumeKeysClass, "setCapture", "(Landroid/app/Activity;Z)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jboolean(on));
+#else
+    Q_UNUSED(on)
+#endif
+}
+
+bool openSiteCheck(const QString &url, const QString &title, const QString &doneLabel) {
+#ifdef Q_OS_ANDROID
+    if (!registerBrowserCheck())
+        return false;
+    QJniObject::callStaticMethod<void>(
+        kBrowserCheckClass, "start", "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+        QNativeInterface::QAndroidApplication::context().object(), QJniObject::fromString(url).object<jstring>(),
+        QJniObject::fromString(ext::ExtensionSource::checkAgent(url)).object<jstring>(),
+        QJniObject::fromString(title).object<jstring>(), QJniObject::fromString(doneLabel).object<jstring>());
+    return true;
+#else
+    Q_UNUSED(url)
+    Q_UNUSED(title)
+    Q_UNUSED(doneLabel)
+    return false;
+#endif
+}
+
+bool batteryRestricted() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kPowerClass, "restricted", "(Landroid/content/Context;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object());
+#else
+    return false;
+#endif
+}
+
+bool charging() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kPowerClass, "charging", "(Landroid/content/Context;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object());
+#else
+    return true;
+#endif
+}
+
+void askBatteryUnrestricted() {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kPowerClass, "ask", "(Landroid/content/Context;)V",
+                                       QNativeInterface::QAndroidApplication::context().object());
+#endif
+}
+
+bool shareText(const QString &text, const QString &subject) {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kShareClass, "text", "(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object(),
+                                                  QJniObject::fromString(text).object<jstring>(), QJniObject::fromString(subject).object<jstring>());
+#else
+    Q_UNUSED(text)
+    Q_UNUSED(subject)
+    return false;
+#endif
+}
+
+void holdMulticast(bool on) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kMulticastClass, "hold", "(Landroid/content/Context;Z)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jboolean(on));
+#else
+    Q_UNUSED(on)
+#endif
+}
+
+bool openExternalPlayer(const QString &url, const QString &title, const QStringList &headers, int positionMs,
+                        const QStringList &subtitles, const QStringList &subtitleNames) {
+#ifdef Q_OS_ANDROID
+    QJniEnvironment env;
+    const auto strings = [&](const QStringList &list) {
+        auto *array = env->NewObjectArray(jsize(list.size()), env.findClass("java/lang/String"), nullptr);
+        for (int i = 0; i < list.size(); ++i)
+            env->SetObjectArrayElement(array, i, QJniObject::fromString(list[i]).object<jstring>());
+        return array;
+    };
+    auto *headerArray = strings(headers);
+    auto *subtitleArray = strings(subtitles);
+    auto *nameArray = strings(subtitleNames);
+    const bool ok = QJniObject::callStaticMethod<jboolean>(
+        kExternalPlayerClass, "open",
+        "(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;)Z",
+        QNativeInterface::QAndroidApplication::context().object(), QJniObject::fromString(url).object<jstring>(),
+        QJniObject::fromString(title).object<jstring>(), headerArray, jint(positionMs), subtitleArray, nameArray);
+    env->DeleteLocalRef(headerArray);
+    env->DeleteLocalRef(subtitleArray);
+    env->DeleteLocalRef(nameArray);
+    return ok;
+#else
+    Q_UNUSED(url)
+    Q_UNUSED(title)
+    Q_UNUSED(headers)
+    Q_UNUSED(positionMs)
+    Q_UNUSED(subtitles)
+    Q_UNUSED(subtitleNames)
+    return false;
+#endif
+}
+
+bool notify(const QString &title, const QString &body, const QString &tag) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(
+        kNotifyClass, "show", "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+        QNativeInterface::QAndroidApplication::context().object(), QJniObject::fromString(title).object<jstring>(),
+        QJniObject::fromString(body).object<jstring>(), QJniObject::fromString(tag).object<jstring>(),
+        QJniObject::fromString(QCoreApplication::translate("Notifications", "Updates and announcements")).object<jstring>());
+    return true;
+#else
+    Q_UNUSED(title)
+    Q_UNUSED(body)
+    Q_UNUSED(tag)
+    return false;
+#endif
+}
+
+void askNotificationPermission() {
+#ifdef Q_OS_ANDROID
+    QNativeInterface::QAndroidApplication::runOnAndroidMainThread([] {
+        QJniObject::callStaticMethod<void>(kNotifyClass, "ask", "(Landroid/content/Context;)V",
+                                           QNativeInterface::QAndroidApplication::context().object());
+    });
+#endif
+}
+
+void setWebPlayerPrepared(std::function<void()> prepared) { g_webPlayerPrepared = std::move(prepared); }
+
+void prepareWebPlayer() {
+#ifdef Q_OS_ANDROID
+    if (!registerWebPlayer()) {
+        if (g_webPlayerPrepared)
+            g_webPlayerPrepared();
+        return;
+    }
+    QJniObject::callStaticMethod<void>(kWebPlayerClass, "prepare", "(Landroid/app/Activity;)V",
+                                       QNativeInterface::QAndroidApplication::context().object());
+#endif
+}
+
+void setOrientation(const QString &mode) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "orient", "(Landroid/app/Activity;Ljava/lang/String;)V",
+                                       QNativeInterface::QAndroidApplication::context().object(),
+                                       QJniObject::fromString(mode).object<jstring>());
+#else
+    Q_UNUSED(mode)
+#endif
+}
+
+void setBarIcons(bool darkScreen) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "barIcons", "(Landroid/app/Activity;Z)V",
+                                       QNativeInterface::QAndroidApplication::context().object(),
+                                       jboolean(darkScreen));
+#else
+    Q_UNUSED(darkScreen)
+#endif
+}
+
+} // namespace sc::platform

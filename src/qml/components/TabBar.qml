@@ -65,7 +65,8 @@ Rectangle {
                             Behavior on scale { NumberAnimation { duration: Motion.fast } }
                         }
                         Rectangle {
-                            readonly property int count: tab.modelData.key === "library" ? Library.unreadUpdates : 0
+                            readonly property int count: tab.modelData.key === "library" ? Library.unreadUpdates
+                                : tab.modelData.key === "more" ? Notifications.unread : 0
                             visible: count > 0
                             x: parent.width / 2 + 8
                             y: -2
@@ -107,6 +108,7 @@ Rectangle {
             Repeater {
                 model: [
                     { key: "search", label: qsTr("Search"), icon: "search" },
+                    { key: "notifications", label: qsTr("Notifications"), icon: "bell" },
                     { key: "history", label: qsTr("History"), icon: "history" },
                     { key: "activity", label: qsTr("Activity"), icon: "activity" },
                     { key: "downloads", label: qsTr("Downloads"), icon: "download" },
@@ -132,6 +134,23 @@ Rectangle {
                             color: Theme.text
                             font.family: Theme.fontSans
                             font.pixelSize: Theme.textMd
+                        }
+                        Rectangle {
+                            visible: modelData.key === "notifications" && Notifications.unread > 0
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: unreadText.implicitWidth + 12
+                            height: 20
+                            radius: 10
+                            color: Theme.accent
+                            Text {
+                                id: unreadText
+                                anchors.centerIn: parent
+                                text: Notifications.unread > 99 ? "99+" : Notifications.unread
+                                color: Theme.accentInk
+                                font.family: Theme.fontSans
+                                font.pixelSize: 11
+                                font.weight: Font.Bold
+                            }
                         }
                     }
                 }

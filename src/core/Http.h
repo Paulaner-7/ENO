@@ -9,7 +9,9 @@
 #include <QUrlQuery>
 
 #include <atomic>
+#include <functional>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 namespace sc {
@@ -67,6 +69,9 @@ struct Response {
     QByteArray body;
     QByteArray contentType;
     QUrl finalUrl;
+    QList<QPair<QByteArray, QByteArray>> headers;
+    // A response header by name (any case), or empty.
+    QByteArray header(const QByteArray &name) const;
 
     bool ok() const { return status >= 200 && status < 300; }
     QString text() const { return QString::fromUtf8(body); }
@@ -81,6 +86,17 @@ public:
     static constexpr const char *BrowserUA =
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
+    // Chrome's user agent for this system at Chromium `major`, as Chrome
+    // itself sends it (reduced: x.0.0.0). Builds with Qt WebEngine use it with
+    // the engine's own version (main.cpp): Cloudflare compares the user agent
+    // with what the browser shows of itself (navigator.platform, client
+    // hints), and a Windows Chrome 141 that is Chromium 140 on Linux gets a
+    // check to click every time, whose clearance then works for nothing.
+    static QByteArray chromeUserAgent(int major);
+    // Accept header for images: only formats every build decodes (Qt and
+    // qtimageformats). Image servers that choose the format from it would
+    // otherwise send AVIF, which Qt cannot read.
+    static constexpr const char *ImageAccept = "image/webp,image/jpeg,image/png,image/gif,*/*;q=0.5";
 
     // Blocking; must run on a worker thread (Task or image loader).
     static Response send(const Request &request);
@@ -95,6 +111,12 @@ public:
 
     static void setUserAgent(const QByteArray &ua);
     static QByteArray userAgent();
+
+    // Offline tests answer requests themselves (fixture sites and
+    // repositories on *.test). A handler that returns nothing lets the
+    // request go to the network; an empty handler removes it.
+    using TestHandler = std::function<std::optional<Response>(const Request &)>;
+    static void setTestHandler(TestHandler handler);
 };
 
 QUrl withQuery(QUrl url, std::initializer_list<QPair<QString, QString>> params);

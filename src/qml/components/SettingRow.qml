@@ -19,7 +19,12 @@ Item {
 
     readonly property int pad: 16
     readonly property int textX: pad + (iconName ? 32 + 14 : 0)
-    readonly property bool stacked: Theme.compact && holder.width > width * 0.42
+    // Its control under the text on every screen (wide controls such as a
+    // row of chips); on phones any control that would squeeze the text into
+    // a narrow column goes there.
+    property bool wide: false
+    readonly property real besideWidth: width - textX - pad - (holder.width > 0 ? holder.width + 16 : 0) - trailing
+    readonly property bool stacked: wide || (Theme.compact && (holder.width > width * 0.42 || besideWidth < 160))
     readonly property real trailing: clickable ? 22 : 0
 
     width: parent ? parent.width : 600
@@ -64,8 +69,7 @@ Item {
         id: texts
         x: row.textX
         y: row.stacked ? 14 : (parent.height - height) / 2
-        width: row.stacked ? parent.width - x - row.pad
-                           : parent.width - x - row.pad - (holder.width > 0 ? holder.width + 16 : 0) - row.trailing
+        width: row.stacked ? parent.width - x - row.pad : row.besideWidth
         spacing: 3
         Text {
             width: parent.width
@@ -90,7 +94,10 @@ Item {
 
     Item {
         id: holder
-        x: row.stacked ? row.textX : parent.width - width - row.pad - row.trailing
+        // Under the text; one wider than the text column starts under the
+        // icon instead, so it stays inside the card.
+        x: !row.stacked ? parent.width - width - row.pad - row.trailing
+            : width > parent.width - row.textX - row.pad ? row.pad : row.textX
         y: row.stacked ? texts.y + texts.implicitHeight + 12 : (parent.height - height) / 2
         width: childrenRect.width
         height: childrenRect.height

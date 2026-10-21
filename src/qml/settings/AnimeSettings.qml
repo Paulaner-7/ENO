@@ -69,4 +69,61 @@ SettingsPane {
             }
         }
     }
+
+    // SCANCORE's own player (anime from extensions); web players draw their own.
+    SettingsGroup {
+        visible: Anime.nativePlayerAvailable
+        title: qsTr("Subtitles")
+        note: qsTr("For SCANCORE's player. Subtitles with their own styling keep it, apart from the size.")
+        SettingRow {
+            iconName: "zoom-in"
+            title: qsTr("Size")
+            Segmented {
+                options: [{ value: 0.8, label: qsTr("Small") }, { value: 1, label: qsTr("Normal") }, { value: 1.25, label: qsTr("Large") }, { value: 1.5, label: qsTr("Huge") }]
+                value: Number(App.settings.subtitleScale) || 1
+                onPicked: (v) => App.setSetting("subtitleScale", v)
+            }
+        }
+        SettingRow {
+            iconName: "palette"
+            title: qsTr("Colour")
+            Segmented {
+                options: [{ value: "#ffffff", label: qsTr("White") }, { value: "#ffe14d", label: qsTr("Yellow") }, { value: "#b8f5ff", label: qsTr("Light blue") }]
+                value: App.settings.subtitleColor || "#ffffff"
+                onPicked: (v) => App.setSetting("subtitleColor", v)
+            }
+        }
+        SettingRow {
+            iconName: "type"
+            title: qsTr("Outline")
+            enabled: App.settings.subtitleBox !== true
+            opacity: enabled ? 1 : 0.45
+            Segmented {
+                options: [{ value: 1.5, label: qsTr("Thin") }, { value: 3, label: qsTr("Normal") }, { value: 5, label: qsTr("Thick") }]
+                value: Number(App.settings.subtitleOutline)
+                onPicked: (v) => App.setSetting("subtitleOutline", v)
+            }
+        }
+        SettingRow {
+            iconName: "square"
+            title: qsTr("Dark box behind the lines")
+            description: qsTr("Easier to read over bright scenes.")
+            Toggle { checked: App.settings.subtitleBox === true; onToggled: App.setSetting("subtitleBox", checked) }
+        }
+    }
+
+    SettingsGroup {
+        visible: Anime.nativePlayerAvailable
+        title: qsTr("Picture")
+        SettingRow {
+            iconName: "sparkles"
+            title: qsTr("Sharpen (Anime4K)")
+            description: qsTr("Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card; on phones Fast is the most to try.")
+            Segmented {
+                options: [{ value: "off", label: qsTr("Off") }, { value: "fast", label: qsTr("Fast") }, { value: "hq", label: qsTr("Best") }]
+                value: App.settings.animeSharpen || "off"
+                onPicked: (v) => App.setSetting("animeSharpen", v)
+            }
+        }
+    }
 }

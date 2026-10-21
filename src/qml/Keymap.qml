@@ -4,8 +4,9 @@ import ScanCore
 
 // Keyboard shortcuts that can be changed in Settings → Keyboard. Each action
 // has default keys; the keybinds setting holds the ones changed, as
-// {action: ["Ctrl+K", …]} in Qt's portable notation. Escape and the Left
-// and Right arrows (page and chapter turns) are fixed and not listed.
+// {action: ["Ctrl+K", …]} in Qt's portable notation. Escape and the
+// reader's Left and Right arrows (page and chapter turns) are fixed and not
+// listed.
 QtObject {
     id: keymap
 
@@ -40,7 +41,13 @@ QtObject {
         { id: "reader.pageUp", scope: "reader", label: qsTr("Scroll up a screen"), keys: ["Shift+Space", "PgUp"] },
         { id: "player.next", scope: "player", label: qsTr("Next episode"), keys: ["N"] },
         { id: "player.prev", scope: "player", label: qsTr("Previous episode"), keys: ["P"] },
-        { id: "player.fullscreen", scope: "player", label: qsTr("Full screen"), keys: ["F"] }
+        { id: "player.fullscreen", scope: "player", label: qsTr("Full screen"), keys: ["F"] },
+        { id: "player.pause", scope: "player", label: qsTr("Play or pause"), keys: ["Space", "K"] },
+        { id: "player.forward", scope: "player", label: qsTr("Forward 10 seconds"), keys: ["Right", "L"] },
+        { id: "player.backward", scope: "player", label: qsTr("Back 10 seconds"), keys: ["Left", "J"] },
+        { id: "player.volumeUp", scope: "player", label: qsTr("Volume up"), keys: ["Up"] },
+        { id: "player.volumeDown", scope: "player", label: qsTr("Volume down"), keys: ["Down"] },
+        { id: "player.mute", scope: "player", label: qsTr("Mute"), keys: ["M"] }
     ]
     readonly property var scopes: [
         { scope: "app", title: qsTr("Anywhere") },

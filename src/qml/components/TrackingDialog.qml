@@ -14,23 +14,33 @@ Dialog {
     // The service being linked (search shown), or "".
     property string picking: ""
     property var searchTask: null
-    readonly property var links: { Trackers.anilist; Trackers.mal; Trackers.comick; return Trackers.links(seriesId) }
-    readonly property var services: [
-        { key: "anilist", label: "AniList", connected: !!Trackers.anilist.name, kind: media === "anime" ? "anime" : "manga",
-          site: "https://anilist.co/" },
-        { key: "mal", label: "MyAnimeList", connected: !!Trackers.mal.name, kind: media === "anime" ? "anime" : "manga",
-          site: "https://myanimelist.net/" },
-        // Comick has comics and anime, not novels.
-        { key: "comick", label: qsTr("Comick"), connected: !!Trackers.comick.name && media !== "novel", kind: media === "anime" ? "anime" : "comic",
-          site: "https://comick.dev/" }
-    ].filter(s => s.connected)
+    readonly property var links: { App.dependOn(Trackers.services); return Trackers.links(seriesId) }
+    // Connected services that list this kind of series (Comick has no
+    // novels, MangaUpdates no anime, Simkl only anime).
+    readonly property var services: Trackers.services.filter(s => s.connected && s.media.indexOf(media) >= 0)
+
+    // The name to search by: the catalogue's title when the series came
+    // from one, which trackers know better than a site's.
+    readonly property string lookupTitle: Trackers.lookupTitle(seriesId, seriesTitle)
+    readonly property var misses: { App.dependOn(Trackers.services); return Trackers.misses(seriesId) }
+    property string pendingPick: ""
 
     function search(service, text) {
         picking = service
+        query.text = text
         searchTask = Trackers.search(service, media, text)
     }
+    // Opens straight on one service's search.
+    function pick(service) {
+        pendingPick = service
+        open()
+    }
 
-    onOpened: picking = ""
+    onOpened: {
+        picking = ""
+        if (pendingPick) search(pendingPick, lookupTitle)
+        pendingPick = ""
+    }
 
     parent: Overlay.overlay
     anchors.centerIn: parent
@@ -72,7 +82,7 @@ Dialog {
             Text {
                 width: parent.width - close.width - 10
                 anchors.verticalCenter: parent.verticalCenter
-                text: dialog.picking ? qsTr("Find it on ") + ({ mal: "MyAnimeList", comick: qsTr("Comick"), anilist: "AniList" }[dialog.picking]) : qsTr("Tracking")
+                text: dialog.picking ? qsTr("Find it on ") + (Trackers.services.find(s => s.key === dialog.picking) || { label: "" }).label : qsTr("Tracking")
                 color: Theme.text
                 font.family: Theme.fontDisplay
                 font.pixelSize: Theme.textLg
@@ -96,7 +106,7 @@ Dialog {
                 visible: dialog.services.length === 0
                 width: parent.width
                 wrapMode: Text.Wrap
-                text: qsTr("Connect AniList, MyAnimeList or Comick in Settings → Connections to keep your lists there up to date.")
+                text: qsTr("Connect a tracker such as AniList, MyAnimeList or Kitsu in Settings → Connections to keep your lists there up to date.")
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
@@ -142,9 +152,11 @@ Dialog {
                             }
                             Text {
                                 width: parent.width
+                                readonly property bool missed: !card.link && dialog.misses.indexOf(card.modelData.key) >= 0
                                 text: card.link ? (card.link.title || qsTr("Entry ") + card.link.id) + (card.link.auto ? qsTr(" · from this anime") : "")
+                                    : missed ? qsTr("Not found by its title; pick the entry")
                                     : dialog.media === "anime" ? qsTr("Linked when you finish an episode") : qsTr("Found by title when you finish a chapter")
-                                color: Theme.textMuted
+                                color: missed ? Theme.warning : Theme.textMuted
                                 font.family: Theme.fontSans
                                 font.pixelSize: Theme.textSm
                                 elide: Text.ElideRight
@@ -159,12 +171,13 @@ Dialog {
                                 visible: !!card.link
                                 iconName: "external-link"
                                 tip: qsTr("Open on ") + card.modelData.label
-                                onClicked: App.openUrl(card.modelData.site + card.modelData.kind + "/" + card.link.id)
+                                onClicked: App.openUrl(Trackers.entryUrl(card.modelData.key, dialog.media, card.link.id))
                             }
                             ScButton {
                                 compact: true
                                 text: card.link ? qsTr("Change") : qsTr("Link")
-                                onClicked: dialog.search(card.modelData.key, dialog.seriesTitle)
+                                variant: !card.link && dialog.misses.indexOf(card.modelData.key) >= 0 ? "primary" : "secondary"
+                                onClicked: dialog.search(card.modelData.key, dialog.lookupTitle)
                             }
                             ScButton {
                                 visible: !!card.link && !card.link.auto
@@ -187,7 +200,7 @@ Dialog {
             SearchField {
                 id: query
                 width: parent.width
-                text: dialog.seriesTitle
+                text: dialog.lookupTitle
                 placeholderText: qsTr("Title")
                 onSubmitted: (text) => dialog.search(dialog.picking, text)
             }
@@ -209,6 +222,7 @@ Dialog {
                 }
             }
             ListView {
+                WheelScroll {}
                 id: results
                 width: parent.width
                 height: Math.min(contentHeight, 380)

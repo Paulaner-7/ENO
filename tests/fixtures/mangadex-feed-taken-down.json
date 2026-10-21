@@ -1,0 +1,9 @@
+{
+  "result": "ok",
+  "total": 3,
+  "data": [
+    {"id": "c-1", "type": "chapter", "attributes": {"chapter": "1", "title": "", "pages": 0, "isUnavailable": true, "externalUrl": null, "publishAt": "2020-01-01T00:00:00+00:00"}},
+    {"id": "c-2", "type": "chapter", "attributes": {"chapter": "2", "title": "", "pages": 0, "isUnavailable": true, "externalUrl": null, "publishAt": "2020-01-08T00:00:00+00:00"}},
+    {"id": "c-3", "type": "chapter", "attributes": {"chapter": "3", "title": "Fin", "pages": 18, "isUnavailable": false, "externalUrl": null, "publishAt": "2020-01-15T00:00:00+00:00"}}
+  ]
+}

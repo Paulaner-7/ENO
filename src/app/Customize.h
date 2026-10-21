@@ -23,10 +23,14 @@ public:
 // background images kept with the app, .sct theme files, key sequences and
 // the see-through window.
 //
-// A .sct file is JSON: {"format": "scancore-theme", "version": 1, "name",
+// A .sct file is JSON: {"format": "scancore-theme", "version": 2, "name",
 // "colors": {"window", "accent"}, "window": {"opacity", "panels"},
-// "background": {"type", "fit", "dim", "blur", "data" (base64)}}. The
-// background travels inside it, so one file works on every system.
+// "background": {"type", "fit", "dim", "blur", "data" (base64)}, "look"}.
+// The background travels inside it, so one file works on every system.
+// "look" (version 2, core/ThemeLook.h) is the rest of the look: light or
+// dark, navigation, spacing, corners, sizes, motion, arranged pages and the
+// readers' colours. Version 1 files (colours and background) still open; a
+// file without "colors.window" is a preset theme ("preset": true).
 class Customize : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -74,9 +78,11 @@ public:
     // Copies an image or GIF into the app's theme folder. {ok, url,
     // animated} or {ok: false, error}.
     Q_INVOKABLE QVariantMap useBackground(const QUrl &file);
-    // theme: the customTheme setting plus "accent" (#rrggbb).
+    // theme: the customTheme setting (empty for a preset theme) plus
+    // "accent" (#rrggbb, custom accents) and "look" (see above).
     Q_INVOKABLE sc::Task *exportTheme(const QVariantMap &theme, const QUrl &file);
-    // A theme map ready for the customTheme setting, plus "accent".
+    // A theme map ready for the customTheme setting, plus "accent", "look"
+    // and "preset" (Router.applyTheme applies it).
     Q_INVOKABLE sc::Task *importTheme(const QUrl &file);
     // The themes people have shared in the SCANCORE repository (themes/):
     // [{id, name, author, description, window, accent, preview, file}].

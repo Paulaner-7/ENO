@@ -1,5 +1,7 @@
 #include "Activity.h"
 
+#include "App.h"
+
 #include "core/Database.h"
 
 #include <QCoreApplication>
@@ -8,10 +10,14 @@
 #include <QEvent>
 #include <QFile>
 #include <QGuiApplication>
+#include <QHash>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSysInfo>
 #include <QUuid>
+
+#include <algorithm>
+#include <limits>
 
 namespace sc {
 
@@ -184,7 +190,8 @@ void Activity::setMedia(const QString &media) {
     if (media == m_media)
         return;
     tick(); // the time so far belongs to what was open
-    m_media = kMedia.contains(media) ? media : QString();
+    // Incognito reading and watching is not counted.
+    m_media = kMedia.contains(media) && !App::instance()->incognito() ? media : QString();
     m_lastInput = QDateTime::currentMSecsSinceEpoch();
 }
 
@@ -365,18 +372,77 @@ Task *Activity::year(int year) {
             weekdays.append(seconds);
         const qint64 start = QDateTime(from, QTime(0, 0)).toSecsSinceEpoch();
         const qint64 end = QDateTime(to.addDays(1), QTime(0, 0)).toSecsSinceEpoch();
-        const auto top = Database::query(QStringLiteral(R"(
-            SELECT s.id, s.title, s.cover, s.media, s.source_url AS sourceUrl, s.extra, COUNT(*) AS units
+        // Every series something was finished in this year, in one pass:
+        // the tops (overall and per media), genres and authors weighted by
+        // what was finished, and how many series each media had.
+        const auto rows = Database::query(QStringLiteral(R"(
+            SELECT s.id, s.title, s.cover, s.media, s.source_url AS sourceUrl, s.extra, s.genres, s.author,
+                   COUNT(*) AS units, MIN(p.updated_at) AS firstAt
             FROM progress p JOIN series s ON s.id = p.series_id
             WHERE p.completed = 1 AND p.updated_at >= ? AND p.updated_at < ?
-            GROUP BY s.id ORDER BY units DESC LIMIT 6
+            GROUP BY s.id ORDER BY units DESC, firstAt
         )"),
-                                         {start, end});
+                                          {start, end});
         QVariantList series;
-        for (const auto &value : top) {
+        QVariantMap topByMedia{{"comic", QVariantList()}, {"novel", QVariantList()}, {"anime", QVariantList()}};
+        QVariantMap seriesCount{{"comic", 0}, {"novel", 0}, {"anime", 0}};
+        QHash<QString, QPair<QString, qint64>> genres; // lower case -> {as written, units}
+        QHash<QString, QPair<QString, qint64>> authors;
+        QVariantMap first;
+        qint64 firstAt = std::numeric_limits<qint64>::max();
+        const auto weigh = [](QHash<QString, QPair<QString, qint64>> &into, const QString &name, qint64 units) {
+            const auto key = name.trimmed().toLower();
+            if (key.isEmpty() || key == QLatin1String("unknown"))
+                return;
+            auto &entry = into[key];
+            if (entry.first.isEmpty())
+                entry.first = name.trimmed();
+            entry.second += units;
+        };
+        const auto ranked = [](const QHash<QString, QPair<QString, qint64>> &from, int count) {
+            QList<QPair<QString, qint64>> list(from.begin(), from.end());
+            std::sort(list.begin(), list.end(), [](const auto &a, const auto &b) { return a.second != b.second ? a.second > b.second : a.first < b.first; });
+            QVariantList out;
+            for (int i = 0; i < std::min<int>(count, int(list.size())); ++i)
+                out.append(QVariantMap{{"name", list[i].first}, {"units", list[i].second}});
+            return out;
+        };
+        // Units from series that know their genres or author: many library
+        // entries never had their details fetched, so the genre and author
+        // slides only count when most of the year is covered.
+        qint64 allUnits = 0, genreUnits = 0, bookUnits = 0, authorUnits = 0;
+        for (const auto &value : rows) {
             auto row = value.toMap();
+            const auto media = row.value("media").toString();
+            const auto units = row.value("units").toLongLong();
+            const auto genreList = row.take("genres").toString().split(QStringLiteral(", "), Qt::SkipEmptyParts);
+            for (const auto &genre : genreList)
+                weigh(genres, genre, units);
+            allUnits += units;
+            if (!genreList.isEmpty())
+                genreUnits += units;
+            if (media != QLatin1String("anime")) {
+                bookUnits += units;
+                const auto author = row.value("author").toString().trimmed();
+                weigh(authors, author, units);
+                if (!author.isEmpty() && author.compare(QLatin1String("unknown"), Qt::CaseInsensitive) != 0)
+                    authorUnits += units;
+            }
             row.insert(QStringLiteral("extra"), QJsonDocument::fromJson(row.value("extra").toByteArray()).toVariant());
-            series.append(row);
+            if (series.size() < 6)
+                series.append(row);
+            if (seriesCount.contains(media)) {
+                seriesCount[media] = seriesCount[media].toInt() + 1;
+                auto list = topByMedia[media].toList();
+                if (list.size() < 5) {
+                    list.append(row);
+                    topByMedia[media] = list;
+                }
+            }
+            if (row.value("firstAt").toLongLong() < firstAt) {
+                firstAt = row.value("firstAt").toLongLong();
+                first = row;
+            }
         }
         return QVariantMap{{"year", year},
                            {"total", totals(days, from.toString(Qt::ISODate), to.toString(Qt::ISODate))},
@@ -386,7 +452,13 @@ Task *Activity::year(int year) {
                            {"longestStreak", streaks(days, to).second},
                            {"bestDay", bestDay},
                            {"bestDaySeconds", std::max<qint64>(0, bestDaySeconds)},
-                           {"top", series}};
+                           {"top", series},
+                           {"topByMedia", topByMedia},
+                           {"seriesCount", seriesCount},
+                           {"series", int(rows.size())},
+                           {"genres", genreUnits * 2 >= allUnits ? ranked(genres, 5) : QVariantList()},
+                           {"author", authorUnits * 2 >= bookUnits ? ranked(authors, 1).value(0) : QVariant()},
+                           {"first", first}};
     });
 }
 

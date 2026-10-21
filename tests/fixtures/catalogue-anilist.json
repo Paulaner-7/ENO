@@ -1,0 +1,13 @@
+{
+  "media": [
+    {"id": 1001, "idMal": 2001, "format": "MANGA", "status": "RELEASING", "chapters": null, "countryOfOrigin": "KR",
+     "startDate": {"year": 2023}, "averageScore": 79, "isAdult": false, "siteUrl": "https://anilist.co/manga/1001",
+     "description": "Test description.",
+     "title": {"romaji": "Tesuto Romaji", "english": "Test English", "native": "테스트"},
+     "synonyms": ["Test Synonym", "Test English"], "coverImage": {"large": "https://img.test/a/1001.jpg"}},
+    {"id": 1002, "idMal": null, "format": "NOVEL", "status": "FINISHED", "chapters": 300, "countryOfOrigin": "CN",
+     "startDate": {"year": null}, "averageScore": null, "isAdult": true,
+     "title": {"romaji": "Shousetsu", "english": null, "native": null},
+     "synonyms": [], "coverImage": {"large": "https://img.test/a/1002.jpg"}}
+  ]
+}

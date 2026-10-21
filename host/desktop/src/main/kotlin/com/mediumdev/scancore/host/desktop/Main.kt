@@ -1,0 +1,86 @@
+// SCANCORE's extension host for Windows, macOS and Linux: started by the app
+// on first use, it runs Mihon extensions and answers over stdin/stdout (one
+// JSON object per line, see core/Rpc.kt).
+//
+//   scancore-host --root <folder> [--user-agent <ua>] [--app-version <v>]
+package com.mediumdev.scancore.host.desktop
+
+import android.app.Application
+import android.content.Context
+import com.mediumdev.scancore.host.ExtensionHost
+import com.mediumdev.scancore.host.MemoStore
+import com.mediumdev.scancore.host.RpcServer
+import eu.kanade.tachiyomi.AppInfo
+import eu.kanade.tachiyomi.network.HostNetwork
+import eu.kanade.tachiyomi.network.JavaScriptEngine
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.PersistentCookieJar
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.addSingleton
+import uy.kohesive.injekt.api.addSingletonFactory
+import xyz.nulldev.androidcompat.AndroidCompat
+import xyz.nulldev.androidcompat.AndroidCompatInitializer
+import java.io.File
+import java.io.OutputStreamWriter
+import java.io.PrintStream
+import kotlin.system.exitProcess
+
+const val HOST_VERSION = "1"
+
+fun main(args: Array<String>) {
+    val options = args.toList().zipWithNext().filter { it.first.startsWith("--") }.associate { it.first.removePrefix("--") to it.second }
+    val root = File(options["root"] ?: run { System.err.println("--root is required"); exitProcess(2) })
+    root.mkdirs()
+
+    // The protocol owns stdout; anything an extension prints goes to stderr.
+    val protocol = OutputStreamWriter(System.out, Charsets.UTF_8)
+    System.setOut(PrintStream(System.err, true, "UTF-8"))
+
+    val (host, memos) = setUp(root, options["user-agent"], options["app-version"])
+    val server = RpcServer(host::handle)
+    HostNetwork.browserCheckSolver = AppBrowserCheck(server)
+    HostNetwork.readerBrowserCheck = com.mediumdev.scancore.host.ReaderBrowserCheck(server)
+    server.serve(System.`in`.bufferedReader(Charsets.UTF_8), protocol)
+    memos.save()
+    exitProcess(0)
+}
+
+// Everything an extension expects of the app: Android stand-ins, Injekt's
+// objects, the network with SCANCORE's identity and cookies. Once per
+// process.
+fun setUp(
+    root: File,
+    userAgent: String?,
+    appVersion: String?,
+): Pair<ExtensionHost, MemoStore> {
+    System.setProperty("scancore.host.root", root.absolutePath)
+    userAgent?.let { HostNetwork.userAgent = it }
+    HostNetwork.cookieJar = PersistentCookieJar(File(root, "cookies.json"))
+    HostNetwork.cacheDir = File(root, "cache")
+    // Offline tests: fixture sites on *.test are served from this machine.
+    if (System.getenv("SCANCORE_HOST_TEST_LOOPBACK") == "1") HostNetwork.dns = HostNetwork.loopbackForTestDomains
+    AppInfo.set(versionCode = 1, versionName = appVersion ?: "SCANCORE")
+
+    AndroidCompatInitializer().init(HostNetwork.userAgent)
+    val app = Application()
+    AndroidCompat().startApp(app)
+
+    Injekt.addSingleton<Application>(app)
+    Injekt.addSingleton<Context>(app)
+    Injekt.addSingletonFactory { NetworkHelper(app) }
+    Injekt.addSingletonFactory { JavaScriptEngine(app) }
+    Injekt.addSingletonFactory {
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
+    }
+    Injekt.addSingletonFactory<ProtoBuf> { ProtoBuf }
+
+    val memos = MemoStore(File(root, "memos.json"))
+    val host = ExtensionHost(ApkLoader(File(root, "jars")), memos, HOST_VERSION, CompatSettings(app))
+    Runtime.getRuntime().addShutdownHook(Thread { memos.save() })
+    return host to memos
+}

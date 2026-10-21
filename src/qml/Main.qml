@@ -65,7 +65,18 @@ ApplicationWindow {
     }
 
 
+    // Status bar icons for the screen under them: a reader or the player
+    // covers the window and may say (systemBarsDark), else they are dark
+    // screens; otherwise the app's theme decides, not the phone's mode.
+    readonly property bool darkBars: {
+        const page = immersive.currentItem
+        if (immersive.depth > 0 && page) return page.systemBarsDark !== undefined ? page.systemBarsDark === true : true
+        return Theme.dark
+    }
+    onDarkBarsChanged: App.setBarIcons(darkBars)
+
     Component.onCompleted: {
+        App.setBarIcons(darkBars)
         if (!App.startAction.screenshot)
             window.showFullScreen()
         Theme.compact = Qt.binding(() => window.width < 720)
@@ -81,6 +92,10 @@ ApplicationWindow {
         if (first && first !== "home") shell.goSection(first)
         if (start.siteCheck) Qt.callLater(() => Router.openSiteCheck(start.siteCheck))
         if (start.toasts) for (const t of start.toasts) shell.toast(t.message, t.kind)
+        // {"notify": {title, body, delay}}: one in the notification area and
+        // the system's (after `delay` ms, e.g. once the app is in the
+        // background).
+        if (start.notify) notifyHook.start()
         if (start.palette) Qt.callLater(() => commandPalette.open())
         if (start.shortcuts) Qt.callLater(() => shortcutsSheet.open())
         if (start.push) Qt.callLater(() => shell.push(start.push.path, start.push.props || {}))
@@ -105,6 +120,22 @@ ApplicationWindow {
         target: Downloads
         function onFinished(title) { shell.toast(qsTr("Downloaded ") + title, "success") }
     }
+    // A crash last time: the report, to send.
+    CrashReportsDialog { id: crashPrompt }
+    Timer { running: true; interval: 2500; onTriggered: crashPrompt.showLatest() }
+
+    // Another of the account's apps sent where it is (Continue on…).
+    Connections {
+        target: Live
+        function onHandoffReceived(entry, from) {
+            shell.toast(qsTr("From %1: %2, %3").arg(from.name).arg(entry.title).arg(entry.unitTitle), "info",
+                        { label: qsTr("Continue"), run: () => shell.resume(entry) })
+            // Sent on purpose from the other device: bring this one forward.
+            if (!window.visible) window.show()
+            window.raise()
+            window.requestActivate()
+        }
+    }
     // A file or link given on the command line or by a second launch.
     Connections {
         target: App
@@ -115,7 +146,27 @@ ApplicationWindow {
                 themeConfirm.open()
             } else if (/\.(cbz|zip|cbr|rar|cb7|7z|cbt|pdf|epub)$/.test(lower)) {
                 Router.openFile(target)
+            } else if (Extensions.repositoryLink(target).url && !/^https?:/.test(lower)) {
+                // A one-tap "add repository" link from a repository's page.
+                Router.addRepository(target)
             }
+        }
+        // An extension's request is waiting for a check only the reader can pass.
+        function onBrowserCheckWanted(url) { Router.openSiteCheck(url) }
+        // A browser check has been left; pages waiting on it load again.
+        function onSiteChecked(url) {
+            shell.toast(qsTr("Browser check done for %1").arg(url.replace(/^https?:\/\//, "").replace(/\/.*$/, "")), "success")
+        }
+    }
+
+    // Extensions that were installing in the background (adding a repository).
+    Connections {
+        target: Extensions
+        function onInstallsFinished(installed, failed, firstError) {
+            if (installed > 0)
+                shell.toast(installed === 1 ? qsTr("1 extension installed") : qsTr("%1 extensions installed").arg(installed), "success")
+            if (failed > 0)
+                shell.toast(failed === 1 ? firstError : qsTr("%1 extensions could not be installed: %2").arg(failed).arg(firstError), "error")
         }
     }
 
@@ -138,6 +189,10 @@ ApplicationWindow {
         id: shell
         property string section: "home"
         property var visited: ({ home: true })
+        // After the first page is up, the others are built over several
+        // frames instead of in one go, so a first visit (and the press that
+        // led there) never freezes the window; slow phones gain most.
+        property bool settled: false
 
         function stackFor(name) {
             for (let i = 0; i < sectionRepeater.count; ++i) {
@@ -148,6 +203,11 @@ ApplicationWindow {
         }
 
         function goSection(name) {
+            // Not a page: the notification area opens over the current one.
+            if (name === "notifications") {
+                notificationsPanel.open()
+                return
+            }
             if (immersive.depth > 0) immersive.clear()
             if (name === section) {
                 const stack = stackFor(name)
@@ -159,6 +219,7 @@ ApplicationWindow {
             v[name] = true
             visited = v
             section = name
+            if (App.profiling) App.profilePlace(name)
             Router.section = name
         }
 
@@ -168,10 +229,12 @@ ApplicationWindow {
             if (!stack) return
             if (fromCover && coverSource) hero.launch(fromCover, coverSource)
             stack.push(Qt.resolvedUrl(path), props)
+            if (App.profiling) App.profilePlace(path)
         }
 
         function openImmersive(path, props) {
             immersive.push(Qt.resolvedUrl(path), props)
+            if (App.profiling) App.profilePlace(path)
         }
 
         // Closes the reader or player, or pops the current page. Returns
@@ -201,13 +264,16 @@ ApplicationWindow {
             else App.moveToBackground()
         }
 
-        function toast(message, kind) { toasts.show(message, kind) }
+        function addRepository(link) { repositorySheet.start(link) }
+        function toast(message, kind, action) { toasts.show(message, kind, action) }
 
         function land(target) { hero.land(target) }
 
         function resume(entry) {
             const props = { url: entry.sourceUrl, summary: entry, autoResume: true }
-            if (entry.media === "anime") {
+            if (entry.media === "anime" && String(entry.source || "").startsWith("aniyomi:")) {
+                push("pages/AnimeDetails.qml", { sourceUrl: entry.sourceUrl, summary: entry, autoResume: true })
+            } else if (entry.media === "anime") {
                 const extra = entry.extra || {}
                 const aid = extra.anilistId || entry.anilistId || (entry.id ? parseInt(String(entry.id).split(":")[2]) : 0)
                 push("pages/AnimeDetails.qml", { anilistId: aid, summary: entry, autoResume: true })
@@ -285,11 +351,12 @@ ApplicationWindow {
                         readonly property bool current: shell.section === key
                         anchors.fill: parent
                         active: shell.visited[key] === true
-                        visible: current
+                        asynchronous: shell.settled
+                        visible: opacity > 0.001
                         opacity: current ? 1 : 0
                         z: current ? 1 : 0
-                        transform: Translate { y: sectionLoader.current ? 0 : 10; Behavior on y { enabled: sectionLoader.current; NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
-                        Behavior on opacity { enabled: sectionLoader.current; NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
+                        transform: Translate { y: sectionLoader.current ? 0 : 14; Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
+                        Behavior on opacity { NumberAnimation { duration: sectionLoader.current ? Motion.slow : Motion.fast; easing.type: Easing.OutCubic } }
 
                         sourceComponent: PageStack {
                             initial: {
@@ -356,6 +423,11 @@ ApplicationWindow {
         // Readers that set edgeToEdge draw under the system bars and pad
         // their own controls; everything else stays inside the safe area.
         readonly property bool edgeToEdge: currentItem !== null && currentItem.edgeToEdge === true
+        // The window's own root, not ApplicationWindow's content, which Qt
+        // (6.9 and later) pads by the safe area: inside it a reader could not
+        // reach under the status bar and was told its inset was 0, so its
+        // hidden top bar stuck out above it, over the phone's clock.
+        parent: window.contentItem.parent
         anchors.fill: parent
         // The parent's safe area, so these margins do not feed back into it.
         anchors.topMargin: edgeToEdge ? 0 : parent.SafeArea.margins.top
@@ -399,10 +471,54 @@ ApplicationWindow {
         }
     }
 
+    // Incognito badge over the pages, at the bottom (readers say it in
+    // their own header).
+    AbstractButton {
+        id: incognitoBadge
+        parent: shellView
+        z: 4
+        visible: App.settings.incognito === true
+        anchors.horizontalCenter: parent.horizontalCenter
+        // Above the phone's tabs or a bottom dock, clear of page headers.
+        y: parent.height - height - 12 - (tabBar.visible ? tabBar.height
+            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0)
+        height: 28
+        width: badgeRow.implicitWidth + 22
+        hoverEnabled: true
+        Accessible.name: qsTr("Incognito is on. Turn it off")
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Nothing you read or watch is recorded. Click to turn off.")
+        onClicked: Router.setIncognito(false)
+        background: Rectangle {
+            radius: height / 2
+            color: incognitoBadge.hovered ? Theme.surface3 : Theme.surface2
+            border.width: 1
+            border.color: Theme.borderStrong
+        }
+        contentItem: Item {
+            Row {
+                id: badgeRow
+                anchors.centerIn: parent
+                spacing: 6
+                Icon { anchors.verticalCenter: parent.verticalCenter; name: "venetian-mask"; size: 15; color: Theme.text }
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Incognito")
+                    color: Theme.text
+                    font.family: Theme.fontSans
+                    font.pixelSize: Theme.textXs
+                    font.weight: Font.DemiBold
+                }
+            }
+        }
+    }
+
     CommandPalette {
         id: commandPalette
         z: 30
     }
+
+    LockScreen {}
 
     ShortcutsSheet {
         id: shortcutsSheet
@@ -433,9 +549,51 @@ ApplicationWindow {
         confirmText: qsTr("Use theme")
         onConfirmed: window.importTheme(window.pendingTheme)
     }
+    AddRepositoryDialog { id: repositorySheet }
+    NotificationsPanel { id: notificationsPanel }
+    Timer { interval: 1500; running: true; onTriggered: shell.settled = true }
+    Timer {
+        id: notifyHook
+        interval: App.startAction.notify ? (App.startAction.notify.delay || 0) : 0
+        onTriggered: Notifications.add("app", App.startAction.notify.title || "Test", App.startAction.notify.body || "", true)
+    }
+
+    // Android 13 and later: ask once, after the welcome, to allow
+    // notifications (new chapters, announcements, updates).
+    Timer {
+        interval: 1200
+        running: App.platform === "android" && App.settings.onboarded === true && App.settings.notificationsAsked !== true && !onboarding.active
+        onTriggered: {
+            App.setSetting("notificationsAsked", true)
+            Notifications.askPermission()
+        }
+    }
+
+    // Android: once, after the welcome, ask to be let off battery
+    // optimisation, which stops update checks, downloads and reading aloud
+    // soon after the app leaves the screen. Settings → Library has it later.
+    ConfirmDialog {
+        id: batteryAsk
+        heading: qsTr("Let SCANCORE run in the background?")
+        message: qsTr("Android's battery optimisation closes SCANCORE soon after you leave it, so new chapters are not checked, downloads pause and reading aloud stops. Android will ask you to allow it; you can change it later in Settings → Library.")
+        confirmText: qsTr("Allow")
+        onConfirmed: App.askBatteryUnrestricted()
+    }
+    Timer {
+        interval: 2500
+        running: App.platform === "android" && App.batteryRestricted && App.settings.onboarded === true
+            && App.settings.batteryAsked !== true && !onboarding.active
+            && App.settings.notificationsAsked === true && Qt.application.state === Qt.ApplicationActive
+        onTriggered: {
+            App.setSetting("batteryAsked", true)
+            batteryAsk.open()
+        }
+    }
     Toasts {
         id: toasts
         z: 40
+        // Above the phone's tab bar, not over it.
+        bottomInset: (tabBar.visible ? tabBar.height : 0) + (incognitoBadge.visible ? incognitoBadge.height + 12 : 0)
     }
 
     // Development hook: SCANCORE_START {"screenshot": "/path.png", "delay": ms}

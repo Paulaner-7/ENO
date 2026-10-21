@@ -6,7 +6,8 @@ import ScanCore
 // stretch or shrink with the animation speed setting, so every animation in
 // the app respects both by using these.
 QtObject {
-    readonly property bool reduced: App.settings.reducedMotion === true
+    // E-ink screens redraw slowly and ghost: no motion there either.
+    readonly property bool reduced: App.settings.reducedMotion === true || App.settings.eink === true
     // Settings → Interface → Animation speed: a duration multiplier.
     readonly property real scale: ({ relaxed: 1.35, snappy: 0.7 })[App.settings.motionSpeed] || 1
 

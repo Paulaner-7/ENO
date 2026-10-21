@@ -1,0 +1,2 @@
+• Reader controls no longer cover the status bar
+• The novel's title is readable on phones

@@ -19,7 +19,23 @@ public:
     Q_INVOKABLE QString seriesId(const QString &url) const;
 
     // {shelves: [{title, books}]}
+    // One source by itself (plugins), as Comics.browse and Comics.filters.
+    Q_INVOKABLE sc::Task *browse(const QString &source, const QString &listing, int page,
+                                 const QString &query = QString(), const QVariantList &filters = {});
+    Q_INVOKABLE sc::Task *filters(const QString &source);
+    Q_INVOKABLE QString imageReferer(const QString &url) const;
+    // The book's page on its site, for "Open on the website".
+    Q_INVOKABLE sc::Task *webUrl(const QString &url);
     Q_INVOKABLE sc::Task *discover();
+    // Novels in the novel catalogue the user chose (AniList or MyAnimeList): {books: [{catalog, catalogId, title, titles, cover, ...}]}.
+    Q_INVOKABLE sc::Task *catalog(const QString &query);
+    // {catalog, label, shelves: [{key, items}]}
+    Q_INVOKABLE sc::Task *catalogFeeds(bool mature = false);
+    // Where a catalogue novel can be read, as Comics.resolve (same scopes).
+    Q_INVOKABLE sc::Task *resolve(const QVariantMap &item, const QString &scope = QString());
+    // Whether an LNReader plugin is installed and on.
+    Q_INVOKABLE bool hasExtensions() const;
+    Q_INVOKABLE bool isExtension(const QString &sourceKey) const;
     // {books, providers}
     Q_INVOKABLE sc::Task *search(const QString &query, const QString &source = QStringLiteral("all"));
     // {series, chapters, offline}

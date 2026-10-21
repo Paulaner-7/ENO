@@ -1,6 +1,10 @@
 #include "Registry.h"
 
 #include "LnCrawl.h"
+#include "extensions/Host.h"
+#include "extensions/Manager.h"
+#include "plugins/PluginSource.h"
+#include "core/Text.h"
 #include "sources/Manifest.h"
 #include "sources/local/LocalSources.h"
 
@@ -19,6 +23,16 @@ QList<std::shared_ptr<Source>> g_sources;
 
 void Registry::rebuild() {
     QList<std::shared_ptr<Source>> sources;
+    auto wanted = builtinLanguages();
+    // None of this medium's built-in sources in those languages: English.
+    {
+        bool any = wanted.contains(QStringLiteral("*"));
+        for (const auto &value : Manifest::current().value(QStringLiteral("novels")).toArray())
+            any = any || (value.toObject().value(QStringLiteral("enabled")).toBool(true) && Manifest::supports(value.toObject()) &&
+                          wanted.contains(baseLanguage(value.toObject().value(QStringLiteral("language")).toString(QStringLiteral("en")))));
+        if (!any)
+            wanted.append(QStringLiteral("en"));
+    }
     for (const auto &value : Manifest::current().value(QStringLiteral("novels")).toArray()) {
         const auto o = value.toObject();
         if (!Manifest::supports(o))
@@ -38,6 +52,18 @@ void Registry::rebuild() {
         config.urlTag = o.value(QStringLiteral("urlTag")).toString();
         if (config.key.isEmpty() || config.base.isEmpty())
             continue;
+        // The whole pack switched off (published manifest): series stay in
+        // the library and history, and say why they no longer update.
+        if (config.enabled && !Manifest::bundledEnabled()) {
+            config.enabled = false;
+            config.disabledReason = Manifest::bundledReason();
+        }
+        // Built-in sources in languages the user has not chosen stay off
+        // (their series still open from the library and history).
+        if (config.enabled && !wanted.contains(QStringLiteral("*")) && !wanted.contains(baseLanguage(config.language))) {
+            config.enabled = false;
+            config.disabledReason = QStringLiteral("Its language is off in Source languages above");
+        }
         if (auto source = createSource(config))
             sources.append(std::shared_ptr<Source>(std::move(source)));
     }
@@ -72,6 +98,9 @@ void Registry::rebuild() {
             }
         }
     }
+    // Sources of installed LNReader plugins.
+    for (const auto &entry : ext::Manager::sources(ext::Kind::LNReader))
+        sources.append(std::make_shared<plugins::PluginSource>(entry));
     // EPUB books on this device.
     SourceConfig local;
     local.key = QStringLiteral("local");
@@ -95,6 +124,11 @@ std::shared_ptr<Source> Registry::byKey(const QString &key) {
     return nullptr;
 }
 
-std::shared_ptr<Source> Registry::forUrl(const QString &url) { return sourceForUrl(all(), url); }
+std::shared_ptr<Source> Registry::forUrl(const QString &url) {
+    // Plugin links name their source ("lnreader:<id>:<path>").
+    if (const auto wrapped = ext::unwrapUrl(url))
+        return byKey(wrapped->key);
+    return sourceForUrl(all(), url);
+}
 
 } // namespace sc::novels

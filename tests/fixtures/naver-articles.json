@@ -1,0 +1,7 @@
+{"titleId":747269,"webtoonLevelCode":"WEBTOON","totalCount":3,"finished":false,"dailyPass":false,
+ "articleList":[
+  {"no":3,"thumbnailUrl":"https://image-comic.pstatic.net/webtoon/747269/3/thumbnail.jpg","subtitle":"002. Ep.1 시작 (2)","charge":false,"serviceDateDescription":"26.06.09"},
+  {"no":2,"thumbnailUrl":"https://image-comic.pstatic.net/webtoon/747269/2/thumbnail.jpg","subtitle":"001. Ep.1 시작 (1)","charge":true,"serviceDateDescription":"26.06.02"},
+  {"no":1,"thumbnailUrl":"https://image-comic.pstatic.net/webtoon/747269/1/thumbnail.jpg","subtitle":" 000. 프롤로그 ","charge":false,"serviceDateDescription":"22.04.22"}
+ ],
+ "chargeFolderArticleList":[],"pageInfo":{"totalRows":3,"pageSize":20,"page":1,"nextPage":0,"totalPages":1}}

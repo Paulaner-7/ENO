@@ -26,6 +26,8 @@ class Task : public QObject {
     Q_PROPERTY(int status READ status NOTIFY changed)
     Q_PROPERTY(QVariant result READ result NOTIFY changed)
     Q_PROPERTY(QString verifyUrl READ verifyUrl NOTIFY changed)
+    // What the work has so far, while it is still loading (see report()).
+    Q_PROPERTY(QVariant partial READ partial NOTIFY progressed)
 
 public:
     using Work = std::function<QVariant()>;
@@ -45,6 +47,11 @@ public:
     int status() const { return m_status; }
     QVariant result() const { return m_result; }
     QString verifyUrl() const { return m_verifyUrl; }
+    QVariant partial() const { return m_partial; }
+
+    // From inside a task's work: hands QML what is ready so far (a search
+    // with some sources answered). Ignored outside a task.
+    static void report(const QVariant &value);
 
     Q_INVOKABLE void cancel();
     // Calls fn(result) on success, now if already finished.
@@ -54,6 +61,7 @@ signals:
     void changed();
     void finished(const QVariant &result);
     void failed(const QString &error);
+    void progressed(const QVariant &partial);
 
 private:
     explicit Task(QObject *parent = nullptr);
@@ -64,6 +72,7 @@ private:
     int m_status = 0;
     QVariant m_result;
     QString m_verifyUrl;
+    QVariant m_partial;
     CancelFlag m_cancel;
 };
 

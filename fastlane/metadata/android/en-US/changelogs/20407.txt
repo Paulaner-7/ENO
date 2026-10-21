@@ -1,0 +1,3 @@
+• Settings → Sources is fast again
+• Built-in sources a dozen at a time, with search
+• Long lists only build what is on screen

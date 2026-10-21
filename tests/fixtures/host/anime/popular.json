@@ -1,0 +1,4 @@
+{"items": [
+  {"url": "/anime/1", "title": "Fixture Anime", "cover": "/img/anime-1.png"},
+  {"url": "/anime/2", "title": "Fixture Seasons", "cover": "/img/anime-2.png", "seasons": true}
+], "next": "false"}

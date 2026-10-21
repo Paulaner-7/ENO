@@ -1,13 +1,18 @@
 // Offline tests for the HTML layer and parsers. Live site checks are a
 // separate, opt-in run because sites change and CI must stay deterministic.
 
+#include "app/Resolve.h"
+#include "core/Database.h"
 #include "core/Html.h"
+#include "core/Parallel.h"
+#include "core/Proto.h"
 #include "core/Text.h"
 #include "sources/Manifest.h"
 #include "sources/comics/ComicSource.h"
-#include "sources/comics/Engines.h"
+#include "sources/bundled/comics/Engines.h"
 #include "sources/comics/Registry.h"
 #include "sources/local/Local.h"
+#include "sources/bundled/novels/Engines.h"
 #include "sources/novels/NovelSource.h"
 #include "sources/novels/Registry.h"
 
@@ -16,6 +21,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QRegularExpression>
+#include <QTemporaryDir>
 #include <QVersionNumber>
 #include <QtTest>
 
@@ -143,6 +149,9 @@ private slots:
         QCOMPARE(comics::chapterLabel(QStringLiteral("it"), QStringLiteral("12")), QStringLiteral("Capitolo 12"));
         // Unknown languages fall back to English.
         QCOMPARE(comics::chapterLabel(QStringLiteral("xx"), QStringLiteral("1")), QStringLiteral("Chapter 1"));
+        QCOMPARE(comics::chapterLabel(QStringLiteral("pt-br"), QStringLiteral("2")), QString::fromUtf8("Capítulo 2"));
+        QCOMPARE(comics::chapterLabel(QStringLiteral("ko"), QStringLiteral("12")), QString::fromUtf8("12화"));
+        QCOMPARE(comics::chapterLabel(QStringLiteral("fr"), QStringLiteral("1"), QStringLiteral("Début")), QString::fromUtf8("Chapitre 1: Début"));
     }
 
     void minVersion() {
@@ -356,12 +365,214 @@ private slots:
         QCOMPARE(chapters[1].released, QStringLiteral("2023-08-07T19:20:00Z"));
     }
 
+    void naver() {
+        // Paid previews are left out; the episode number is the chapter.
+        const auto page = QJsonDocument::fromJson(fixture("naver-articles.json")).object();
+        const auto chapters = comics::NaverSource::parseChapters(page, QStringLiteral("https://comic.naver.com"));
+        QCOMPARE(chapters.size(), 2);
+        QCOMPARE(chapters[0].number, QStringLiteral("3"));
+        QCOMPARE(chapters[0].released, QStringLiteral("2026-06-09"));
+        QCOMPARE(chapters[1].title, QString::fromUtf8("000. 프롤로그"));
+        QCOMPARE(chapters[1].url, QStringLiteral("https://comic.naver.com/webtoon/detail?titleId=747269&no=1"));
+        QCOMPARE(chapters[1].released, QStringLiteral("2022-04-22"));
+        // The age notice is not a page.
+        const auto panels = comics::NaverSource::parsePanels(fixture("naver-viewer.html"));
+        QCOMPARE(panels.size(), 2);
+        QCOMPARE(panels[1].url, QStringLiteral("https://image-comic.pstatic.net/webtoon/747269/1/IMAG01_2.jpg"));
+    }
+
+    void kakaoPage() {
+        // Free episodes only, without the video teaser; an unnumbered
+        // prologue keeps its place.
+        const auto page = QJsonDocument::fromJson(fixture("kakaopage-products.json")).object().value("result").toObject();
+        auto chapters = comics::KakaoPageSource::parseEpisodes(page.value("list").toArray(), QStringLiteral("https://page.kakao.com"),
+                                                               QStringLiteral("50866481"), QString::fromUtf8("나 혼자만 레벨업"));
+        QCOMPARE(chapters.size(), 2);
+        QCOMPARE(chapters[0].number, QStringLiteral("0.003"));
+        QCOMPARE(chapters[0].title, QString::fromUtf8("프롤로그"));
+        QCOMPARE(chapters[1].number, QStringLiteral("1"));
+        QCOMPARE(chapters[1].title, QString::fromUtf8("1화"));
+        QCOMPARE(chapters[1].url, QStringLiteral("https://page.kakao.com/content/50866481/viewer/50896826"));
+        QCOMPARE(chapters[1].released, QStringLiteral("2018-03-04T21:59:57+09:00"));
+        // AniList's links to the series page open it in "Read from".
+        comics::SourceConfig config;
+        config.key = QStringLiteral("kakaopage");
+        config.base = QStringLiteral("https://page.kakao.com");
+        config.hosts = {QStringLiteral("page.kakao.com")};
+        const comics::KakaoPageSource source(config);
+        QCOMPARE(source.seriesLink(QUrl(QStringLiteral("https://page.kakao.com/content/50866481"))),
+                 QStringLiteral("https://page.kakao.com/content/50866481"));
+        QCOMPARE(source.seriesLink(QUrl(QStringLiteral("https://page.kakao.com/content/50866481/viewer/50896826"))),
+                 QStringLiteral("https://page.kakao.com/content/50866481"));
+        QVERIFY(source.seriesLink(QUrl(QStringLiteral("https://page.kakao.com/menu/10010"))).isEmpty());
+        QVERIFY(source.seriesLink(QUrl(QStringLiteral("https://webtoon.kakao.com/content/x/2320"))).isEmpty());
+    }
+
+    void zonaTmo() {
+        const auto base = QStringLiteral("https://zonatmo.to");
+        // Novels and (by default) doujinshi stay out; other names come along.
+        const auto search = QJsonDocument::fromJson(fixture("zonatmo-search.json")).object();
+        const auto results = comics::ZonaTmoSource::parseSearch(search, base, QStringLiteral("zonatmo"), false);
+        QCOMPARE(results.size(), 1);
+        QCOMPARE(results[0].url, QStringLiteral("https://zonatmo.to/manga/solo-leveling"));
+        QCOMPARE(results[0].cover, QStringLiteral("https://zonatmo.to/wp-content/uploads/2025/11/5c2efcd42cd5e.webp"));
+        QVERIFY(results[0].names.contains(QStringLiteral("I Level Up Alone")));
+        QVERIFY(!results[0].names.contains(QStringLiteral("Solo Leveling")));
+        QCOMPARE(comics::ZonaTmoSource::parseSearch(search, base, QStringLiteral("zonatmo"), true).size(), 2);
+        // One number from two groups says whose each is; a title that only
+        // repeats the number is dropped.
+        const auto rows = QJsonDocument::fromJson(fixture("zonatmo-chapters.json")).array();
+        const auto chapters = comics::ZonaTmoSource::parseChapters(rows, base, QStringLiteral("solo-leveling"), QStringLiteral("es"));
+        QCOMPARE(chapters.size(), 3);
+        QCOMPARE(chapters[0].title, QString::fromUtf8("Capítulo 1: Lectorxd_com"));
+        QCOMPARE(chapters[1].title, QString::fromUtf8("Capítulo 1: Otro Scan"));
+        QCOMPARE(chapters[1].url, QStringLiteral("https://zonatmo.to/manga/solo-leveling/solo-leveling-capitulo-1-2"));
+        QCOMPARE(chapters[1].slug, QStringLiteral("solo-leveling-capitulo-1-2"));
+        QCOMPARE(chapters[2].number, QStringLiteral("200.5"));
+        QCOMPARE(chapters[2].title, QString::fromUtf8("Capítulo 200.5: Epílogo"));
+        QCOMPARE(chapters[2].released, QStringLiteral("2026-06-01T00:00:00Z"));
+    }
+
+    void olympus() {
+        const auto panels = comics::OlympusSource::parsePanels(fixture("olympus-reader.html"));
+        QCOMPARE(panels.size(), 2);
+        QCOMPARE(panels[0].url, QStringLiteral("https://media.imagesolymp.xyz/comics/5/106167/01.webp"));
+    }
+
+    void wtrLab() {
+        // The site's JSON and page data, through a stand-in site.
+        Http::setTestHandler([](const Request &request) -> std::optional<Response> {
+            const auto path = request.url.path();
+            const char *name = path == QLatin1String("/api/search")             ? "wtrlab-search.json"
+                               : path.startsWith(QLatin1String("/api/chapters/")) ? "wtrlab-chapters.json"
+                               : path.startsWith(QLatin1String("/api/v2/reader/content/")) ? "wtrlab-content.json"
+                               : path == QLatin1String("/api/reader/get")
+                                   ? (request.body.contains("\"chapter_no\":2") ? "wtrlab-locked.json" : "wtrlab-reader.json")
+                               : path.startsWith(QLatin1String("/en/novel/")) ? "wtrlab-novel.html"
+                                                                               : nullptr;
+            Response response;
+            response.status = name ? 200 : 404;
+            response.body = name ? fixture(name) : QByteArray();
+            response.contentType = path.endsWith(QLatin1String("-path")) ? "text/html" : "application/json";
+            response.finalUrl = request.url;
+            return response;
+        });
+        novels::SourceConfig config;
+        config.key = QStringLiteral("wtrlab");
+        config.label = QStringLiteral("WTR-LAB");
+        config.engine = QStringLiteral("wtrlab");
+        config.base = QStringLiteral("https://wtrlab.test");
+        config.hosts = {QStringLiteral("wtrlab.test")};
+        auto source = novels::createSource(config);
+        QVERIFY(source);
+
+        const auto found = source->search(QStringLiteral("test"));
+        QCOMPARE(found.size(), 1);
+        QCOMPARE(found[0].title, QStringLiteral("Test Land: The Test Path"));
+        QCOMPARE(found[0].url, QStringLiteral("https://wtrlab.test/en/novel/42/the-test-path"));
+
+        QList<novels::ChapterRef> chapters;
+        const auto book = source->book(QStringLiteral("https://wtrlab.test/pt/novel/42/the-test-path/chapter-1"), chapters);
+        QCOMPARE(book.url, QStringLiteral("https://wtrlab.test/en/novel/42/the-test-path"));
+        QCOMPARE(book.description, QStringLiteral("A Hero walks."));
+        QCOMPARE(book.status, QStringLiteral("Completed"));
+        QCOMPARE(book.rating, QStringLiteral("4.3"));
+        QCOMPARE(chapters.size(), 2);
+        QCOMPARE(chapters[1].title, QStringLiteral("Chapter 2: Onward"));
+        QCOMPARE(chapters[1].url, QStringLiteral("https://wtrlab.test/en/novel/42/the-test-path/chapter-2"));
+
+        // Glossary terms filled in, empty lines dropped, unknown terms empty,
+        // text escaped for the reader.
+        QString title;
+        const auto blocks = source->chapter(chapters[0].url, title);
+        QCOMPARE(title, QStringLiteral("Chapter 1: A Start"));
+        QCOMPARE(blocks.size(), 2);
+        QCOMPARE(blocks[0].text, QStringLiteral("The young hero met the Sect Master."));
+        QCOMPARE(blocks[1].html, QStringLiteral("&lt;She&gt; said ."));
+
+        // A locked chapter stays locked.
+        try {
+            source->chapter(chapters[1].url, title);
+            QFAIL("a locked chapter loaded");
+        } catch (const Error &e) {
+            QVERIFY(e.message().contains(QStringLiteral("locked")));
+        }
+        Http::setTestHandler({});
+    }
+
+    // Search fans out to every source and shows each answer as it arrives;
+    // one that hangs is cut off at the deadline instead of holding the rest.
+    void fanOutStreamsAndTimesOut() {
+        const auto stuck = std::make_shared<std::atomic_bool>(false);
+        QList<std::function<int()>> jobs{
+            [] {
+                QThread::msleep(150);
+                return 2;
+            },
+            [] { return 1; },
+            [stuck] {
+                while (!CancelScope::cancelled())
+                    QThread::msleep(5);
+                stuck->store(true);
+                return 3;
+            },
+        };
+        QList<int> order;
+        QList<int> statuses(3, 0);
+        QElapsedTimer timer;
+        timer.start();
+        qint64 firstAt = -1;
+        parallelEach<int>(jobs, 400, [&](int i, const Outcome<int> &r) {
+            if (firstAt < 0)
+                firstAt = timer.elapsed();
+            order.append(i);
+            statuses[i] = r.ok() ? 200 : r.status;
+        });
+        QCOMPARE(order, (QList<int>{1, 0, 2}));
+        QVERIFY2(firstAt < 100, qPrintable(QStringLiteral("first answer after %1 ms").arg(firstAt)));
+        QCOMPARE(statuses, (QList<int>{200, 200, 504}));
+        QTRY_VERIFY_WITH_TIMEOUT(stuck->load(), 1000);
+    }
+
     void gunzip() {
         // Python's gzip, with a file name in the header.
         const auto packed = QByteArray::fromHex("1f8b08080000000002ff6261636b75702e7461636869626b000b7676f473f60f7255484a4cce2e2d50081ee58ff2e9c8070008b786ca80020000");
         QCOMPARE(local::gunzip(packed), QByteArray("SCANCORE backup ").repeated(40));
         QVERIFY(local::gunzip(packed.left(12)).isEmpty());
         QVERIFY(local::gunzip("not gzip at all").isEmpty());
+    }
+
+    void protoWriterRoundTrip() {
+        // What a Mihon backup export writes reads back the same, gzipped.
+        ProtoWriter chapter;
+        chapter.text(1, QStringLiteral("/chapter/1"));
+        chapter.boolean(4, true);
+        chapter.fixed32(9, 12.5f);
+        ProtoWriter manga;
+        manga.varint(1, quint64(Q_INT64_C(2499283573021220255)));
+        manga.text(3, QString::fromUtf8("Título"));
+        manga.message(16, chapter);
+        ProtoWriter backup;
+        backup.message(1, manga);
+        const auto packed = local::gzip(backup.data());
+        QVERIFY(packed.startsWith("\x1f\x8b"));
+        const auto data = local::gunzip(packed);
+        QCOMPARE(data, backup.data());
+        Proto root(data);
+        QVERIFY(root.next());
+        QCOMPARE(root.field(), 1);
+        Proto m(root.bytes());
+        QVERIFY(m.next());
+        QCOMPARE(m.varint(), quint64(Q_INT64_C(2499283573021220255)));
+        QVERIFY(m.next());
+        QCOMPARE(m.text(), QString::fromUtf8("Título"));
+        QVERIFY(m.next());
+        QCOMPARE(m.field(), 16);
+        Proto c(m.bytes());
+        QVERIFY(c.next() && c.text() == QStringLiteral("/chapter/1"));
+        QVERIFY(c.next() && c.varint() == 1);
+        QVERIFY(c.next());
+        QCOMPARE(c.number(), 12.5);
     }
 
     void manifestIsValid() {
@@ -396,6 +607,62 @@ private slots:
                     QVERIFY2(novels::createSource(config) != nullptr, qPrintable(config.engine));
                 }
             }
+    }
+
+    // Last: it opens a database (for the content language), which the
+    // tests above run without.
+    void resolveNames() {
+        QTemporaryDir dir;
+        Database::open(dir.filePath(QStringLiteral("resolve.db")));
+        // No source is in the content language: the sources' own order.
+        Database::setPref(QStringLiteral("language"), QStringLiteral("fr"));
+        // Stand-in sources for "Read from".
+        struct Config {
+            QString language;
+        };
+        struct Fake {
+            QString name;
+            Config cfg;
+            QList<comics::Summary> hits;
+            QString key() const { return name; }
+            QString label() const { return name; }
+            const Config &config() const { return cfg; }
+            QList<comics::Summary> search(const QString &) const { return hits; }
+        };
+        const auto hit = [](const QString &title, const QString &url, const QStringList &names = {}) {
+            comics::Summary s;
+            s.title = title;
+            s.url = url;
+            s.names = names;
+            return s;
+        };
+        // Listed only under its Russian name, known in English as an
+        // alternative: found. A spin-off carrying the series' name as an
+        // alternative loses to the series itself.
+        auto ru = std::make_shared<Fake>(Fake{QStringLiteral("ru"), {QStringLiteral("ru")},
+                                              {hit(QString::fromUtf8("Поднятие уровня"), QStringLiteral("ru:1"), {QStringLiteral("Solo Leveling")})}});
+        auto es = std::make_shared<Fake>(Fake{QStringLiteral("es"), {QStringLiteral("es")},
+                                              {hit(QStringLiteral("Solo Leveling: Spin-off"), QStringLiteral("es:2"), {QStringLiteral("Solo Leveling")}),
+                                               hit(QStringLiteral("Solo Leveling"), QStringLiteral("es:1"))}});
+        auto none = std::make_shared<Fake>(Fake{QStringLiteral("en"), {QStringLiteral("en")}, {hit(QStringLiteral("Other"), QStringLiteral("en:1"))}});
+        const auto matches = resolveAcross<std::shared_ptr<Fake>>({ru, es, none}, {QStringLiteral("Solo Leveling")});
+        QCOMPARE(matches.size(), 2);
+        QCOMPARE(matches[0].toMap().value("url").toString(), QStringLiteral("ru:1"));
+        QCOMPARE(matches[1].toMap().value("url").toString(), QStringLiteral("es:1"));
+    }
+
+    // "Read from" asks built-in sources unless an extension is picked.
+    void resolveScope() {
+        const QString mangadex = QStringLiteral("mihon:2499283573021220255");
+        QVERIFY(resolveAsks({}, QStringLiteral("asura"), true, false, true));
+        QVERIFY(!resolveAsks({}, QStringLiteral("asura"), true, false, false));
+        QVERIFY(!resolveAsks({}, mangadex, true, true, true));
+        QVERIFY(resolveAsks(QStringLiteral("extensions"), mangadex, true, true, false));
+        QVERIFY(!resolveAsks(QStringLiteral("extensions"), mangadex, false, true, false));
+        QVERIFY(!resolveAsks(QStringLiteral("extensions"), QStringLiteral("asura"), true, false, true));
+        QVERIFY(resolveAsks(mangadex, mangadex, true, true, false));
+        QVERIFY(!resolveAsks(mangadex, QStringLiteral("mihon:1"), true, true, true));
+        QVERIFY(!resolveAsks(mangadex, QStringLiteral("asura"), true, false, true));
     }
 };
 

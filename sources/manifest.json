@@ -1,6 +1,6 @@
 {
-  "version": 4,
-  "updated": "2026-10-19",
+  "version": 6,
+  "updated": "2026-10-20",
   "enoExclusive": [
     "comics"
   ],
@@ -19,6 +19,15 @@
     }
   ],
   "novels": [
+    {
+      "key": "wtrlab",
+      "label": "WTR-LAB",
+      "engine": "wtrlab",
+      "base": "https://wtr-lab.com",
+      "hosts": [
+        "wtr-lab.com"
+      ]
+    },
     {
       "key": "royalroad",
       "label": "Royal Road",

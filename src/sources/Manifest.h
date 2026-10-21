@@ -35,6 +35,12 @@ public:
     // False for an entry that asks for a newer app ("minVersion"), so a
     // source that needs new code is not run by an older build.
     static bool supports(const QJsonObject &entry);
+    // The bundled sources pack: on unless the published manifest switches it
+    // off ("bundled": {"enabled": false, "reason": "..."}), which leaves
+    // extensions and files to read from. Builds without the pack say so too.
+    static bool bundledEnabled();
+    // Why the pack is off, for the sources' "switched off" note.
+    static QString bundledReason();
 
 private:
     static bool apply(const QByteArray &json, bool persist);

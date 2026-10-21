@@ -25,6 +25,10 @@ std::atomic_bool g_shutdown = false;
 std::mutex g_uaMutex;
 QByteArray g_userAgent = Http::BrowserUA;
 
+std::atomic_bool g_hasTestHandler = false;
+std::mutex g_testMutex;
+Http::TestHandler g_testHandler;
+
 // Bounds concurrent requests per host and overall, separately for pages/API
 // calls and for images, so a long chapter cannot starve search requests.
 class Limiter {
@@ -115,6 +119,13 @@ QJsonDocument Response::json() const {
     return doc;
 }
 
+QByteArray Response::header(const QByteArray &name) const {
+    for (const auto &[key, value] : headers)
+        if (key.compare(name, Qt::CaseInsensitive) == 0)
+            return value;
+    return {};
+}
+
 bool Response::isChallenge() const {
     if (!(status == 403 || status == 503 || status == 429 || isHtml()))
         return false;
@@ -130,6 +141,19 @@ bool Response::isChallenge() const {
     return refused && (head.contains(QLatin1String("cf-mitigated")) || head.contains(QLatin1String("challenge-platform")));
 }
 
+QByteArray Http::chromeUserAgent(int major) {
+#if defined(Q_OS_WIN)
+    const char *platform = "Windows NT 10.0; Win64; x64";
+#elif defined(Q_OS_MACOS)
+    const char *platform = "Macintosh; Intel Mac OS X 10_15_7";
+#else
+    // What Chrome sends on every Linux, whatever the processor.
+    const char *platform = "X11; Linux x86_64";
+#endif
+    return QByteArray("Mozilla/5.0 (") + platform + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + QByteArray::number(major) +
+           ".0.0.0 Safari/537.36";
+}
+
 void Http::setUserAgent(const QByteArray &ua) {
     std::lock_guard lock(g_uaMutex);
     g_userAgent = ua;
@@ -138,6 +162,12 @@ void Http::setUserAgent(const QByteArray &ua) {
 QByteArray Http::userAgent() {
     std::lock_guard lock(g_uaMutex);
     return g_userAgent;
+}
+
+void Http::setTestHandler(TestHandler handler) {
+    std::lock_guard lock(g_testMutex);
+    g_testHandler = std::move(handler);
+    g_hasTestHandler = bool(g_testHandler);
 }
 
 namespace {
@@ -153,6 +183,19 @@ Response sendOnce(const Request &request) {
         throw Error(QStringLiteral("Unsupported address: %1").arg(request.url.toString()));
     if (CancelScope::cancelled())
         throw Error(QStringLiteral("Cancelled"), 499);
+    if (g_hasTestHandler) {
+        Http::TestHandler handler;
+        {
+            std::lock_guard lock(g_testMutex);
+            handler = g_testHandler;
+        }
+        if (handler)
+            if (auto answer = handler(request)) {
+                if (answer->finalUrl.isEmpty())
+                    answer->finalUrl = request.url;
+                return *answer;
+            }
+    }
 
     Slot slot{request.lane, request.url.host().toLower()};
     slot.held = limiter(request.lane).acquire(slot.host);
@@ -161,6 +204,12 @@ Response sendOnce(const Request &request) {
 
     QNetworkRequest req(request.url);
     req.setHeader(QNetworkRequest::UserAgentHeader, Http::userAgent());
+    // Covers come from extensions and plugins too: one pointing at SCANCORE's
+    // own site gets no session.
+    if (request.lane == Lane::Images && CookieJar::isProtected(request.url)) {
+        req.setAttribute(QNetworkRequest::CookieLoadControlAttribute, QNetworkRequest::Manual);
+        req.setAttribute(QNetworkRequest::CookieSaveControlAttribute, QNetworkRequest::Manual);
+    }
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
     req.setTransferTimeout(request.timeoutMs);
     for (const auto &[name, value] : request.headers) {
@@ -219,6 +268,7 @@ Response sendOnce(const Request &request) {
     response.status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     response.contentType = reply->header(QNetworkRequest::ContentTypeHeader).toByteArray().toLower();
     response.finalUrl = reply->url();
+    response.headers = reply->rawHeaderPairs();
     response.body = reply->readAll();
 
     if (response.status == 0) {

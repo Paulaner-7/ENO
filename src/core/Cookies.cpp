@@ -1,9 +1,13 @@
 #include "Cookies.h"
 
+#include "Database.h"
+
 #include <QDateTime>
 #include <QFile>
 #include <QNetworkCookie>
 #include <QSaveFile>
+#include <QStringList>
+#include <QUrl>
 
 namespace sc {
 
@@ -38,6 +42,44 @@ bool CookieJar::insertCookie(const QNetworkCookie &cookie) {
 bool CookieJar::deleteCookie(const QNetworkCookie &cookie) {
     std::lock_guard lock(m_mutex);
     return QNetworkCookieJar::deleteCookie(cookie);
+}
+
+namespace {
+
+std::mutex g_protectedMutex;
+QStringList g_protected;
+bool g_protectedRead = false;
+
+QStringList readProtected() {
+    QStringList hosts{QStringLiteral("scancore.onl")};
+    for (const auto &address : {qEnvironmentVariable("SCANCORE_SITE"), Database::pref(QStringLiteral("account.site")).toString()})
+        if (const auto host = QUrl(address).host().toLower(); !host.isEmpty() && !hosts.contains(host))
+            hosts.append(host);
+    return hosts;
+}
+
+} // namespace
+
+bool CookieJar::isProtected(const QUrl &url) {
+    const auto host = url.host().toLower();
+    if (host.isEmpty())
+        return false;
+    std::lock_guard lock(g_protectedMutex);
+    if (!g_protectedRead) {
+        g_protected = readProtected();
+        g_protectedRead = true;
+    }
+    for (const auto &own : std::as_const(g_protected))
+        if (host == own || host.endsWith(QLatin1Char('.') + own))
+            return true;
+    return false;
+}
+
+void CookieJar::refreshProtected() {
+    const auto hosts = readProtected();
+    std::lock_guard lock(g_protectedMutex);
+    g_protected = hosts;
+    g_protectedRead = true;
 }
 
 void CookieJar::load(const QString &path) {

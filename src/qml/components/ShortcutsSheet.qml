@@ -93,6 +93,7 @@ Popup {
         }
 
         Flickable {
+            WheelScroll {}
             anchors.fill: parent
             anchors.topMargin: 76
             anchors.bottomMargin: 12

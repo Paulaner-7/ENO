@@ -26,7 +26,9 @@ Rectangle {
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "history", label: qsTr("History"), icon: "history" },
         { key: "activity", label: qsTr("Activity"), icon: "activity" },
-        { key: "downloads", label: qsTr("Downloads"), icon: "download" }
+        { key: "downloads", label: qsTr("Downloads"), icon: "download" },
+        // Opens the notification area rather than a page.
+        { key: "notifications", label: qsTr("Notifications"), icon: "bell" }
     ]
 
     implicitWidth: collapsed ? 72 : 228
@@ -157,6 +159,7 @@ Rectangle {
     // Scrolls when the window is too short for every section above the
     // Settings button.
     Flickable {
+        WheelScroll {}
         id: navArea
         y: searchButton.y + searchButton.height + 18
         width: parent.width
@@ -247,7 +250,7 @@ Rectangle {
                                 id: navIcon
                                 x: sidebar.collapsed ? (parent.width - width) / 2 : 12
                                 anchors.verticalCenter: parent.verticalCenter
-                                name: modelData.icon || ""
+                                name: modelData.key === "notifications" && Notifications.unread > 0 ? "bell-dot" : (modelData.icon || "")
                                 size: 18
                                 color: sidebar.current === modelData.key ? Theme.text : Theme.textMuted
                                 scale: navButton.pressed ? 0.88 : 1
@@ -268,7 +271,8 @@ Rectangle {
                             }
                             Rectangle {
                                 readonly property int count: modelData.key === "library" ? Library.unreadUpdates
-                                    : modelData.key === "downloads" ? Downloads.pending : 0
+                                    : modelData.key === "downloads" ? Downloads.pending
+                                    : modelData.key === "notifications" ? Notifications.unread : 0
                                 visible: count > 0
                                 x: sidebar.collapsed ? navIcon.x + 12 : parent.width - width - 8
                                 y: sidebar.collapsed ? 4 : (parent.height - height) / 2

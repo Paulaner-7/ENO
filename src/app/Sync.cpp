@@ -2,6 +2,7 @@
 
 #include "Activity.h"
 #include "Library.h"
+#include "Live.h"
 #include "core/Database.h"
 
 #include <QCoreApplication>
@@ -252,11 +253,14 @@ QJsonObject Sync::snapshot() {
     }
     QJsonObject library;
     for (const auto &value : Database::query(
-             QStringLiteral("SELECT series_id, category, added_at, COALESCE(changed_at, added_at) AS changed FROM library "
+             QStringLiteral("SELECT series_id, category, added_at, COALESCE(changed_at, added_at) AS changed, favourite FROM library "
                             "WHERE series_id NOT LIKE '%:local:%'"))) {
         const auto row = value.toMap();
+        // [category, added, changed, favourite]; apps before 2.0 read the
+        // first three.
         library.insert(row.value("series_id").toString(),
-                       QJsonArray{row.value("category").toString(), row.value("added_at").toLongLong(), row.value("changed").toLongLong()});
+                       QJsonArray{row.value("category").toString(), row.value("added_at").toLongLong(), row.value("changed").toLongLong(),
+                                  row.value("favourite").toInt()});
     }
     QJsonObject removed;
     for (const auto &value : Database::query(QStringLiteral("SELECT series_id, removed_at FROM library_removed WHERE removed_at > ?"),
@@ -277,6 +281,29 @@ QJsonObject Sync::snapshot() {
                                 row.value("updated_at").toLongLong()});
         progress.insert(id, units);
     }
+    // Bookmarks, and those taken off lately: {series: {chapter: when}}.
+    QJsonObject bookmarks;
+    for (const auto &value : Database::query(QStringLiteral("SELECT series_id, unit_key, created_at FROM bookmarks WHERE series_id NOT LIKE '%:local:%'"))) {
+        const auto row = value.toMap();
+        auto units = bookmarks.value(row.value("series_id").toString()).toObject();
+        units.insert(row.value("unit_key").toString(), row.value("created_at").toLongLong());
+        bookmarks.insert(row.value("series_id").toString(), units);
+    }
+    QJsonObject bookmarksRemoved;
+    for (const auto &value : Database::query(QStringLiteral("SELECT series_id, unit_key, removed_at FROM bookmarks_removed WHERE removed_at > ?"),
+                                             {Database::now() - kRemovalLifetime})) {
+        const auto row = value.toMap();
+        auto units = bookmarksRemoved.value(row.value("series_id").toString()).toObject();
+        units.insert(row.value("unit_key").toString(), row.value("removed_at").toLongLong());
+        bookmarksRemoved.insert(row.value("series_id").toString(), units);
+    }
+    // Each series' own settings: {series: [settings, changed]}.
+    QJsonObject seriesSettings;
+    for (const auto &value : Database::query(QStringLiteral("SELECT series_id, value, changed_at FROM series_settings WHERE series_id NOT LIKE '%:local:%'"))) {
+        const auto row = value.toMap();
+        seriesSettings.insert(row.value("series_id").toString(),
+                              QJsonArray{QJsonDocument::fromJson(row.value("value").toByteArray()).object(), row.value("changed_at").toLongLong()});
+    }
     return {{"format", "scancore-sync"},
             {"version", kFormatVersion},
             {"device", QJsonObject{{"id", Activity::deviceId()},
@@ -288,7 +315,67 @@ QJsonObject Sync::snapshot() {
             {"library", library},
             {"removed", removed},
             {"progress", progress},
+            {"bookmarks", bookmarks},
+            {"bookmarksRemoved", bookmarksRemoved},
+            {"seriesSettings", seriesSettings},
             {"activity", Activity::rowsForSync()}};
+}
+
+QString Sync::platform() { return platformName(); }
+
+QJsonObject Sync::unitPayload(const QString &seriesId, const QString &unitKey) {
+    if (seriesId.contains(QLatin1String(":local:")))
+        return {};
+    const auto rows = Database::query(QStringLiteral("SELECT unit_title, unit_number, unit_url, position, percent, completed, updated_at "
+                                                     "FROM progress WHERE series_id = ? AND unit_key = ?"),
+                                      {seriesId, unitKey});
+    const auto series = Database::query(QStringLiteral("SELECT media, source, source_url AS sourceUrl, title, cover, author, status, genres, "
+                                                       "extra FROM series WHERE id = ? AND source != 'local'"),
+                                        {seriesId});
+    if (rows.isEmpty() || series.isEmpty())
+        return {};
+    const auto row = rows.first().toMap();
+    return {{"seriesId", seriesId},
+            {"series", seriesJson(series.first().toMap())},
+            {"unitKey", unitKey},
+            {"unit", QJsonArray{row.value("unit_title").toString(), row.value("unit_number").toString(), row.value("unit_url").toString(),
+                                row.value("position").toString(), row.value("percent").toDouble(), row.value("completed").toInt(),
+                                row.value("updated_at").toLongLong()}}};
+}
+
+bool Sync::mergeUnit(const QJsonObject &payload) {
+    const auto id = payload.value("seriesId").toString();
+    const auto key = payload.value("unitKey").toString();
+    const auto p = payload.value("unit").toArray();
+    if (id.isEmpty() || key.isEmpty() || p.size() < 7 || id.contains(QLatin1String(":local:")))
+        return false;
+    const qint64 at = p.at(6).toInteger();
+    const auto local = Database::scalar(QStringLiteral("SELECT updated_at FROM progress WHERE series_id = ? AND unit_key = ?"), {id, key});
+    if (local.isValid() && at <= local.toLongLong())
+        return false;
+    bool merged = false;
+    Database::transaction([&] {
+        if (!Database::scalar(QStringLiteral("SELECT 1 FROM series WHERE id = ?"), {id}).isValid()) {
+            auto map = payload.value("series").toObject().toVariantMap();
+            if (map.value(QStringLiteral("title")).toString().isEmpty())
+                return;
+            map.insert(QStringLiteral("id"), id);
+            Library::upsertSeries(map);
+        }
+        Database::query(QStringLiteral(R"(
+            INSERT INTO progress(series_id, unit_key, unit_title, unit_number, unit_url, position, percent, completed, updated_at)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(series_id, unit_key) DO UPDATE SET unit_title = excluded.unit_title,
+                unit_number = excluded.unit_number, unit_url = excluded.unit_url, position = excluded.position,
+                percent = excluded.percent, completed = MAX(progress.completed, excluded.completed),
+                updated_at = excluded.updated_at
+        )"),
+                        {id, key, p.at(0).toString(), p.at(1).toString(), p.at(2).toString(),
+                         p.at(3).toString().isEmpty() ? QVariant() : QVariant(p.at(3).toString()), std::clamp(p.at(4).toDouble(), 0.0, 1.0),
+                         p.at(5).toInt() ? 1 : 0, at});
+        merged = true;
+    });
+    return merged;
 }
 
 int Sync::merge(const QJsonObject &s) {
@@ -345,10 +432,14 @@ int Sync::merge(const QJsonObject &s) {
             if (savedAt >= removedAt) {
                 if (!ensureSeries(id))
                     continue;
-                Database::query(QStringLiteral("INSERT INTO library(series_id, category, added_at, changed_at) VALUES(?, ?, ?, ?) "
+                // An older app sends no favourite; the one here stays.
+                const bool hasFavourite = entry.size() > 3;
+                Database::query(QStringLiteral("INSERT INTO library(series_id, category, added_at, changed_at, favourite) VALUES(?, ?, ?, ?, ?) "
                                                "ON CONFLICT(series_id) DO UPDATE SET category = excluded.category, "
-                                               "changed_at = excluded.changed_at"),
-                                {id, entry.at(0).toString(QStringLiteral("reading")), entry.at(1).toInteger(), savedAt});
+                                               "changed_at = excluded.changed_at%1")
+                                    .arg(hasFavourite ? QStringLiteral(", favourite = excluded.favourite") : QString()),
+                                {id, entry.at(0).toString(QStringLiteral("reading")), entry.at(1).toInteger(), savedAt,
+                                 hasFavourite ? entry.at(3).toInt() : 0});
                 Database::query(QStringLiteral("DELETE FROM library_removed WHERE series_id = ?"), {id});
             } else {
                 Database::query(QStringLiteral("DELETE FROM library WHERE series_id = ?"), {id});
@@ -388,6 +479,52 @@ int Sync::merge(const QJsonObject &s) {
                                  std::clamp(p.at(4).toDouble(), 0.0, 1.0), p.at(5).toInt() ? 1 : 0, at});
                 ++changes;
             }
+        }
+
+        // Bookmarks: taking one and taking it off, the latest wins.
+        const auto bookmarks = s.value("bookmarks").toObject();
+        const auto bookmarksRemoved = s.value("bookmarksRemoved").toObject();
+        const auto localBookmark = [](const QString &id, const QString &key) {
+            const auto added = Database::scalar(QStringLiteral("SELECT created_at FROM bookmarks WHERE series_id = ? AND unit_key = ?"), {id, key});
+            const auto removed = Database::scalar(QStringLiteral("SELECT removed_at FROM bookmarks_removed WHERE series_id = ? AND unit_key = ?"), {id, key});
+            return std::max(added.isValid() ? added.toLongLong() : -1, removed.isValid() ? removed.toLongLong() : -1);
+        };
+        for (auto it = bookmarks.begin(); it != bookmarks.end(); ++it) {
+            const auto units = it.value().toObject();
+            for (auto unit = units.begin(); unit != units.end(); ++unit) {
+                const qint64 at = unit.value().toInteger();
+                if (at <= localBookmark(it.key(), unit.key()) || !ensureSeries(it.key()))
+                    continue;
+                Database::query(QStringLiteral("INSERT OR REPLACE INTO bookmarks(series_id, unit_key, created_at) VALUES(?, ?, ?)"),
+                                {it.key(), unit.key(), at});
+                Database::query(QStringLiteral("DELETE FROM bookmarks_removed WHERE series_id = ? AND unit_key = ?"), {it.key(), unit.key()});
+                ++changes;
+            }
+        }
+        for (auto it = bookmarksRemoved.begin(); it != bookmarksRemoved.end(); ++it) {
+            const auto units = it.value().toObject();
+            for (auto unit = units.begin(); unit != units.end(); ++unit) {
+                const qint64 at = unit.value().toInteger();
+                if (at <= localBookmark(it.key(), unit.key()))
+                    continue;
+                Database::query(QStringLiteral("DELETE FROM bookmarks WHERE series_id = ? AND unit_key = ?"), {it.key(), unit.key()});
+                Database::query(QStringLiteral("INSERT OR REPLACE INTO bookmarks_removed(series_id, unit_key, removed_at) VALUES(?, ?, ?)"),
+                                {it.key(), unit.key(), at});
+                ++changes;
+            }
+        }
+
+        // Series settings: the latest change wins, as a whole.
+        const auto settings = s.value("seriesSettings").toObject();
+        for (auto it = settings.begin(); it != settings.end(); ++it) {
+            const auto entry = it.value().toArray();
+            const qint64 at = entry.at(1).toInteger();
+            const auto local = Database::scalar(QStringLiteral("SELECT changed_at FROM series_settings WHERE series_id = ?"), {it.key()});
+            if (at <= (local.isValid() ? local.toLongLong() : -1) || !ensureSeries(it.key()))
+                continue;
+            Database::query(QStringLiteral("INSERT OR REPLACE INTO series_settings(series_id, value, changed_at) VALUES(?, ?, ?)"),
+                            {it.key(), QString::fromUtf8(QJsonDocument(entry.at(0).toObject()).toJson(QJsonDocument::Compact)), at});
+            ++changes;
         }
     });
     Activity::mergeRows(device, s.value("activity").toArray());
@@ -499,7 +636,7 @@ std::unique_ptr<Sync::Store> Sync::currentStore() const {
 }
 
 void Sync::schedule() {
-    if (kind().isEmpty())
+    if (kind().isEmpty() || Live::applying())
         return;
     if (m_syncing) {
         m_dirty = true;

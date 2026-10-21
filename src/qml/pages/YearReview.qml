@@ -17,7 +17,7 @@ Item {
         function onFinished(result) { page.stats = result }
     }
 
-    readonly property var monthNames: [qsTr("January"), qsTr("February"), qsTr("March"), qsTr("April"), "May", qsTr("June"), qsTr("July"), qsTr("August"),
+    readonly property var monthNames: [qsTr("January"), qsTr("February"), qsTr("March"), qsTr("April"), qsTr("May", "month"), qsTr("June"), qsTr("July"), qsTr("August"),
                                        qsTr("September"), qsTr("October"), qsTr("November"), qsTr("December")]
     readonly property var dayNames: [qsTr("Mondays"), qsTr("Tuesdays"), qsTr("Wednesdays"), qsTr("Thursdays"), qsTr("Fridays"), qsTr("Saturdays"), qsTr("Sundays")]
 
@@ -75,6 +75,13 @@ Item {
                         enabled: page.year < new Date().getFullYear()
                         onClicked: page.year += 1
                     }
+                }
+                ScButton {
+                    text: qsTr("Wrapped")
+                    iconName: "sparkles"
+                    variant: "primary"
+                    enabled: page.stats !== null && !page.empty
+                    onClicked: Router.openWrapped(page.year)
                 }
                 ScButton {
                     text: qsTr("Save picture")

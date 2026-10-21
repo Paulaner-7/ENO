@@ -1,8 +1,12 @@
 #include "Downloads.h"
 
+#include "Anime.h"
+#include "Library.h"
 #include "Novels.h"
 #include "core/Database.h"
+#include "core/ImageCache.h"
 #include "core/Http.h"
+#include "core/VideoSave.h"
 #include "sources/comics/Registry.h"
 
 #include <QCryptographicHash>
@@ -119,17 +123,25 @@ void Downloads::enqueue(const QVariantMap &series, const QVariantList &units) {
     const auto seriesId = series.value(QStringLiteral("id")).toString();
     if (seriesId.isEmpty())
         return;
+    // Kept, so the downloads list can name it before anything is read.
+    if (!series.value(QStringLiteral("title")).toString().isEmpty())
+        Library::upsertSeries(series);
     Database::transaction([&] {
         for (const auto &value : units) {
             const auto u = value.toMap();
             Database::query(QStringLiteral(R"(
-                INSERT INTO downloads(series_id, unit_key, unit_title, unit_url, status, created_at)
-                VALUES(?, ?, ?, ?, 'queued', ?)
+                INSERT INTO downloads(series_id, unit_key, unit_title, unit_url, status, created_at, extra)
+                VALUES(?, ?, ?, ?, 'queued', ?, ?)
                 ON CONFLICT(series_id, unit_key) DO UPDATE SET
-                    status = CASE WHEN downloads.status = 'done' THEN 'done' ELSE 'queued' END, error = NULL
+                    status = CASE WHEN downloads.status = 'done' THEN 'done' ELSE 'queued' END, error = NULL,
+                    extra = COALESCE(excluded.extra, downloads.extra)
             )"),
                             {seriesId, u.value(QStringLiteral("key")).toString(), u.value(QStringLiteral("title")).toString(),
-                             u.value(QStringLiteral("url")).toString(), Database::now()});
+                             u.value(QStringLiteral("url")).toString(), Database::now(),
+                             // Anime: where the episode's video comes from.
+                             u.contains(QStringLiteral("download"))
+                                 ? QVariant(QString::fromUtf8(QJsonDocument::fromVariant(u.value(QStringLiteral("download"))).toJson(QJsonDocument::Compact)))
+                                 : QVariant()});
         }
     });
     notify();
@@ -153,13 +165,16 @@ void Downloads::pump() {
             return;
         const int id = row.value(QStringLiteral("id")).toInt();
         m_running.insert(id);
+        const auto flag = std::make_shared<std::atomic_bool>(false);
+        m_flags.insert(id, flag);
         Database::exec(QStringLiteral("UPDATE downloads SET status = 'running' WHERE id = ?"), {id});
         notify();
-        runInBackground([this, row] { runJob(row); });
+        runInBackground([this, row, flag] { runJob(row, flag); });
     }
 }
 
-void Downloads::runJob(const QVariantMap &row) {
+void Downloads::runJob(const QVariantMap &row, const CancelFlag &flag) {
+    CancelScope scope(flag);
     const int id = row.value(QStringLiteral("id")).toInt();
     const auto seriesId = row.value(QStringLiteral("series_id")).toString();
     const auto unitKey = row.value(QStringLiteral("unit_key")).toString();
@@ -184,15 +199,30 @@ void Downloads::runJob(const QVariantMap &row) {
             for (int i = 0; i < panels.size(); ++i) {
                 if (CancelScope::cancelled())
                     throw Error(QStringLiteral("Cancelled"), 499);
+                const auto referer = source->imageReferer();
+                Response response;
+                // Extension pages ("extimage:") and images an extension
+                // fetches itself come through the image cache's writers.
+                if (!panels[i].url.startsWith(QLatin1String("http")) || !referer.startsWith(QLatin1String("http"))) {
+                    for (int attempt = 0; attempt < 3 && !response.ok(); ++attempt) {
+                        try {
+                            response.body = ImageCache::fetch(panels[i].url, referer);
+                            response.status = 200;
+                            response.contentType = QMimeDatabase().mimeTypeForData(response.body).name().toLatin1();
+                        } catch (const Error &e) {
+                            if (attempt == 2 || e.status() == 499)
+                                throw;
+                        }
+                    }
+                }
                 Request request;
                 request.url = QUrl(panels[i].url);
                 request.lane = Lane::Images;
                 request.timeoutMs = 30000;
                 request.maxBytes = 40 * 1024 * 1024;
-                request.headers = {{"Referer", source->imageReferer().toUtf8()},
-                                   {"Accept", "image/avif,image/webp,image/*,*/*;q=0.8"}};
-                Response response;
-                for (int attempt = 0; attempt < 3; ++attempt) {
+                request.headers = {{"Referer", referer.toUtf8()},
+                                   {"Accept", Http::ImageAccept}};
+                for (int attempt = 0; attempt < 3 && !response.ok(); ++attempt) {
                     try {
                         response = Http::send(request);
                         if (response.ok())
@@ -214,8 +244,77 @@ void Downloads::runJob(const QVariantMap &row) {
                 QMetaObject::invokeMethod(this, [this] { notify(); });
             }
             writeJson(folder + QStringLiteral("/index.json"), QJsonDocument(QJsonObject{{"panels", index}}));
+        } else if (seriesId.startsWith(QLatin1String("anime:"))) {
+            const auto from = QJsonDocument::fromJson(row.value(QStringLiteral("extra")).toByteArray()).object();
+            if (from.value("source").toString().isEmpty())
+                throw Error(QStringLiteral("Only episodes from an anime source can be downloaded."));
+            const auto ask = [&] {
+                return Anime::videoForDownload(from.value("source").toString(), from.value("episodeUrl").toString(),
+                                               from.value("animeUrl").toString(), from.value("number").toDouble(-1));
+            };
+            // The video the player had (same server, address already
+            // resolved), else what the source gives now.
+            auto video = from.value("video").toObject().toVariantMap();
+            if (video.value(QStringLiteral("url")).toString().isEmpty())
+                video = ask();
+            const auto headersOf = [](const QVariantMap &v) {
+                Headers out;
+                const auto wanted = v.value(QStringLiteral("headers")).toMap();
+                for (auto it = wanted.begin(); it != wanted.end(); ++it)
+                    out.append({it.key().toUtf8(), it.value().toString().toUtf8()});
+                return out;
+            };
+            // Progress in thousandths: parts of a stream, or bytes of a file.
+            Database::exec(QStringLiteral("UPDATE downloads SET total = 1000, done = 0 WHERE id = ?"), {id});
+            const auto progress = [&](qint64 done, qint64 total) {
+                const qint64 permille = total > 0 ? std::min<qint64>(999, done * 1000 / total) : 0;
+                Database::exec(QStringLiteral("UPDATE downloads SET done = ? WHERE id = ?"), {permille, id});
+                QMetaObject::invokeMethod(this, [this] { notify(); });
+            };
+            auto headers = headersOf(video);
+            video::Saved saved;
+            try {
+                saved = video::save(QUrl(video.value(QStringLiteral("url")).toString()), headers, folder, progress);
+            } catch (const Error &e) {
+                // A player's address can expire (signed links); the source
+                // is asked once more.
+                if (e.status() == 499 || !from.contains("video"))
+                    throw;
+                video = ask();
+                headers = headersOf(video);
+                saved = video::save(QUrl(video.value(QStringLiteral("url")).toString()), headers, folder, progress);
+            }
+            // Subtitles and separate audio tracks beside it. One that cannot
+            // be fetched leaves the episode without it, not undownloaded.
+            QJsonObject index{{"file", saved.file}, {"hls", saved.hls}, {"skips", QJsonArray::fromVariantList(video.value("skips").toList())}};
+            int n = 0;
+            for (const auto *kind : {"subtitles", "audio"}) {
+                const bool subtitles = QLatin1String(kind) == QLatin1String("subtitles");
+                QJsonArray tracks;
+                for (const auto &value : video.value(QLatin1String(kind)).toList()) {
+                    const auto track = value.toMap();
+                    const QUrl url(track.value(QStringLiteral("url")).toString());
+                    if (url.scheme() != QLatin1String("https") && url.scheme() != QLatin1String("http"))
+                        continue;
+                    auto suffix = QFileInfo(url.path()).suffix().toLower();
+                    if (suffix.isEmpty() || suffix.size() > 5)
+                        suffix = subtitles ? QStringLiteral("vtt") : QStringLiteral("m4a");
+                    const auto name = QStringLiteral("%1-%2.%3").arg(subtitles ? QStringLiteral("sub") : QStringLiteral("audio")).arg(++n).arg(suffix);
+                    try {
+                        video::streamToFile(url, headers, folder + QLatin1Char('/') + name, [](qint64, qint64) {});
+                        tracks.append(QJsonObject{{"file", name}, {"lang", track.value(QStringLiteral("lang")).toString()}});
+                    } catch (const Error &e) {
+                        if (e.status() == 499)
+                            throw;
+                        qWarning().noquote() << "Track not downloaded:" << e.message();
+                    }
+                }
+                index.insert(QLatin1String(kind), tracks);
+            }
+            writeJson(folder + QStringLiteral("/video.json"), QJsonDocument(index));
+            Database::exec(QStringLiteral("UPDATE downloads SET done = 1000 WHERE id = ?"), {id});
         } else {
-            throw Error(QStringLiteral("Only comics and novels can be downloaded."));
+            throw Error(QStringLiteral("This can not be downloaded."));
         }
     } catch (const Error &e) {
         error = e.message();
@@ -227,10 +326,16 @@ void Downloads::runJob(const QVariantMap &row) {
                     error.isEmpty() ? QVariant() : QVariant(error), folder, id});
     const auto title = QStringLiteral("%1 · %2").arg(row.value(QStringLiteral("series_title")).toString(),
                                                       row.value(QStringLiteral("unit_title")).toString());
-    QMetaObject::invokeMethod(this, [this, id, title, ok = error.isEmpty()] {
+    QMetaObject::invokeMethod(this, [this, id, title, ok = error.isEmpty(), flag, folder] {
         m_running.remove(id);
+        m_flags.remove(id);
+        // Removed while it ran: what it had written goes too.
+        if (*flag) {
+            QDir(folder).removeRecursively();
+            Database::exec(QStringLiteral("DELETE FROM downloads WHERE id = ?"), {id});
+        }
         notify();
-        if (ok)
+        if (ok && !*flag)
             emit finished(title);
         pump();
     });
@@ -238,12 +343,19 @@ void Downloads::runJob(const QVariantMap &row) {
 
 Task *Downloads::items() {
     return Task::run([]() -> QVariant {
-        return Database::query(QStringLiteral(
+        auto rows = Database::query(QStringLiteral(
             "SELECT d.id, d.series_id AS seriesId, d.unit_key AS unitKey, d.unit_title AS unitTitle, d.unit_url AS unitUrl, "
             "d.status, d.done, d.total, d.error, d.created_at AS createdAt, s.title AS seriesTitle, s.cover, s.media, "
-            "s.source_url AS sourceUrl, s.source FROM downloads d LEFT JOIN series s ON s.id = d.series_id "
+            "s.source_url AS sourceUrl, s.source, s.extra FROM downloads d LEFT JOIN series s ON s.id = d.series_id "
             "ORDER BY CASE d.status WHEN 'running' THEN 0 WHEN 'queued' THEN 1 WHEN 'failed' THEN 2 ELSE 3 END, "
             "d.created_at DESC, d.id"));
+        // The series' extra (an AniList anime's id) as an object.
+        for (auto &value : rows) {
+            auto row = value.toMap();
+            row.insert(QStringLiteral("extra"), QJsonDocument::fromJson(row.value(QStringLiteral("extra")).toByteArray()).toVariant());
+            value = row;
+        }
+        return rows;
     });
 }
 
@@ -262,8 +374,14 @@ QVariantMap Downloads::states(const QString &seriesId) const {
 
 void Downloads::remove(int id) {
     const auto row = Database::one(QStringLiteral("SELECT series_id, unit_key FROM downloads WHERE id = ?"), {id});
-    if (row.isEmpty() || m_running.contains(id))
+    if (row.isEmpty())
         return;
+    // Running: it stops, then goes (see runJob).
+    if (m_running.contains(id)) {
+        if (const auto flag = m_flags.value(id))
+            *flag = true;
+        return;
+    }
     QDir(unitFolder(row.value(QStringLiteral("series_id")).toString(), row.value(QStringLiteral("unit_key")).toString()))
         .removeRecursively();
     Database::exec(QStringLiteral("DELETE FROM downloads WHERE id = ?"), {id});
@@ -348,6 +466,37 @@ QVariantList Downloads::localPanels(const QString &seriesId, const QString &unit
                                {"height", p.value("height").toInt()}});
     }
     return out;
+}
+
+QVariantMap Downloads::localVideo(const QString &seriesId, const QString &unitKey) const {
+    const auto folder = unitFolder(seriesId, unitKey);
+    QFile file(folder + QStringLiteral("/video.json"));
+    if (!file.open(QIODevice::ReadOnly))
+        return {};
+    const auto index = QJsonDocument::fromJson(file.readAll()).object();
+    const auto path = folder + QLatin1Char('/') + index.value("file").toString();
+    if (index.value("file").toString().isEmpty() || !QFileInfo::exists(path))
+        return {};
+    const auto tracks = [&](const char *kind) {
+        QVariantList out;
+        for (const auto &value : index.value(QLatin1String(kind)).toArray()) {
+            const auto t = value.toObject();
+            out.append(QVariantMap{{"url", QUrl::fromLocalFile(folder + QLatin1Char('/') + t.value("file").toString()).toString()},
+                                   {"lang", t.value("lang").toString()}});
+        }
+        return out;
+    };
+    QVariantMap video{{"url", QUrl::fromLocalFile(path).toString()},
+                      {"offline", true},
+                      {"subtitles", tracks("subtitles")},
+                      {"audio", tracks("audio")},
+                      {"skips", index.value("skips").toArray().toVariantList()}};
+    // mpv reads a local playlist as a list of files unless FFmpeg opens it
+    // (only the video: external subtitles keep their own demuxer); its keys
+    // and parts have names FFmpeg would otherwise refuse.
+    if (index.value("hls").toBool())
+        video.insert(QStringLiteral("mpvArgs"), QVariantMap{{"demuxer", "lavf"}, {"demuxer-lavf-o", "allowed_extensions=ALL"}});
+    return video;
 }
 
 QVariantMap Downloads::localNovelChapter(const QString &seriesId, const QString &unitKey) {

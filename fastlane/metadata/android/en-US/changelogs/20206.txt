@@ -1,0 +1,5 @@
+• Keiyoushi extensions work again
+• Cloudflare checks pass by themselves, as in Mihon
+• One tap at most when a site insists; the page goes on loading
+• Add a repository without installing; installs run in the background
+• Search installed extensions; the keyboard stays open while typing

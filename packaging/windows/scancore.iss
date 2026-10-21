@@ -46,6 +46,24 @@ Root: HKA; Subkey: "Software\Classes\Applications\scancore.exe\SupportedTypes"; 
 Root: HKA; Subkey: "Software\Classes\Applications\scancore.exe\SupportedTypes"; ValueType: string; ValueName: ".cbz"; ValueData: ""
 Root: HKA; Subkey: "Software\Classes\Applications\scancore.exe\SupportedTypes"; ValueType: string; ValueName: ".epub"; ValueData: ""
 
+; Links SCANCORE answers: its own and the one-tap "add repository" links
+; repository pages publish for Mihon, Tachiyomi, Aniyomi and LNReader.
+Root: HKA; Subkey: "Software\Classes\scancore"; ValueType: string; ValueName: ""; ValueData: "URL:scancore link"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\scancore"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\scancore\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\scancore.exe"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\tachiyomi"; ValueType: string; ValueName: ""; ValueData: "URL:tachiyomi link"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\tachiyomi"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\tachiyomi\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\scancore.exe"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\mihon"; ValueType: string; ValueName: ""; ValueData: "URL:mihon link"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\mihon"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\mihon\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\scancore.exe"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\aniyomi"; ValueType: string; ValueName: ""; ValueData: "URL:aniyomi link"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\aniyomi"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\aniyomi\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\scancore.exe"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\lnreader"; ValueType: string; ValueName: ""; ValueData: "URL:lnreader link"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\lnreader"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\lnreader\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\scancore.exe"" ""%1"""
+
 [Icons]
 Name: "{autoprograms}\SCANCORE"; Filename: "{app}\scancore.exe"
 Name: "{autodesktop}\SCANCORE"; Filename: "{app}\scancore.exe"; Tasks: desktopicon
