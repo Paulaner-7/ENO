@@ -29,11 +29,21 @@ public:
 
     // Each returns {imported, unmatched, progress} (progress: chapters and
     // episodes marked read).
+    // What a Mihon, Tachiyomi or Aniyomi backup holds and needs: {comics,
+    // anime, lists: [names], repositories: [{url, name, added, count,
+    // error}], extensions: [{kind, pkg, name, series}] not installed that its
+    // series came from, unknownSources (series no repository here offers)}.
+    Q_INVOKABLE sc::Task *previewMihon(const QUrl &file);
     // A Mihon, Tachiyomi or Aniyomi backup (.tachibk, .proto.gz). Series
     // from an extension installed here are restored onto it exactly (its
-    // own links, chapters and episodes read or watched, bookmarks, the one
-    // part-way, category); anime without theirs are found on AniList.
-    Q_INVOKABLE sc::Task *importMihon(const QUrl &file);
+    // own links, chapters and episodes read or watched with when, bookmarks,
+    // the ones part-way, date added, list, chapter list and reader
+    // settings, trackers); anime without theirs are found on AniList. The
+    // backup's lists are made in its order. `prepare` first adds
+    // repositories ([urls]) and installs extensions ([{kind, pkg}]), as
+    // previewMihon offers them. Also returns {lists, inSeveral,
+    // repositoriesAdded, extensionsInstalled}.
+    Q_INVOKABLE sc::Task *importMihon(const QUrl &file, const QVariantMap &prepare = {});
     // An LNReader backup (.zip): novels onto the same LNReader plugin.
     Q_INVOKABLE sc::Task *importLNReader(const QUrl &file);
     Q_INVOKABLE sc::Task *importAniList(const QString &user);

@@ -102,6 +102,7 @@ Get the latest version from the **[releases page](https://github.com/medium-gh/s
 | | `SCANCORE-<version>-windows-x64-portable.zip` | No install; unzip and run `scancore.exe`. |
 | **macOS** 13+ (Apple Silicon and Intel) | `SCANCORE-<version>-macos-universal.dmg` | Drag to Applications. Updates itself. |
 | **Android** 9+ (arm64) | `SCANCORE-<version>-android-arm64.apk` | Sideload; updates open the system installer. |
+| **Android** 9+ (32-bit ARM) | `SCANCORE-<version>-android-armv7.apk` | For older phones that cannot install the arm64 APK. |
 
 Community package definitions for [AUR, WinGet, Scoop and Homebrew](docs/package-managers.md) are maintained separately from GitHub release uploads.
 

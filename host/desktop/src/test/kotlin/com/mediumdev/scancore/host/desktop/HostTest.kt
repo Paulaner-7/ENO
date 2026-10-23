@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpServer
 import eu.kanade.tachiyomi.network.HostNetwork
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
@@ -107,8 +109,7 @@ class HostTest {
                     when (v) {
                         is String -> put(k, v)
                         is Int -> put(k, v)
-                        is JsonArray -> put(k, v)
-                        is JsonObject -> put(k, v)
+                        is JsonElement -> put(k, v)
                     }
                 }
             },
@@ -188,17 +189,38 @@ class HostTest {
         assertEquals(File(fixtures, "image.png").readBytes().toList(), target.readBytes().toList())
     }
 
+    private fun setting(key: String) = call("preferences").jsonArray.map { it.jsonObject }.single { it["key"]!!.jsonPrimitive.content == key }
+
     @Test
     fun settings() {
-        val prefs = call("preferences").jsonArray
-        val quality = prefs.single().jsonObject
+        val quality = setting("quality")
         assertEquals("list", quality["type"]!!.jsonPrimitive.content)
         assertEquals("high", quality["value"]!!.jsonPrimitive.content)
         call("setPreference", mapOf("key" to "quality", "value" to JsonPrimitive("low").content))
-        assertEquals("low", call("preferences").jsonArray.single().jsonObject["value"]!!.jsonPrimitive.content)
+        assertEquals("low", setting("quality")["value"]!!.jsonPrimitive.content)
         call("popular", mapOf("page" to 1))
         assertTrue(requests.last { it.startsWith("/popular") }.contains("quality=low"))
         call("setPreference", mapOf("key" to "quality", "value" to "high"))
+    }
+
+    // #21: a multiselect with nothing stored yet, ticked, then cleared, and
+    // a null (nothing chosen) taken as an empty set.
+    @Test
+    fun multiselectSettings() {
+        val blocked = setting("blocked")
+        assertEquals("multiselect", blocked["type"]!!.jsonPrimitive.content)
+        call("setPreference", mapOf("key" to "blocked", "value" to buildJsonArray { add(JsonPrimitive("drama")) }))
+        assertEquals(listOf("drama"), setting("blocked")["value"]!!.jsonArray.map { it.jsonPrimitive.content })
+        call("setPreference", mapOf("key" to "blocked", "value" to JsonNull))
+        assertEquals(emptyList<String>(), setting("blocked")["value"]!!.jsonArray.map { it.jsonPrimitive.content })
+    }
+
+    // #20: extensions that make a Handler on the main looper (Komga, Comix,
+    // keiyoushi's WebView helper) and post work to it.
+    @Test
+    fun mainThreadRunsPostedWork() {
+        val latest = call("latest", mapOf("page" to 1)).jsonObject
+        assertTrue(latest["items"]!!.jsonArray.isNotEmpty())
     }
 
     @Test

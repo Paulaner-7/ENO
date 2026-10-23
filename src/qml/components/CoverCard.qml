@@ -25,12 +25,15 @@ AbstractButton {
     property int order: 0
     property bool animateIn: true
     property real coverRatio: 1.5
+    // The title over the cover's foot instead of under it (the library's
+    // compact grid).
+    property bool titleInside: false
     readonly property alias coverItem: cover
 
     signal opened(var item, Item coverItem)
 
     implicitWidth: 160
-    implicitHeight: width * coverRatio + textColumn.implicitHeight + 10
+    implicitHeight: width * coverRatio + (titleInside ? 0 : textColumn.implicitHeight + 10)
     hoverEnabled: true
     focusPolicy: Qt.TabFocus
     z: hovered || pressed ? 10 : 0
@@ -81,7 +84,8 @@ AbstractButton {
                 anchors.fill: parent
                 source: card.coverUrl
                 referer: card.referer
-                title: card.title
+                // Its stand-in shows the title, unless the card already does.
+                title: card.titleInside ? "" : card.title
                 radius: Theme.radiusMd
                 // A saved series whose site moved its pictures.
                 onFailedChanged: if (failed && card.item.id && card.item.progressAt !== undefined) Library.refreshCover(card.item.id)
@@ -163,6 +167,40 @@ AbstractButton {
                 }
             }
 
+            // Compact grid: the title on a shade over the cover's foot.
+            Rectangle {
+                visible: card.titleInside
+                anchors.left: cover.left
+                anchors.right: cover.right
+                anchors.bottom: cover.bottom
+                height: Math.min(cover.height, insideTitle.implicitHeight + (card.progress >= 0 ? 30 : 22))
+                radius: Theme.radiusMd
+                gradient: Gradient {
+                    GradientStop { position: 0; color: "transparent" }
+                    GradientStop { position: 0.45; color: Qt.rgba(0, 0, 0, 0.55) }
+                    GradientStop { position: 1; color: Qt.rgba(0, 0, 0, 0.82) }
+                }
+                Text {
+                    id: insideTitle
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 8
+                    anchors.bottomMargin: card.progress >= 0 ? 16 : 8
+                    text: card.title
+                    color: "white"
+                    font.family: Theme.fontSans
+                    font.pixelSize: Theme.textSm
+                    font.weight: Font.DemiBold
+                    wrapMode: Text.Wrap
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    lineHeight: 1.05
+                    style: Text.Raised
+                    styleColor: Qt.rgba(0, 0, 0, 0.35)
+                }
+            }
+
             Rectangle {
                 visible: card.progress >= 0
                 anchors.left: parent.left
@@ -183,6 +221,7 @@ AbstractButton {
 
         Column {
             id: textColumn
+            visible: !card.titleInside
             y: coverWrap.height + 10 + (card.hovered ? 3 : 0)
             Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
             width: parent.width

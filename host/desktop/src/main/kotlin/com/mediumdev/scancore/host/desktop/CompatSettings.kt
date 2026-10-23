@@ -18,7 +18,6 @@ import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 
@@ -87,7 +86,8 @@ class CompatSettings(
         val newValue: Any? =
             when (p) {
                 is TwoStatePreference -> value.jsonPrimitive.boolean
-                is MultiSelectListPreference -> value.jsonArray.map { it.jsonPrimitive.content }.toSet()
+                // Nothing chosen may come as null (#21).
+                is MultiSelectListPreference -> (value as? JsonArray).orEmpty().map { it.jsonPrimitive.content }.toSet()
                 else -> value.jsonPrimitive.contentOrNull
             }
         if (p.callChangeListener(newValue)) p.saveNewValue(newValue)

@@ -70,6 +70,31 @@ SettingsPane {
         }
     }
 
+    SettingsGroup {
+        title: qsTr("Quality and audio")
+        note: qsTr("What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.")
+        SettingRow {
+            iconName: "settings"
+            title: qsTr("Preferred quality")
+            description: qsTr("The highest resolution at or under this one; lower ones save data.")
+            Select {
+                model: VideoPrefs.heights
+                value: Number(App.settings.animeQuality) || 0
+                onPicked: (v) => App.setSetting("animeQuality", v)
+            }
+        }
+        SettingRow {
+            iconName: "languages"
+            title: qsTr("Preferred audio")
+            description: qsTr("A dub when the source has one, or the original language with subtitles.")
+            Select {
+                model: VideoPrefs.languages
+                value: App.settings.animeAudio || ""
+                onPicked: (v) => App.setSetting("animeAudio", v)
+            }
+        }
+    }
+
     // SCANCORE's own player (anime from extensions); web players draw their own.
     SettingsGroup {
         visible: Anime.nativePlayerAvailable

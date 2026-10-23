@@ -1,0 +1,127 @@
+{
+ "content": [
+  {
+   "series_id": "019c340e-2d44-72ea-9ed9-8037f057079a",
+   "title": "The Hunter's Gonna Lay Low",
+   "alternate_titles": [
+    "Heonjosal",
+    "Hunter-neun Joyonghi Salgo Sipda"
+   ],
+   "cover_image_id": "019c340e-2d39-7b8f-8264-95c3923e0994",
+   "age_rating": "Safe",
+   "is_pornographic": false,
+   "format": "Manhwa",
+   "latest_chapters": [
+    {
+     "book_id": "01a167b4-8581-765e-b0e7-fb3d5aaafe0d",
+     "title": "Episode 55",
+     "chapter_no": "56",
+     "volume_no": null,
+     "created_at": "2026-10-23T07:40:46.333622+00:00",
+     "available_at": "2026-10-23T07:40:46.333622+00:00"
+    }
+   ],
+   "genre_list": [
+    {
+     "id": "019beb9a-a36a-718c-b551-d917a0818cc7",
+     "name": "Romance"
+    },
+    {
+     "id": "019c1b6f-3d3b-7528-a3e2-a791cfdcc4f7",
+     "name": "Drama"
+    },
+    {
+     "id": "019c1b6f-51ed-7991-a796-a8ca26e86666",
+     "name": "Fantasy"
+    },
+    {
+     "id": "019c1b6f-9c7b-77a0-8b54-e62925422b91",
+     "name": "Supernatural"
+    },
+    {
+     "id": "019c1b6f-b682-7fee-9a9b-86e648b77e9e",
+     "name": "Adventure"
+    },
+    {
+     "id": "019c1ee5-38f9-7324-9f7d-07a01dbf88a6",
+     "name": "Yaoi"
+    },
+    {
+     "id": "019c1ee5-4be9-766d-b545-5b87d7cdff96",
+     "name": "Shounen Ai"
+    },
+    {
+     "id": "019c1fe4-fabf-7242-a0a8-7866f98f705e",
+     "name": "Action"
+    },
+    {
+     "id": "019c1fe5-51fe-7f26-aee3-f057ac50f81d",
+     "name": "Comedy"
+    },
+    {
+     "id": "019c1fe5-b704-72a6-a676-a8ad87ebcdd8",
+     "name": "Sci-Fi"
+    },
+    {
+     "id": "019c1fe6-211d-7e73-927d-3c54b66a9055",
+     "name": "Tragedy"
+    }
+   ]
+  },
+  {
+   "series_id": "01a0d011-3947-7686-b7cb-42273cd5c132",
+   "title": "The Cat and the Dragon",
+   "alternate_titles": [
+    "CatDragon",
+    "Cats and Dragon"
+   ],
+   "cover_image_id": "01a0d06a-9f21-7a7f-9e0a-49f44c22b7b1",
+   "age_rating": "Safe",
+   "is_pornographic": false,
+   "format": "Manga",
+   "latest_chapters": [
+    {
+     "book_id": "01a167aa-65b0-7f25-9a16-e72ba92c42eb",
+     "title": "The Cat and the Royal Capital Festival (Lemon MTL)",
+     "chapter_no": "10",
+     "volume_no": "2",
+     "created_at": "2026-10-23T07:29:42.830823+00:00",
+     "available_at": "2026-10-23T07:29:42.830823+00:00"
+    }
+   ],
+   "genre_list": [
+    {
+     "id": "019c1b6f-51ed-7991-a796-a8ca26e86666",
+     "name": "Fantasy"
+    },
+    {
+     "id": "019c1b6f-b682-7fee-9a9b-86e648b77e9e",
+     "name": "Adventure"
+    },
+    {
+     "id": "019c1fe8-2221-7d69-9cd2-b67d64924994",
+     "name": "Magic"
+    },
+    {
+     "id": "019c1fe8-3261-7c3d-9103-428f9a54eb41",
+     "name": "Monsters"
+    },
+    {
+     "id": "019c1fea-983f-7279-944e-8fb6e2cccdbc",
+     "name": "Seinen"
+    }
+   ]
+  }
+ ],
+ "total_elements": 1000,
+ "total_pages": 334,
+ "size": 3,
+ "page": 0,
+ "number_of_elements": 3,
+ "first": true,
+ "last": false,
+ "total": {
+  "value": 84823,
+  "relation": "Eq"
+ }
+}

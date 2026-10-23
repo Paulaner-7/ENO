@@ -47,6 +47,10 @@ public:
     QVariantMap startAction() const;
 
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
+    // A value QML handed to a QVariant parameter, as plain data: JS arrays
+    // and objects arrive as QJSValue, which JSON (the database, sync) turns
+    // into null.
+    static QVariant plain(const QVariant &value);
     Q_INVOKABLE QString image(const QString &url, const QString &referer = QString()) const;
     Q_INVOKABLE QString icon(const QString &name, const QString &color) const;
     Q_INVOKABLE void openUrl(const QString &url) const;
@@ -75,6 +79,8 @@ public:
     Q_INVOKABLE void prepareWebPlayer() const;
     Q_INVOKABLE void setOrientation(const QString &mode) const;
     Q_INVOKABLE void setBarIcons(bool darkScreen) const;
+    // Keeps the screen on while `holder` wants it (a playing video).
+    Q_INVOKABLE void keepAwake(const QString &holder, bool on) const;
     // Android: volume keys come as volumeKey() instead of changing the
     // volume while on (the comic reader turns pages with them).
     Q_INVOKABLE void setVolumeKeys(bool on) const;
@@ -102,6 +108,9 @@ public:
     Q_INVOKABLE QString reportIssueUrl(const QString &text) const;
     Q_INVOKABLE void notify(const QString &title, const QString &body);
     Q_INVOKABLE QString relativeTime(const QVariant &when) const;
+    // The part each chapter title names ("volume", "chapter", "extra"; see
+    // chapterPart in core/Text.h), for the Volumes / Chapters / Extras tabs.
+    Q_INVOKABLE QStringList chapterParts(const QStringList &titles) const;
     Q_INVOKABLE QString formatBytes(qint64 bytes) const;
     // Makes a binding depend on values it does not use, as in
     // `{ App.dependOn(Library.revision); return Library.isSaved(id) }`. The

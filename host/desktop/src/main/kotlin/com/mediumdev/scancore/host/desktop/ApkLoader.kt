@@ -31,7 +31,7 @@ class ApkLoader(
 
     companion object {
         // Raised whenever conversion changes (BytecodeEditor included).
-        const val CONVERTER = 3
+        const val CONVERTER = 4
     }
 
     override fun load(

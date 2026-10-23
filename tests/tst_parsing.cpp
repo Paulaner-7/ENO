@@ -433,6 +433,123 @@ private slots:
         QCOMPARE(chapters[2].released, QStringLiteral("2026-06-01T00:00:00Z"));
     }
 
+    // Volumes, chapters and extras from their titles, in the ways Chinese,
+    // Japanese, Korean and English sources write them.
+    void chapterParts() {
+        for (const auto &value : QJsonDocument::fromJson(fixture("chapter-parts.json")).array()) {
+            const auto pair = value.toArray();
+            QCOMPARE(chapterPart(pair.at(0).toString()), pair.at(1).toString());
+        }
+    }
+
+    static comics::SourceConfig kaganeConfig(const QString &base) {
+        comics::SourceConfig config;
+        config.key = QStringLiteral("kagane-es");
+        config.label = QStringLiteral("Kagane");
+        config.engine = QStringLiteral("kagane");
+        config.base = base;
+        config.api = base + QStringLiteral("/api/v2");
+        config.hosts = {QUrl(base).host()};
+        config.language = QStringLiteral("es");
+        config.urlTag = QStringLiteral("es");
+        config.options = QJsonObject{{"languages", QJsonArray{"es", "es-419"}}};
+        return config;
+    }
+
+    void kagane() {
+        const comics::KaganeSource source(kaganeConfig(QStringLiteral("https://kagane.si")));
+        const auto results = source.parseSearch(QJsonDocument::fromJson(fixture("kagane-search.json")).object());
+        QCOMPARE(results.size(), 2);
+        QCOMPARE(results[0].title, QStringLiteral("One Piece"));
+        QCOMPARE(results[0].url, QStringLiteral("https://kagane.si/series/019c3a10-837e-7d7c-bf6c-006df658a021#es"));
+        // The site's own cover size, not the original.
+        QCOMPARE(results[0].cover, QStringLiteral("https://kagane.si/api/v2/image/019e2c21-50db-789e-95a9-c20199434cf3/compressed"));
+        QCOMPARE(results[0].type, QStringLiteral("Manga"));
+        QVERIFY(results[0].names.contains(QString::fromUtf8("ワンピース")));
+
+        const auto latest = source.parseLatest(QJsonDocument::fromJson(fixture("kagane-latest.json")).object());
+        QCOMPARE(latest.size(), 2);
+        QVERIFY(latest[0].chapterUrl.startsWith(QStringLiteral("https://kagane.si/series/019c340e-2d44-72ea-9ed9-8037f057079a/reader/")));
+        QCOMPARE(latest[0].chapterNumber, QStringLiteral("56"));
+
+        // Rows by the index's own column order; chapters without pages left
+        // out, the site's {notes} dropped, a missing number from sort_no.
+        const auto id = QStringLiteral("019c3a10-837e-7d7c-bf6c-006df658a021");
+        const auto chapters = source.parseChapters(QJsonDocument::fromJson(fixture("kagane-index.json")).object(), id);
+        QCOMPARE(chapters.size(), 4);
+        QCOMPARE(chapters[0].number, QStringLiteral("1"));
+        QCOMPARE(chapters[0].title, QStringLiteral("Chapter 1 - Volume 1 (1r0n)"));
+        QCOMPARE(chapters[0].url, QStringLiteral("https://kagane.si/series/%1/reader/019e2d3b-e841-705c-a47c-c8e4659731d2#es").arg(id));
+        QCOMPARE(chapters[0].scanlator, QStringLiteral("The Hours Between"));
+        QCOMPARE(chapters[0].released, QStringLiteral("2026-05-15T20:02:41Z"));
+        QCOMPARE(chapters[1].number, QStringLiteral("1.5"));
+        QCOMPARE(chapters[1].title, QString::fromUtf8("Capítulo 1.5"));
+        QCOMPARE(chapters[3].number, QStringLiteral("1176"));
+
+        const auto details = source.parseDetails(QJsonDocument::fromJson(fixture("kagane-series.json")).object());
+        QCOMPARE(details.title, QStringLiteral("One Piece"));
+        QCOMPARE(details.cover, QStringLiteral("https://kagane.si/api/v2/image/019e2c21-50db-789e-95a9-c20199434cf3/compressed"));
+        QCOMPARE(details.status, QStringLiteral("Ongoing"));
+        QCOMPARE(details.description, QStringLiteral("Original Webtoon: KakaoPage and more."));
+        QCOMPARE(details.author, QStringLiteral("Eiichiro Oda"));
+        QCOMPARE(details.trackerIds.value("anilist").toInt(), 30013);
+        QCOMPARE(details.trackerIds.value("mal").toInt(), 13);
+        QVERIFY(details.genres.contains(QStringLiteral("Drama")));
+
+        // Pages in page order, on the image host, with their token.
+        const auto book = QStringLiteral("019e2d3b-f83f-7f88-97b6-4fe2caf9ab2e");
+        const auto panels = comics::KaganeSource::parsePanels(QJsonDocument::fromJson(fixture("kagane-book.json")).object(), book);
+        QCOMPARE(panels.size(), 3);
+        QVERIFY(panels[0].url.startsWith(QStringLiteral("https://kstatic.to/api/v2/books/page/%1/d1ad59eb-6c09-585e-8151-4dc61172adb6.jxl?token=").arg(book)));
+        QVERIFY(panels[0].url.endsWith(QStringLiteral("token=test.token%2B%2F%3D")));
+        QCOMPARE(panels[0].width, 1500);
+        QCOMPARE(panels[0].height, 2250);
+    }
+
+    void kaganeRequests() {
+        // A stand-in site: the integrity token is fetched once, a refused
+        // page request gets a fresh one, and search sends the filters.
+        int integrity = 0, books = 0;
+        QByteArray searchBody;
+        Http::setTestHandler([&](const Request &request) -> std::optional<Response> {
+            const auto path = request.url.path();
+            Response response;
+            response.status = 200;
+            response.contentType = "application/json";
+            response.finalUrl = request.url;
+            if (path == QLatin1String("/api/integrity")) {
+                ++integrity;
+                response.body = QStringLiteral(R"({"token":"t%1","exp":%2})").arg(integrity).arg(QDateTime::currentSecsSinceEpoch() + 300).toUtf8();
+            } else if (path.startsWith(QLatin1String("/api/v2/books/"))) {
+                ++books;
+                const auto token = std::find_if(request.headers.begin(), request.headers.end(), [](const auto &h) { return h.first == "x-integrity-token"; });
+                if (books == 2 && token != request.headers.end() && token->second == "t1")
+                    response.status = 401; // as when the token expired early
+                else
+                    response.body = fixture("kagane-book.json");
+            } else if (path == QLatin1String("/api/v2/search/series")) {
+                searchBody = request.body;
+                response.body = fixture("kagane-search.json");
+            } else {
+                response.status = 404;
+            }
+            return response;
+        });
+        comics::KaganeSource source(kaganeConfig(QStringLiteral("https://kagane.test")));
+        const auto chapter = QStringLiteral("https://kagane.test/series/019c3a10-837e-7d7c-bf6c-006df658a021/reader/019e2d3b-f83f-7f88-97b6-4fe2caf9ab2e#es");
+        QCOMPARE(source.panels(chapter).size(), 3);
+        QCOMPARE(source.panels(chapter).size(), 3);
+        QCOMPARE(integrity, 2);
+        QCOMPARE(books, 3);
+        QCOMPARE(source.search(QStringLiteral("one piece")).size(), 2);
+        const auto body = QJsonDocument::fromJson(searchBody).object();
+        QCOMPARE(body.value("title").toString(), QStringLiteral("one piece"));
+        QCOMPARE(body.value("content_lang").toArray(), (QJsonArray{"es", "es-419"}));
+        QCOMPARE(body.value("is_pornographic").toBool(true), false);
+        QVERIFY_THROWS_EXCEPTION(Error, source.panels(QStringLiteral("https://kagane.test/series/nope/reader/x")));
+        Http::setTestHandler({});
+    }
+
     void olympus() {
         const auto panels = comics::OlympusSource::parsePanels(fixture("olympus-reader.html"));
         QCOMPARE(panels.size(), 2);

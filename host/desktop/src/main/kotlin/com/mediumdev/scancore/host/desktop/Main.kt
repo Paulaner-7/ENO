@@ -7,6 +7,7 @@ package com.mediumdev.scancore.host.desktop
 
 import android.app.Application
 import android.content.Context
+import android.os.Looper
 import com.mediumdev.scancore.host.ExtensionHost
 import com.mediumdev.scancore.host.MemoStore
 import com.mediumdev.scancore.host.RpcServer
@@ -25,9 +26,10 @@ import xyz.nulldev.androidcompat.AndroidCompatInitializer
 import java.io.File
 import java.io.OutputStreamWriter
 import java.io.PrintStream
+import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
 
-const val HOST_VERSION = "1"
+const val HOST_VERSION = "3"
 
 fun main(args: Array<String>) {
     val options = args.toList().zipWithNext().filter { it.first.startsWith("--") }.associate { it.first.removePrefix("--") to it.second }
@@ -62,6 +64,7 @@ fun setUp(
     // Offline tests: fixture sites on *.test are served from this machine.
     if (System.getenv("SCANCORE_HOST_TEST_LOOPBACK") == "1") HostNetwork.dns = HostNetwork.loopbackForTestDomains
     AppInfo.set(versionCode = 1, versionName = appVersion ?: "SCANCORE")
+    startMainThread()
 
     AndroidCompatInitializer().init(HostNetwork.userAgent)
     val app = Application()
@@ -83,4 +86,22 @@ fun setUp(
     val host = ExtensionHost(ApkLoader(File(root, "jars")), memos, HOST_VERSION, CompatSettings(app))
     Runtime.getRuntime().addShutdownHook(Thread { memos.save() })
     return host to memos
+}
+
+// Android's main thread: extensions make Handlers on Looper.getMainLooper()
+// (Komga at construction) and post toasts or web-view work to it (#20).
+// Calls still run on the RPC workers, so myLooper() stays null there, as on
+// a background thread on Android.
+private fun startMainThread() {
+    if (Looper.getMainLooper() != null) return
+    val ready = CountDownLatch(1)
+    Thread({
+        Looper.prepareMainLooper()
+        ready.countDown()
+        Looper.loop()
+    }, "main").apply {
+        isDaemon = true
+        start()
+    }
+    ready.await()
 }

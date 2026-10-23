@@ -1,0 +1,5 @@
+• Mihon backups bring back everything: lists in order, history, pages, settings
+• Kagane as a built-in source, in 15 languages
+• Chapters as a grid, two-line titles, Volumes / Chapters / Extras tabs
+• Hold a page to zoom in the comic reader
+• Fixes: extension errors on computers (#20, #21), settings lost on restart

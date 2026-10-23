@@ -128,6 +128,16 @@ void Extensions::startHost() {
     ext::setHost(ext::Kind::Mihon, host);
     ext::setHost(ext::Kind::Aniyomi, host);
     ext::ExtensionSource::installImageWriter();
+    // A runtime from an older SCANCORE runs an older host (issue #14: lib
+    // values it could not read, no anime): the user chose to have one, so
+    // its replacement downloads by itself.
+    if (ext::Runtime::outdated()) {
+        auto *update = installRuntime();
+        connect(update, &Task::changed, update, [update] {
+            if (!update->loading())
+                qInfo() << "Extensions runtime update:" << (update->ok() ? QStringLiteral("installed") : update->error());
+        });
+    }
 #endif
     // Development hook: SCANCORE_START {"extensions": {"repo": url,
     // "install": [package or "lnreader:<id>", …]}} adds a repository and
@@ -170,10 +180,12 @@ Task *Extensions::installRuntime() {
     m_status = QStringLiteral("Starting…");
     emit changed();
     auto *task = Task::run([this]() -> QVariant {
-        // The running host holds the old runtime's files.
-        if (auto host = processHost())
-            host->stop();
-        ext::Runtime::install([this](const QString &status) { setStatus(status); });
+        // The running host holds the old runtime's files: it keeps working
+        // while the new one downloads and stops just before the swap.
+        ext::Runtime::install([this](const QString &status) { setStatus(status); }, [] {
+            if (auto host = processHost())
+                host->stop();
+        });
         if (auto host = processHost())
             host->setLaunch(hostLaunch());
         return true;
@@ -731,7 +743,9 @@ Task *Extensions::sourceSettings(const QString &key) {
     });
 }
 
-Task *Extensions::setSourceSetting(const QString &key, const QString &setting, const QVariant &value) {
+Task *Extensions::setSourceSetting(const QString &key, const QString &setting, const QVariant &input) {
+    // A multiselect's choices are a JS array (#21).
+    const auto value = App::plain(input);
     return Task::run([key, setting, value]() -> QVariant {
         if (auto novel = novels::Registry::byKey(key)) {
             novel->setPreference(setting, QJsonValue::fromVariant(value));

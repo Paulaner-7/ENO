@@ -35,6 +35,13 @@ public:
     // reading (watching, for anime), planned, paused (on hold), completed,
     // dropped.
     Q_INVOKABLE void setCategory(const QString &seriesId, const QString &category);
+    // The user's own lists, after the built-in ones (issue #9): [{id, name}]
+    // in their order. Removing one moves its series to reading.
+    Q_INVOKABLE QVariantList customCategories() const { return storedCategories(); }
+    Q_INVOKABLE QString addCategory(const QString &name);
+    Q_INVOKABLE void renameCategory(const QString &id, const QString &name);
+    Q_INVOKABLE void removeCategory(const QString &id);
+    Q_INVOKABLE void moveCategory(const QString &id, int by);
     Q_INVOKABLE bool isFavourite(const QString &seriesId) const;
     Q_INVOKABLE void setFavourite(const QString &seriesId, bool favourite);
     Q_INVOKABLE void markSeen(const QString &seriesId);
@@ -86,6 +93,14 @@ public:
 
     // Used by services.
     static void upsertSeries(const QVariantMap &series);
+    // Custom lists as stored, with when they last changed (sync keeps the
+    // newest); any thread.
+    static QVariantList storedCategories();
+    static qint64 categoriesChangedAt();
+    static void storeCategories(const QVariantList &categories, qint64 changedAt);
+    // The custom list with this name (case aside), made when there is none
+    // (imports from other apps); any thread.
+    static QString categoryNamed(const QString &name);
     static void storeUnits(const QString &seriesId, const QVariantList &units);
     static QVariantList cachedUnits(const QString &seriesId);
     void notifyChanged();

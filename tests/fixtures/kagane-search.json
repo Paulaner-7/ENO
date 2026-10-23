@@ -1,0 +1,126 @@
+{
+ "content": [
+  {
+   "series_id": "019c3a10-837e-7d7c-bf6c-006df658a021",
+   "title": "One Piece",
+   "alternate_titles": [
+    "원피스",
+    "וואן פיס",
+    "One Piece - Большой куш",
+    "ワンピース"
+   ],
+   "cover_image_id": "019e2c21-50db-789e-95a9-c20199434cf3",
+   "age_rating": "FifteenPlus",
+   "is_pornographic": false,
+   "format": "Manga",
+   "latest_chapters": [
+    {
+     "book_id": "019e2d3b-c173-767f-bc9b-503b2cb41cb5",
+     "title": "Chapter 1176 [1r0n]",
+     "chapter_no": "1176",
+     "volume_no": null,
+     "created_at": "2026-05-15T20:02:31.410723+00:00",
+     "available_at": "2026-05-15T20:02:31.410723+00:00"
+    }
+   ],
+   "genre_list": [
+    {
+     "id": "019c1b6f-3d3b-7528-a3e2-a791cfdcc4f7",
+     "name": "Drama"
+    },
+    {
+     "id": "019c1b6f-51ed-7991-a796-a8ca26e86666",
+     "name": "Fantasy"
+    },
+    {
+     "id": "019c1b6f-b682-7fee-9a9b-86e648b77e9e",
+     "name": "Adventure"
+    },
+    {
+     "id": "019c1fe4-fabf-7242-a0a8-7866f98f705e",
+     "name": "Action"
+    },
+    {
+     "id": "019c1fe5-51fe-7f26-aee3-f057ac50f81d",
+     "name": "Comedy"
+    },
+    {
+     "id": "019c1fe6-211d-7e73-927d-3c54b66a9055",
+     "name": "Tragedy"
+    },
+    {
+     "id": "019c1fea-85c7-76a7-996a-b41ce0cb05f8",
+     "name": "Shounen"
+    },
+    {
+     "id": "019c200f-1825-738c-b7c1-67266b9520b1",
+     "name": "Music"
+    }
+   ]
+  },
+  {
+   "series_id": "019cd87a-0a8d-7ef6-b72b-5a250a72bd79",
+   "title": "ONE PIECE",
+   "alternate_titles": [
+    "ONE PIECE",
+    "ワンピース",
+    "원피스"
+   ],
+   "cover_image_id": "01a022e5-c2a5-709c-afa8-b11189d383c1",
+   "age_rating": "FifteenPlus",
+   "is_pornographic": false,
+   "format": "Manga",
+   "latest_chapters": [
+    {
+     "book_id": "01a1438e-fbc1-7c28-9646-c311a171a1e6",
+     "title": "",
+     "chapter_no": "1196",
+     "volume_no": null,
+     "created_at": "2026-10-16T07:13:26.463722+00:00",
+     "available_at": "2026-10-16T07:13:26.463722+00:00"
+    }
+   ],
+   "genre_list": [
+    {
+     "id": "019c1b6f-3d3b-7528-a3e2-a791cfdcc4f7",
+     "name": "Drama"
+    },
+    {
+     "id": "019c1b6f-51ed-7991-a796-a8ca26e86666",
+     "name": "Fantasy"
+    },
+    {
+     "id": "019c1b6f-b682-7fee-9a9b-86e648b77e9e",
+     "name": "Adventure"
+    },
+    {
+     "id": "019c1fe4-fabf-7242-a0a8-7866f98f705e",
+     "name": "Action"
+    },
+    {
+     "id": "019c1fe5-51fe-7f26-aee3-f057ac50f81d",
+     "name": "Comedy"
+    },
+    {
+     "id": "019c1fea-85c7-76a7-996a-b41ce0cb05f8",
+     "name": "Shounen"
+    }
+   ]
+  },
+  {
+   "series_id": "not-an-id",
+   "title": "Broken"
+  }
+ ],
+ "total_elements": 70,
+ "total_pages": 24,
+ "size": 3,
+ "page": 0,
+ "number_of_elements": 3,
+ "first": true,
+ "last": false,
+ "total": {
+  "value": 70,
+  "relation": "Eq"
+ }
+}

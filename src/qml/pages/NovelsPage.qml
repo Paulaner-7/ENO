@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
+import QtQuick.Dialogs
 import ScanCore
 
 // Novel discovery (the chosen catalogue's and Royal Road's shelves) and
@@ -119,6 +120,13 @@ Item {
                     tip: qsTr("Edit page")
                     active: page.editing
                     onClicked: page.editing = !page.editing
+                }
+                // A book of your own (issue #16): an EPUB opens in the
+                // novel reader, a PDF as pages.
+                IconButton {
+                    iconName: "folder-open"
+                    tip: qsTr("Open a book file (EPUB or PDF)")
+                    onClicked: bookFile.open()
                 }
                 // Plugins, beside comics' extensions.
                 ScButton {
@@ -337,5 +345,12 @@ Item {
         editing: page.editing
         arrangers: [topLayout, idleLayout]
         onDone: page.editing = false
+    }
+
+    FileDialog {
+        id: bookFile
+        fileMode: FileDialog.OpenFile
+        nameFilters: [qsTr("Books (*.epub *.pdf)"), qsTr("All files (*)")]
+        onAccepted: Router.openFile(selectedFile)
     }
 }

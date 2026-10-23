@@ -100,4 +100,22 @@ QStringList builtinLanguages() {
 
 QString titleKey(const QString &text) { return normalizedTitle(text).remove(QLatin1Char(' ')); }
 
+QString chapterPart(const QString &title) {
+    static const QRegularExpression cjkExtra(QString::fromUtf8("番外|特别篇|特別篇|特別編|特别编|外传|外傳|おまけ"));
+    static const QRegularExpression latinExtra(QStringLiteral(R"(\b(extras?|specials?|omake|bonus)\b|\bside[ -]?stor)"),
+                                               QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression cjkVolume(QString::fromUtf8("[卷巻册冊권]"));
+    static const QRegularExpression cjkChapter(QString::fromUtf8("[话話章回화]"));
+    static const QRegularExpression latinVolume(QStringLiteral(R"(\b(vol(ume)?|tome|tomo|band)\.?\s*\d)"), QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression latinChapter(QStringLiteral(R"(\b(ch(apter)?|chap|ep(isode)?|cap[ií]tulo|cap|chapitre|kapitel)\.?\s*\d)"),
+                                                 QRegularExpression::CaseInsensitiveOption);
+    const bool numbered = latinChapter.match(title).hasMatch();
+    // "Chapter 45: Special Training" is a chapter; "Extra 2" and "番外 1" are not.
+    if (cjkExtra.match(title).hasMatch() || (!numbered && latinExtra.match(title).hasMatch()))
+        return QStringLiteral("extra");
+    const bool cjk = cjkVolume.match(title).hasMatch() && !cjkChapter.match(title).hasMatch();
+    const bool latin = latinVolume.match(title).hasMatch() && !numbered;
+    return cjk || latin ? QStringLiteral("volume") : QStringLiteral("chapter");
+}
+
 } // namespace sc

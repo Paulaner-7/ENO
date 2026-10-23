@@ -81,11 +81,17 @@ Rectangle {
         Presence.show("novel", series.title || "", chapters[i].title || "")
     }
 
+    // The screen stays on while reading (a setting, on by default).
+    readonly property bool keepScreenOn: App.settings.readerKeepAwake !== false && Qt.application.state === Qt.ApplicationActive
+    onKeepScreenOnChanged: App.keepAwake("reader", keepScreenOn)
+
     Component.onCompleted: {
         load(index)
+        App.keepAwake("reader", keepScreenOn)
         Activity.setMedia("novel")
     }
     Component.onDestruction: {
+        App.keepAwake("reader", false)
         Speech.stop()
         Activity.setMedia("")
         Presence.clear()

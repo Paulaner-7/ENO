@@ -1,0 +1,5 @@
+• Your own library lists, synced, with Mihon categories imported
+• Preferred quality and dub for anime, and a Quality menu in the player
+• The screen stays on while watching and reading
+• Chapters in one scrolling list; reversing the order keeps your place
+• Compact grid with titles on the covers; an APK for 32-bit phones

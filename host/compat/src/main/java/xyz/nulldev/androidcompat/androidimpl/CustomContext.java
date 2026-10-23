@@ -93,7 +93,7 @@ public class CustomContext extends Context {
 
     @Override
     public Looper getMainLooper() {
-        return null;
+        return Looper.getMainLooper();
     }
 
     @Override

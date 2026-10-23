@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>最高</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>画質と音声</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>最初に再生されるもの。ソースの動画は名前で選ばれ、複数の解像度や音声トラックがあるストリームは指定したもので始まります。視聴中はプレーヤーの「画質」「音声」ボタンで変更できます。</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>優先する画質</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>これ以下で最も高い解像度。低いほどデータを節約できます。</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>優先する音声</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>ソースにあれば吹き替え、なければ字幕付きの原語。</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Simklのアニメ。</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>拡張機能を %1 件インストールしました</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1件は複数のリストに入っていたため、最初のリストに入れました</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>確認</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>リスト名を変更</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>新しいリスト</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>名前（例：異世界、週刊）</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>名前を変更</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>追加</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>リスト「%1」を削除しますか？</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>このリストの作品は「読書中」に移ります。ライブラリから削除されるものはありません。</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>左へ移動</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>右へ移動</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>リストを削除</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>シリーズごとに通知する代わりに、1回のチェックで見つかった新しいチャプターをまとめて知らせます。</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>リスト名を変更</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>新しいリスト</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>名前（例：異世界、週刊）</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>名前を変更</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>追加</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>リスト「%1」を削除しますか？</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>このリストの作品は「読書中」に移ります。ライブラリから削除されるものはありません。</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>自分のリスト</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>自分のリストは「読書中」「読む予定」「保留」「完了」「中断」と並んで、コミック・小説・アニメで使えます。Mihon と LNReader のバックアップは独自のリストも引き継ぎます。ライブラリでリストを長押しまたは右クリックすると変更できます。</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>上へ移動</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>下へ移動</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>リストを削除</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>別のリストを追加</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>リストを追加</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>Mihonからすべて取り戻す</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>コミック%1件とアニメ%2件。</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>リストはMihonの順番で取り込まれます：%1。</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>バックアップ内のリポジトリ</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>拡張機能%1個</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>拡張機能は他の人が作ったコードです。信頼できるリポジトリだけを追加してください。</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>シリーズの元の拡張機能%1個をインストール</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation>、ほか%1件</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>%1件のシリーズ</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>拡張機能は拡張機能ランタイムで動きます。先にダウンロードします（約100 MB）。</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1件のシリーズは、どのリポジトリにもない拡張機能のものです。下でタイトルから見つかるのを待ちます。</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>キャンセル</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>インポート</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>全画面</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>画質</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>発見</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>書籍ファイルを開く（EPUB または PDF）</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>書籍 (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>すべてのファイル (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>読み上げ中の段落を画面に保つ</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>チャプターと画面</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>チャプターの表示</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>コミックや小説のページで、全チャプターを1つのリストにするか、ページ番号付きで10件ずつ表示します。</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>1つのリスト</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>10件ずつ</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>読書中は画面をオンのままにする</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>リーダーを開いている間、画面が暗くなったりロックされたりしません。動画は再生中、常に画面をオンにします。</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>チャプターの表示</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>リスト、または巻のような短いタイトル向けの2列以上のグリッド。シリーズごとにチャプター上のグリッドボタンで変えられます。</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>リスト</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>グリッド</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>長押しでズーム</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>ページを指やマウスで押したままにすると、離すまで2倍に拡大します。小さなセリフや欄外のメモに。</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>長押しズームの位置</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>押した場所</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>中央</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>ダブルタップでズーム</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>ページ表示で：中央をダブルタップで拡大、もう一度で縮小。</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>自分の拡張機能で探す</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>巻</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>番外編</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>グループを隠す</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>リストで表示</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>グリッドで表示</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>あとで</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>ソースのまま</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>日本語（オリジナル）</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>英語吹き替え</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>スペイン語吹き替え</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>ポルトガル語吹き替え</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>フランス語吹き替え</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>ドイツ語吹き替え</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>イタリア語吹き替え</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>ヒンディー語吹き替え</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>最高画質</translation>
         </message>
     </context>
     <context>

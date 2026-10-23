@@ -65,13 +65,16 @@ QtObject {
         return true
     }
     // The library's categories, as anime or reading media call them.
+    // The built-in lists, then the user's own (custom: true).
     function libraryCategories(media) {
+        App.dependOn(Library.revision)
         const anime = media === "anime"
         return [{ value: "reading", label: anime ? qsTr("Watching") : qsTr("Reading") },
                 { value: "planned", label: anime ? qsTr("Plan to watch") : qsTr("Plan to read") },
                 { value: "paused", label: qsTr("On hold") },
                 { value: "completed", label: qsTr("Completed") },
                 { value: "dropped", label: qsTr("Dropped") }]
+            .concat(Array.from(Library.customCategories()).map(c => ({ value: c.id, label: c.name, custom: true })))
     }
     // One source's own popular, latest and filtered lists.
     function openSource(key) { push("pages/SourcePage.qml", { sourceKey: key }) }

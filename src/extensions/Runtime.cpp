@@ -74,6 +74,13 @@ QString Runtime::platform() {
 
 bool Runtime::installed() { return !dir().isEmpty() && hostVersionIn(dir()) == QLatin1String(HostVersion); }
 
+bool Runtime::outdated() {
+    if (dir().isEmpty())
+        return false;
+    const auto version = hostVersionIn(dir());
+    return !version.isEmpty() && version != QLatin1String(HostVersion);
+}
+
 QString Runtime::assetUrl() {
     QString base;
     {
@@ -83,7 +90,7 @@ QString Runtime::assetUrl() {
     return QStringLiteral("%1/extensions-runtime-%2/%3").arg(base, QLatin1String(HostVersion), assetName());
 }
 
-void Runtime::install(const std::function<void(const QString &)> &status) {
+void Runtime::install(const std::function<void(const QString &)> &status, const std::function<void()> &beforeSwap) {
     if (platform().isEmpty())
         throw Error(QStringLiteral("There is no Extensions runtime for this computer."));
     const auto target = dir();
@@ -145,6 +152,8 @@ void Runtime::install(const std::function<void(const QString &)> &status) {
         throw Error(QStringLiteral("The download is not the runtime this SCANCORE needs."));
     }
 
+    if (beforeSwap)
+        beforeSwap();
     // Swap: the old runtime goes only once the new one is in place.
     const auto old = target + QStringLiteral(".old");
     QDir(old).removeRecursively();

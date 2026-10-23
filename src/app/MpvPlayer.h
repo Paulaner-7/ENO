@@ -32,6 +32,12 @@ class MpvPlayer : public QQuickFramebufferObject {
     Q_PROPERTY(QVariantList audio READ audio WRITE setAudio NOTIFY audioChanged)
     // Where the next source starts, in seconds.
     Q_PROPERTY(double startAt READ startAt WRITE setStartAt NOTIFY startAtChanged)
+    // The picture height a stream with several (HLS variants) starts at:
+    // the tallest at or under it, else the shortest; 0 for the best.
+    Q_PROPERTY(int preferredHeight READ preferredHeight WRITE setPreferredHeight NOTIFY preferredHeightChanged)
+    // Audio languages to pick first, as mpv's alang ("eng,en"); empty for
+    // the stream's own default.
+    Q_PROPERTY(QString audioLanguages READ audioLanguages WRITE setAudioLanguages NOTIFY audioLanguagesChanged)
 
     Q_PROPERTY(double position READ position NOTIFY positionChanged)
     Q_PROPERTY(double duration READ duration NOTIFY durationChanged)
@@ -52,7 +58,8 @@ class MpvPlayer : public QQuickFramebufferObject {
     // subtitleOutline, subtitleColor, subtitleBox, sharpen: off|fast|hq}.
     // Subtitles with their own styling (ASS) keep it, apart from the size.
     Q_PROPERTY(QVariantMap look READ look WRITE setLook NOTIFY lookChanged)
-    // [{id, type: video|audio|sub, title, lang, selected, external}]
+    // [{id, type: video|audio|sub, title, lang, selected, external,
+    // height (video), bitrate (an HLS variant's)}]
     Q_PROPERTY(QVariantList tracks READ tracks NOTIFY tracksChanged)
     // The hardware decoder in use ("vaapi", "d3d11va", …), empty when the
     // video is decoded in software.
@@ -84,6 +91,10 @@ public:
     void setAudio(const QVariantList &audio);
     double startAt() const { return m_startAt; }
     void setStartAt(double seconds);
+    int preferredHeight() const { return m_preferredHeight; }
+    void setPreferredHeight(int height);
+    QString audioLanguages() const { return m_audioLanguages; }
+    void setAudioLanguages(const QString &languages);
 
     double position() const { return m_position; }
     double duration() const { return m_duration; }
@@ -126,6 +137,8 @@ signals:
     void subtitlesChanged();
     void audioChanged();
     void startAtChanged();
+    void preferredHeightChanged();
+    void audioLanguagesChanged();
     void positionChanged();
     void durationChanged();
     void bufferedChanged();
@@ -148,6 +161,8 @@ private:
     void load();
     void drainEvents();
     void setError(const QString &error);
+    // The variant for preferredHeight, once a new file's tracks are known.
+    void pickVariant();
 
     std::shared_ptr<MpvCore> m_core;
     QString m_source;
@@ -156,6 +171,9 @@ private:
     QVariantList m_subtitles;
     QVariantList m_audio;
     double m_startAt = 0;
+    int m_preferredHeight = 0;
+    QString m_audioLanguages;
+    bool m_variantPending = false;
     double m_position = 0;
     double m_reportedPosition = -1;
     double m_duration = 0;

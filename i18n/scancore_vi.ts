@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>Tốt nhất</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>Chất lượng và âm thanh</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>Thứ được phát trước. Video của một nguồn được chọn theo tên, và luồng có nhiều độ phân giải hoặc bản âm thanh sẽ bắt đầu ở lựa chọn của bạn. Đổi bất cứ lúc nào khi xem bằng nút Chất lượng và Âm thanh của trình phát.</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>Chất lượng ưu tiên</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>Độ phân giải cao nhất không vượt quá mức này; mức thấp hơn tiết kiệm dữ liệu.</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>Âm thanh ưu tiên</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>Bản lồng tiếng khi nguồn có, hoặc ngôn ngữ gốc kèm phụ đề.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Anime trên Simkl.</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>Đã cài %1 tiện ích</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1 bộ nằm trong nhiều danh sách và được đặt vào danh sách đầu</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>Xem lại</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Đổi tên danh sách</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Danh sách mới</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Tên, như Isekai hoặc Hằng tuần</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Đổi tên</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Thêm</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Xóa danh sách %1?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Các bộ trong đó chuyển sang Đang đọc; không có gì bị xóa khỏi thư viện.</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>Chuyển sang trái</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>Chuyển sang phải</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Xóa danh sách</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>Gộp mọi chương mới của một lần kiểm tra thay vì mỗi bộ một thông báo.</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Đổi tên danh sách</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Danh sách mới</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Tên, như Isekai hoặc Hằng tuần</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Đổi tên</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Thêm</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Xóa danh sách %1?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Các bộ trong đó chuyển sang Đang đọc; không có gì bị xóa khỏi thư viện.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Gỡ</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>Danh sách của bạn</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>Danh sách riêng của bạn nằm cạnh Đang đọc, Sẽ đọc, Tạm dừng, Đã xong và Bỏ dở, cho truyện tranh, tiểu thuyết và anime. Bản sao lưu Mihon và LNReader mang theo danh sách của chúng. Nhấn giữ hoặc nhấp chuột phải vào một danh sách trong thư viện để thay đổi.</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>Lên trên</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>Xuống dưới</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Xóa danh sách</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>Thêm danh sách khác</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>Thêm danh sách</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>Mang mọi thứ về từ Mihon</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>%1 truyện tranh và %2 anime.</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>Danh sách của bạn đến theo thứ tự trong Mihon: %1.</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>Kho trong bản sao lưu</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>%1 tiện ích</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>Tiện ích là mã của người khác. Chỉ thêm những kho bạn tin tưởng.</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>Cài %1 tiện ích mà các bộ của bạn đến từ</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation> và %1 nữa</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>%1 bộ</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>Tiện ích chạy trong môi trường tiện ích, sẽ tải về trước (khoảng 100 MB).</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1 bộ đến từ tiện ích mà không kho nào trong số này có; chúng chờ bên dưới để được tìm theo tên.</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>Hủy</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>Nhập</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>Toàn màn hình</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>Chất lượng</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>Khám phá</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>Mở tệp sách (EPUB hoặc PDF)</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>Sách (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Mọi tệp (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>Giữ đoạn đang đọc trên màn hình</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>Chương và màn hình</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>Hiển thị chương</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>Trên trang của truyện tranh hoặc tiểu thuyết: mọi chương trong một danh sách, hoặc mười chương một lần với số trang.</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>Một danh sách</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>Trang 10 chương</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>Giữ màn hình sáng khi đọc</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>Màn hình không tối đi hay khóa khi trình đọc đang mở. Video luôn giữ màn hình sáng khi phát.</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>Bố cục chương</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>Hàng, hoặc lưới hai cột trở lên cho tên ngắn như tập. Mỗi bộ có thể chọn riêng bằng nút lưới phía trên danh sách chương.</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>Hàng</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>Lưới</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>Nhấn giữ để phóng to</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>Giữ ngón tay hoặc chuột trên trang để thấy nó to gấp đôi cho tới khi thả, dành cho thoại nhỏ và ghi chú lề.</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>Vị trí phóng to khi nhấn giữ</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>Chỗ bạn nhấn</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>Giữa</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>Chạm hai lần để phóng to</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>Ở chế độ trang: chạm hai lần vào giữa để phóng to, lần nữa để thu nhỏ.</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>Tìm trong tiện ích của tôi</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>Tập</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ngoại truyện</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>Ẩn nhóm</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>Xem dạng hàng</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>Xem dạng lưới</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>Để sau</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>Như nguồn phát</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>Tiếng Nhật (gốc)</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>Lồng tiếng Anh</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>Lồng tiếng Tây Ban Nha</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>Lồng tiếng Bồ Đào Nha</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>Lồng tiếng Pháp</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>Lồng tiếng Đức</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>Lồng tiếng Ý</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>Lồng tiếng Hindi</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>Tốt nhất hiện có</translation>
         </message>
     </context>
     <context>

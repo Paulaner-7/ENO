@@ -14,6 +14,8 @@ finish-args:
   - --share=network
   - --device=dri
   - --socket=pulseaudio
+  # Keeping the screen on while a video plays.
+  - --talk-name=org.freedesktop.ScreenSaver
   - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
   # Discord Rich Presence (off unless turned on in Settings → Connections):
   # the Discord app's socket, native or Flatpak.
@@ -164,9 +166,9 @@ modules:
     sources:
       - type: git
         url: https://github.com/medium-gh/scancore.git
-        tag: v2.7.1
+        tag: v2.9.0
       - type: git
         url: https://github.com/lexbor/lexbor.git
-        tag: v2.7.1
+        tag: v2.7.0
         commit: de30a79397f8db1c22bce2fd5a792d84fd065762
         dest: lexbor

@@ -26,6 +26,36 @@ SettingsPane {
     }
 
     SettingsGroup {
+        title: qsTr("Chapters and screen")
+        SettingRow {
+            iconName: "list"
+            title: qsTr("Show chapters")
+            description: qsTr("On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.")
+            Segmented {
+                options: [{ value: "list", label: qsTr("One list") }, { value: "pages", label: qsTr("Pages of 10") }]
+                value: App.settings.chapterList || "list"
+                onPicked: (v) => App.setSetting("chapterList", v)
+            }
+        }
+        SettingRow {
+            iconName: "layout-grid"
+            title: qsTr("Chapter layout")
+            description: qsTr("Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.")
+            Segmented {
+                options: [{ value: "list", label: qsTr("Rows") }, { value: "grid", label: qsTr("Grid") }]
+                value: App.settings.chapterLayout || "list"
+                onPicked: (v) => App.setSetting("chapterLayout", v)
+            }
+        }
+        SettingRow {
+            iconName: "sun"
+            title: qsTr("Keep the screen on while reading")
+            description: qsTr("The screen does not dim or lock while a reader is open. Videos always keep it on while they play.")
+            Toggle { checked: App.settings.readerKeepAwake !== false; onToggled: App.setSetting("readerKeepAwake", checked) }
+        }
+    }
+
+    SettingsGroup {
         title: qsTr("Comic reader")
         note: qsTr("While reading: M switches layout, Ctrl + scroll changes the strip width (or zooms a page), and F goes full screen. Each series can keep its own settings from the reader's settings button.")
 
@@ -116,6 +146,28 @@ SettingsPane {
             title: qsTr("Tap zones in the vertical strip")
             description: qsTr("A tap scrolls a screen up or down instead of showing the controls.")
             Toggle { checked: App.settings.readerStripTaps === true; onToggled: App.setSetting("readerStripTaps", checked) }
+        }
+        SettingRow {
+            iconName: "zoom-in"
+            title: qsTr("Long press to zoom")
+            description: qsTr("Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.")
+            Toggle { checked: App.settings.readerLongPressZoom !== false; onToggled: App.setSetting("readerLongPressZoom", checked) }
+        }
+        SettingRow {
+            visible: App.settings.readerLongPressZoom !== false
+            iconName: "hand"
+            title: qsTr("Long press zoom position")
+            Segmented {
+                options: [{ value: "press", label: qsTr("Where you press") }, { value: "centre", label: qsTr("Centre") }]
+                value: App.settings.readerLongPressZoomAt || "press"
+                onPicked: (v) => App.setSetting("readerLongPressZoomAt", v)
+            }
+        }
+        SettingRow {
+            iconName: "maximize"
+            title: qsTr("Double tap to zoom")
+            description: qsTr("On pages: a double tap in the middle zooms in, another zooms out.")
+            Toggle { checked: App.settings.readerDoubleTapZoom !== false; onToggled: App.setSetting("readerDoubleTapZoom", checked) }
         }
         SettingRow {
             visible: App.platform === "android"

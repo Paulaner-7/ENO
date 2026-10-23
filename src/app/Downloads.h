@@ -38,8 +38,8 @@ public:
     Q_INVOKABLE void retry(int id);
     Q_INVOKABLE void retryFailed();
     Q_INVOKABLE void clearFinished();
-    Q_INVOKABLE QString folder() const;
-    Q_INVOKABLE bool hasCustomFolder() const;
+    QString folder() const;
+    bool hasCustomFolder() const;
     Q_INVOKABLE void setFolder(const QString &folder);
     Q_INVOKABLE void resetFolder();
     Q_INVOKABLE QString sizeOnDisk() const;

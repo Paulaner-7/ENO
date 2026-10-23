@@ -14,6 +14,12 @@ QString normalizedTitle(const QString &text);
 // The same without spaces, for exact matches ("Año 2" -> "ano2").
 QString titleKey(const QString &text);
 
+// Which part of a series a chapter title names: "volume" (a whole volume:
+// "第01卷191p", "第3巻", "Vol. 2", "Volume 4"), "extra" (番外, 特别篇,
+// 特別編, Extra, Special, Omake, Side story, Bonus) or "chapter" (anything
+// else, "Vol.1 Ch.3" included).
+QString chapterPart(const QString &title);
+
 // A content language's name in that language, for source lists: "en" ->
 // "English", "es" -> "Español".
 QString languageName(const QString &code);

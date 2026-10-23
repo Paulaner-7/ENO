@@ -44,6 +44,54 @@ SettingsPane {
         }
     }
 
+    // The user's own lists (issue #9), after the built-in ones.
+    readonly property var ownLists: { App.dependOn(Library.revision); return Array.from(Library.customCategories()) }
+    ConfirmDialog {
+        id: listName
+        property string listId: ""
+        asksText: true
+        heading: listId ? qsTr("Rename list") : qsTr("New list")
+        placeholder: qsTr("Name, like Isekai or Weekly")
+        confirmText: listId ? qsTr("Rename") : qsTr("Add")
+        onConfirmed: listId ? Library.renameCategory(listId, value) : Library.addCategory(value)
+        function ask(id, name) { listId = id; value = name; open() }
+    }
+    ConfirmDialog {
+        id: listRemove
+        property var list: null
+        heading: list ? qsTr("Remove the list %1?").arg(list.name) : ""
+        message: qsTr("Its series move to Reading; nothing is removed from your library.")
+        confirmText: qsTr("Remove")
+        destructive: true
+        onConfirmed: Library.removeCategory(list.id)
+    }
+
+    SettingsGroup {
+        title: qsTr("Your lists")
+        note: qsTr("Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.")
+        Repeater {
+            model: pane.ownLists
+            SettingRow {
+                required property var modelData
+                required property int index
+                iconName: "list"
+                title: modelData.name
+                Row {
+                    spacing: 2
+                    IconButton { iconName: "pencil"; tip: qsTr("Rename"); onClicked: listName.ask(modelData.id, modelData.name) }
+                    IconButton { iconName: "chevron-up"; tip: qsTr("Move up"); enabled: index > 0; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.id, -1) }
+                    IconButton { iconName: "chevron-down"; tip: qsTr("Move down"); enabled: index < pane.ownLists.length - 1; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.id, 1) }
+                    IconButton { iconName: "trash"; tip: qsTr("Remove list"); onClicked: { listRemove.list = modelData; listRemove.open() } }
+                }
+            }
+        }
+        SettingRow {
+            iconName: "plus"
+            title: pane.ownLists.length ? qsTr("Add another list") : qsTr("Add a list")
+            ScButton { text: qsTr("New list"); iconName: "plus"; onClicked: listName.ask("", "") }
+        }
+    }
+
     // Library lists as chips that switch a list setting's members.
     component ListChips: Flow {
         id: chips

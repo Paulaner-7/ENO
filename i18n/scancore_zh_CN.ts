@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>最佳</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>画质与音频</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>优先播放什么。来源的视频按名称挑选，含多种分辨率或音轨的视频流从所选的开始。观看时可用播放器的“画质”和“音频”按钮更改。</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>首选画质</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>不超过此分辨率的最高分辨率；较低的更省流量。</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>首选音频</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>来源有配音时用配音，否则用带字幕的原语言。</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Simkl 上的动画。</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>已安装 %1 个扩展</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1 部在多个列表中，已放入第一个</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>查看</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>重命名列表</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>新建列表</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>名称，例如 异世界 或 周更</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>重命名</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>添加</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>删除列表 %1？</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>其中的作品会移到“在读”；不会从书库中删除任何内容。</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>左移</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>右移</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>删除列表</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>把一次检查发现的所有新章节合成一条通知，而不是每部作品一条。</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>重命名列表</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>新建列表</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>名称，例如 异世界 或 周更</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>重命名</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>添加</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>删除列表 %1？</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>其中的作品会移到“在读”；不会从书库中删除任何内容。</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>移除</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>我的列表</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>自建列表与“在读”“想读”“搁置”“已完成”“已弃”并列，适用于漫画、小说和动画。Mihon 和 LNReader 备份会带上它们自己的列表。在书库中长按或右键点击列表即可修改。</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>上移</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>下移</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>删除列表</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>再添加一个列表</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>添加列表</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>从 Mihon 取回一切</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>%1 部漫画和 %2 部动画。</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>你的列表按 Mihon 中的顺序导入：%1。</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>备份中的仓库</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>%1 个扩展</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>扩展是别人编写的代码。请只添加你信任的仓库。</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>安装你的作品来自的 %1 个扩展</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation>，还有 %1 个</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>%1 个系列</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>扩展在扩展运行环境中运行，会先下载（约 100 MB）。</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1 部作品来自这些仓库都没有的扩展，它们在下方等待按标题查找。</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>取消</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>导入</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>全屏</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>画质</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>发现</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>打开书籍文件（EPUB 或 PDF）</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>书籍 (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>所有文件 (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>让正在朗读的段落保持在屏幕上</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>章节与屏幕</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>章节显示</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>在漫画或小说页面上：所有章节显示为一个列表，或每页十章并带页码。</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>一个列表</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>每页 10 章</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>阅读时保持屏幕常亮</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>阅读器打开时屏幕不会变暗或锁定。视频播放时始终保持屏幕常亮。</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>章节布局</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>列表，或适合卷名等短标题的两列及以上网格。每部作品可用章节上方的网格按钮单独设置。</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>列表</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>网格</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>长按缩放</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>在页面上按住手指或鼠标，松开前页面放大两倍，适合小字对白和页边注释。</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>长按缩放位置</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>按下的位置</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>中间</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>双击缩放</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>页面模式：双击中间放大，再次双击缩小。</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>在我的扩展中查找</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>卷</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>番外</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>隐藏汉化组</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>以列表显示</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>以网格显示</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>稍后</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>按来源播放</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>日语（原声）</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>英语配音</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>西班牙语配音</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>葡萄牙语配音</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>法语配音</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>德语配音</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>意大利语配音</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>印地语配音</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>最佳可用</translation>
         </message>
     </context>
     <context>

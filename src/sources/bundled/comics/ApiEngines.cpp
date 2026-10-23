@@ -1,6 +1,6 @@
 // Comic sources that publish a JSON API: Asura, MangaDex, Iken (Vortex),
 // HiveToons, Qi Manga, ManhwaWeb, Naver Webtoon, Kakao Page, ZonaTMO,
-// Olympus and ZeroComics (LectorManga.lat).
+// Olympus, ZeroComics (LectorManga.lat) and Kagane.
 
 #include "Engines.h"
 
@@ -1801,6 +1801,299 @@ std::optional<Details> ZeroComicsSource::details(const QString &seriesUrl) {
     d.genres = names(arr(m.value("generos")));
     d.author = str(m.value("grupo").toObject().value("nombre")).trimmed();
     return d;
+}
+
+// ---------------------------------------------------------------- Kagane
+
+namespace {
+std::mutex g_kaganeMutex;
+qint64 g_kaganeNext = 0;
+// Per site: the integrity token page requests need, and when it expires.
+QHash<QString, QPair<QString, qint64>> g_kaganeIntegrity;
+
+const QRegularExpression &kaganeId() {
+    static const QRegularExpression uuid(
+        QStringLiteral("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"),
+        QRegularExpression::CaseInsensitiveOption);
+    return uuid;
+}
+
+// The series id of <base>/series/<id>[/reader/<book id>], and the book id.
+QPair<QString, QString> kaganeIds(const QString &link, const QString &label) {
+    const QUrl url(link);
+    const auto series = pathSegment(url, 1);
+    const auto book = pathSegment(url, 2) == QLatin1String("reader") ? pathSegment(url, 3) : QString();
+    if (pathSegment(url, 0) != QLatin1String("series") || !kaganeId().match(series).hasMatch() ||
+        (!book.isEmpty() && !kaganeId().match(book).hasMatch()))
+        throw Error(QStringLiteral("That is not a %1 link.").arg(label));
+    return {series, book};
+}
+
+// Covers at the size the site shows them (the original is a lossless
+// image of several megabytes).
+QString kaganeImage(const QString &api, const QString &id) {
+    return id.isEmpty() ? QString() : QStringLiteral("%1/image/%2/compressed").arg(api, id);
+}
+
+// "Chapter 3 - Volume 1 (group) {f}": the braces are the site's own notes.
+// A title that already carries the number is shown as it is.
+QString kaganeTitle(const QString &language, const QString &number, const QString &title) {
+    static const QRegularExpression notes(QStringLiteral(R"((\s*\{[^{}]*\})+\s*$)"));
+    const auto clean = QString(title).remove(notes).trimmed();
+    const QRegularExpression numbered(QStringLiteral("(^|[^\\d.])%1($|[^\\d.])").arg(QRegularExpression::escape(number)));
+    return !clean.isEmpty() && numbered.match(clean).hasMatch() ? clean : chapterLabel(language, number, clean);
+}
+} // namespace
+
+QJsonObject KaganeSource::api(const QByteArray &method, const QString &path, const QList<QPair<QString, QString>> &params,
+                              const QByteArray &body, const Headers &extra) {
+    // The site asks clients to stay at about three requests a second.
+    qint64 wait = 0;
+    {
+        std::lock_guard lock(g_kaganeMutex);
+        const auto now = QDateTime::currentMSecsSinceEpoch();
+        const auto at = std::max(now, g_kaganeNext);
+        if (at - now > 8000)
+            throw Error(QStringLiteral("%1 is busy. Try again in a moment.").arg(label()), 429);
+        g_kaganeNext = at + 340;
+        wait = at - now;
+    }
+    while (wait > 0 && !CancelScope::cancelled()) {
+        QThread::msleep(std::min<qint64>(wait, 50));
+        wait -= 50;
+    }
+    Request request;
+    request.url = apiUrl(m_config.api, path, params);
+    request.method = method;
+    request.headers = jsonHeaders() + extra;
+    if (method == "POST") {
+        request.headers.append(QPair<QByteArray, QByteArray>("Content-Type", "application/json"));
+        request.body = body.isEmpty() ? QByteArray("{}") : body;
+    }
+    const auto response = Http::send(request);
+    if (!response.ok())
+        throw Error(QStringLiteral("%1 answered %2.").arg(label()).arg(response.status), response.status);
+    return response.json().object();
+}
+
+QString KaganeSource::integrityToken(bool fresh) {
+    const auto now = QDateTime::currentMSecsSinceEpoch();
+    {
+        std::lock_guard lock(g_kaganeMutex);
+        const auto cached = g_kaganeIntegrity.value(m_config.base);
+        if (!fresh && !cached.first.isEmpty() && cached.second - 15000 > now)
+            return cached.first;
+    }
+    Request request;
+    request.url = QUrl(m_config.base + QStringLiteral("/api/integrity"));
+    request.method = "POST";
+    request.headers = jsonHeaders();
+    request.headers.append(QPair<QByteArray, QByteArray>("Content-Type", "application/json"));
+    const auto response = Http::send(request);
+    const auto root = response.json().object();
+    const auto token = str(root.value("token"));
+    if (!response.ok() || token.isEmpty())
+        throw Error(QStringLiteral("%1 did not open the chapter (%2).").arg(label()).arg(response.status), response.status);
+    std::lock_guard lock(g_kaganeMutex);
+    g_kaganeIntegrity.insert(m_config.base, {token, qint64(root.value("exp").toDouble()) * 1000});
+    return token;
+}
+
+QByteArray KaganeSource::searchBody(const QString &query) const {
+    QJsonObject body;
+    if (!query.trimmed().isEmpty())
+        body.insert("title", query.trimmed());
+    body.insert("source_type", QJsonArray{"Official", "Unofficial", "Mixed"});
+    QJsonArray languages = m_config.options.value("languages").toArray();
+    if (languages.isEmpty())
+        languages.append(m_config.language);
+    body.insert("content_lang", languages);
+    if (!m_config.options.value("adult").toBool(false)) {
+        body.insert("age_rating", QJsonArray{"Safe", "FifteenPlus"});
+        body.insert("is_pornographic", false);
+    }
+    return QJsonDocument(body).toJson(QJsonDocument::Compact);
+}
+
+QList<Summary> KaganeSource::parseSearch(const QJsonObject &root) const {
+    QList<Summary> out;
+    for (const auto &row : arr(root.value("content"))) {
+        const auto m = row.toObject();
+        const auto id = str(m.value("series_id"));
+        Summary item;
+        item.title = str(m.value("title")).trimmed();
+        if (!kaganeId().match(id).hasMatch() || item.title.isEmpty())
+            continue;
+        item.url = tagged(QStringLiteral("%1/series/%2").arg(m_config.base, id));
+        item.cover = kaganeImage(m_config.api, str(m.value("cover_image_id")));
+        item.type = str(m.value("format"));
+        item.genres = names(arr(m.value("genre_list"))).join(QStringLiteral(", "));
+        item.source = key();
+        for (const auto &name : arr(m.value("alternate_titles")))
+            if (const auto n = str(name).trimmed(); !n.isEmpty() && n != item.title && !item.names.contains(n))
+                item.names.append(n);
+        out.append(item);
+    }
+    return out;
+}
+
+QList<Summary> KaganeSource::search(const QString &query) {
+    return parseSearch(api("POST", QStringLiteral("/search/series"), {{"page", "0"}, {"size", "35"}}, searchBody(query)));
+}
+
+QList<LatestItem> KaganeSource::parseLatest(const QJsonObject &root) const {
+    QList<LatestItem> out;
+    for (const auto &row : arr(root.value("content"))) {
+        const auto m = row.toObject();
+        const auto id = str(m.value("series_id"));
+        if (!kaganeId().match(id).hasMatch())
+            continue;
+        LatestItem item;
+        item.source = key();
+        item.sourceLabel = label();
+        item.title = str(m.value("title")).trimmed();
+        item.url = tagged(QStringLiteral("%1/series/%2").arg(m_config.base, id));
+        item.cover = kaganeImage(m_config.api, str(m.value("cover_image_id")));
+        const auto chapter = arr(m.value("latest_chapters")).at(0).toObject();
+        if (const auto book = str(chapter.value("book_id")); kaganeId().match(book).hasMatch()) {
+            item.chapterNumber = str(chapter.value("chapter_no"));
+            item.chapterTitle = kaganeTitle(language(), item.chapterNumber, str(chapter.value("title")));
+            item.chapterUrl = tagged(QStringLiteral("%1/series/%2/reader/%3").arg(m_config.base, id, book));
+            item.publishedAt = str(chapter.value("created_at"));
+        }
+        if (!item.title.isEmpty())
+            out.append(item);
+    }
+    return out;
+}
+
+QList<LatestItem> KaganeSource::latest(int limit) {
+    const auto size = QString::number(std::clamp(limit, 12, 60));
+    return parseLatest(api("POST", QStringLiteral("/search/series"), {{"page", "0"}, {"size", size}, {"sort", "updated_at,desc"}},
+                           searchBody({})));
+}
+
+QList<Chapter> KaganeSource::parseChapters(const QJsonObject &index, const QString &seriesId) const {
+    // Rows are arrays in the order "fields" names; groups are by index.
+    QHash<QString, int> column;
+    const auto fields = arr(index.value("fields"));
+    for (int i = 0; i < fields.size(); ++i)
+        column.insert(str(fields.at(i)), i);
+    const auto groups = arr(index.value("groups"));
+    const auto at = [&](const QJsonArray &row, const char *name) { return row.at(column.value(QLatin1String(name), -1)); };
+    QList<Chapter> out;
+    for (const auto &value : arr(index.value("books"))) {
+        const auto row = value.toArray();
+        const auto book = str(at(row, "book_id"));
+        if (!kaganeId().match(book).hasMatch() || at(row, "page_count").toInt() <= 0)
+            continue;
+        Chapter ch;
+        ch.number = str(at(row, "chapter_no")).trimmed();
+        if (ch.number.isEmpty())
+            ch.number = plainNumber(str(at(row, "sort_no")));
+        ch.title = kaganeTitle(language(), ch.number, str(at(row, "title")));
+        ch.url = tagged(QStringLiteral("%1/series/%2/reader/%3").arg(m_config.base, seriesId, book));
+        ch.slug = book;
+        if (const auto released = at(row, "released_at").toDouble(); released > 0)
+            ch.released = QDateTime::fromSecsSinceEpoch(qint64(released), QTimeZone::UTC).toString(Qt::ISODate);
+        QStringList by;
+        for (const auto &ix : at(row, "group_ix").toArray())
+            if (const auto name = str(groups.at(ix.toInt()).toObject().value("title")).trimmed(); !name.isEmpty())
+                by.append(name);
+        ch.scanlator = by.join(QStringLiteral(", "));
+        out.append(ch);
+    }
+    sortChapters(out);
+    return out;
+}
+
+QList<Chapter> KaganeSource::chapters(const QString &seriesUrl) {
+    const auto id = kaganeIds(seriesUrl, label()).first;
+    return parseChapters(api("GET", QStringLiteral("/series/%1/books/index").arg(id), {{"fields", "List"}}), id);
+}
+
+QList<Panel> KaganeSource::parsePanels(const QJsonObject &book, const QString &bookId) {
+    const auto token = str(book.value("access_token"));
+    const QUrl cache(str(book.value("cache_url")));
+    if (token.isEmpty() || cache.scheme() != QLatin1String("https") || cache.host().isEmpty())
+        throw Error(QStringLiteral("This Kagane chapter is unavailable."));
+    QList<QPair<int, Panel>> pages;
+    for (const auto &value : arr(book.value("manifest").toObject().value("pages"))) {
+        const auto p = value.toObject();
+        const auto page = str(p.value("page_id"));
+        if (!kaganeId().match(page).hasMatch())
+            continue;
+        static const QRegularExpression extension(QStringLiteral("^[a-z0-9]{2,5}$"));
+        auto ext = str(p.value("ext"));
+        if (!extension.match(ext).hasMatch())
+            ext = QStringLiteral("jxl");
+        // The server sends JPEG to clients that do not ask for JPEG XL.
+        QUrl url(QStringLiteral("%1://%2/api/v2/books/page/%3/%4.%5").arg(cache.scheme(), cache.authority(), bookId, page, ext));
+        url.setQuery(QStringLiteral("token=") + QString::fromUtf8(QUrl::toPercentEncoding(token)));
+        pages.append({p.value("page_no").toInt(), Panel{url.toString(QUrl::FullyEncoded), p.value("width").toInt(), p.value("height").toInt()}});
+    }
+    std::stable_sort(pages.begin(), pages.end(), [](const auto &a, const auto &b) { return a.first < b.first; });
+    QList<Panel> out;
+    for (const auto &page : pages)
+        out.append(page.second);
+    return out;
+}
+
+QList<Panel> KaganeSource::panels(const QString &chapterUrl) {
+    const auto book = kaganeIds(chapterUrl, label()).second;
+    if (book.isEmpty())
+        throw Error(QStringLiteral("That is not a %1 chapter link.").arg(label()));
+    // A page request needs the site's integrity token (renewed every few
+    // minutes); the answer carries the pages' own token (twenty minutes).
+    for (int attempt = 0;; ++attempt) {
+        try {
+            const auto token = integrityToken(attempt > 0);
+            return parsePanels(api("POST", QStringLiteral("/books/%1").arg(book), {{"is_datasaver", "false"}}, {},
+                                   {{"x-integrity-token", token.toUtf8()}}),
+                               book);
+        } catch (const Error &e) {
+            if (attempt > 0 || (e.status() != 401 && e.status() != 403))
+                throw;
+        }
+    }
+}
+
+Details KaganeSource::parseDetails(const QJsonObject &m) const {
+    Details d;
+    d.title = str(m.value("title")).trimmed();
+    QString cover;
+    for (const auto &value : arr(m.value("series_covers"))) {
+        const auto c = value.toObject();
+        if (cover.isEmpty() || c.value("is_main").toBool())
+            cover = str(c.value("image_id"));
+        if (c.value("is_main").toBool())
+            break;
+    }
+    d.cover = kaganeImage(m_config.api, cover);
+    // Markdown on the site: links and emphasis become plain text.
+    static const QRegularExpression link(QStringLiteral(R"(\[([^\]]*)\]\([^)\s]*\))"));
+    static const QRegularExpression emphasis(QStringLiteral(R"((\*\*|__)(.+?)\1)"));
+    d.description = str(m.value("description")).replace(link, QStringLiteral("\\1")).replace(emphasis, QStringLiteral("\\2")).trimmed();
+    d.status = str(m.value("publication_status"));
+    d.genres = names(arr(m.value("genres")), QStringLiteral("genre_name"));
+    QStringList staff;
+    for (const auto &value : arr(m.value("series_staff")))
+        if (const auto name = str(value.toObject().value("name")).trimmed(); !name.isEmpty() && !staff.contains(name))
+            staff.append(name);
+    d.author = staff.join(QStringLiteral(", "));
+    // The same title on AniList and MyAnimeList, from the site's links.
+    static const QRegularExpression tracker(QStringLiteral(R"(^https?://(?:www\.)?(anilist\.co|myanimelist\.net)/manga/(\d+))"));
+    for (const auto &value : arr(m.value("series_links"))) {
+        const auto match = tracker.match(str(value.toObject().value("url")));
+        if (match.hasMatch())
+            d.trackerIds.insert(match.captured(1) == QLatin1String("anilist.co") ? QStringLiteral("anilist") : QStringLiteral("mal"),
+                                match.captured(2).toInt());
+    }
+    return d;
+}
+
+std::optional<Details> KaganeSource::details(const QString &seriesUrl) {
+    return parseDetails(api("GET", QStringLiteral("/series/%1").arg(kaganeIds(seriesUrl, label()).first)));
 }
 
 } // namespace sc::comics

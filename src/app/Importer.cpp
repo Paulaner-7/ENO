@@ -10,7 +10,10 @@
 #include "core/Parallel.h"
 #include "core/Proto.h"
 #include "core/Text.h"
+#include "App.h"
 #include "extensions/Host.h"
+#include "extensions/Manager.h"
+#include "sources/anime/Registry.h"
 #include "sources/comics/Registry.h"
 #include "sources/local/Local.h"
 #include "sources/novels/Registry.h"
@@ -27,6 +30,7 @@
 #include <QXmlStreamReader>
 
 #include <cstring>
+#include <limits>
 
 namespace sc {
 
@@ -191,12 +195,26 @@ struct Tally {
     int progress = 0;
     QList<Item> unmatched;
     QStringList saved;
+    // Reader settings per series (readerSeries), applied on the main thread.
+    QVariantMap reader;
+    // Series that were in more than one list.
+    int inSeveral = 0;
 };
 
 // Into the library (when not there yet), with its chapters or episodes done.
-int store(const QVariantMap &series, const QString &category, const QVariantList &units, const Item &item) {
+int store(const QVariantMap &series, const QString &list, const QVariantList &units, const Item &item) {
     const auto id = series.value("id").toString();
-    const auto when = item.updatedAt > 0 ? std::min(item.updatedAt, Database::now()) : Database::now();
+    // A backup's own list becomes one of the user's (made once, by name).
+    const auto category = list.startsWith(QLatin1String("custom:")) ? Library::categoryNamed(list.mid(7)) : list;
+    const auto now = Database::now();
+    const auto when = item.updatedAt > 0 ? std::min(item.updatedAt, now) : now;
+    // When it was added there, else when it was last read.
+    const auto added = item.addedAt > 0 ? std::min(item.addedAt, now) : when;
+    // Mihon's history has the chapter read last; the others just before it,
+    // so Continue picks that one.
+    auto unrecorded = when;
+    for (const auto at : item.readAt)
+        unrecorded = std::min(unrecorded, at - 60);
     QSet<qint64> numbers;
     for (const double n : item.numbers)
         numbers.insert(qRound64(n * 1000));
@@ -206,7 +224,7 @@ int store(const QVariantMap &series, const QString &category, const QVariantList
         Library::storeUnits(id, units);
     Database::transaction([&] {
         Database::query(QStringLiteral("INSERT OR IGNORE INTO library(series_id, category, added_at, known_units, changed_at) VALUES(?, ?, ?, ?, ?)"),
-                        {id, category, when, units.size(), Database::now()});
+                        {id, category, added, units.size(), now});
         Database::query(QStringLiteral("DELETE FROM library_removed WHERE series_id = ?"), {id});
         for (const auto &value : units) {
             const auto unit = value.toMap();
@@ -216,15 +234,17 @@ int store(const QVariantMap &series, const QString &category, const QVariantList
                 link = unit.value("key").toString();
             if (const auto wrapped = ext::unwrapUrl(link))
                 link = wrapped->url;
+            // History: when this one was last read there.
+            const auto at = std::min(item.readAt.value(link, unrecorded), now);
             if (item.bookmarkLinks.contains(link))
                 Database::query(QStringLiteral("INSERT OR IGNORE INTO bookmarks(series_id, unit_key, created_at) VALUES(?, ?, ?)"),
-                                {id, unit.value("key").toString(), when});
+                                {id, unit.value("key").toString(), at});
             bool ok = false;
             const double number = unit.value("number").toString().toDouble(&ok);
             const bool done = item.doneLinks.contains(link)
                 || (ok && (numbers.isEmpty() ? number <= item.count && number > 0 : numbers.contains(qRound64(number * 1000))));
             if (!done) {
-                if (!item.partLink.isEmpty() && link == item.partLink)
+                if (const auto part = item.parts.find(link); part != item.parts.end())
                     Database::query(QStringLiteral(R"(
                         INSERT INTO progress(series_id, unit_key, unit_title, unit_number, unit_url, position, percent, completed, updated_at)
                         VALUES(?, ?, ?, ?, ?, ?, ?, 0, ?)
@@ -232,8 +252,8 @@ int store(const QVariantMap &series, const QString &category, const QVariantList
                     )"),
                                     {id, unit.value("key").toString(), unit.value("title").toString(), unit.value("number").toString(),
                                      unit.value("url").toString(),
-                                     QString::fromUtf8(QJsonDocument(QJsonObject::fromVariantMap(item.partPosition)).toJson(QJsonDocument::Compact)),
-                                     item.partPercent, when});
+                                     QString::fromUtf8(QJsonDocument(QJsonObject::fromVariantMap(part->position)).toJson(QJsonDocument::Compact)),
+                                     part->percent, at});
                 continue;
             }
             Database::query(QStringLiteral(R"(
@@ -242,8 +262,25 @@ int store(const QVariantMap &series, const QString &category, const QVariantList
                 ON CONFLICT(series_id, unit_key) DO UPDATE SET completed = 1, percent = 1
             )"),
                             {id, unit.value("key").toString(), unit.value("title").toString(), unit.value("number").toString(),
-                             unit.value("url").toString(), when});
+                             unit.value("url").toString(), at});
             ++marked;
+        }
+        // Its chapter list settings, where it has none of its own yet.
+        if (!item.settings.isEmpty()) {
+            auto settings = QJsonDocument::fromJson(Database::scalar(QStringLiteral("SELECT value FROM series_settings WHERE series_id = ?"), {id})
+                                                        .toString()
+                                                        .toUtf8())
+                                .object()
+                                .toVariantMap();
+            bool changed = false;
+            for (auto it = item.settings.cbegin(); it != item.settings.cend(); ++it)
+                if (!settings.contains(it.key())) {
+                    settings.insert(it.key(), it.value());
+                    changed = true;
+                }
+            if (changed)
+                Database::query(QStringLiteral("INSERT OR REPLACE INTO series_settings(series_id, value, changed_at) VALUES(?, ?, ?)"),
+                                {id, QString::fromUtf8(QJsonDocument(QJsonObject::fromVariantMap(settings)).toJson(QJsonDocument::Compact)), now});
         }
     });
     if (item.anilistId > 0 && series.value("media").toString() != QLatin1String("anime"))
@@ -252,6 +289,8 @@ int store(const QVariantMap &series, const QString &category, const QVariantList
         Trackers::remember(id, QStringLiteral("mal"), item.malId, item.title());
     if (!item.comickHid.isEmpty())
         Trackers::remember(id, QStringLiteral("comick"), item.comickHid, item.title());
+    for (auto it = item.trackerIds.cbegin(); it != item.trackerIds.cend(); ++it)
+        Trackers::remember(id, it.key(), it.value(), item.title());
     return marked;
 }
 
@@ -284,6 +323,16 @@ void storeAnime(const Item &item, Tally &outcome) {
     ++outcome.imported;
 }
 
+// Counts a series brought in, with what is applied once the import is done.
+void stored(const QVariantMap &series, const Item &item, Tally &outcome) {
+    outcome.saved.append(series.value("id").toString());
+    ++outcome.imported;
+    if (!item.reader.isEmpty() && series.value("media").toString() == QLatin1String("comic"))
+        outcome.reader.insert(series.value("id").toString(), item.reader);
+    if (!item.otherCategories.isEmpty())
+        ++outcome.inSeveral;
+}
+
 template <typename SourcePtr>
 bool sameSource(const SourcePtr &source, const QString &name) {
     const auto a = titleKey(source->label());
@@ -303,13 +352,15 @@ bool storeFound(const Item &item, Tally &outcome, bool searchEverywhere) {
     QVariantMap series;
     QVariantList units;
 
-    const auto tryUrl = [&](const QString &url, const QString &sourceKey, const QString &title, const QString &cover) {
+    // `exact`: its own extension, where a series with no chapters (yet, or
+    // taken down) is still the one the backup had.
+    const auto tryUrl = [&](const QString &url, const QString &sourceKey, const QString &title, const QString &cover, bool exact = false) {
         try {
             units = novel ? Novels::fetchUnits(url) : anime ? Anime::fetchUnits(url) : Comics::fetchUnits(url);
         } catch (const Error &) {
             return false;
         }
-        if (units.isEmpty())
+        if (units.isEmpty() && !exact)
             return false;
         series = {{"id", Library::idFor(item.media, sourceKey, url)}, {"media", item.media}, {"source", sourceKey},
                   {"sourceUrl", url}, {"title", title.isEmpty() ? item.title() : title}, {"cover", cover.isEmpty() ? item.cover : cover}};
@@ -321,10 +372,9 @@ bool storeFound(const Item &item, Tally &outcome, bool searchEverywhere) {
     if (!item.extensionKey.isEmpty() && !item.url.isEmpty()) {
         const auto key = item.extensionKey;
         const auto comicSource = novel || anime ? nullptr : comics::Registry::byKey(key);
-        if ((novel || anime || (comicSource && comicSource->enabled())) && tryUrl(ext::wrapUrl(key, item.url), key, {}, {})) {
+        if ((novel || anime || (comicSource && comicSource->enabled())) && tryUrl(ext::wrapUrl(key, item.url), key, {}, {}, true)) {
             outcome.progress += store(series, item.category, units, item);
-            outcome.saved.append(series.value("id").toString());
-            ++outcome.imported;
+            stored(series, item, outcome);
             return true;
         }
     }
@@ -386,8 +436,7 @@ bool storeFound(const Item &item, Tally &outcome, bool searchEverywhere) {
     if (series.isEmpty())
         return false;
     outcome.progress += store(series, item.category, units, item);
-    outcome.saved.append(series.value("id").toString());
-    ++outcome.imported;
+    stored(series, item, outcome);
     return true;
 }
 
@@ -480,6 +529,8 @@ void storeAll(const QList<Item> &items, Tally &outcome, bool searchEverywhere) {
             outcome.progress += result.value->progress;
             outcome.saved += result.value->saved;
             outcome.unmatched += result.value->unmatched;
+            outcome.inSeveral += result.value->inSeveral;
+            outcome.reader.insert(result.value->reader);
         }
     }
     QList<Item> anime;
@@ -514,7 +565,9 @@ QVariantMap summary(const Tally &outcome) {
     return {{"imported", outcome.imported},
             {"unmatched", outcome.unmatched.size()},
             {"progress", outcome.progress},
-            {"saved", outcome.saved}};
+            {"saved", outcome.saved},
+            {"inSeveral", outcome.inSeveral},
+            {"reader", outcome.reader}};
 }
 
 QByteArray readFile(const QUrl &file) {
@@ -552,6 +605,14 @@ QVariantList Importer::unmatched() const {
 
 Task *Importer::finish(Task *task) {
     task->then(this, [this](const QVariant &value) {
+        // Reader settings a backup had per series, where there are none here.
+        if (const auto reader = value.toMap().value("reader").toMap(); !reader.isEmpty()) {
+            auto all = App::instance()->settings().value(QStringLiteral("readerSeries")).toMap();
+            for (auto it = reader.cbegin(); it != reader.cend(); ++it)
+                if (!all.contains(it.key()))
+                    all.insert(it.key(), it.value());
+            App::instance()->setSetting(QStringLiteral("readerSeries"), all);
+        }
         const auto saved = value.toMap().value("saved").toStringList();
         for (const auto &id : saved)
             emit Library::instance()->saved(id);
@@ -573,21 +634,184 @@ Task *Importer::importLNReader(const QUrl &file) {
     }));
 }
 
-Task *Importer::importMihon(const QUrl &file) {
-    return finish(Task::run([file]() -> QVariant {
-        const auto items = parseMihon(readFile(file));
-        if (items.isEmpty())
+namespace {
+
+// A repository address without its index file, to compare two ways of
+// naming the same repository (GitHub serves raw files under two hosts).
+QString repositoryKey(QString url) {
+    url = url.trimmed().toLower();
+    static const QRegularExpression githubRaw(QStringLiteral("^https://github\\.com/([^/]+)/([^/]+)/raw/"));
+    url.replace(githubRaw, QStringLiteral("https://raw.githubusercontent.com/\\1/\\2/"));
+    for (const auto *file : {"/index.min.json", "/index.json", "/repo.json", "/index.pb"})
+        if (url.endsWith(QLatin1String(file)))
+            url.chop(int(std::strlen(file)));
+    while (url.endsWith(QLatin1Char('/')))
+        url.chop(1);
+    return url;
+}
+
+// The repositories added here, by address and by signing key.
+QSet<QString> addedRepositories() {
+    QSet<QString> out;
+    for (const auto &repo : ext::Manager::repositories()) {
+        out.insert(repositoryKey(repo.url));
+        if (!repo.listUrl.isEmpty())
+            out.insert(repositoryKey(repo.listUrl));
+        if (!repo.signingKey.isEmpty())
+            out.insert(QStringLiteral("key:") + repo.signingKey.toLower());
+    }
+    return out;
+}
+
+bool isAdded(const QSet<QString> &added, const backups::Repository &repo) {
+    return added.contains(repositoryKey(repo.url)) || (!repo.signingKey.isEmpty() && added.contains(QStringLiteral("key:") + repo.signingKey.toLower()));
+}
+
+// Extensions the backup's series came from that are not installed here,
+// with how many series each brings back: {kind:pkg -> (package, count)}.
+// Looks in the repositories added and in `more` (previews of others).
+QHash<QString, QPair<ext::Package, int>> neededExtensions(const QList<Item> &items, const QList<ext::Package> &more,
+                                                          int *unknown = nullptr) {
+    QSet<QString> installed;
+    for (const auto &source : ext::Manager::sources())
+        installed.insert(source.key);
+    QHash<QString, ext::Package> bySource;
+    for (const auto &list : {ext::Manager::available(), more})
+        for (const auto &package : list)
+            for (const auto &source : package.sources)
+                bySource.insert(ext::kindName(package.kind) + QLatin1Char(':') + source.id, package);
+    QHash<QString, QPair<ext::Package, int>> out;
+    for (const auto &item : items) {
+        if (item.extensionKey.isEmpty() || installed.contains(item.extensionKey))
+            continue;
+        const auto it = bySource.constFind(item.extensionKey);
+        if (it == bySource.constEnd()) {
+            if (unknown)
+                ++*unknown;
+            continue;
+        }
+        auto &entry = out[ext::kindName(it->kind) + QLatin1Char(':') + it->pkg];
+        entry.first = *it;
+        ++entry.second;
+    }
+    return out;
+}
+
+} // namespace
+
+Task *Importer::previewMihon(const QUrl &file) {
+    return Task::run([file]() -> QVariant {
+        const auto backup = backups::parseMihonBackup(readFile(file));
+        if (backup.items.isEmpty())
             throw Error(QStringLiteral("This backup has no library."));
+        int comics = 0, anime = 0;
+        for (const auto &item : backup.items)
+            ++(item.media == QLatin1String("anime") ? anime : comics);
+        // Repositories not added here are read to see what they offer.
+        const auto added = addedRepositories();
+        QVariantList repos;
+        QList<ext::Package> offered;
+        for (const auto &repo : backup.repositories) {
+            const bool have = isAdded(added, repo);
+            QVariantMap row{{"url", repo.url}, {"name", repo.name.isEmpty() ? QUrl(repo.url).host() : repo.name}, {"added", have}};
+            if (!have) {
+                try {
+                    const auto preview = ext::Manager::preview(repo.url);
+                    offered += preview.packages;
+                    row.insert("count", int(preview.packages.size()));
+                } catch (const Error &e) {
+                    row.insert("error", e.message());
+                }
+            }
+            repos.append(row);
+        }
+        int unknown = 0;
+        QVariantList extensions;
+        for (const auto &[package, count] : neededExtensions(backup.items, offered, &unknown))
+            extensions.append(QVariantMap{{"kind", ext::kindName(package.kind)}, {"pkg", package.pkg}, {"name", package.name}, {"series", count}});
+        std::sort(extensions.begin(), extensions.end(),
+                  [](const QVariant &a, const QVariant &b) { return a.toMap().value("series").toInt() > b.toMap().value("series").toInt(); });
+        return QVariantMap{{"comics", comics},
+                           {"anime", anime},
+                           {"lists", backup.lists},
+                           {"repositories", repos},
+                           {"extensions", extensions},
+                           {"unknownSources", unknown}};
+    });
+}
+
+Task *Importer::importMihon(const QUrl &file, const QVariantMap &prepare) {
+    return finish(Task::run([file, prepare]() -> QVariant {
+        const auto backup = backups::parseMihonBackup(readFile(file));
+        if (backup.items.isEmpty())
+            throw Error(QStringLiteral("This backup has no library."));
+        // First what the user chose to bring along: the backup's
+        // repositories and the extensions its series came from, so those
+        // series land on their own sources.
+        int reposAdded = 0, installed = 0;
+        const auto added = addedRepositories();
+        for (const auto &value : prepare.value("repositories").toList()) {
+            const auto url = value.toString();
+            if (url.isEmpty() || added.contains(repositoryKey(url)))
+                continue;
+            const auto named = std::find_if(backup.repositories.begin(), backup.repositories.end(),
+                                            [&](const backups::Repository &r) { return r.url == url; });
+            if (named != backup.repositories.end() && isAdded(added, *named))
+                continue;
+            try {
+                ext::Manager::add(ext::Manager::preview(url));
+                ++reposAdded;
+            } catch (const Error &) {
+                // Left out; its series wait to be found like any other.
+            }
+        }
+        QSet<QString> wanted;
+        for (const auto &value : prepare.value("extensions").toList())
+            wanted.insert(value.toMap().value("kind").toString() + QLatin1Char(':') + value.toMap().value("pkg").toString());
+        if (!wanted.isEmpty()) {
+            QList<std::function<bool()>> jobs;
+            for (const auto &[package, count] : neededExtensions(backup.items, {})) {
+                if (!wanted.contains(ext::kindName(package.kind) + QLatin1Char(':') + package.pkg))
+                    continue;
+                jobs.append([kind = package.kind, pkg = package.pkg] {
+                    ext::Manager::install(kind, pkg);
+                    return true;
+                });
+            }
+            for (int i = 0; i < jobs.size(); i += 4) {
+                if (CancelScope::cancelled())
+                    throw Error(QStringLiteral("Cancelled"), 499);
+                for (const auto &result : parallel(jobs.mid(i, 4)))
+                    installed += result.ok() ? 1 : 0;
+            }
+            // Their sources, before the series look for them.
+            if (installed > 0)
+                QMetaObject::invokeMethod(
+                    App::instance(),
+                    [] {
+                        comics::Registry::rebuild();
+                        anime::Registry::rebuild();
+                    },
+                    Qt::BlockingQueuedConnection);
+        }
+        // The backup's own lists, in its order, empty ones too.
+        for (const auto &name : backup.lists)
+            Library::categoryNamed(name);
         Tally outcome;
         // Only the sources the backup names; the rest wait for matchAll.
-        storeAll(items, outcome, false);
-        return summary(outcome);
+        storeAll(backup.items, outcome, false);
+        auto result = summary(outcome);
+        result.insert("lists", int(backup.lists.size()));
+        result.insert("repositoriesAdded", reposAdded);
+        result.insert("extensionsInstalled", installed);
+        return result;
     }));
 }
 
 namespace {
-// SCANCORE's categories as Mihon's, in this order.
-const QList<QPair<QString, QString>> kMihonCategories{{"reading", "Reading"},    {"planned", "Plan to read"}, {"paused", "On hold"},
+// SCANCORE's lists as Mihon's categories, in this order. Reading is
+// Mihon's Default (no category), as on import.
+const QList<QPair<QString, QString>> kMihonCategories{{"planned", "Plan to read"}, {"paused", "On hold"},
                                                      {"completed", "Completed"}, {"dropped", "Dropped"}};
 
 // Mihon's SManga status: 1 ongoing, 2 completed, 5 cancelled, 6 on hiatus.
@@ -601,6 +825,33 @@ int mihonStatus(const QString &status) {
         return 6;
     if (s.contains(QLatin1String("ongoing")) || s.contains(QLatin1String("emisi")) || s.contains(QLatin1String("releasing")))
         return 1;
+    return 0;
+}
+
+// Mihon's tracker ids for SCANCORE's trackers.
+const QList<QPair<QString, int>> kMihonTrackers{{"mal", 1},      {"anilist", 2},      {"kitsu", 3},
+                                               {"shikimori", 4}, {"bangumi", 5},     {"mangaupdates", 7}};
+
+// A series' chapter list settings as Mihon's chapter flags.
+quint64 mihonChapterFlags(const QVariantMap &settings) {
+    quint64 flags = 0;
+    if (settings.value("sort").toString() == QLatin1String("asc"))
+        flags |= 0x1;
+    if (settings.value("onlyUnread").toBool())
+        flags |= 0x2;
+    if (settings.value("onlyBookmarked").toBool())
+        flags |= 0x20;
+    return flags;
+}
+
+// Its reader settings as Mihon's reading mode (0 when it follows the
+// app's).
+quint64 mihonReadingMode(const QVariantMap &reader) {
+    const auto mode = reader.value("readerMode").toString();
+    if (mode == QLatin1String("strip"))
+        return 4;
+    if (mode == QLatin1String("paged"))
+        return reader.value("readerDirection").toString() == QLatin1String("rtl") ? 2 : 1;
     return 0;
 }
 
@@ -622,6 +873,19 @@ Task *Importer::exportMihon(const QUrl &file) {
         ProtoWriter backup;
         QHash<QString, QString> sourceNames;
         int exported = 0, skipped = 0;
+        // The built-in lists series are in, then all the user's own.
+        QSet<QString> used;
+        for (const auto &value : rows)
+            if (value.toMap().value("source").toString().startsWith(QLatin1String("mihon:")))
+                used.insert(value.toMap().value("category").toString());
+        QList<QPair<QString, QString>> lists;
+        for (const auto &list : kMihonCategories)
+            if (used.contains(list.first))
+                lists.append(list);
+        for (const auto &c : Library::storedCategories())
+            lists.append({c.toMap().value("id").toString(), c.toMap().value("name").toString()});
+        const auto trackerLinks = Database::pref(QStringLiteral("tracker.links")).toMap();
+        const auto readerSeries = Database::pref(QStringLiteral("setting.readerSeries")).toMap();
         for (const auto &value : rows) {
             const auto row = value.toMap();
             const auto key = row.value("source").toString();
@@ -650,9 +914,12 @@ Task *Importer::exportMihon(const QUrl &file) {
             manga.varint(13, quint64(row.value("added_at").toLongLong() * 1000));
             // Chapters, with the ones finished read and the others' place.
             QHash<QString, QVariantMap> progress;
-            for (const auto &p : Database::query(QStringLiteral("SELECT unit_key, completed, updated_at FROM progress WHERE series_id = ?"), {id}))
+            for (const auto &p : Database::query(QStringLiteral("SELECT unit_key, completed, updated_at, position FROM progress WHERE series_id = ?"), {id}))
                 progress.insert(p.toMap().value("unit_key").toString(), p.toMap());
-            const auto units = Database::query(QStringLiteral("SELECT unit_key, number, title, url FROM units WHERE series_id = ? ORDER BY idx"), {id});
+            const auto units = Database::query(QStringLiteral("SELECT unit_key, number, title, url, released_at, scanlator FROM units WHERE series_id = ? ORDER BY idx"), {id});
+            QSet<QString> bookmarked;
+            for (const auto &b : Database::query(QStringLiteral("SELECT unit_key FROM bookmarks WHERE series_id = ?"), {id}))
+                bookmarked.insert(b.toMap().value("unit_key").toString());
             QList<ProtoWriter> history;
             for (int i = 0; i < units.size(); ++i) {
                 const auto unit = units[i].toMap();
@@ -665,10 +932,20 @@ Task *Importer::exportMihon(const QUrl &file) {
                 const auto done = progress.value(key);
                 ProtoWriter chapter;
                 chapter.text(1, link);
-                chapter.text(2, unit.value("title").toString());
+                chapter.requiredText(2, unit.value("title").toString());
+                // Its group (Mihon hides groups by this name) and release.
+                chapter.text(3, unit.value("scanlator").toString());
                 chapter.boolean(4, done.value("completed").toBool());
+                if (bookmarked.contains(key))
+                    chapter.boolean(5, true);
+                // The page a chapter part-read is on.
+                if (!done.isEmpty() && !done.value("completed").toBool())
+                    if (const auto panel = QJsonDocument::fromJson(done.value("position").toString().toUtf8()).object().value("panel").toInteger(); panel > 0)
+                        chapter.varint(6, quint64(panel));
                 bool numbered = false;
                 const auto number = unit.value("number").toString().toFloat(&numbered);
+                if (const auto released = QDateTime::fromString(unit.value("released_at").toString(), Qt::ISODateWithMs); released.isValid())
+                    chapter.varint(8, quint64(released.toMSecsSinceEpoch()));
                 chapter.fixed32(9, numbered ? number : -1.f);
                 chapter.varint(10, quint64(units.size() - 1 - i));
                 if (!done.isEmpty()) {
@@ -680,20 +957,47 @@ Task *Importer::exportMihon(const QUrl &file) {
                 }
                 manga.message(16, chapter);
             }
-            for (int c = 0; c < kMihonCategories.size(); ++c)
-                if (kMihonCategories[c].first == row.value("category").toString())
+            for (int c = 0; c < lists.size(); ++c)
+                if (lists[c].first == row.value("category").toString())
                     manga.varint(17, quint64(c + 1));
+            // Trackers it is linked to: Mihon's id for each, its id there.
+            const auto links = trackerLinks.value(id).toMap();
+            for (const auto &[service, syncId] : kMihonTrackers) {
+                bool numeric = false;
+                const auto remote = links.value(service).toMap().value("id").toString().toLongLong(&numeric);
+                if (!numeric || remote <= 0)
+                    continue;
+                ProtoWriter tracking;
+                tracking.varint(1, quint64(syncId));
+                tracking.varint(2, 0);
+                if (remote <= std::numeric_limits<int>::max())
+                    tracking.varint(3, quint64(remote));
+                tracking.text(5, links.value(service).toMap().value("title").toString());
+                tracking.varint(100, quint64(remote));
+                manga.message(18, tracking);
+            }
             manga.boolean(100, true);
+            const auto settings = QJsonDocument::fromJson(Database::scalar(QStringLiteral("SELECT value FROM series_settings WHERE series_id = ?"), {id})
+                                                              .toString()
+                                                              .toUtf8())
+                                      .object()
+                                      .toVariantMap();
+            if (const auto flags = mihonChapterFlags(settings))
+                manga.varint(101, flags);
+            if (const auto mode = mihonReadingMode(readerSeries.value(id).toMap()))
+                manga.varint(103, mode);
             for (const auto &read : history)
                 manga.message(104, read);
+            for (const auto &group : settings.value("hiddenScanlators").toStringList())
+                manga.text(108, group);
             backup.message(1, manga);
             ++exported;
         }
         if (exported == 0)
             throw Error(QStringLiteral("No comics from extensions to export. Mihon cannot open series from SCANCORE's built-in sources."));
-        for (int c = 0; c < kMihonCategories.size(); ++c) {
+        for (int c = 0; c < lists.size(); ++c) {
             ProtoWriter category;
-            category.text(1, kMihonCategories[c].second);
+            category.requiredText(1, lists[c].second);
             category.varint(2, quint64(c + 1));
             backup.message(2, category);
         }
@@ -702,6 +1006,17 @@ Task *Importer::exportMihon(const QUrl &file) {
             source.text(1, it.value());
             source.varint(2, quint64(it.key().mid(6).toLongLong()));
             backup.message(101, source);
+        }
+        // The extension repositories, so Mihon can offer them back.
+        for (const auto &repo : ext::Manager::repositories()) {
+            if (repo.kind != ext::Kind::Mihon || repo.signingKey.isEmpty())
+                continue;
+            ProtoWriter store;
+            store.text(1, repo.url);
+            store.text(2, repo.name.isEmpty() ? QUrl(repo.url).host() : repo.name);
+            store.requiredText(4, repo.website);
+            store.text(5, repo.signingKey);
+            backup.message(106, store);
         }
         QSaveFile out(file.isLocalFile() ? file.toLocalFile() : file.toString());
         const auto data = local::gzip(backup.data());

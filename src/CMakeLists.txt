@@ -113,7 +113,7 @@ endif()
 if(NOT SCANCORE_WITH_SYSTEM_WEBVIEW)
     list(REMOVE_ITEM SCANCORE_QML qml/components/WebPlayerSystem.qml)
 endif()
-set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml
+set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(scancore
@@ -136,6 +136,7 @@ qt_add_qml_module(scancore
         app/Announcements.cpp app/Announcements.h
         app/Notifications.cpp app/Notifications.h
         app/Platform.cpp app/Platform.h
+        app/KeepAwake.cpp app/KeepAwake.h
         app/Profiler.cpp app/Profiler.h
         app/Speech.cpp app/Speech.h
         app/Trackers.cpp app/Trackers.h app/MoreTrackers.cpp app/TrackerCommon.h
@@ -271,6 +272,16 @@ else()
     target_link_libraries(scancore PRIVATE Qt6::Widgets)
     if(APPLE)
         target_link_libraries(scancore PRIVATE "-framework AppKit" "-framework QuartzCore")
+    endif()
+endif()
+# Keeping the screen on while a video plays (app/KeepAwake.cpp).
+if(APPLE)
+    target_link_libraries(scancore PRIVATE "-framework IOKit" "-framework CoreFoundation")
+elseif(UNIX AND NOT ANDROID)
+    find_package(Qt6 6.9 QUIET COMPONENTS DBus)
+    if(Qt6DBus_FOUND)
+        target_link_libraries(scancore PRIVATE Qt6::DBus)
+        target_compile_definitions(scancore PRIVATE SCANCORE_HAVE_DBUS)
     endif()
 endif()
 

@@ -1,4 +1,5 @@
 #include "App.h"
+#include "KeepAwake.h"
 
 #include "WebBridge.h"
 #include "Images.h"
@@ -22,6 +23,7 @@
 #include "sources/comics/Registry.h"
 #include "sources/novels/Registry.h"
 
+#include <QJSValue>
 #include <QUrlQuery>
 #include <QNetworkInformation>
 #include <QClipboard>
@@ -112,6 +114,10 @@ const QVariantMap kDefaults{
     {"animeSubLang", "it"},
     {"animeSubQuality", "high"},
     {"animeVideoQuality", "max"},
+    // What plays first: a picture height (0 for the best) and the audio
+    // (VideoPrefs.languages: "" for the source's choice, "ja", "en", …).
+    {"animeQuality", 0},
+    {"animeAudio", ""},
     {"libraryCheckHours", 2},
     // Which saved series the check looks at, and when it runs by itself.
     {"updateLists", QVariantList{"reading", "planned", "paused", "completed"}},
@@ -163,6 +169,10 @@ const QVariantMap kDefaults{
     {"libraryMedia", "comic"},
     {"libraryCategory", "all"},
     {"libraryView", "grid"},
+    // A series' chapters: one list ("list") or ten a page ("pages").
+    {"chapterList", "list"},
+    // The screen stays on while a reader is open.
+    {"readerKeepAwake", true},
     {"librarySort", "updates"},
     {"comickCatalog", true},
     // The tracker catalogue each page browses and searches: comick,
@@ -275,7 +285,12 @@ QVariantMap App::startAction() const {
     return QJsonDocument::fromJson(qgetenv("SCANCORE_START")).object().toVariantMap();
 }
 
-void App::setSetting(const QString &key, const QVariant &value) {
+QVariant App::plain(const QVariant &value) {
+    return value.metaType() == QMetaType::fromType<QJSValue>() ? value.value<QJSValue>().toVariant() : value;
+}
+
+void App::setSetting(const QString &key, const QVariant &input) {
+    const auto value = plain(input);
     if (m_settings.value(key) == value)
         return;
     m_settings.insert(key, value);
@@ -403,6 +418,7 @@ void App::prepareWebPlayer() const { platform::prepareWebPlayer(); }
 void App::setOrientation(const QString &mode) const { platform::setOrientation(mode); }
 
 void App::setBarIcons(bool darkScreen) const { platform::setBarIcons(darkScreen); }
+void App::keepAwake(const QString &holder, bool on) const { keepAwake::hold(holder, on); }
 
 void App::setVolumeKeys(bool on) const { platform::setVolumeKeys(on); }
 
@@ -478,6 +494,14 @@ void App::notify(const QString &title, const QString &body) {
     Q_UNUSED(title)
     Q_UNUSED(body)
 #endif
+}
+
+QStringList App::chapterParts(const QStringList &titles) const {
+    QStringList out;
+    out.reserve(titles.size());
+    for (const auto &title : titles)
+        out.append(chapterPart(title));
+    return out;
 }
 
 QString App::relativeTime(const QVariant &when) const {

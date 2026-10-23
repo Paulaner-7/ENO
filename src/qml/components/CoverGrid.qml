@@ -11,6 +11,8 @@ Item {
     property int minCardWidth: Math.round((Theme.compact ? 104 : 150) * Theme.coverScale)
     property int spacing: Theme.compact ? 12 : 20
     property real coverRatio: 1.5
+    // Titles over the covers (a compact grid), not under them.
+    property bool titlesInside: false
     property var subtitleFor: (item) => ""
     property var badgeFor: (item) => ""
     property var progressFor: (item) => -1
@@ -26,7 +28,8 @@ Item {
     readonly property int columns: Math.max(2, Math.floor((width + spacing) / (minCardWidth + spacing)))
     readonly property real cardWidth: (width - (columns - 1) * spacing) / columns
     // Cover, gap, two title lines and the subtitle (CoverCard's layout).
-    readonly property real cardHeight: Math.ceil(cardWidth * coverRatio + 10 + titleMetrics.height * 2.2 + 2 + subtitleMetrics.height)
+    readonly property real cardHeight: titlesInside ? Math.ceil(cardWidth * coverRatio)
+                                                    : Math.ceil(cardWidth * coverRatio + 10 + titleMetrics.height * 2.2 + 2 + subtitleMetrics.height)
     readonly property real rowStride: cardHeight + spacing
     readonly property int rows: Math.ceil(items.length / columns)
 
@@ -80,6 +83,7 @@ Item {
             item: card.entry || ({})
             animateIn: !grid.settled
             coverRatio: grid.coverRatio
+            titleInside: grid.titlesInside
             subtitle: card.entry ? grid.subtitleFor(card.entry) : ""
             badge: card.entry ? grid.badgeFor(card.entry) : ""
             progress: card.entry ? grid.progressFor(card.entry) : -1

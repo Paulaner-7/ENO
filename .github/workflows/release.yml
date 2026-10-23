@@ -83,6 +83,36 @@ jobs:
             exit 1
           fi
           echo "Tag $TAG matches CMakeLists.txt."
+      # Desktop copies download the extension host separately (the
+      # extensions-runtime-<host version> pre-release, extensions-runtime.yml)
+      # and only check its version, so a host changed after that runtime was
+      # built never reaches anyone (issue #14). Fails when the versions in the
+      # app and the host differ, or when host/ changed since the runtime's
+      # last build: raise the host version and publish its runtime first.
+      - name: Extensions runtime is current
+        if: steps.check.outputs.test != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --quiet --tags --unshallow origin || git fetch --quiet --tags origin
+          APP=$(sed -nE 's/.*HostVersion = "([^"]+)".*/\1/p' src/extensions/Runtime.h)
+          HOST=$(sed -nE 's/^val hostVersion = "([^"]+)"$/\1/p' host/desktop/build.gradle.kts)
+          MAIN=$(sed -nE 's/^const val HOST_VERSION = "([^"]+)"$/\1/p' host/desktop/src/main/kotlin/com/mediumdev/scancore/host/desktop/Main.kt)
+          if [ "$APP" != "$HOST" ] || [ "$APP" != "$MAIN" ]; then
+            echo "::error::Host versions differ: Runtime.h $APP, build.gradle.kts $HOST, Main.kt $MAIN."
+            exit 1
+          fi
+          if ! gh release view "extensions-runtime-$APP" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::error::No extensions-runtime-$APP release. Push the tag extensions-runtime-$APP and let extensions-runtime.yml publish it first."
+            exit 1
+          fi
+          BUILT=$(git tag --list "extensions-runtime-$APP" "extensions-runtime-$APP-*" --sort=-creatordate | head -1)
+          if ! git diff --quiet "$BUILT" HEAD -- host/core host/desktop host/compat host/api host/build.gradle.kts host/settings.gradle.kts host/gradle; then
+            echo "::error::host/ changed since $BUILT built the Extensions runtime. Raise the host version (Runtime.h, Main.kt, build.gradle.kts) and publish extensions-runtime-<new version> first."
+            git diff --stat "$BUILT" HEAD -- host/core host/desktop host/compat host/api
+            exit 1
+          fi
+          echo "Extensions runtime $APP was built from $BUILT; host/ is unchanged since."
       - name: Test build of this commit
         id: reuse
         if: steps.check.outputs.test != 'true'
@@ -97,7 +127,7 @@ jobs:
             exit 0
           fi
           HAVE=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/artifacts?per_page=100" -q '[.artifacts[] | select(.expired | not) | .name] | join(" ")')
-          for NAME in scancore-Windows scancore-macOS scancore-AppImage scancore-Android scancore-Flatpak; do
+          for NAME in scancore-Windows scancore-macOS scancore-AppImage scancore-Android scancore-Android-armv7 scancore-Flatpak; do
             case " $HAVE " in
               *" $NAME "*) ;;
               *) echo "Test build $RUN has no $NAME: building."; exit 0 ;;
@@ -423,11 +453,19 @@ jobs:
           path: dist/*.flatpak
           if-no-files-found: error
 
+  # One APK per processor: arm64 (most phones) and armv7 (32-bit phones,
+  # issue #19).
   android:
-    name: Android
+    name: Android ${{ matrix.name }}
     needs: version
     if: needs.version.outputs.reuse == ''
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: arm64, qtArch: android_arm64_v8a, mpv: android-arm64, artifact: scancore-Android }
+          - { name: armv7, qtArch: android_armv7, mpv: android-armv7, artifact: scancore-Android-armv7 }
     steps:
       - uses: actions/checkout@v5
         with:
@@ -461,7 +499,7 @@ jobs:
           # Qt 6.7+ publishes Android packages under the all_os host.
           host: all_os
           target: android
-          arch: android_arm64_v8a
+          arch: ${{ matrix.qtArch }}
           modules: qtwebview qtimageformats qtwebchannel qtpositioning
           cache: true
 
@@ -471,15 +509,15 @@ jobs:
         id: libmpv
         uses: actions/cache@v4
         with:
-          path: build/libmpv/android-arm64
-          key: libmpv-android-arm64-${{ hashFiles('tools/libmpv/build.sh') }}
+          path: build/libmpv/${{ matrix.mpv }}
+          key: libmpv-${{ matrix.mpv }}-${{ hashFiles('tools/libmpv/build.sh') }}
 
       - name: libmpv
         if: steps.libmpv.outputs.cache-hit != 'true'
         run: |
           sudo apt-get install -y nasm gperf python3-jinja2
           pipx install meson
-          tools/libmpv/build.sh android-arm64
+          tools/libmpv/build.sh ${{ matrix.mpv }}
 
       - name: Signed APK
         env:
@@ -490,18 +528,19 @@ jobs:
           export QT_ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/scancore.jks" QT_ANDROID_KEYSTORE_ALIAS=scancore
           export QT_ANDROID_KEYSTORE_STORE_PASS="$KEYSTORE_PASSWORD" QT_ANDROID_KEYSTORE_KEY_PASS="$KEYSTORE_PASSWORD"
           HOST_QT=$(dirname "$QT_ROOT_DIR")/gcc_64
-          "$QT_ROOT_DIR/bin/qt-cmake" -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+          # Qt's android_armv7 package ships qt-cmake without its execute bit.
+          sh "$QT_ROOT_DIR/bin/qt-cmake" -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
             -DQT_HOST_PATH="$HOST_QT" -DANDROID_SDK_ROOT="$ANDROID_HOME" -DANDROID_NDK_ROOT="$ANDROID_NDK_ROOT" \
             -DQT_ANDROID_SIGN_APK=ON
           cmake --build build --parallel
           cmake --build build --target apk
           mkdir -p dist
           cp build/src/android-build/build/outputs/apk/release/android-build-release-signed.apk \
-            "dist/SCANCORE-$VERSION-android-arm64.apk"
+            "dist/SCANCORE-$VERSION-android-${{ matrix.name }}.apk"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: scancore-Android
+          name: ${{ matrix.artifact }}
           path: dist/*.apk
           if-no-files-found: error
 
@@ -557,7 +596,7 @@ jobs:
           | Windows | \`windows-x64-setup.exe\` or portable \`.zip\` |
           | macOS 13+ | \`macos-universal.dmg\` |
           | Linux | \`linux-x86_64.AppImage\` or \`.flatpak\` |
-          | Android 9+ | \`android-arm64.apk\` |
+          | Android 9+ | \`android-arm64.apk\` (32-bit phones: \`android-armv7.apk\`) |
           EOF
           cat notes.md
       - name: Publish release

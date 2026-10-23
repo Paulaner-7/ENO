@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
+import QtQuick.Dialogs
 import ScanCore
 
 SettingsPane {
@@ -51,7 +52,7 @@ SettingsPane {
         SettingRow {
             iconName: "folder"
             title: qsTr("Storage folder")
-            description: Downloads.sizeOnDisk() + (App.platform !== "android" ? " · " + Downloads.folder() : "")
+            description: Downloads.sizeOnDisk() + (App.platform !== "android" ? " · " + Downloads.folder : "")
             Row {
                 spacing: 8
                 visible: App.platform !== "android"
@@ -62,7 +63,7 @@ SettingsPane {
                     onClicked: downloadFolderDialog.open()
                 }
                 ScButton {
-                    visible: Downloads.hasCustomFolder()
+                    visible: Downloads.hasCustomFolder
                     text: qsTr("Reset")
                     variant: "ghost"
                     onClicked: {
@@ -73,7 +74,7 @@ SettingsPane {
                 ScButton {
                     text: qsTr("Open folder")
                     iconName: "folder-open"
-                    onClicked: App.openFolder(Downloads.folder())
+                    onClicked: App.openFolder(Downloads.folder)
                 }
             }
         }

@@ -116,6 +116,40 @@ Item {
     }
 
     ActionMenu { id: menu }
+    // The user's own lists (issue #9): made, renamed and removed here and
+    // in Settings → Library.
+    ConfirmDialog {
+        id: listName
+        property string listId: ""
+        asksText: true
+        heading: listId ? qsTr("Rename list") : qsTr("New list")
+        placeholder: qsTr("Name, like Isekai or Weekly")
+        confirmText: listId ? qsTr("Rename") : qsTr("Add")
+        onConfirmed: {
+            if (listId) Library.renameCategory(listId, value)
+            else App.setSetting("libraryCategory", Library.addCategory(value))
+        }
+        function ask(id, name) { listId = id; value = name; open() }
+    }
+    ConfirmDialog {
+        id: listRemove
+        property var list: null
+        heading: list ? qsTr("Remove the list %1?").arg(list.label) : ""
+        message: qsTr("Its series move to Reading; nothing is removed from your library.")
+        confirmText: qsTr("Remove")
+        destructive: true
+        onConfirmed: Library.removeCategory(list.value)
+    }
+    function listMenu(chip, x, y, list) {
+        const own = page.categories.filter(c => c.custom)
+        const at = own.findIndex(c => c.value === list.value)
+        menu.openAt(chip, x, y, [
+            { text: qsTr("Rename"), icon: "pencil", run: () => listName.ask(list.value, list.label) },
+            { text: qsTr("Move left"), icon: "chevron-left", enabled: at > 0, run: () => Library.moveCategory(list.value, -1) },
+            { text: qsTr("Move right"), icon: "chevron-right", enabled: at < own.length - 1, run: () => Library.moveCategory(list.value, 1) },
+            null,
+            { text: qsTr("Remove list"), icon: "trash", danger: true, run: () => { listRemove.list = list; listRemove.open() } }])
+    }
     MigrateDialog {
         id: migrate
         onClosed: page.endSelection()
@@ -344,12 +378,25 @@ Item {
                 Repeater {
                     model: page.categories
                     Chip {
+                        id: listChip
                         required property var modelData
                         text: modelData.label
                         detail: String(page.counts[modelData.value] || 0)
                         selected: page.category === modelData.value
                         onClicked: App.setSetting("libraryCategory", modelData.value)
+                        // The user's own lists: rename, move or remove them.
+                        onPressAndHold: if (modelData.custom) page.listMenu(listChip, width / 2, height, modelData)
+                        TapHandler {
+                            enabled: listChip.modelData.custom === true
+                            acceptedButtons: Qt.RightButton
+                            onTapped: (point) => page.listMenu(listChip, point.position.x, point.position.y, listChip.modelData)
+                        }
                     }
+                }
+                Chip {
+                    text: qsTr("New list")
+                    iconName: "plus"
+                    onClicked: listName.ask("", "")
                 }
             }
 
@@ -407,7 +454,8 @@ Item {
             CoverGrid {
                 visible: page.view !== "list"
                 items: page.view !== "list" ? page.entries : []
-                minCardWidth: page.view === "compact" ? Math.round((Theme.compact ? 78 : 112) * Theme.coverScale)
+                titlesInside: page.view === "compact"
+                minCardWidth: page.view === "compact" ? Math.round((Theme.compact ? 84 : 120) * Theme.coverScale)
                                                       : Math.round((Theme.compact ? 104 : 150) * Theme.coverScale)
                 badgeFor: (it) => it.newUnits > 0 ? "+" + it.newUnits : ""
                 progressFor: (it) => it.unitKey ? (it.completed ? 1 : (it.percent || 0)) : -1

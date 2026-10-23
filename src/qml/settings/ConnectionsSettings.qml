@@ -26,6 +26,8 @@ SettingsPane {
             const parts = [r.imported === 1 ? qsTr("1 series added") : r.imported + qsTr(" series added")]
             if (r.progress > 0) parts.push(r.progress + (r.progress === 1 ? qsTr(" chapter or episode") : qsTr(" chapters and episodes")) + qsTr(" marked"))
             if (r.unmatched > 0) parts.push(r.unmatched + qsTr(" waiting to be found"))
+            if (r.extensionsInstalled > 0) parts.push(qsTr("%1 extensions installed").arg(r.extensionsInstalled))
+            if (r.inSeveral > 0) parts.push(qsTr("%1 were in several lists and are in the first").arg(r.inSeveral))
             Router.toast(parts.join(" · "), "success")
         })
         task.failed.connect((error) => Router.toast(error, "error"))
@@ -212,7 +214,15 @@ SettingsPane {
         id: mihonDialog
         fileMode: FileDialog.OpenFile
         nameFilters: [qsTr("Mihon, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)"), qsTr("All files (*)")]
-        onAccepted: pane.imported(Importer.importMihon(selectedFile), "mihon")
+        onAccepted: {
+            mihonImport.start(selectedFile)
+            pane.importTask = mihonImport.task
+            pane.importing = "mihon"
+        }
+    }
+    MihonImportDialog {
+        id: mihonImport
+        onImportStarted: (task) => pane.imported(task, "mihon")
     }
     FileDialog {
         id: lnreaderDialog

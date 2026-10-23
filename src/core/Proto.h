@@ -104,6 +104,9 @@ public:
         if (!value.isEmpty())
             bytes(field, value.toUtf8());
     }
+    // Written even when empty: Mihon cannot read a backup that lacks a
+    // field its model has no default for.
+    void requiredText(int field, const QString &value) { bytes(field, value.toUtf8()); }
     void fixed32(int field, float value) {
         tag(field, 5);
         quint32 bits;

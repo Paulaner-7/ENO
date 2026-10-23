@@ -6,6 +6,7 @@
 #include "extensions/Host.h"
 
 #include <QColor>
+#include <algorithm>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -441,6 +442,7 @@ void MpvPlayer::load() {
     m_cachePause = false;
     m_seeking = false;
     m_tracks.clear();
+    m_variantPending = true;
     emit positionChanged();
     emit durationChanged();
     emit bufferedChanged();
@@ -513,6 +515,10 @@ void MpvPlayer::load() {
             qInfo("mpv: the source's option %s is not used", qPrintable(it.key()));
     }
     setString(mpv, "start", m_startAt > 0 ? QString::number(m_startAt) : QStringLiteral("none"));
+    // Audio in the language asked for (a dub, or the original), when the
+    // stream has several; the source's own aid still wins.
+    if (!m_options.contains(QLatin1String("aid")))
+        setString(mpv, "alang", m_audioLanguages);
     // The last video's end paused mpv (keep-open); the next one plays.
     setString(mpv, "pause", QStringLiteral("no"));
     m_buffering = true;
@@ -598,10 +604,13 @@ void MpvPlayer::drainEvents() {
                                                   {"title", m.value("title")},
                                                   {"lang", m.value("lang")},
                                                   {"selected", m.value("selected")},
-                                                  {"external", m.value("external")}});
+                                                  {"external", m.value("external")},
+                                                  {"height", m.value("demux-h")},
+                                                  {"bitrate", m.value("hls-bitrate", m.value("demux-bitrate"))}});
                     }
                 m_tracks = tracks;
                 emit tracksChanged();
+                pickVariant();
                 break;
             }
             case CacheDuration:
@@ -813,8 +822,31 @@ void MpvPlayer::togglePause() { setPaused(!m_paused); }
 void MpvPlayer::setTrack(const QString &type, int id) {
 #ifdef SCANCORE_HAVE_MPV
     const char *name = type == QLatin1String("audio") ? "aid" : type == QLatin1String("video") ? "vid" : "sid";
-    if (m_core->mpv)
-        setString(m_core->mpv, name, id > 0 ? QString::number(id) : QStringLiteral("no"));
+    if (!m_core->mpv)
+        return;
+    setString(m_core->mpv, name, id > 0 ? QString::number(id) : QStringLiteral("no"));
+    if (type != QLatin1String("video"))
+        return;
+    // An HLS variant often carries its own audio: take the one of the same
+    // variant (and language), so only one variant downloads.
+    QVariantMap video, audio;
+    for (const auto &t : std::as_const(m_tracks)) {
+        const auto m = t.toMap();
+        if (m.value("type") == QLatin1String("video") && m.value("id").toInt() == id)
+            video = m;
+        else if (m.value("type") == QLatin1String("audio") && m.value("selected").toBool())
+            audio = m;
+    }
+    const auto bitrate = video.value("bitrate").toLongLong();
+    if (bitrate <= 0 || audio.isEmpty() || audio.value("bitrate").toLongLong() == bitrate)
+        return;
+    for (const auto &t : std::as_const(m_tracks)) {
+        const auto m = t.toMap();
+        if (m.value("type") == QLatin1String("audio") && m.value("bitrate").toLongLong() == bitrate && m.value("lang") == audio.value("lang")) {
+            setString(m_core->mpv, "aid", m.value("id").toString());
+            return;
+        }
+    }
 #else
     Q_UNUSED(type)
     Q_UNUSED(id)
@@ -822,5 +854,47 @@ void MpvPlayer::setTrack(const QString &type, int id) {
 }
 
 void MpvPlayer::stop() { setSource({}); }
+
+void MpvPlayer::setPreferredHeight(int height) {
+    if (height == m_preferredHeight)
+        return;
+    m_preferredHeight = height;
+    emit preferredHeightChanged();
+}
+
+void MpvPlayer::setAudioLanguages(const QString &languages) {
+    if (languages == m_audioLanguages)
+        return;
+    m_audioLanguages = languages;
+    emit audioLanguagesChanged();
+}
+
+void MpvPlayer::pickVariant() {
+    if (!m_variantPending || m_options.contains(QLatin1String("vid")))
+        return;
+    QList<QPair<int, int>> variants; // height, id
+    for (const auto &t : std::as_const(m_tracks)) {
+        const auto m = t.toMap();
+        if (m.value("type") == QLatin1String("video") && m.value("height").toInt() > 0)
+            variants.append({m.value("height").toInt(), m.value("id").toInt()});
+    }
+    if (variants.isEmpty())
+        return;
+    // The tracks are known now; later changes are the viewer's own picks.
+    m_variantPending = false;
+    if (m_preferredHeight <= 0 || variants.size() < 2)
+        return;
+    std::sort(variants.begin(), variants.end());
+    auto pick = variants.first();
+    for (const auto &v : std::as_const(variants))
+        if (v.first <= m_preferredHeight)
+            pick = v;
+    for (const auto &t : std::as_const(m_tracks)) {
+        const auto m = t.toMap();
+        if (m.value("type") == QLatin1String("video") && m.value("selected").toBool() && m.value("id").toInt() == pick.second)
+            return;
+    }
+    setTrack(QStringLiteral("video"), pick.second);
+}
 
 } // namespace sc

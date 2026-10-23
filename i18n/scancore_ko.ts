@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>최고</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>화질 및 오디오</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>먼저 재생되는 항목. 소스의 동영상은 이름으로 고르고, 여러 해상도나 오디오 트랙이 있는 스트림은 선택한 것으로 시작합니다. 시청 중 플레이어의 화질 및 오디오 버튼으로 바꿀 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>선호 화질</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>이 해상도 이하에서 가장 높은 해상도. 낮을수록 데이터를 아낍니다.</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>선호 오디오</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>소스에 더빙이 있으면 더빙, 없으면 자막이 있는 원어.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Simkl의 애니메이션.</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>확장 %1개 설치됨</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1개는 여러 목록에 있어서 첫 번째 목록에 넣었습니다</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>검토</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>목록 이름 바꾸기</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>새 목록</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>이름(예: 이세계, 주간)</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>이름 바꾸기</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>추가</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>%1 목록을 삭제할까요?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>이 목록의 작품은 '읽는 중'으로 옮겨지며, 라이브러리에서 삭제되는 것은 없습니다.</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>왼쪽으로 이동</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>오른쪽으로 이동</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>목록 삭제</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>시리즈마다 알림을 보내는 대신 한 번의 확인에서 찾은 새 챕터를 모두 묶어 알려 줍니다.</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>목록 이름 바꾸기</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>새 목록</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>이름(예: 이세계, 주간)</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>이름 바꾸기</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>추가</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>%1 목록을 삭제할까요?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>이 목록의 작품은 '읽는 중'으로 옮겨지며, 라이브러리에서 삭제되는 것은 없습니다.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>제거</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>내 목록</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>나만의 목록은 읽는 중, 읽을 예정, 보류, 완료, 중단과 함께 만화, 소설, 애니메이션에 쓸 수 있습니다. Mihon과 LNReader 백업은 자체 목록도 가져옵니다. 라이브러리에서 목록을 길게 누르거나 마우스 오른쪽 버튼으로 클릭해 바꿀 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>위로 이동</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>아래로 이동</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>목록 삭제</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>다른 목록 추가</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>목록 추가</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>Mihon에서 모두 가져오기</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>만화 %1개와 애니 %2개.</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>목록은 Mihon 순서대로 옵니다: %1.</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>백업의 저장소</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>확장 프로그램 %1개</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>확장 프로그램은 다른 사람이 만든 코드입니다. 신뢰하는 저장소만 추가하세요.</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>시리즈가 온 확장 프로그램 %1개 설치</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation> 외 %1개</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>시리즈 %1개</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>확장 프로그램은 확장 런타임에서 실행되며, 먼저 다운로드됩니다(약 100MB).</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1개 시리즈는 이 저장소들 어디에도 없는 확장 프로그램에서 왔습니다. 아래에서 제목으로 찾기를 기다립니다.</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>취소</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>가져오기</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>전체 화면</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>화질</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>발견</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>책 파일 열기(EPUB 또는 PDF)</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>책 (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>모든 파일 (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>읽는 문단을 화면에 유지</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>챕터와 화면</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>챕터 표시</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>만화나 소설 페이지에서 모든 챕터를 한 목록으로 보거나, 페이지 번호와 함께 10개씩 봅니다.</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>한 목록</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>10개씩</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>읽는 동안 화면 켜 두기</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>리더가 열려 있는 동안 화면이 어두워지거나 잠기지 않습니다. 동영상은 재생 중 항상 화면을 켜 둡니다.</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>회차 배치</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>줄, 또는 권처럼 짧은 제목을 위한 두 칸 이상의 격자. 시리즈마다 회차 위 격자 버튼으로 따로 정할 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>줄</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>격자</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>길게 눌러 확대</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>페이지를 손가락이나 마우스로 누르고 있으면 뗄 때까지 두 배로 크게 보입니다. 작은 대사와 여백 메모에 좋습니다.</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>길게 눌러 확대할 위치</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>누른 곳</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>가운데</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>두 번 탭해서 확대</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>페이지에서: 가운데를 두 번 탭하면 확대, 다시 하면 축소.</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>내 확장 프로그램에서 찾기</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>권</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>외전</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>그룹 숨기기</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>줄로 보기</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>격자로 보기</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>나중에</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>소스 재생 그대로</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>일본어(원어)</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>영어 더빙</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>스페인어 더빙</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>포르투갈어 더빙</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>프랑스어 더빙</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>독일어 더빙</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>이탈리아어 더빙</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>힌디어 더빙</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>최고 화질</translation>
         </message>
     </context>
     <context>

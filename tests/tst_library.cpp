@@ -281,13 +281,94 @@ private slots:
             QCOMPARE(item.anilistId, 21);
             QCOMPARE(item.doneLinks, QSet<QString>{QStringLiteral("/ep/1")});
             QCOMPARE(item.bookmarkLinks, QSet<QString>{QStringLiteral("/ep/2")});
-            QCOMPARE(item.partLink, QStringLiteral("/ep/2"));
-            QCOMPARE(item.partPosition.value("seconds").toDouble(), 600.0);
+            QCOMPARE(item.parts.keys(), QStringList{QStringLiteral("/ep/2")});
+            QCOMPARE(item.parts.value(QStringLiteral("/ep/2")).position.value("seconds").toDouble(), 600.0);
             QCOMPARE(item.numbers, QList<double>{1.0});
         }
         QCOMPARE(backups::categoryNamed(QStringLiteral("Reading")), QStringLiteral("reading"));
         QCOMPARE(backups::categoryNamed(QStringLiteral("Completed")), QStringLiteral("completed"));
         QCOMPARE(backups::categoryNamed(QStringLiteral("Favourites")), QString());
+    }
+
+    // Mihon's backup as Mihon writes it today: lists in its order (empty
+    // ones too, Default being none), a series in two lists, date added,
+    // history, a chapter part-read, chapter and reader settings, hidden
+    // groups, other trackers and the extension repositories.
+    void mihonBackup() {
+        const auto chapter = [](const QString &link, float number, bool read, qint64 page = 0) {
+            ProtoWriter c;
+            c.text(1, link);
+            c.boolean(4, read);
+            c.varint(6, quint64(page));
+            c.fixed32(9, number);
+            return c;
+        };
+        const auto category = [](const QString &name, quint64 order) {
+            ProtoWriter c;
+            c.text(1, name);
+            c.varint(2, order);
+            return c;
+        };
+        ProtoWriter manga;
+        manga.varint(1, 2499283573021220255ull);
+        manga.text(2, QStringLiteral("/manga/x"));
+        manga.text(3, QStringLiteral("Some Manga"));
+        manga.varint(13, 1700000000000ull);
+        manga.message(16, chapter(QStringLiteral("/c/1"), 1, true));
+        manga.message(16, chapter(QStringLiteral("/c/2"), 2, false, 7));
+        manga.message(16, chapter(QStringLiteral("/c/3"), 3, false));
+        // In "Favourites" (order 3) and "Weekly" (order 2): Weekly comes first.
+        manga.varint(17, 3);
+        manga.varint(17, 2);
+        ProtoWriter kitsu;
+        kitsu.varint(1, 3);
+        kitsu.varint(100, 4321);
+        manga.message(18, kitsu);
+        ProtoWriter updates;
+        updates.varint(1, 7);
+        updates.varint(100, 55555);
+        manga.message(18, updates);
+        manga.varint(101, 0x1 | 0x2);
+        manga.varint(103, 2);
+        ProtoWriter history;
+        history.text(1, QStringLiteral("/c/2"));
+        history.varint(2, 1710000000000ull);
+        manga.message(104, history);
+        manga.text(108, QStringLiteral("Bad Group"));
+        ProtoWriter repo;
+        repo.text(1, QStringLiteral("https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"));
+        repo.text(2, QStringLiteral("Keiyoushi"));
+        repo.text(5, QStringLiteral("9add655a78e96c4ec7a53ef89dccb557cb5d767489fac5e785d671a5a75d4da2"));
+        ProtoWriter backup;
+        backup.message(1, manga);
+        backup.message(2, category(QStringLiteral("Favourites"), 3));
+        backup.message(2, category(QStringLiteral("Weekly"), 2));
+        backup.message(2, category(QStringLiteral("Plan to read"), 1));
+        backup.message(2, category(QStringLiteral("Empty one"), 4));
+        backup.message(106, repo);
+
+        const auto parsed = backups::parseMihonBackup(backup.data());
+        QCOMPARE(parsed.lists, (QStringList{QStringLiteral("Weekly"), QStringLiteral("Favourites"), QStringLiteral("Empty one")}));
+        QCOMPARE(parsed.repositories.size(), 1);
+        QCOMPARE(parsed.repositories[0].name, QStringLiteral("Keiyoushi"));
+        QCOMPARE(parsed.repositories[0].signingKey.size(), 64);
+        QCOMPARE(parsed.items.size(), 1);
+        const auto &item = parsed.items[0];
+        QCOMPARE(item.extensionKey, QStringLiteral("mihon:2499283573021220255"));
+        QCOMPARE(item.category, QStringLiteral("custom:Weekly"));
+        QCOMPARE(item.otherCategories, QStringList{QStringLiteral("custom:Favourites")});
+        QCOMPARE(item.addedAt, qint64(1700000000));
+        QCOMPARE(item.doneLinks, QSet<QString>{QStringLiteral("/c/1")});
+        QCOMPARE(item.parts.keys(), QStringList{QStringLiteral("/c/2")});
+        QCOMPARE(item.parts.value(QStringLiteral("/c/2")).position.value("panel").toInt(), 7);
+        QCOMPARE(item.readAt.value(QStringLiteral("/c/2")), qint64(1710000000));
+        QCOMPARE(item.trackerIds.value("kitsu").toLongLong(), 4321);
+        QCOMPARE(item.trackerIds.value("mangaupdates").toLongLong(), 55555);
+        QCOMPARE(item.settings.value("sort").toString(), QStringLiteral("asc"));
+        QCOMPARE(item.settings.value("onlyUnread").toBool(), true);
+        QCOMPARE(item.settings.value("hiddenScanlators").toStringList(), QStringList{QStringLiteral("Bad Group")});
+        QCOMPARE(item.reader.value("readerMode").toString(), QStringLiteral("paged"));
+        QCOMPARE(item.reader.value("readerDirection").toString(), QStringLiteral("rtl"));
     }
 
     // LNReader's zip: the novel on its plugin, chapters read by link, the
@@ -318,8 +399,8 @@ private slots:
         QCOMPARE(item.url, QStringLiteral("novel/lord"));
         QCOMPARE(item.category, QStringLiteral("completed"));
         QCOMPARE(item.doneLinks, QSet<QString>{QStringLiteral("c/1")});
-        QCOMPARE(item.partLink, QStringLiteral("c/2"));
-        QCOMPARE(item.partPercent, 0.4);
+        QCOMPARE(item.parts.keys(), QStringList{QStringLiteral("c/2")});
+        QCOMPARE(item.parts.value(QStringLiteral("c/2")).percent, 0.4);
         QCOMPARE(item.bookmarkLinks, QSet<QString>{QStringLiteral("c/2")});
         QVERIFY_THROWS_EXCEPTION(Error, backups::parseLNReader(QByteArray("not a zip")));
     }

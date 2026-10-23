@@ -69,6 +69,21 @@ Rectangle {
     readonly property string tapZones: opt("readerTapZones", "sides")
     readonly property string tapInvert: opt("readerTapInvert", "none")
     readonly property bool stripTaps: opt("readerStripTaps", false) === true
+    // Holding a finger (or the mouse) on the page magnifies it twice, under
+    // the finger or at the middle, until it lets go: small dialogue and
+    // margin notes. Double tap (double click) zooms in on paged pages.
+    readonly property bool longPressZoom: opt("readerLongPressZoom", true) !== false
+    readonly property bool longPressAtCentre: opt("readerLongPressZoomAt", "press") === "centre"
+    readonly property bool doubleTapZoom: opt("readerDoubleTapZoom", true) !== false
+    property bool magnifying: false
+    property point magnifyAt: Qt.point(0, 0)
+    function startMagnifier(item, x, y) {
+        if (!longPressZoom) return
+        magnifyAt = longPressAtCentre ? Qt.point(item.width / 2, item.height / 2) : Qt.point(x, y)
+        magnifying = true
+        controlsShown = false
+    }
+    function moveMagnifier(x, y) { if (magnifying && !longPressAtCentre) magnifyAt = Qt.point(x, y) }
     readonly property bool volumeKeys: App.platform === "android" && opt("readerVolumeKeys", false) === true
     readonly property var tapZoneOptions: [{ value: "sides", label: qsTr("Tap zones: left and right") }, { value: "lshape", label: qsTr("Tap zones: L shape") },
         { value: "kindle", label: qsTr("Tap zones: Kindle") }, { value: "edge", label: qsTr("Tap zones: edges") }, { value: "off", label: qsTr("Tap zones: off") }]
@@ -109,12 +124,18 @@ Rectangle {
     }
     property int nextFor: -1
 
+    // The screen stays on while reading (a setting, on by default).
+    readonly property bool keepScreenOn: App.settings.readerKeepAwake !== false && Qt.application.state === Qt.ApplicationActive
+    onKeepScreenOnChanged: App.keepAwake("reader", keepScreenOn)
+
     Component.onCompleted: {
         load(index)
+        App.keepAwake("reader", keepScreenOn)
         Activity.setMedia("comic")
         App.setVolumeKeys(volumeKeys)
     }
     Component.onDestruction: {
+        App.keepAwake("reader", false)
         App.setVolumeKeys(false)
         Activity.setMedia("")
         Presence.clear()
@@ -295,6 +316,14 @@ Rectangle {
         id: strip
         anchors.fill: parent
         visible: reader.mode === "strip"
+        interactive: !reader.magnifying
+        transform: Scale {
+            origin.x: reader.magnifyAt.x
+            origin.y: reader.magnifyAt.y
+            xScale: reader.magnifying ? 2 : 1
+            yScale: xScale
+            Behavior on xScale { NumberAnimation { duration: Motion.fast; easing.type: Easing.OutCubic } }
+        }
         model: reader.mode === "strip" ? reader.panels : []
         cacheBuffer: Math.max(2400, height * 3)
         boundsBehavior: Flickable.StopAtBounds
@@ -331,6 +360,12 @@ Rectangle {
                 }
             }
             onDoubleTapped: if (App.platform !== "android") reader.toggleControls()
+            onLongPressed: reader.startMagnifier(strip, point.position.x, point.position.y)
+        }
+        // Follows the finger while magnifying, and lets go with it.
+        PointHandler {
+            onPointChanged: reader.moveMagnifier(point.position.x, point.position.y)
+            onActiveChanged: if (!active) reader.magnifying = false
         }
 
         // Ctrl+wheel: the strip's width.
@@ -403,6 +438,13 @@ Rectangle {
 
     Item {
         id: pageView
+        transform: Scale {
+            origin.x: reader.magnifyAt.x
+            origin.y: reader.magnifyAt.y
+            xScale: reader.magnifying ? 2 : 1
+            yScale: xScale
+            Behavior on xScale { NumberAnimation { duration: Motion.fast; easing.type: Easing.OutCubic } }
+        }
         anchors.fill: parent
         visible: reader.mode === "paged"
         // The first page of the pages shown.
@@ -656,10 +698,15 @@ Rectangle {
             acceptedButtons: Qt.LeftButton
             // The tap zones turn the page (unless zoomed in) or show the
             // controls; a double click on the controls' zone zooms.
-            onClicked: (mouse) => reader.act(pageView.zoomed ? "menu" : reader.tapZone(mouse.x, mouse.y, width, height))
+            onClicked: (mouse) => { if (!mouse.wasHeld) reader.act(pageView.zoomed ? "menu" : reader.tapZone(mouse.x, mouse.y, width, height)) }
             onDoubleClicked: (mouse) => {
-                if (pageView.zoomed || reader.tapZone(mouse.x, mouse.y, width, height) === "menu") pageView.toggleZoom(mouse.x, mouse.y)
+                if (reader.doubleTapZoom && (pageView.zoomed || reader.tapZone(mouse.x, mouse.y, width, height) === "menu"))
+                    pageView.toggleZoom(mouse.x, mouse.y)
             }
+            onPressAndHold: (mouse) => { if (!pageView.zoomed && !swipe.active && !pinch.active) reader.startMagnifier(pageView, mouse.x, mouse.y) }
+            onPositionChanged: (mouse) => reader.moveMagnifier(mouse.x, mouse.y)
+            onReleased: reader.magnifying = false
+            onCanceled: reader.magnifying = false
             onWheel: (wheel) => {
                 if (wheel.modifiers & Qt.ControlModifier) {
                     pageView.zoomAt(wheel.x, wheel.y, zoomLayer.scale * (wheel.angleDelta.y > 0 ? 1.2 : 1 / 1.2))
@@ -700,7 +747,7 @@ Rectangle {
             DragHandler {
                 id: swipe
                 target: null
-                enabled: !pageView.zoomed && !pinch.active
+                enabled: !pageView.zoomed && !pinch.active && !reader.magnifying
                 yAxis.enabled: false
                 onTranslationChanged: if (active) pageHolder.x = translation.x * 0.7
                 onActiveChanged: {

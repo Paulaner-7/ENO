@@ -1101,7 +1101,7 @@ QString Trackers::lookupTitle(const QString &seriesId, const QString &title) con
 }
 
 void Trackers::link(const QString &seriesId, const QString &service, const QVariant &remoteId, const QString &title) {
-    saveLink(seriesId, service, remoteId, title);
+    saveLink(seriesId, service, App::plain(remoteId), title);
     saveMiss(seriesId, service, false);
     emit changed();
     unitFinished(seriesId);

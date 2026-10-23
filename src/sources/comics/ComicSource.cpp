@@ -102,6 +102,8 @@ std::unique_ptr<Source> createSource(const SourceConfig &config) {
         return std::make_unique<OlympusSource>(config);
     if (e == QLatin1String("zerocomics"))
         return std::make_unique<ZeroComicsSource>(config);
+    if (e == QLatin1String("kagane"))
+        return std::make_unique<KaganeSource>(config);
     return nullptr;
 #endif
 }

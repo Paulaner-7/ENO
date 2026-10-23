@@ -2,15 +2,26 @@ import QtQuick
 import QtQuick.Controls.Basic
 import ScanCore
 
-// A short question with Cancel and a confirming button. Springs in from the
-// middle of the window over a dimmed page.
+// A short question with Cancel and a confirming button, or (asksText) a
+// name to type. Springs in from the middle of the window over a dimmed page.
 Dialog {
     id: dialog
     property string heading
     property string message
     property string confirmText: "OK"
     property bool destructive: false
+    // A text field (a list's name, say): its text is `value`.
+    property bool asksText: false
+    property alias value: field.text
+    property string placeholder
     signal confirmed()
+
+    function confirm() {
+        if (asksText && !field.text.trim()) return
+        dialog.close()
+        dialog.confirmed()
+    }
+    onOpened: if (asksText) { field.forceActiveFocus(); field.selectAll() }
 
     parent: Overlay.overlay
     anchors.centerIn: parent
@@ -63,6 +74,14 @@ Dialog {
             lineHeight: 1.25
             wrapMode: Text.Wrap
         }
+        InlineField {
+            id: field
+            visible: dialog.asksText
+            width: parent.width
+            placeholderText: dialog.placeholder
+            maximumLength: 60
+            onAccepted: dialog.confirm()
+        }
         Row {
             anchors.right: parent.right
             spacing: 8
@@ -73,10 +92,8 @@ Dialog {
             ScButton {
                 text: dialog.confirmText
                 variant: dialog.destructive ? "danger" : "primary"
-                onClicked: {
-                    dialog.close()
-                    dialog.confirmed()
-                }
+                enabled: !dialog.asksText || field.text.trim().length > 0
+                onClicked: dialog.confirm()
             }
         }
     }

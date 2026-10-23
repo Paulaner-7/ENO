@@ -19,7 +19,6 @@ import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 
@@ -89,7 +88,7 @@ class AndroidSettings(
         when (p) {
             is TwoStatePreference -> value.jsonPrimitive.boolean.let { if (p.callChangeListener(it)) p.isChecked = it }
             is MultiSelectListPreference ->
-                value.jsonArray.map { it.jsonPrimitive.content }.toSet().let { if (p.callChangeListener(it)) p.values = it }
+                (value as? JsonArray).orEmpty().map { it.jsonPrimitive.content }.toSet().let { if (p.callChangeListener(it)) p.values = it }
             is ListPreference -> value.jsonPrimitive.contentOrNull.let { if (p.callChangeListener(it)) p.value = it }
             is EditTextPreference -> value.jsonPrimitive.contentOrNull.let { if (p.callChangeListener(it)) p.text = it }
             else -> throw HostError("That setting cannot be changed.", 400)

@@ -44,7 +44,14 @@ Updater *Updater::instance() {
 
 QString Updater::assetSuffix() const {
 #if defined(Q_OS_ANDROID)
+    // The APK built for this phone's processor (32-bit phones: issue #19).
+#if defined(__aarch64__)
     return QStringLiteral("-android-arm64.apk");
+#elif defined(__arm__)
+    return QStringLiteral("-android-armv7.apk");
+#else
+    return QStringLiteral("-android-x86_64.apk");
+#endif
 #elif defined(Q_OS_WIN)
     return QStringLiteral("-windows-x64-setup.exe");
 #elif defined(Q_OS_MACOS)

@@ -2,12 +2,15 @@
 // real extensions use (lib 1.4 style: request/parse overrides). It reads a
 // fixture site on fixture.test that the tests serve, and touches what real
 // extensions lean on: Injekt's Json, SimpleDateFormat, JavaScript, filters,
-// a setting, an interceptor on its own client, and pages that need a second
-// request for their image.
+// settings, an interceptor on its own client, pages that need a second
+// request for their image, and the app's main thread.
 package com.mediumdev.scancore.testext
 
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import androidx.preference.ListPreference
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.PreferenceScreen
 import app.cash.quickjs.QuickJs
 import eu.kanade.tachiyomi.network.GET
@@ -32,6 +35,8 @@ import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class TestSource :
     HttpSource(),
@@ -44,6 +49,9 @@ class TestSource :
     private val json: Json by injectLazy()
     private val preferences: SharedPreferences by lazy { getSourcePreferences() }
     private val dates = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+    // Made with the source, as Komga's is: needs the app's main thread (#20).
+    private val main = Handler(Looper.getMainLooper())
 
     // Every request of this source carries a header the fixture site checks,
     // images included, so the tests see the source's own client was used.
@@ -74,7 +82,14 @@ class TestSource :
 
     override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/popular?page=$page&latest=1", headers)
 
-    override fun latestUpdatesParse(response: Response) = mangas(response)
+    // Hands work to the main thread and waits for it, as extensions do for
+    // toasts and web views.
+    override fun latestUpdatesParse(response: Response): MangasPage {
+        val ran = CountDownLatch(1)
+        main.post { if (Looper.myLooper() == Looper.getMainLooper()) ran.countDown() }
+        check(ran.await(5, TimeUnit.SECONDS)) { "The main thread did not run." }
+        return mangas(response)
+    }
 
     override fun searchMangaRequest(
         page: Int,
@@ -150,6 +165,15 @@ class TestSource :
                 entryValues = arrayOf("high", "low")
                 setDefaultValue("high")
                 summary = "%s"
+            },
+        )
+        // No default, so the stored value starts as null (#21).
+        screen.addPreference(
+            MultiSelectListPreference(screen.context).apply {
+                key = "blocked"
+                title = "Blocked genres"
+                entries = arrayOf("Action", "Drama")
+                entryValues = arrayOf("action", "drama")
             },
         )
     }

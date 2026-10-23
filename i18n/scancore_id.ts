@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>Terbaik</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>Kualitas dan audio</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>Yang diputar lebih dulu. Video dari sumber dipilih berdasarkan namanya, dan stream dengan beberapa resolusi atau trek audio dimulai pada yang diminta. Ubah keduanya saat menonton dengan tombol Kualitas dan Audio pada pemutar.</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>Kualitas pilihan</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>Resolusi tertinggi hingga yang ini; yang lebih rendah menghemat data.</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>Audio pilihan</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>Sulih suara jika sumber memilikinya, atau bahasa asli dengan subtitle.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Anime di Simkl.</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 ekstensi terpasang</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1 ada di beberapa daftar dan kini di yang pertama</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>Tinjau</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Ganti nama daftar</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Daftar baru</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Nama, misalnya Isekai atau Mingguan</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Ganti nama</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Tambah</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Hapus daftar %1?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Serinya pindah ke Dibaca; tidak ada yang dihapus dari pustaka Anda.</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>Geser ke kiri</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>Geser ke kanan</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Hapus daftar</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>Merangkum semua bab baru dari satu pemeriksaan, bukan satu notifikasi per seri.</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Ganti nama daftar</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Daftar baru</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Nama, misalnya Isekai atau Mingguan</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Ganti nama</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Tambah</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Hapus daftar %1?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Serinya pindah ke Dibaca; tidak ada yang dihapus dari pustaka Anda.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Hapus</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>Daftar Anda</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>Daftar Anda sendiri ada di samping Dibaca, Rencana dibaca, Ditunda, Selesai, dan Dihentikan, untuk komik, novel, dan anime. Cadangan Mihon dan LNReader membawa daftarnya. Tekan lama atau klik kanan salah satunya di pustaka untuk mengubahnya.</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>Naikkan</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>Turunkan</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Hapus daftar</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>Tambah daftar lain</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>Tambah daftar</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>Bawa kembali semuanya dari Mihon</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>%1 komik dan %2 anime.</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>Daftarmu ikut dalam urutan Mihon: %1.</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>Repositori di cadangan</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>%1 ekstensi</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>Ekstensi adalah kode buatan orang lain. Tambahkan repositori yang Anda percayai.</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>Pasang %1 ekstensi asal seri kamu</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation> dan %1 lainnya</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>%1 seri</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>Ekstensi berjalan di runtime Ekstensi, yang diunduh lebih dulu (sekitar 100 MB).</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1 seri berasal dari ekstensi yang tidak ada di repositori mana pun ini; mereka menunggu di bawah untuk ditemukan lewat judul.</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>Batal</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>Impor</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>Layar penuh</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>Kualitas</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>Temukan</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>Buka file buku (EPUB atau PDF)</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>Buku (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Semua file (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>Tetap tampilkan paragraf yang dibacakan</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>Bab dan layar</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>Tampilkan bab</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>Di halaman komik atau novel: semua bab dalam satu daftar, atau sepuluh sekaligus dengan nomor halaman.</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>Satu daftar</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>Halaman isi 10</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>Biarkan layar menyala saat membaca</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>Layar tidak meredup atau terkunci selama pembaca terbuka. Video selalu membuatnya tetap menyala saat diputar.</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>Tata letak bab</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>Baris, atau kisi dua kolom atau lebih untuk judul pendek seperti volume. Tiap seri bisa punya sendiri lewat tombol kisi di atas babnya.</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>Baris</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>Kisi</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>Tekan lama untuk zoom</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>Tahan jari atau mouse di halaman untuk melihatnya dua kali lebih besar sampai dilepas, untuk dialog kecil dan catatan di pinggir.</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>Posisi zoom tekan lama</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>Tempat kamu menekan</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>Tengah</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>Ketuk dua kali untuk zoom</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>Di halaman: ketuk dua kali di tengah untuk memperbesar, sekali lagi untuk memperkecil.</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>Cari di ekstensi saya</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>Volume</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ekstra</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>Sembunyikan grup</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>Tampilkan sebagai baris</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>Tampilkan sebagai kisi</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>Nanti</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>Sesuai sumbernya</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>Jepang (asli)</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>Sulih suara Inggris</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>Sulih suara Spanyol</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>Sulih suara Portugis</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>Sulih suara Prancis</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>Sulih suara Jerman</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>Sulih suara Italia</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>Sulih suara Hindi</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>Terbaik yang tersedia</translation>
         </message>
     </context>
     <context>

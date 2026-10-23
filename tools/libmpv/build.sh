@@ -5,6 +5,7 @@
 # against their SHA-256; nothing built here is committed.
 #
 #   tools/libmpv/build.sh android-arm64     phones
+#   tools/libmpv/build.sh android-armv7     32-bit phones
 #   tools/libmpv/build.sh android-x86_64    the emulator
 #   tools/libmpv/build.sh linux-x86_64      the AppImage (on its build system)
 #   tools/libmpv/build.sh windows-x64       cross-built with mingw-w64
@@ -55,13 +56,16 @@ fi
 
 case "$target" in
 android-arm64) os=android cpu=aarch64 triple=aarch64-linux-android ffarch=aarch64 ffcpu=armv8-a ;;
+# 32-bit phones (issue #19). The NDK's clang is armv7a-linux-androideabi<api>,
+# its other tools (and autotools' --host) arm-linux-androideabi.
+android-armv7) os=android cpu=arm triple=armv7a-linux-androideabi ffarch=arm ffcpu=armv7-a ;;
 android-x86_64) os=android cpu=x86_64 triple=x86_64-linux-android ffarch=x86_64 ffcpu=generic ;;
 linux-x86_64) os=linux cpu=x86_64 triple= ffarch=x86_64 ffcpu=generic ;;
 windows-x64) os=windows cpu=x86_64 triple=x86_64-w64-mingw32 ffarch=x86_64 ffcpu=generic ;;
 macos-arm64) os=macos cpu=aarch64 triple= ffarch=aarch64 ffcpu=armv8-a ;;
 macos-x86_64) os=macos cpu=x86_64 triple= ffarch=x86_64 ffcpu=generic ;;
 *)
-    echo "usage: $0 android-arm64|android-x86_64|linux-x86_64|windows-x64|macos-universal" >&2
+    echo "usage: $0 android-arm64|android-armv7|android-x86_64|linux-x86_64|windows-x64|macos-universal" >&2
     exit 2
     ;;
 esac

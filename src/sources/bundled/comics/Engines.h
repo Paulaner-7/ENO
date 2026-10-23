@@ -269,6 +269,36 @@ private:
     QJsonObject series(const QString &seriesUrl);
 };
 
+// Kagane: the site's JSON API (<base>/api/v2), which answers without a
+// browser check. Series are <base>/series/<id>, chapters
+// <base>/series/<id>/reader/<book id>. Options: "languages" (the content
+// languages to list; default the source's language), "adult" (adult titles
+// too).
+class KaganeSource : public Source {
+public:
+    using Source::Source;
+    QList<Summary> search(const QString &query) override;
+    QList<Chapter> chapters(const QString &seriesUrl) override;
+    QList<Panel> panels(const QString &chapterUrl) override;
+    std::optional<Details> details(const QString &seriesUrl) override;
+    QList<LatestItem> latest(int limit) override;
+    bool hasLatest() const override { return true; }
+
+    QList<Summary> parseSearch(const QJsonObject &root) const;
+    QList<LatestItem> parseLatest(const QJsonObject &root) const;
+    // The compact chapter index (/books/index?fields=List).
+    QList<Chapter> parseChapters(const QJsonObject &index, const QString &seriesId) const;
+    Details parseDetails(const QJsonObject &series) const;
+    // A chapter's pages from the answer to its page request.
+    static QList<Panel> parsePanels(const QJsonObject &book, const QString &bookId);
+
+private:
+    QJsonObject api(const QByteArray &method, const QString &path, const QList<QPair<QString, QString>> &params = {},
+                    const QByteArray &body = {}, const Headers &extra = {});
+    QByteArray searchBody(const QString &query) const;
+    QString integrityToken(bool fresh);
+};
+
 class WpSource : public Source {
 public:
     using Source::Source;

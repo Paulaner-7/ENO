@@ -52,6 +52,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.9.0" date="2026-10-23">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#290--2026-10-23</url>
+      <description>
+        <p>Mihon backups that bring back everything (lists in order, history, pages, chapter and reader settings, repositories and extensions), Kagane as a built-in source, a chapter grid with Volumes, Chapters and Extras tabs, hold-to-zoom in the comic reader, and fixes for extensions on computers and settings lost on restart.</p>
+      </description>
+    </release>
+    <release version="2.8.0" date="2026-10-23">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#280--2026-10-23</url>
+      <description>
+        <p>Your own library lists, a preferred quality and audio (dubs) for anime, a quality menu in the player, the screen kept on while watching and reading, one scrolling chapter list, and extensions working again on computers.</p>
+      </description>
+    </release>
     <release version="2.7.1" date="2026-10-21">
       <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#271--2026-10-21</url>
       <description>

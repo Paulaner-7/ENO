@@ -5,14 +5,23 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.view.OrientationEventListener;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowInsetsController;
 
 // Turning the phone for the anime player's full screen (src/app/Platform.cpp,
-// WatchPage.qml).
+// WatchPage.qml), keeping the screen on, and the bars' icons.
 public final class Screen {
     private Screen() {}
 
     private static OrientationEventListener release;
+
+    // The screen stays on while a video plays (src/app/KeepAwake.cpp).
+    public static void keepOn(final Activity activity, final boolean on) {
+        activity.runOnUiThread(() -> {
+            if (on) activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            else activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        });
+    }
 
     // Status and navigation bar icons for the screen under them: light icons
     // on SCANCORE's dark screens, dark icons on light ones, whatever the

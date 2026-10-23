@@ -1317,6 +1317,30 @@
             <source>Best</source>
             <translation>Meilleur</translation>
         </message>
+        <message>
+            <source>Quality and audio</source>
+            <translation>Qualité et audio</translation>
+        </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.</source>
+            <translation>Ce qui est lu en premier. Les vidéos d'une source sont choisies d'après leur nom, et un flux avec plusieurs résolutions ou pistes audio démarre sur celles demandées. Changez-les pendant le visionnage avec les boutons Qualité et Audio du lecteur.</translation>
+        </message>
+        <message>
+            <source>Preferred quality</source>
+            <translation>Qualité préférée</translation>
+        </message>
+        <message>
+            <source>The highest resolution at or under this one; lower ones save data.</source>
+            <translation>La meilleure résolution jusqu'à celle-ci ; les plus basses économisent des données.</translation>
+        </message>
+        <message>
+            <source>Preferred audio</source>
+            <translation>Audio préféré</translation>
+        </message>
+        <message>
+            <source>A dub when the source has one, or the original language with subtitles.</source>
+            <translation>Une VF ou un doublage quand la source en a un, sinon la langue originale sous-titrée.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -2303,6 +2327,14 @@
         <message>
             <source>Anime on Simkl.</source>
             <translation>Les anime sur Simkl.</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 extensions installées</translation>
+        </message>
+        <message>
+            <source>%1 were in several lists and are in the first</source>
+            <translation>%1 étaient dans plusieurs listes et sont dans la première</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +3931,46 @@
             <source>Review</source>
             <translation>Examiner</translation>
         </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Renommer la liste</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Nouvelle liste</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Nom, comme Isekai ou Hebdo</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Renommer</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ajouter</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Retirer la liste %1 ?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Ses séries passent dans En cours ; rien n'est retiré de votre bibliothèque.</translation>
+        </message>
+        <message>
+            <source>Move left</source>
+            <translation>Déplacer à gauche</translation>
+        </message>
+        <message>
+            <source>Move right</source>
+            <translation>Déplacer à droite</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Retirer la liste</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4065,6 +4137,66 @@
         <message>
             <source>Sums up every new chapter a check found, instead of one notification per series.</source>
             <translation>Résume tous les nouveaux chapitres d'une vérification au lieu d'une notification par série.</translation>
+        </message>
+        <message>
+            <source>Rename list</source>
+            <translation>Renommer la liste</translation>
+        </message>
+        <message>
+            <source>New list</source>
+            <translation>Nouvelle liste</translation>
+        </message>
+        <message>
+            <source>Name, like Isekai or Weekly</source>
+            <translation>Nom, comme Isekai ou Hebdo</translation>
+        </message>
+        <message>
+            <source>Rename</source>
+            <translation>Renommer</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ajouter</translation>
+        </message>
+        <message>
+            <source>Remove the list %1?</source>
+            <translation>Retirer la liste %1 ?</translation>
+        </message>
+        <message>
+            <source>Its series move to Reading; nothing is removed from your library.</source>
+            <translation>Ses séries passent dans En cours ; rien n'est retiré de votre bibliothèque.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Supprimer</translation>
+        </message>
+        <message>
+            <source>Your lists</source>
+            <translation>Vos listes</translation>
+        </message>
+        <message>
+            <source>Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.</source>
+            <translation>Vos propres listes s'ajoutent à En cours, À lire, En pause, Terminé et Abandonné, pour les BD, romans et animes. Les sauvegardes Mihon et LNReader apportent les leurs. Appuyez longuement ou faites un clic droit sur l'une d'elles dans la bibliothèque pour la modifier.</translation>
+        </message>
+        <message>
+            <source>Move up</source>
+            <translation>Monter</translation>
+        </message>
+        <message>
+            <source>Move down</source>
+            <translation>Descendre</translation>
+        </message>
+        <message>
+            <source>Remove list</source>
+            <translation>Retirer la liste</translation>
+        </message>
+        <message>
+            <source>Add another list</source>
+            <translation>Ajouter une autre liste</translation>
+        </message>
+        <message>
+            <source>Add a list</source>
+            <translation>Ajouter une liste</translation>
         </message>
     </context>
     <context>
@@ -4300,6 +4432,61 @@
         </message>
     </context>
     <context>
+        <name>MihonImportDialog</name>
+        <message>
+            <source>Bring back everything from Mihon</source>
+            <translation>Tout récupérer de Mihon</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime.</source>
+            <translation>%1 BD et %2 anime.</translation>
+        </message>
+        <message>
+            <source>Your lists come along in Mihon's order: %1.</source>
+            <translation>Vos listes arrivent dans l'ordre de Mihon : %1.</translation>
+        </message>
+        <message>
+            <source>Repositories in the backup</source>
+            <translation>Dépôts de la sauvegarde</translation>
+        </message>
+        <message>
+            <source>%1 extensions</source>
+            <translation>%1 extensions</translation>
+        </message>
+        <message>
+            <source>Extensions are other people's code. Add repositories you trust.</source>
+            <translation>Les extensions sont du code écrit par d'autres. Ajoutez des dépôts de confiance.</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions your series came from</source>
+            <translation>Installer les %1 extensions d'où viennent vos séries</translation>
+        </message>
+        <message>
+            <source> and %1 more</source>
+            <translation> et %1 de plus</translation>
+        </message>
+        <message>
+            <source>%1 series</source>
+            <translation>%1 séries</translation>
+        </message>
+        <message>
+            <source>Extensions run in the Extensions runtime, which downloads first (about 100 MB).</source>
+            <translation>Les extensions tournent dans l'environnement d'extensions, téléchargé d'abord (environ 100 Mo).</translation>
+        </message>
+        <message>
+            <source>%1 series come from extensions none of these repositories has; they wait below to be found by title.</source>
+            <translation>%1 séries viennent d'extensions qu'aucun de ces dépôts ne propose ; elles attendent ci-dessous d'être retrouvées par leur titre.</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>Annuler</translation>
+        </message>
+        <message>
+            <source>Import</source>
+            <translation>Importer</translation>
+        </message>
+    </context>
+    <context>
         <name>NativePlayer</name>
         <message>
             <source>This copy of SCANCORE has no video player for anime from extensions.</source>
@@ -4352,6 +4539,10 @@
         <message>
             <source>Full screen</source>
             <translation>Plein écran</translation>
+        </message>
+        <message>
+            <source>Quality</source>
+            <translation>Qualité</translation>
         </message>
     </context>
     <context>
@@ -4711,6 +4902,18 @@
         <message>
             <source>Discover</source>
             <translation>Découvrir</translation>
+        </message>
+        <message>
+            <source>Open a book file (EPUB or PDF)</source>
+            <translation>Ouvrir un fichier livre (EPUB ou PDF)</translation>
+        </message>
+        <message>
+            <source>Books (*.epub *.pdf)</source>
+            <translation>Livres (*.epub *.pdf)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Tous les fichiers (*)</translation>
         </message>
     </context>
     <context>
@@ -5561,6 +5764,78 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>Garder à l&apos;écran le paragraphe lu</translation>
         </message>
+        <message>
+            <source>Chapters and screen</source>
+            <translation>Chapitres et écran</translation>
+        </message>
+        <message>
+            <source>Show chapters</source>
+            <translation>Afficher les chapitres</translation>
+        </message>
+        <message>
+            <source>On a comic's or novel's page: every chapter in one list, or ten at a time with page numbers.</source>
+            <translation>Sur la page d'une BD ou d'un roman : tous les chapitres en une liste, ou dix à la fois avec des numéros de page.</translation>
+        </message>
+        <message>
+            <source>One list</source>
+            <translation>Une liste</translation>
+        </message>
+        <message>
+            <source>Pages of 10</source>
+            <translation>Pages de 10</translation>
+        </message>
+        <message>
+            <source>Keep the screen on while reading</source>
+            <translation>Garder l'écran allumé pendant la lecture</translation>
+        </message>
+        <message>
+            <source>The screen does not dim or lock while a reader is open. Videos always keep it on while they play.</source>
+            <translation>L'écran ne s'assombrit pas et ne se verrouille pas tant qu'un lecteur est ouvert. Les vidéos le gardent toujours allumé pendant la lecture.</translation>
+        </message>
+        <message>
+            <source>Chapter layout</source>
+            <translation>Disposition des chapitres</translation>
+        </message>
+        <message>
+            <source>Rows, or a grid of two or more for short titles such as volumes. Each series can have its own from the grid button above its chapters.</source>
+            <translation>Des lignes, ou une grille de deux ou plus pour les titres courts comme les tomes. Chaque série peut avoir la sienne avec le bouton grille au-dessus de ses chapitres.</translation>
+        </message>
+        <message>
+            <source>Rows</source>
+            <translation>Lignes</translation>
+        </message>
+        <message>
+            <source>Grid</source>
+            <translation>Grille</translation>
+        </message>
+        <message>
+            <source>Long press to zoom</source>
+            <translation>Appui long pour zoomer</translation>
+        </message>
+        <message>
+            <source>Hold a finger or the mouse on the page to see it twice as big until you let go, for small dialogue and notes in the margins.</source>
+            <translation>Gardez un doigt ou la souris sur la page pour la voir deux fois plus grande jusqu'à ce que vous lâchiez : pour les petits dialogues et les notes en marge.</translation>
+        </message>
+        <message>
+            <source>Long press zoom position</source>
+            <translation>Position du zoom par appui long</translation>
+        </message>
+        <message>
+            <source>Where you press</source>
+            <translation>Là où vous appuyez</translation>
+        </message>
+        <message>
+            <source>Centre</source>
+            <translation>Centre</translation>
+        </message>
+        <message>
+            <source>Double tap to zoom</source>
+            <translation>Toucher deux fois pour zoomer</translation>
+        </message>
+        <message>
+            <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
+            <translation>Sur les pages : deux touches au milieu zooment, deux autres dézooment.</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6014,6 +6289,26 @@
         <message>
             <source>Find it on my extensions</source>
             <translation>Chercher dans mes extensions</translation>
+        </message>
+        <message>
+            <source>Volumes</source>
+            <translation>Tomes</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Bonus</translation>
+        </message>
+        <message>
+            <source>Hide groups</source>
+            <translation>Masquer des groupes</translation>
+        </message>
+        <message>
+            <source>Show as rows</source>
+            <translation>Afficher en lignes</translation>
+        </message>
+        <message>
+            <source>Show as a grid</source>
+            <translation>Afficher en grille</translation>
         </message>
     </context>
     <context>
@@ -7794,6 +8089,49 @@
         <message>
             <source>Later</source>
             <translation>Plus tard</translation>
+        </message>
+    </context>
+    <context>
+        <name>VideoPrefs</name>
+        <message>
+            <source>As the source plays it</source>
+            <translation>Comme la source le diffuse</translation>
+        </message>
+        <message>
+            <source>Japanese (original)</source>
+            <translation>Japonais (original)</translation>
+        </message>
+        <message>
+            <source>English dub</source>
+            <translation>Doublage anglais</translation>
+        </message>
+        <message>
+            <source>Spanish dub</source>
+            <translation>Doublage espagnol</translation>
+        </message>
+        <message>
+            <source>Portuguese dub</source>
+            <translation>Doublage portugais</translation>
+        </message>
+        <message>
+            <source>French dub</source>
+            <translation>Doublage français</translation>
+        </message>
+        <message>
+            <source>German dub</source>
+            <translation>Doublage allemand</translation>
+        </message>
+        <message>
+            <source>Italian dub</source>
+            <translation>Doublage italien</translation>
+        </message>
+        <message>
+            <source>Hindi dub</source>
+            <translation>Doublage hindi</translation>
+        </message>
+        <message>
+            <source>Best available</source>
+            <translation>La meilleure disponible</translation>
         </message>
     </context>
     <context>

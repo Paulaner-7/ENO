@@ -17,6 +17,9 @@
 #include "sources/comics/Registry.h"
 
 #include <QJsonDocument>
+#include <algorithm>
+#include <QMutex>
+#include <QUuid>
 #include <QSet>
 #include <QJsonObject>
 #include <QLocale>
@@ -209,6 +212,111 @@ void Library::setCategory(const QString &seriesId, const QString &category) {
     Database::exec(QStringLiteral("UPDATE library SET category = ?, changed_at = ? WHERE series_id = ?"),
                    {category, Database::now(), seriesId});
     notifyChanged();
+}
+
+namespace {
+
+QMutex g_categoriesMutex;
+const QString kCategoriesKey = QStringLiteral("libraryCategories");
+
+// A new list is checked for new chapters like the built-in reading lists.
+void checkListForUpdates(const QString &id) {
+    QMetaObject::invokeMethod(
+        App::instance(),
+        [id] {
+            // Unless it is gone again by now.
+            const auto own = Library::storedCategories();
+            if (std::none_of(own.begin(), own.end(), [&](const QVariant &c) { return c.toMap().value(QStringLiteral("id")) == id; }))
+                return;
+            auto lists = App::instance()->settings().value(QStringLiteral("updateLists")).toList();
+            if (!lists.contains(id)) {
+                lists.append(id);
+                App::instance()->setSetting(QStringLiteral("updateLists"), lists);
+            }
+        },
+        Qt::QueuedConnection);
+}
+
+} // namespace
+
+QVariantList Library::storedCategories() {
+    return Database::pref(kCategoriesKey).toMap().value(QStringLiteral("list")).toList();
+}
+
+qint64 Library::categoriesChangedAt() {
+    return Database::pref(kCategoriesKey).toMap().value(QStringLiteral("changed")).toLongLong();
+}
+
+void Library::storeCategories(const QVariantList &categories, qint64 changedAt) {
+    Database::setPref(kCategoriesKey, QVariantMap{{QStringLiteral("list"), categories}, {QStringLiteral("changed"), changedAt}});
+    QMetaObject::invokeMethod(instance(), [] { instance()->notifyChanged(); }, Qt::QueuedConnection);
+}
+
+QString Library::categoryNamed(const QString &name) {
+    const auto wanted = name.trimmed();
+    if (wanted.isEmpty())
+        return QStringLiteral("reading");
+    QMutexLocker lock(&g_categoriesMutex);
+    auto list = storedCategories();
+    for (const auto &c : std::as_const(list))
+        if (c.toMap().value(QStringLiteral("name")).toString().compare(wanted, Qt::CaseInsensitive) == 0)
+            return c.toMap().value(QStringLiteral("id")).toString();
+    const auto id = QStringLiteral("c-") + QUuid::createUuid().toString(QUuid::Id128).left(10);
+    list.append(QVariantMap{{QStringLiteral("id"), id}, {QStringLiteral("name"), wanted.left(60)}});
+    storeCategories(list, Database::now());
+    checkListForUpdates(id);
+    return id;
+}
+
+QString Library::addCategory(const QString &name) {
+    const auto wanted = name.trimmed();
+    if (wanted.isEmpty())
+        return {};
+    return categoryNamed(wanted);
+}
+
+void Library::renameCategory(const QString &id, const QString &name) {
+    const auto wanted = name.trimmed().left(60);
+    if (wanted.isEmpty())
+        return;
+    QMutexLocker lock(&g_categoriesMutex);
+    auto list = storedCategories();
+    for (auto &c : list)
+        if (c.toMap().value(QStringLiteral("id")) == id) {
+            auto m = c.toMap();
+            m.insert(QStringLiteral("name"), wanted);
+            c = m;
+        }
+    storeCategories(list, Database::now());
+}
+
+void Library::removeCategory(const QString &id) {
+    QMutexLocker lock(&g_categoriesMutex);
+    auto list = storedCategories();
+    list.removeIf([&](const QVariant &c) { return c.toMap().value(QStringLiteral("id")) == id; });
+    storeCategories(list, Database::now());
+    Database::exec(QStringLiteral("UPDATE library SET category = 'reading', changed_at = ? WHERE category = ?"), {Database::now(), id});
+    for (const auto *key : {"updateLists", "autoDownloadLists"}) {
+        auto lists = App::instance()->settings().value(QLatin1String(key)).toList();
+        if (lists.removeAll(id) > 0)
+            App::instance()->setSetting(QLatin1String(key), lists);
+    }
+    if (App::instance()->settings().value(QStringLiteral("libraryCategory")) == id)
+        App::instance()->setSetting(QStringLiteral("libraryCategory"), QStringLiteral("all"));
+}
+
+void Library::moveCategory(const QString &id, int by) {
+    QMutexLocker lock(&g_categoriesMutex);
+    auto list = storedCategories();
+    int at = -1;
+    for (int i = 0; i < list.size(); ++i)
+        if (list[i].toMap().value(QStringLiteral("id")) == id)
+            at = i;
+    const int to = at + by;
+    if (at < 0 || to < 0 || to >= list.size())
+        return;
+    list.move(at, to);
+    storeCategories(list, Database::now());
 }
 
 bool Library::isFavourite(const QString &seriesId) const {
@@ -479,9 +587,10 @@ QVariantMap Library::seriesSettings(const QString &seriesId) const {
     return parse(Database::scalar(QStringLiteral("SELECT value FROM series_settings WHERE series_id = ?"), {seriesId})).toMap();
 }
 
-void Library::setSeriesSetting(const QString &seriesId, const QString &key, const QVariant &value) {
+void Library::setSeriesSetting(const QString &seriesId, const QString &key, const QVariant &input) {
     if (seriesId.isEmpty())
         return;
+    const auto value = App::plain(input);
     auto settings = seriesSettings(seriesId);
     if (value.isNull() || !value.isValid())
         settings.remove(key);

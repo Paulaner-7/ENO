@@ -13,6 +13,9 @@ AbstractButton {
     property bool selected: false
     property bool canDownload: true
     property bool bookmarked: false
+    // One cell of the chapter grid: a tile, with only the download state at
+    // its end (read and download stay in the long-press menu).
+    property bool cell: false
     signal toggleRead()
     signal requestDownload()
     signal removeDownload()
@@ -22,7 +25,9 @@ AbstractButton {
     readonly property bool done: progress ? progress.completed === true : false
     readonly property real percent: progress ? (progress.percent || 0) : 0
 
-    height: 54
+    // Titles may take two lines.
+    implicitHeight: Math.max(cell ? 58 : 54, info.implicitHeight + 18)
+    height: implicitHeight
     hoverEnabled: true
     onPressAndHold: if (!selecting) menuRequested(width / 2, height / 2)
 
@@ -32,19 +37,22 @@ AbstractButton {
     }
 
     background: Rectangle {
-        x: Theme.gutter - 12
-        width: row.width - 2 * Theme.gutter + 24
+        x: row.cell ? 3 : Theme.gutter - 12
+        y: row.cell ? 3 : 0
+        width: row.cell ? row.width - 6 : row.width - 2 * Theme.gutter + 24
+        height: row.cell ? row.height - 6 : row.height
         radius: Theme.radiusMd
         color: row.selected ? Theme.alpha(Theme.accent, 0.14)
-             : row.current ? Theme.alpha(Theme.text, 0.06)
-             : row.hovered ? Theme.alpha(Theme.text, 0.04) : "transparent"
+             : row.current ? Theme.alpha(Theme.text, 0.08)
+             : row.hovered ? Theme.alpha(Theme.text, row.cell ? 0.07 : 0.04)
+             : row.cell ? Theme.alpha(Theme.text, 0.035) : "transparent"
         Behavior on color { ColorAnimation { duration: Motion.fast } }
     }
 
     contentItem: Item {
         Rectangle {
             visible: row.selecting
-            x: Theme.gutter
+            x: row.cell ? 12 : Theme.gutter
             anchors.verticalCenter: parent.verticalCenter
             width: 18
             height: 18
@@ -62,9 +70,10 @@ AbstractButton {
         }
 
         Column {
-            x: Theme.gutter + (row.selecting ? 32 : 0)
+            id: info
+            x: (row.cell ? 12 : Theme.gutter) + (row.selecting ? 32 : 0)
             anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - x - Theme.gutter - trailing.width - 12
+            width: parent.width - x - (row.cell ? 8 : Theme.gutter) - trailing.width - (trailing.width > 0 ? 12 : 0)
             spacing: 3
             Behavior on x { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
             Text {
@@ -75,10 +84,12 @@ AbstractButton {
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textMd
                 font.weight: row.current ? Font.DemiBold : Font.Normal
+                wrapMode: Text.Wrap
+                maximumLineCount: 2
                 elide: Text.ElideRight
                 Icon {
                     visible: row.bookmarked
-                    anchors.verticalCenter: parent.verticalCenter
+                    y: (parent.font.pixelSize * 1.25 - height) / 2
                     name: "bookmark"
                     size: 14
                     color: Theme.accent
@@ -104,6 +115,8 @@ AbstractButton {
                 }
                 Text {
                     id: subtitle
+                    width: Math.min(implicitWidth, info.width - (progressBar.visible ? 68 : 0))
+                    elide: Text.ElideRight
                     text: {
                         const parts = []
                         if (row.unit.released) parts.push(App.relativeTime(row.unit.released))
@@ -121,7 +134,7 @@ AbstractButton {
         Row {
             id: trailing
             anchors.right: parent.right
-            anchors.rightMargin: Theme.gutter - 6
+            anchors.rightMargin: row.cell ? 4 : Theme.gutter - 6
             anchors.verticalCenter: parent.verticalCenter
             spacing: 2
 
@@ -139,7 +152,8 @@ AbstractButton {
                 }
             }
             IconButton {
-                visible: row.canDownload && (row.hovered || Theme.touch || row.download !== null) && !(row.download && row.download.status === "running")
+                visible: row.canDownload && (row.cell ? row.download !== null : (row.hovered || Theme.touch || row.download !== null))
+                         && !(row.download && row.download.status === "running")
                 iconName: row.download && row.download.status === "done" ? "check"
                         : row.download && row.download.status === "failed" ? "triangle-alert"
                         : row.download && row.download.status === "queued" ? "clock" : "download"
@@ -151,7 +165,7 @@ AbstractButton {
                 onClicked: row.download && row.download.status === "done" ? row.removeDownload() : row.requestDownload()
             }
             IconButton {
-                visible: row.hovered || Theme.touch
+                visible: !row.cell && (row.hovered || Theme.touch)
                 iconName: row.done ? "eye-off" : "eye"
                 iconSize: 16
                 tip: row.done ? qsTr("Mark unread") : qsTr("Mark read")
