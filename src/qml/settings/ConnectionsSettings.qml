@@ -35,16 +35,19 @@ SettingsPane {
 
     SettingsGroup {
         title: qsTr("Tracking")
-        note: qsTr("Finishing a chapter or episode moves the series forward on every tracker you connect. Anime are matched by their AniList entry, comics and novels by their catalogue entry or title; link one by hand from its page.")
+        note: Router.animeOnly ? qsTr("Finishing an episode moves the series forward on every tracker you connect. Anime are matched by their AniList entry.")
+                               : qsTr("Finishing a chapter or episode moves the series forward on every tracker you connect. Anime are matched by their AniList entry, comics and novels by their catalogue entry or title; link one by hand from its page.")
 
         // The catalogues the Comics, Novels and Anime pages browse and search.
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "compass"
             title: qsTr("Comics catalogue")
             description: qsTr("What the Comics page shows and searches. None searches your sources directly.")
             CataloguePicker { media: "comic" }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "compass"
             title: qsTr("Novels catalogue")
             description: qsTr("What the Novels page shows and searches.")
@@ -54,11 +57,11 @@ SettingsPane {
             visible: Trackers.malAvailable
             iconName: "compass"
             title: qsTr("Anime catalogue")
-            description: qsTr("Whose lists the Anime page shows. Episodes, the schedule and search come from AniList either way.")
+            description: qsTr("Whose lists the Anime page shows. Episodes, the calendar and search come from AniList either way.")
             CataloguePicker { media: "anime" }
         }
         Repeater {
-            model: Trackers.services
+            model: Trackers.services.filter(t => !Router.animeOnly || (t.key !== "comick" && t.key !== "mangaupdates"))
             SettingRow {
                 id: trackerRow
                 required property var modelData
@@ -86,11 +89,12 @@ SettingsPane {
     SettingsGroup {
         visible: Presence.available
         title: qsTr("Discord")
-        note: qsTr("Shown while a reader or the player is open, through the Discord app on this computer.")
+        note: Router.animeOnly ? qsTr("Shown while the player is open, through the Discord app on this computer.")
+                               : qsTr("Shown while a reader or the player is open, through the Discord app on this computer.")
         SettingRow {
             iconName: "message-circle"
             iconTint: Theme.dark ? "#8c9eff" : "#5865f2"
-            title: qsTr("Show what you read and watch on Discord")
+            title: Router.animeOnly ? qsTr("Show what you watch on Discord") : qsTr("Show what you read and watch on Discord")
             description: App.settings.discordPresence !== true ? qsTr("Off") : Presence.connected ? qsTr("Connected to Discord") : qsTr("Discord is not running")
             Toggle { checked: App.settings.discordPresence === true; onToggled: App.setSetting("discordPresence", checked) }
         }
@@ -98,7 +102,7 @@ SettingsPane {
             visible: App.settings.discordPresence === true
             iconName: "eye-off"
             title: qsTr("Keep titles private")
-            description: qsTr("Shows “Reading a comic” without saying which.")
+            description: Router.animeOnly ? qsTr("Shows “Watching an anime” without saying which.") : qsTr("Shows “Reading a comic” without saying which.")
             Toggle { checked: App.settings.discordHideTitles === true; onToggled: App.setSetting("discordHideTitles", checked) }
         }
     }
@@ -107,10 +111,11 @@ SettingsPane {
 
     SettingsGroup {
         title: qsTr("Bring your library")
-        note: qsTr("Anime come in with the episodes you watched. Comics and novels come in with the chapters you read when one of your sources has them; the others wait below until they are found.")
+        note: Router.animeOnly ? qsTr("Anime come in with the episodes you watched.")
+                               : qsTr("Anime come in with the episodes you watched. Comics and novels come in with the chapters you read when one of your sources has them; the others wait below until they are found.")
         SettingRow {
-            iconName: "book-open"
-            title: qsTr("Mihon, Tachiyomi or Aniyomi backup")
+            iconName: Router.animeOnly ? "tv" : "book-open"
+            title: Router.animeOnly ? qsTr("Aniyomi backup") : qsTr("Mihon, Tachiyomi or Aniyomi backup")
             description: qsTr("A .tachibk file from More → Backup and restore. Series from an extension you have here come back exactly as they were.")
             ScButton {
                 text: qsTr("Choose file")
@@ -121,6 +126,7 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "book-text"
             title: qsTr("LNReader backup")
             description: qsTr("A backup .zip from LNReader's More → Backup. Novels from a plugin you have here come back exactly as they were.")
@@ -133,6 +139,7 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "download"
             title: qsTr("Back up for Mihon")
             description: qsTr("Saves the comics you read from extensions as a .tachibk file Mihon or Tachiyomi can restore.")
@@ -146,7 +153,7 @@ SettingsPane {
         SettingRow {
             iconName: "list"
             title: "AniList"
-            description: qsTr("Anime, comics and novels from a public AniList list.")
+            description: Router.animeOnly ? qsTr("Anime from a public AniList list.") : qsTr("Anime, comics and novels from a public AniList list.")
             Row {
                 spacing: 8
                 InlineField {
@@ -166,7 +173,7 @@ SettingsPane {
             }
         }
         SettingRow {
-            visible: Trackers.comickAvailable
+            visible: Trackers.comickAvailable && !Router.animeOnly
             iconName: "book-open"
             title: qsTr("Comick")
             description: Trackers.comick.name ? qsTr("Everything ") + Trackers.comick.name + qsTr(" follows on Comick.")
@@ -181,7 +188,7 @@ SettingsPane {
         SettingRow {
             iconName: "bookmark"
             title: "MyAnimeList"
-            description: qsTr("The anime or manga list file from MyAnimeList's export page.")
+            description: Router.animeOnly ? qsTr("The anime list file from MyAnimeList's export page.") : qsTr("The anime or manga list file from MyAnimeList's export page.")
             Row {
                 spacing: 8
                 ScButton {
@@ -235,7 +242,7 @@ SettingsPane {
 
     // Titles from an import that no source had yet.
     SettingsGroup {
-        visible: pane.waiting.length > 0
+        visible: pane.waiting.length > 0 && !Router.animeOnly
         title: qsTr("Waiting to be found · ") + pane.waiting.length
         note: qsTr("Adding a source in Settings → Sources, or a site coming back, can find more of them later.")
         SettingRow {

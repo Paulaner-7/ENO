@@ -259,7 +259,8 @@ Rectangle {
                     width: Math.min(root.width - 2 * Theme.gutter, 520)
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
-                    text: qsTr("Comics, novels and anime in one fast app. Everything runs and stays on your device.")
+                    text: Router.animeOnly ? qsTr("Anime in one fast app. Everything runs and stays on your device.")
+                                           : qsTr("Comics, novels and anime in one fast app. Everything runs and stays on your device.")
                     color: Theme.textMuted
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textLg
@@ -313,8 +314,9 @@ Rectangle {
                 spacing: 28
                 Heading {
                     kicker: qsTr("Everything in one place")
-                    title: qsTr("Read and watch from the sources you choose")
-                    body: qsTr("Search every source together, keep your place in every series, and download chapters for offline reading.")
+                    title: Router.animeOnly ? qsTr("Watch from the sources you choose") : qsTr("Read and watch from the sources you choose")
+                    body: Router.animeOnly ? qsTr("Search every source together, keep your place in every series, and download episodes to watch offline.")
+                                           : qsTr("Search every source together, keep your place in every series, and download chapters for offline reading.")
                 }
                 Flow {
                     width: parent.width
@@ -323,13 +325,13 @@ Rectangle {
                         model: [
                             { icon: "book-open", title: qsTr("Comics"), text: qsTr("Manhwa, manga and webtoons from Webtoon, MangaDex, your files and the sources you add. Vertical strip or page by page.") },
                             { icon: "book-text", title: qsTr("Novels"), text: qsTr("Royal Road, your EPUB books and the sources you add, with a reader you can tune: fonts, spacing, paper and sepia themes.") },
-                            { icon: "tv", title: qsTr("Anime"), text: qsTr("Trending, seasonal and top lists from AniList, a weekly schedule, and episodes that resume where you stopped.") }
-                        ]
+                            { icon: "tv", title: qsTr("Anime"), text: qsTr("Trending, seasonal and top lists from AniList, a weekly calendar, and episodes that resume where you stopped.") }
+                        ].filter(c => !Router.animeOnly || c.icon === "tv")
                         Rectangle {
                             id: card
                             required property var modelData
                             required property int index
-                            width: Theme.compact ? parent.width : (parent.width - 32) / 3
+                            width: Theme.compact || Router.animeOnly ? parent.width : (parent.width - 32) / 3
                             height: cardColumn.implicitHeight + 40
                             radius: Theme.radiusLg
                             color: Theme.surface
@@ -387,11 +389,13 @@ Rectangle {
                     body: qsTr("Pick the catalogue each page browses and searches. Connected trackers follow what you finish, whichever you browse with.")
                 }
                 Column {
+                    visible: !Router.animeOnly
                     spacing: 10
                     Text { text: qsTr("Comics"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
                     CataloguePicker { media: "comic" }
                 }
                 Column {
+                    visible: !Router.animeOnly
                     spacing: 10
                     Text { text: qsTr("Novels"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
                     CataloguePicker { media: "novel" }
@@ -409,7 +413,7 @@ Rectangle {
                     Text { text: qsTr("Keep your lists in step"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
                     Repeater {
                         // The three most used; the others are in Settings → Connections.
-                        model: Trackers.services.filter(t => ["anilist", "mal", "comick"].indexOf(t.key) >= 0).map(t => ({ service: t.key }))
+                        model: Trackers.services.filter(t => ["anilist", "mal", "comick"].indexOf(t.key) >= 0 && (!Router.animeOnly || t.key !== "comick")).map(t => ({ service: t.key }))
                         Item {
                             required property var modelData
                             width: trackerColumn.width
@@ -452,7 +456,7 @@ Rectangle {
             WheelScroll {}
             contentHeight: extensionsColumn.height + 60
             clip: true
-            readonly property var repositories: { App.dependOn(Extensions.revision); return Extensions.repositories() }
+            readonly property var repositories: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.repositories()) }
             Column {
                 id: extensionsColumn
                 x: Theme.gutter
@@ -487,7 +491,8 @@ Rectangle {
                         anchors.right: parent.right
                         anchors.rightMargin: 14
                         y: 12
-                        text: qsTr("This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.")
+                        text: Router.animeOnly ? qsTr("This is optional. ENO comes with AniList built in for anime, so you can skip this step and add an anime repository later if you want more.")
+                                               : qsTr("This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.")
                         color: Theme.text
                         font.family: Theme.fontSans
                         font.pixelSize: Theme.textSm
@@ -516,7 +521,8 @@ Rectangle {
                     width: parent.width
                     text: extensionsPage.repositories.length
                         ? qsTr("Added: %1").arg(extensionsPage.repositories.map(r => r.name).join(", "))
-                        : qsTr("No link? Continue; the Extensions page on the Comics tab takes one any time.")
+                        : Router.animeOnly ? qsTr("No link? Continue; the Extensions page on the Anime tab takes one any time.")
+                                           : qsTr("No link? Continue; the Extensions page on the Comics tab takes one any time.")
                     color: extensionsPage.repositories.length ? Theme.success : Theme.textMuted
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textSm
@@ -577,6 +583,7 @@ Rectangle {
                     }
                 }
                 Column {
+                    visible: !Router.animeOnly
                     spacing: 10
                     Text { text: qsTr("Comics open as"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
                     Segmented {
@@ -586,6 +593,7 @@ Rectangle {
                     }
                 }
                 Column {
+                    visible: !Router.animeOnly
                     spacing: 10
                     Text { text: qsTr("Comic sources in"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
                     Select {

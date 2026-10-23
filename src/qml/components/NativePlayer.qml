@@ -96,13 +96,14 @@ Item {
 
     // A tap target in the middle while paused (phones above all).
     IconButton {
+        id: centerPlay
         anchors.centerIn: parent
         visible: mpv.paused && !mpv.buffering && mpv.loaded && !mpv.ended
         diameter: 64
         iconSize: 30
         iconName: "play"
         iconColor: "white"
-        background: Rectangle { radius: 32; color: Qt.rgba(0, 0, 0, 0.55) }
+        filled: true
         onClicked: root.togglePause()
     }
 
@@ -186,15 +187,23 @@ Item {
                 Behavior on width { NumberAnimation { duration: Motion.fast } }
             }
             // The time under the pointer.
-            Rectangle {
+            Item {
                 visible: seekBar.hovered && !root.phone && mpv.duration > 0
                 readonly property real at: hoverPoint.point.position.x / seekBar.width
                 x: Math.max(0, Math.min(seekBar.width - width, hoverPoint.point.position.x - width / 2))
                 y: -height - 4
-                width: hoverTime.implicitWidth + 12
+                width: hoverTime.implicitWidth + 14
                 height: 22
-                radius: 6
-                color: "#18181b"
+                LiquidGlass {
+                    anchors.fill: parent
+                    radius: 6
+                    backdropItem: mpv
+                    glassStyle: "clear"
+                    text: hoverTime.text
+                    textColor: "white"
+                    fontSize: Theme.textXs + 1
+                    tintColor: Qt.rgba(0.08, 0.08, 0.1, 0.55)
+                }
                 Text {
                     id: hoverTime
                     anchors.centerIn: parent
@@ -207,18 +216,53 @@ Item {
             HoverHandler { id: hoverPoint }
         }
 
+        // Liquid Glass pills under the control groups.
+        LiquidGlass {
+            zTier: 1
+            glassStyle: "clear"
+            interactive: true
+            trackPointer: true
+            backdropItem: mpv
+            radius: height / 2
+            x: 2
+            height: 46
+            width: playButton.width + (muteButton.visible ? muteButton.width + 2 : 0) + 12
+            anchors.verticalCenter: playButton.verticalCenter
+            tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
+        }
+        LiquidGlass {
+            zTier: 1
+            glassStyle: "clear"
+            interactive: true
+            trackPointer: true
+            backdropItem: mpv
+            radius: height / 2
+            height: 46
+            width: rightControls.width + 12
+            anchors.right: parent.right
+            anchors.rightMargin: 2
+            anchors.verticalCenter: rightControls.verticalCenter
+            tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
+        }
+
         Row {
             x: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: root.phone ? 4 : 8
             spacing: 2
             IconButton {
+                id: playButton
+                inGlassBar: true
+                zTier: 1
                 iconName: mpv.paused || mpv.ended ? "play" : "pause"
                 iconColor: "white"
                 tip: (mpv.paused ? qsTr("Play") : qsTr("Pause")) + root.keyHint("player.pause")
                 onClicked: mpv.ended ? mpv.seek(0) : root.togglePause()
             }
             IconButton {
+                id: muteButton
+                inGlassBar: true
+                zTier: 1
                 visible: !root.phone
                 iconName: mpv.muted || mpv.volume === 0 ? "volume-x" : "volume-2"
                 iconColor: "white"
@@ -268,12 +312,15 @@ Item {
         }
 
         Row {
+            id: rightControls
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: root.phone ? 4 : 8
             spacing: 2
             IconButton {
+                inGlassBar: true
+                zTier: 1
                 id: subsButton
                 readonly property var subs: mpv.tracks.filter(t => t.type === "sub")
                 visible: subs.length > 0
@@ -284,6 +331,8 @@ Item {
                     .concat(subs.map(t => ({ label: t.title || t.lang || qsTr("Track ") + t.id, selected: t.selected, pick: () => mpv.setTrack("sub", t.id) }))))
             }
             IconButton {
+                inGlassBar: true
+                zTier: 1
                 id: audioButton
                 readonly property var tracks: mpv.tracks.filter(t => t.type === "audio")
                 visible: tracks.length > 1
@@ -293,6 +342,8 @@ Item {
                 onClicked: menu.show(audioButton, tracks.map(t => ({ label: t.title || t.lang || qsTr("Track ") + t.id, selected: t.selected, pick: () => mpv.setTrack("audio", t.id) })))
             }
             IconButton {
+                inGlassBar: true
+                zTier: 1
                 id: speedButton
                 iconName: "gauge"
                 iconColor: mpv.speed !== 1 ? "white" : "#a1a1aa"
@@ -303,6 +354,8 @@ Item {
             }
             // Phones: landscape is full screen (WatchPage turns the phone).
             IconButton {
+                inGlassBar: true
+                zTier: 1
                 readonly property bool full: root.phone ? root.width > root.height
                                                         : root.Window.window !== null && root.Window.window.visibility === Window.FullScreen
                 iconName: full ? "minimize" : "maximize"
@@ -327,7 +380,12 @@ Item {
         width: 200
         height: Math.min(column.implicitHeight + 12, root.height - 100)
         padding: 6
-        background: Rectangle { radius: Theme.radiusMd; color: "#141416"; border.width: 1; border.color: "#2a2a30" }
+        background: LiquidGlass {
+            nativeEnabled: false
+            radius: Theme.radiusMd
+            backdropItem: mpv
+            tintColor: Qt.rgba(0.08, 0.08, 0.1, 0.65)
+        }
         contentItem: Flickable {
             contentHeight: column.implicitHeight
             clip: true

@@ -4,12 +4,14 @@ import ScanCore
 SettingsPane {
     id: pane
     title: qsTr("Library")
-    subtitle: qsTr("New chapters, notifications and background work")
+    subtitle: Router.animeOnly ? qsTr("Notifications and background work") : qsTr("New chapters, notifications and background work")
     iconName: "library"
 
     SettingsGroup {
         title: qsTr("Updates")
+        // ENO: new chapter checks are for comics and novels only.
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "refresh-cw"
             title: qsTr("Check for new chapters")
             description: qsTr("Saved comics and novels are checked in the background while SCANCORE is open.")
@@ -21,12 +23,14 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "bell"
             title: qsTr("Notify me about new chapters")
             description: qsTr("They are always listed under Notifications; this also shows them in the system's notifications.")
             Toggle { checked: App.settings.notifyUpdates !== false; onToggled: App.setSetting("notifyUpdates", checked) }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "list"
             title: qsTr("One notification per check")
             description: qsTr("Sums up every new chapter a check found, instead of one notification per series.")
@@ -63,6 +67,7 @@ SettingsPane {
     }
 
     SettingsGroup {
+        visible: !Router.animeOnly
         title: qsTr("Which series are checked")
         SettingRow {
             iconName: "list-checks"
@@ -103,6 +108,7 @@ SettingsPane {
     }
 
     SettingsGroup {
+        visible: !Router.animeOnly
         title: qsTr("Downloads")
         SettingRow {
             iconName: "download"

@@ -33,7 +33,7 @@ Item {
         { key: "notifications", label: qsTr("Notifications"), icon: "bell" },
         { key: "divider" },
         { key: "settings", label: qsTr("Settings"), icon: "settings" }
-    ]
+    ].filter(s => !s.key || Router.sectionAllowed(s.key))  // ENO: anime only
 
     readonly property bool glass: backdropItem !== null
     readonly property real radius: height / 2
@@ -41,77 +41,17 @@ Item {
     implicitWidth: row.implicitWidth + 16
     implicitHeight: 60
 
-    // Opaque panel, for windows with nothing to frost.
-    Rectangle {
-        anchors.fill: parent
-        radius: dock.radius
-        visible: !dock.glass
-        color: Theme.layered ? Theme.sidebar : Theme.alpha(Theme.surface, 0.97)
-        border.width: 1
-        border.color: Theme.borderStrong
-    }
-
-    // Liquid glass: the page behind is captured, blurred, tinted and lifted
-    // with a specular edge; the mask rounds the whole composition.
-    Item {
+    // Native macOS 27 Liquid Glass: the page behind is refracted through a curved
+    // meniscus bezel, blurred, vibrantly tinted and edged with a directional key-fill
+    // specular rim that responds to pointer interaction.
+    LiquidGlass {
         id: glassLayer
         anchors.fill: parent
-        visible: dock.glass
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskEnabled: true
-            maskSource: glassMask
-        }
-
-        ShaderEffectSource {
-            id: frost
-            visible: false
-            live: dock.glass && dock.visible
-            sourceItem: dock.backdropItem
-            sourceRect: {
-                if (!dock.backdropItem) return Qt.rect(0, 0, 0, 0)
-                const p = dock.mapToItem(dock.backdropItem, 0, 0)
-                return Qt.rect(p.x, p.y, dock.width, dock.height)
-            }
-        }
-        MultiEffect {
-            anchors.fill: parent
-            source: frost
-            blurEnabled: true
-            blur: 1
-            blurMax: 100
-            saturation: Theme.dark ? 1.1 : 1.25
-        }
-        // Theme wash over the frosted page.
-        Rectangle {
-            anchors.fill: parent
-            color: Theme.alpha(Theme.dark ? "#101114" : "#ffffff", Theme.dark ? 0.42 : 0.5)
-        }
-        // Sheen: light catching the top of the glass, shade pooling below.
-        Rectangle {
-            anchors.fill: parent
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Theme.alpha("#ffffff", Theme.dark ? 0.14 : 0.6) }
-                GradientStop { position: 0.42; color: Theme.alpha("#ffffff", 0) }
-                GradientStop { position: 1.0; color: Theme.alpha(Theme.dark ? "#000000" : "#9aa0b4", Theme.dark ? 0.18 : 0.12) }
-            }
-        }
-        // Rim.
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            radius: dock.radius
-            border.width: 1
-            border.color: Theme.alpha("#ffffff", Theme.dark ? 0.2 : 0.75)
-        }
-    }
-    Rectangle {
-        id: glassMask
-        visible: false
-        layer.enabled: true
-        anchors.fill: parent
+        zTier: 1
         radius: dock.radius
-        color: "black"
+        backdropItem: dock.backdropItem
+        interactive: true
+        trackPointer: true
     }
 
     // The dock floats over the page: clicks, wheel and buttons land on the
@@ -162,8 +102,31 @@ Item {
                 id: slot
                 required property var modelData
                 readonly property string key: modelData.key
+                readonly property bool isHovered: button.hovered || nativeDockBtn.hovered
                 width: key === "divider" ? 13 : 48
                 height: 48
+
+                NativeGlassButton {
+                    id: nativeDockBtn
+                    anchors.fill: parent
+                    visible: !Theme.eink && isSupported
+                    glass: false
+                    zTier: 1
+                    layout: slot.key === "divider" ? "divider" : "dock"
+                    passthrough: slot.key === "divider"
+                    active: dock.current === slot.key
+                    indicatorSide: dock.side
+                    accentColor: Theme.accent
+                    iconName: slot.key === "divider" ? ""
+                        : (slot.key === "notifications" && Notifications.unread > 0 ? "bell-dot" : (slot.modelData.icon || ""))
+                    iconSize: 20
+                    iconColor: slot.key === "divider" ? Theme.border : (dock.current === slot.key ? Theme.text : Theme.textMuted)
+                    textColor: Theme.text
+                    badgeCount: slot.key === "library" ? Library.unreadUpdates
+                        : slot.key === "downloads" ? Downloads.pending
+                        : slot.key === "notifications" ? Notifications.unread : 0
+                    onClicked: if (slot.key !== "divider") (slot.key === "search" ? dock.openPalette() : dock.navigate(slot.key))
+                }
 
                 Rectangle {
                     visible: slot.key === "divider"
@@ -204,19 +167,27 @@ Item {
                 }
 
                 // The section's name, floating clear of the dock.
-                Rectangle {
-                    visible: opacity > 0
-                    opacity: button.hovered ? 1 : 0
+                Item {
+                    visible: opacity > 0 && slot.key !== "divider"
+                    opacity: slot.isHovered ? 1 : 0
                     anchors.horizontalCenter: parent.horizontalCenter
-                    y: dock.side === "top" ? parent.height + 14 + (button.hovered ? 0 : -4) : -height - 14 + (button.hovered ? 0 : 4)
-                    width: tipText.implicitWidth + 16
+                    y: dock.side === "top" ? parent.height + 14 + (slot.isHovered ? 0 : -4) : -height - 14 + (slot.isHovered ? 0 : 4)
+                    width: tipText.implicitWidth + 18
                     height: 26
-                    radius: 8
-                    color: Theme.surface3
-                    border.width: 1
-                    border.color: Theme.borderStrong
                     Behavior on opacity { NumberAnimation { duration: Motion.fast } }
                     Behavior on y { NumberAnimation { duration: Motion.fast; easing.type: Easing.OutCubic } }
+                    LiquidGlass {
+                        anchors.fill: parent
+                        zTier: 1
+                        radius: 8
+                        backdropItem: dock.backdropItem
+                        autoBackdrop: true
+                        trackPointer: false
+                        text: slot.modelData.label || ""
+                        textColor: Theme.text
+                        fontSize: Theme.textXs + 1
+                        bold: true
+                    }
                     Text {
                         id: tipText
                         anchors.centerIn: parent

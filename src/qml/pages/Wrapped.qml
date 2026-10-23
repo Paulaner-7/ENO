@@ -51,7 +51,7 @@ Item {
     readonly property bool empty: stats !== null && stats.total.seconds === 0 && stats.total.units === 0
     readonly property int busiestMonth: stats ? indexOfMax(stats.months, m => m.seconds + m.units * 600) : -1
     readonly property int favouriteDay: stats ? indexOfMax(stats.weekdays, s => s) : -1
-    readonly property var mediaUsed: stats ? ["comic", "novel", "anime"].filter(m => stats.topByMedia[m].length > 0) : []
+    readonly property var mediaUsed: stats ? ["comic", "novel", "anime"].filter(m => Router.mediaAllowed(m) && stats.topByMedia[m].length > 0) : []
 
     // The slides this year has something for, in order.
     readonly property var slides: {
@@ -277,7 +277,7 @@ Item {
                     height: 44
                 }
                 Item { width: 1; height: 12 }
-                Kicker { text: qsTr("Your year in comics, novels and anime") }
+                Kicker { text: Router.animeOnly ? qsTr("Your year in anime") : qsTr("Your year in comics, novels and anime") }
                 Big { text: String(page.year); font.pixelSize: Math.min(page.width / 3.2, 180) }
                 Item { width: 1; height: 16 }
                 Kicker { text: Theme.touch ? qsTr("Tap to begin") : qsTr("Click or press → to begin"); font.pixelSize: Theme.textMd; opacity: 0.8 }
@@ -294,10 +294,11 @@ Item {
             Body {
                 Kicker { text: qsTr("This year you spent") }
                 Big { text: page.timeText(page.stats.total.mediaSeconds) }
-                Kicker { text: qsTr("reading and watching") }
+                Kicker { text: Router.animeOnly ? qsTr("watching anime") : qsTr("reading and watching") }
                 Item { width: 1; height: 18 }
                 Repeater {
                     model: [{ key: "comic", label: qsTr("Comics") }, { key: "novel", label: qsTr("Novels") }, { key: "anime", label: qsTr("Anime") }]
+                        .filter(m => Router.mediaAllowed(m.key))
                     Column {
                         required property var modelData
                         width: parent.width
@@ -349,10 +350,10 @@ Item {
                 Kicker { text: qsTr("You finished") }
                 Repeater {
                     model: [
-                        { value: t.comic, label: qsTr("comic chapters") },
-                        { value: t.novel, label: qsTr("novel chapters") },
-                        { value: t.anime, label: qsTr("anime episodes") }
-                    ].filter(x => x.value > 0)
+                        { media: "comic", value: t.comic, label: qsTr("comic chapters") },
+                        { media: "novel", value: t.novel, label: qsTr("novel chapters") },
+                        { media: "anime", value: t.anime, label: qsTr("anime episodes") }
+                    ].filter(x => Router.mediaAllowed(x.media) && x.value > 0)
                     Column {
                         required property var modelData
                         width: parent.width
@@ -701,7 +702,8 @@ Item {
                             Repeater {
                                 model: [
                                     { label: qsTr("Time"), value: page.timeText(page.stats.total.mediaSeconds) },
-                                    { label: qsTr("Chapters"), value: page.number(page.stats.total.comic + page.stats.total.novel) },
+                                    Router.animeOnly ? { label: qsTr("Active days"), value: page.number(page.stats.activeDays) }
+                                                     : { label: qsTr("Chapters"), value: page.number(page.stats.total.comic + page.stats.total.novel) },
                                     { label: qsTr("Episodes"), value: page.number(page.stats.total.anime) },
                                     { label: qsTr("Longest streak"), value: page.stats.longestStreak + (page.stats.longestStreak === 1 ? qsTr(" day") : qsTr(" days")) },
                                     page.stats.genres.length > 0 ? { label: qsTr("Top genre"), value: page.stats.genres[0].name }

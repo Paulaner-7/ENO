@@ -34,8 +34,8 @@ Dialog {
                 }
             }
         }
-        add(Comics, "comic")
-        add(Novels, "novel")
+        if (Router.mediaAllowed("comic")) add(Comics, "comic")
+        if (Router.mediaAllowed("novel")) add(Novels, "novel")
         add(Anime, "anime")
         return out
     }

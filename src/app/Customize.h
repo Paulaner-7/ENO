@@ -44,6 +44,8 @@ class Customize : public QObject {
     Q_PROPERTY(QString language READ language NOTIFY languageChanged)
     // [{value, label}], each in its own language.
     Q_PROPERTY(QVariantList languages READ languages CONSTANT)
+    // Native macOS 27 NSGlassEffectView / CABackdropLayer optical metrics.
+    Q_PROPERTY(QVariantMap liquidGlass READ liquidGlass CONSTANT)
 
 public:
     static Customize *instance();
@@ -66,6 +68,8 @@ public:
 
     bool translucentWindow() const;
     bool canRestart() const;
+    QVariantMap liquidGlass() const;
+    Q_INVOKABLE void syncWindowGlass(QObject *window, bool dark, const QColor &tint, bool clearStyle = false) const;
 
     // The shortcut for a key press, as Shortcut.sequence takes it ("Ctrl+K");
     // empty for a modifier alone.

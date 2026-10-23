@@ -8,6 +8,15 @@ import ScanCore
 // map: each day is coloured by what filled it.
 Item {
     id: page
+    property string activeTab: Router.activityTab || "activity"
+    onActiveTabChanged: Router.activityTab = activeTab
+    Connections {
+        target: Router
+        function onActivityTabChanged() {
+            if (Router.activityTab && page.activeTab !== Router.activityTab)
+                page.activeTab = Router.activityTab
+        }
+    }
     property var task: Activity.summary()
     property var stats: null
     Connections {
@@ -26,7 +35,8 @@ Item {
     // "days", "weeks" or "months".
     property string span: "days"
 
-    readonly property var mediaKeys: ["comic", "novel", "anime"]
+    // ENO: anime only.
+    readonly property var mediaKeys: Router.animeOnly ? ["anime"] : ["comic", "novel", "anime"]
     readonly property var mediaLabels: ({ comic: qsTr("Comics"), novel: qsTr("Novels"), anime: qsTr("Anime"), app: qsTr("Browsing") })
     function mediaColor(key) {
         const name = { comic: "sky", novel: "amber", anime: "rose" }[key]
@@ -48,7 +58,7 @@ Item {
         if (!t) return ""
         const chapters = (t.comic || 0) + (t.novel || 0)
         const parts = []
-        parts.push(chapters + (chapters === 1 ? qsTr(" chapter") : qsTr(" chapters")))
+        if (!Router.animeOnly) parts.push(chapters + (chapters === 1 ? qsTr(" chapter") : qsTr(" chapters")))
         parts.push((t.anime || 0) + ((t.anime || 0) === 1 ? qsTr(" episode") : qsTr(" episodes")))
         return parts.join(" · ")
     }
@@ -161,6 +171,7 @@ Item {
     SmoothFlickable {
         id: flick
         anchors.fill: parent
+        visible: page.activeTab === "activity"
         contentHeight: body.height + 48
 
         Column {
@@ -170,7 +181,17 @@ Item {
 
             PageHeader {
                 title: qsTr("Activity")
-                subtitle: qsTr("Your reading and watching, on every device you sync")
+                subtitle: Router.animeOnly ? qsTr("Your watching, on every device you sync") : qsTr("Your reading and watching, on every device you sync")
+
+                Segmented {
+                    options: [
+                        { value: "activity", label: qsTr("Activity"), icon: "activity" },
+                        { value: "history", label: qsTr("History"), icon: "history" }
+                    ]
+                    value: page.activeTab
+                    onPicked: (v) => page.activeTab = v
+                }
+
                 ScButton {
                     text: qsTr("Your ") + new Date().getFullYear()
                     iconName: "gift"
@@ -352,12 +373,13 @@ Item {
                             rightPadding: 12
                         }
                         Segmented {
-                            options: [{ value: "time", label: qsTr("Time") }, { value: "units", label: qsTr("Chapters & episodes") }]
+                            options: [{ value: "time", label: qsTr("Time") }, { value: "units", label: Router.animeOnly ? qsTr("Episodes") : qsTr("Chapters & episodes") }]
                             value: page.metric
                             onPicked: (v) => App.setSetting("activityMetric", v)
                         }
                         // Phones: the card's width, without icons, so it stays inside.
                         Segmented {
+                            visible: !Router.animeOnly
                             fill: Theme.compact
                             width: fill ? parent.width : implicitWidth
                             options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics"), icon: Theme.compact ? "" : "book-open" },
@@ -537,7 +559,7 @@ Item {
                         Text {
                             height: 34
                             verticalAlignment: Text.AlignVCenter
-                            text: page.metric === "time" ? qsTr("Time spent") : qsTr("Chapters and episodes")
+                            text: page.metric === "time" ? qsTr("Time spent") : (Router.animeOnly ? qsTr("Episodes") : qsTr("Chapters and episodes"))
                             color: Theme.text
                             font.family: Theme.fontDisplay
                             font.pixelSize: Theme.textXl
@@ -719,5 +741,19 @@ Item {
         }
     }
 
-    BackToTop { flick: flick }
+    BackToTop { flick: flick; visible: page.activeTab === "activity" }
+
+    Loader {
+        id: historyLoader
+        anchors.fill: parent
+        visible: page.activeTab === "history"
+        active: page.activeTab === "history" || (historyLoader.item !== null)
+        source: "HistoryPage.qml"
+        onLoaded: {
+            if (item) {
+                item.activeTab = Qt.binding(() => page.activeTab)
+                item.switchTab.connect((tab) => page.activeTab = tab)
+            }
+        }
+    }
 }

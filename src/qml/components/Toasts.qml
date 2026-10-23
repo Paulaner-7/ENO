@@ -77,15 +77,36 @@ Item {
                     leave.start()
                 }
 
-                Rectangle {
+                Item {
                     id: card
                     width: parent.width
                     height: Math.max(52, label.implicitHeight + 28)
-                    radius: Theme.radiusLg
-                    color: Theme.surface
-                    border.width: 1
-                    border.color: Theme.borderStrong
-                    clip: true
+
+                    LiquidGlass {
+                        anchors.fill: parent
+                        zTier: 1
+                        radius: Theme.radiusLg
+                        interactive: true
+                        externalHovered: hover.hovered
+                        trackPointer: true
+                    }
+
+                    NativeGlassButton {
+                        anchors.fill: parent
+                        visible: !Theme.eink && isSupported
+                        glass: false
+                        zTier: 1
+                        layout: "toast"
+                        passthrough: true
+                        iconName: toast.kind === "error" ? "triangle-alert" : toast.kind === "success" ? "check" : "info"
+                        iconColor: toast.tone
+                        accentColor: Theme.alpha(toast.tone, 0.16)
+                        text: toast.message
+                        textColor: Theme.text
+                        fontSize: Theme.textSm
+                        rightInset: (act.visible ? act.width + 8 : 0) + close.width + 12
+                        progress: Motion.reduced ? 0 : Math.max(0, 1 - toast.elapsed / toast.lifetime)
+                    }
 
                     Rectangle {
                         id: badge
@@ -124,6 +145,8 @@ Item {
                         text: toast.actionLabel
                         variant: "primary"
                         compact: true
+                        inGlassBar: true
+                        zTier: 1
                         onClicked: {
                             const action = root.actions[toast.stamp]
                             toast.dismiss(1)
@@ -138,6 +161,8 @@ Item {
                         diameter: 28
                         iconSize: 14
                         iconName: "x"
+                        inGlassBar: true
+                        zTier: 1
                         onClicked: toast.dismiss(1)
                     }
                     // Time left.

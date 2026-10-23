@@ -49,11 +49,13 @@ QtObject {
         { id: "player.volumeDown", scope: "player", label: qsTr("Volume down"), keys: ["Down"] },
         { id: "player.mute", scope: "player", label: qsTr("Mute"), keys: ["M"] }
     ]
+        // ENO: anime only, so no Comics/Novels pages or reader keys.
+        .filter(a => Router.sectionAllowed(a.id) && (a.scope !== "reader" || !Router.animeOnly))
     readonly property var scopes: [
         { scope: "app", title: qsTr("Anywhere") },
         { scope: "reader", title: qsTr("Comic and novel readers") },
         { scope: "player", title: qsTr("Anime player") }
-    ]
+    ].filter(s => s.scope !== "reader" || !Router.animeOnly)
 
     readonly property var changed: App.settings.keybinds || ({})
 

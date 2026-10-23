@@ -11,8 +11,10 @@ Rectangle {
     property string current: "home"
     property string style: "sidebar"
     property string side: "left"
+    property Item backdropItem: null
     readonly property bool floating: style === "floating"
     readonly property bool rail: style === "rail"
+    readonly property bool glassSurface: floating || Theme.layered
     property bool collapsed: rail || App.settings.sidebarCollapsed === true
     signal navigate(string section)
     signal openPalette()
@@ -29,15 +31,26 @@ Rectangle {
         { key: "downloads", label: qsTr("Downloads"), icon: "download" },
         // Opens the notification area rather than a page.
         { key: "notifications", label: qsTr("Notifications"), icon: "bell" }
-    ]
+    ].filter(s => !s.key || Router.sectionAllowed(s.key))  // ENO: anime only
 
     implicitWidth: collapsed ? 72 : 228
     width: implicitWidth
-    color: Theme.sidebar
+    color: glassSurface ? "transparent" : Theme.sidebar
     radius: floating ? Theme.radiusXl : 0
-    border.width: floating ? 1 : 0
-    border.color: Theme.border
+    border.width: 0
     Behavior on width { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+
+    LiquidGlass {
+        anchors.fill: parent
+        visible: sidebar.glassSurface
+        zTier: 1
+        radius: sidebar.floating ? Theme.radiusXl : 0
+        backdropItem: sidebar.backdropItem
+        autoBackdrop: false
+        tintColor: Theme.dark
+            ? Theme.alpha(Theme.palette.sidebar, sidebar.floating ? 0.68 : Theme.panelOpacity)
+            : Theme.alpha(Theme.palette.sidebar, sidebar.floating ? 0.74 : Theme.panelOpacity)
+    }
 
     // The edge towards the content.
     Rectangle {
@@ -53,6 +66,19 @@ Rectangle {
         id: brand
         width: parent.width
         height: 72
+
+        NativeGlassButton {
+            anchors.fill: parent
+            visible: sidebar.glassSurface && !Theme.eink && isSupported
+            glass: false
+            zTier: 1
+            layout: "brand"
+            collapsed: sidebar.collapsed
+            imageSource: sidebar.collapsed
+                ? (Theme.dark ? "qrc:/branding/eno-symbol-dark.png" : "qrc:/branding/eno-symbol-light.png")
+                : (Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png")
+            onClicked: sidebar.navigate("home")
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -101,6 +127,28 @@ Rectangle {
         height: 38
         hoverEnabled: true
         onClicked: sidebar.openPalette()
+
+        NativeGlassButton {
+            anchors.fill: parent
+            visible: sidebar.glassSurface && !Theme.eink && isSupported
+            glass: false
+            zTier: 1
+            layout: "sidebar"
+            isSearch: true
+            collapsed: sidebar.collapsed
+            iconName: "search"
+            iconSize: 16
+            iconColor: Theme.textMuted
+            text: qsTr("Search everything")
+            textColor: Theme.textFaint
+            fontSize: Theme.textSm
+            badgeText: Keymap.labels("palette")[0] || ""
+            fillColor: Theme.alpha(Theme.surface2, 0.72)
+            borderColor: Theme.border
+            tip: sidebar.collapsed ? (qsTr("Search") + (Keymap.labels("palette").length ? " (" + Keymap.labels("palette")[0] + ")" : "")) : ""
+            onClicked: sidebar.openPalette()
+        }
+
         background: Rectangle {
             radius: Theme.radiusMd
             color: searchButton.hovered ? Theme.surface3 : Theme.surface2
@@ -224,6 +272,16 @@ Rectangle {
                     width: navColumn.width
                     height: key === "divider" ? 22 : 40
 
+                    NativeGlassButton {
+                        anchors.fill: parent
+                        visible: parent.key === "divider" && sidebar.glassSurface && !Theme.eink && isSupported
+                        glass: false
+                        zTier: 1
+                        layout: "divider"
+                        passthrough: true
+                        iconColor: Theme.border
+                    }
+
                     Rectangle {
                         visible: parent.key === "divider"
                         anchors.centerIn: parent
@@ -240,6 +298,30 @@ Rectangle {
                         height: 40
                         hoverEnabled: true
                         onClicked: sidebar.navigate(modelData.key)
+
+                        NativeGlassButton {
+                            anchors.fill: parent
+                            visible: sidebar.glassSurface && !Theme.eink && isSupported
+                            glass: false
+                            zTier: 1
+                            layout: "sidebar"
+                            collapsed: sidebar.collapsed
+                            active: sidebar.current === modelData.key
+                            floating: sidebar.floating
+                            indicatorSide: sidebar.side
+                            accentColor: Theme.accent
+                            iconName: modelData.key === "notifications" && Notifications.unread > 0 ? "bell-dot" : (modelData.icon || "")
+                            iconSize: 18
+                            iconColor: sidebar.current === modelData.key ? Theme.text : Theme.textMuted
+                            text: modelData.label || ""
+                            textColor: sidebar.current === modelData.key ? Theme.text : Theme.textMuted
+                            fontSize: Theme.textMd
+                            badgeCount: countBadge.count
+                            badgeTextColor: Theme.accentInk
+                            tip: sidebar.collapsed ? (modelData.label || "") : ""
+                            onClicked: sidebar.navigate(modelData.key)
+                        }
+
                         background: Rectangle {
                             radius: Theme.radiusMd
                             color: navButton.hovered && sidebar.current !== modelData.key ? Theme.alpha(Theme.text, 0.05) : Theme.alpha(Theme.text, 0)
@@ -270,6 +352,7 @@ Rectangle {
                                 Behavior on opacity { NumberAnimation { duration: Motion.fast } }
                             }
                             Rectangle {
+                                id: countBadge
                                 readonly property int count: modelData.key === "library" ? Library.unreadUpdates
                                     : modelData.key === "downloads" ? Downloads.pending
                                     : modelData.key === "notifications" ? Notifications.unread : 0
@@ -314,6 +397,28 @@ Rectangle {
             height: 40
             hoverEnabled: true
             onClicked: sidebar.navigate("settings")
+
+            NativeGlassButton {
+                anchors.fill: parent
+                visible: sidebar.glassSurface && !Theme.eink && isSupported
+                glass: false
+                zTier: 1
+                layout: "sidebar"
+                collapsed: sidebar.collapsed
+                active: sidebar.current === "settings"
+                floating: sidebar.floating
+                indicatorSide: sidebar.side
+                accentColor: Theme.accent
+                iconName: "settings"
+                iconSize: 18
+                iconColor: sidebar.current === "settings" ? Theme.text : Theme.textMuted
+                text: qsTr("Settings")
+                textColor: sidebar.current === "settings" ? Theme.text : Theme.textMuted
+                fontSize: Theme.textMd
+                tip: sidebar.collapsed ? qsTr("Settings") : ""
+                onClicked: sidebar.navigate("settings")
+            }
+
             background: Rectangle {
                 radius: Theme.radiusMd
                 color: sidebar.current === "settings" ? Theme.alpha(Theme.text, 0.08)
@@ -353,6 +458,24 @@ Rectangle {
             height: 36
             hoverEnabled: true
             onClicked: App.setSetting("sidebarCollapsed", !sidebar.collapsed)
+
+            NativeGlassButton {
+                anchors.fill: parent
+                visible: sidebar.glassSurface && !Theme.eink && isSupported
+                glass: false
+                zTier: 1
+                layout: "sidebar"
+                collapsed: sidebar.collapsed
+                iconName: sidebar.side === "right" ? "panel-right" : "panel-left"
+                iconSize: 17
+                iconColor: Theme.textFaint
+                text: qsTr("Collapse")
+                textColor: Theme.textFaint
+                fontSize: Theme.textSm
+                tip: sidebar.collapsed ? qsTr("Expand") : ""
+                onClicked: App.setSetting("sidebarCollapsed", !sidebar.collapsed)
+            }
+
             background: Rectangle {
                 radius: Theme.radiusMd
                 color: collapseButton.hovered ? Theme.alpha(Theme.text, 0.04) : "transparent"

@@ -1,6 +1,7 @@
 #include "Customize.h"
 
 #include "App.h"
+#include "MacGlass.h"
 #include "core/Database.h"
 #include "core/ThemeLook.h"
 #include "sources/comics/Registry.h"
@@ -146,6 +147,12 @@ bool Customize::savedThemeIsTranslucent() {
 void Customize::setTranslucentWindow(bool on) { g_translucent = on; }
 
 bool Customize::translucentWindow() const { return g_translucent; }
+
+QVariantMap Customize::liquidGlass() const { return macglass::opticalMetrics(); }
+
+void Customize::syncWindowGlass(QObject *window, bool dark, const QColor &tint, bool clearStyle) const {
+    macglass::syncWindowGlass(qobject_cast<QQuickWindow *>(window), dark, tint, clearStyle);
+}
 
 bool Customize::canRestart() const {
 #ifdef Q_OS_ANDROID

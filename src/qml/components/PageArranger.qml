@@ -28,7 +28,8 @@ QtObject {
     property real dragHeight: 0
 
     function sections() {
-        return column ? Array.from(column.children).filter(c => c.isPageSection === true) : []
+        // Sections turned off (PageSection.available) take no part.
+        return column ? Array.from(column.children).filter(c => c.isPageSection === true && c.available !== false) : []
     }
 
     function apply() {

@@ -27,13 +27,14 @@ Item {
     Connections {
         target: page.task
         function onFinished(result) {
+            const visibleResult = Router.reachable(result)
             const counts = {}
-            for (const i of result) counts[i.id] = { done: i.done, total: i.total }
+            for (const i of visibleResult) counts[i.id] = { done: i.done, total: i.total }
             page.progress = counts
-            const shape = JSON.stringify(result.map(i => [i.id, i.status, i.error]))
+            const shape = JSON.stringify(visibleResult.map(i => [i.id, i.status, i.error]))
             if (shape !== page.shape) {
                 page.shape = shape
-                page.items = result
+                page.items = visibleResult
             }
         }
     }
@@ -102,7 +103,9 @@ Item {
                 task: page.items.length === 0 ? page.task : null
                 empty: page.task && page.task.ok && page.items.length === 0
                 emptyTitle: qsTr("No downloads yet")
-                emptyText: qsTr("On a comic, novel or anime page, use the download button on a chapter or episode, or select several at once. Downloads open without a connection.")
+                emptyText: Router.animeOnly
+                    ? qsTr("On an anime page, use the download button on an episode, or select several at once. Downloads open without a connection.")
+                    : qsTr("On a comic, novel or anime page, use the download button on a chapter or episode, or select several at once. Downloads open without a connection.")
                 emptyIcon: "download"
             }
         }

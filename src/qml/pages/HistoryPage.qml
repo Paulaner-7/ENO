@@ -5,7 +5,10 @@ import ScanCore
 // Everything read or watched recently, grouped by day.
 Item {
     id: page
-    property string media: ""
+    property string activeTab: "history"
+    signal switchTab(string tab)
+    // ENO: anime only.
+    property string media: Router.animeOnly ? "anime" : ""
     property string filter: ""
     property var task: Library.history("", 300)
 
@@ -64,7 +67,21 @@ Item {
             spacing: 18
             PageHeader {
                 title: qsTr("History")
-                subtitle: qsTr("What you read and watched, newest first")
+                subtitle: Router.animeOnly ? qsTr("What you watched, newest first") : qsTr("What you read and watched, newest first")
+
+                Segmented {
+                    options: [
+                        { value: "activity", label: qsTr("Activity"), icon: "activity" },
+                        { value: "history", label: qsTr("History"), icon: "history" }
+                    ]
+                    value: page.activeTab
+                    onPicked: (v) => {
+                        page.activeTab = v
+                        page.switchTab(v)
+                        Router.activityTab = v
+                    }
+                }
+
                 ScButton {
                     text: qsTr("Clear history")
                     iconName: "trash"
@@ -78,6 +95,7 @@ Item {
                 width: list.width - 2 * Theme.gutter
                 spacing: 12
                 Segmented {
+                    visible: !Router.animeOnly
                     options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics"), icon: "book-open" },
                               { value: "novel", label: qsTr("Novels"), icon: "book-text" }, { value: "anime", label: qsTr("Anime"), icon: "tv" }]
                     value: page.media
@@ -100,7 +118,7 @@ Item {
                 height: visible ? 300 : 0
                 task: page.all.length === 0 ? page.task : null
                 empty: page.task && page.task.ok && page.rows.length === 0
-                emptyTitle: page.filter || page.media ? qsTr("Nothing matches") : qsTr("Nothing read yet")
+                emptyTitle: page.filter || (page.media && !Router.animeOnly) ? qsTr("Nothing matches") : Router.animeOnly ? qsTr("Nothing watched yet") : qsTr("Nothing read yet")
                 emptyText: qsTr("Chapters and episodes you open show up here, with your place saved.")
                 emptyIcon: "history"
                 onRetry: page.task = Library.history("", 300)
@@ -147,6 +165,8 @@ Item {
                     width: item.width - 2 * Theme.gutter + 24
                     radius: Theme.radiusLg
                     color: item.hovered ? Theme.surface2 : "transparent"
+                    border.width: item.hovered ? 1 : 0
+                    border.color: Theme.border
                     Behavior on color { ColorAnimation { duration: Motion.fast } }
                 }
                 contentItem: Item {
@@ -159,10 +179,13 @@ Item {
                         radius: 7
                         source: item.e.cover || ""
                         title: item.e.title || ""
+                        scale: item.pressed ? 0.96 : item.hovered ? 1.06 : 1.0
+                        Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
                     }
                     Column {
                         anchors.left: cover.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: item.hovered ? 19 : 16
+                        Behavior on anchors.leftMargin { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
                         anchors.right: actions.left
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter

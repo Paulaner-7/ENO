@@ -42,6 +42,11 @@ ApplicationWindow {
     }
 
     readonly property bool immersiveOpen: immersive.depth > 0
+    readonly property Item glassBackdrop: immersiveOpen ? immersive : stage
+
+    // Keep native macOS 27 NSWindow appearance & NSGlassEffectView backdrop in sync.
+    readonly property color windowGlassTint: Theme.alpha(Theme.base, Theme.windowOpacity)
+    onWindowGlassTintChanged: Customize.syncWindowGlass(window, Theme.dark, windowGlassTint)
 
     // Settings → Interface: how navigation sits on wide windows. Phones
     // always use the bottom tabs.
@@ -73,10 +78,14 @@ ApplicationWindow {
         if (immersive.depth > 0 && page) return page.systemBarsDark !== undefined ? page.systemBarsDark === true : true
         return Theme.dark
     }
-    onDarkBarsChanged: App.setBarIcons(darkBars)
+    onDarkBarsChanged: {
+        App.setBarIcons(darkBars)
+        Customize.syncWindowGlass(window, Theme.dark, windowGlassTint)
+    }
 
     Component.onCompleted: {
         App.setBarIcons(darkBars)
+        Customize.syncWindowGlass(window, Theme.dark, windowGlassTint)
         if (!App.startAction.screenshot)
             window.showFullScreen()
         Theme.compact = Qt.binding(() => window.width < 720)
@@ -208,7 +217,18 @@ ApplicationWindow {
                 notificationsPanel.open()
                 return
             }
+            if (name === "downloads") {
+                Router.openSettings("downloads")
+                return
+            }
+            if (name === "history") {
+                Router.activityTab = "history"
+                goSection("activity")
+                return
+            }
             if (immersive.depth > 0) immersive.clear()
+            // ENO is anime only: Comics and Novels lead to Anime.
+            if (!Router.sectionAllowed(name)) name = "anime"
             if (name === section) {
                 const stack = stackFor(name)
                 if (stack && stack.depth > 1) stack.pop(null)
@@ -270,6 +290,7 @@ ApplicationWindow {
         function land(target) { hero.land(target) }
 
         function resume(entry) {
+            if (!Router.mediaAllowed(entry.media)) { Router.refuseMedia(); return }
             const props = { url: entry.sourceUrl, summary: entry, autoResume: true }
             if (entry.media === "anime" && String(entry.source || "").startsWith("aniyomi:")) {
                 push("pages/AnimeDetails.qml", { sourceUrl: entry.sourceUrl, summary: entry, autoResume: true })
@@ -321,11 +342,13 @@ ApplicationWindow {
                 visible: window.sidebarShown
                 style: window.navStyle
                 side: window.navSide
+                z: floating ? 2 : 1
                 width: visible ? implicitWidth : 0
                 x: side === "right" ? parent.width - width - window.navInset : window.navInset
                 y: window.navInset
                 height: parent.height - 2 * window.navInset
                 current: shell.section
+                backdropItem: content
                 onNavigate: (name) => shell.goSection(name)
                 onOpenPalette: commandPalette.open()
             }
@@ -344,6 +367,7 @@ ApplicationWindow {
                 Repeater {
                     id: sectionRepeater
                     model: ["home", "comics", "novels", "anime", "library", "history", "activity", "downloads", "settings"]
+                        .filter(k => Router.sectionAllowed(k))
                     delegate: Loader {
                         id: sectionLoader
                         required property string modelData
@@ -354,9 +378,11 @@ ApplicationWindow {
                         asynchronous: shell.settled
                         visible: opacity > 0.001
                         opacity: current ? 1 : 0
+                        scale: current ? 1 : 0.99
                         z: current ? 1 : 0
-                        transform: Translate { y: sectionLoader.current ? 0 : 14; Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
+                        transform: Translate { y: sectionLoader.current ? 0 : 12; Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } } }
                         Behavior on opacity { NumberAnimation { duration: sectionLoader.current ? Motion.slow : Motion.fast; easing.type: Easing.OutCubic } }
+                        Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } }
 
                         sourceComponent: PageStack {
                             initial: {
@@ -489,11 +515,21 @@ ApplicationWindow {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("Nothing you read or watch is recorded. Click to turn off.")
         onClicked: Router.setIncognito(false)
-        background: Rectangle {
+        background: LiquidGlass {
+            zTier: 1
             radius: height / 2
-            color: incognitoBadge.hovered ? Theme.surface3 : Theme.surface2
-            border.width: 1
-            border.color: Theme.borderStrong
+            backdropItem: stage
+            interactive: true
+            externalHovered: incognitoBadge.hovered
+            externalPressed: incognitoBadge.pressed
+            trackPointer: false
+            iconName: "venetian-mask"
+            iconSize: 15
+            iconColor: Theme.text
+            text: qsTr("Incognito")
+            textColor: Theme.text
+            fontSize: Theme.textXs
+            bold: true
         }
         contentItem: Item {
             Row {
@@ -624,13 +660,13 @@ ApplicationWindow {
         onActivated: App.setSetting("sidebarCollapsed", !(App.settings.sidebarCollapsed === true))
     }
     Shortcut { sequences: Keymap.sequences("home"); onActivated: shell.goSection("home") }
-    Shortcut { sequences: Keymap.sequences("comics"); onActivated: shell.goSection("comics") }
-    Shortcut { sequences: Keymap.sequences("novels"); onActivated: shell.goSection("novels") }
+    Shortcut { sequences: Keymap.sequences("comics"); enabled: Router.sectionAllowed("comics"); onActivated: shell.goSection("comics") }
+    Shortcut { sequences: Keymap.sequences("novels"); enabled: Router.sectionAllowed("novels"); onActivated: shell.goSection("novels") }
     Shortcut { sequences: Keymap.sequences("anime"); onActivated: shell.goSection("anime") }
     Shortcut { sequences: Keymap.sequences("library"); onActivated: shell.goSection("library") }
-    Shortcut { sequences: Keymap.sequences("history"); onActivated: shell.goSection("history") }
+    Shortcut { sequences: Keymap.sequences("history"); enabled: Router.sectionAllowed("history"); onActivated: shell.goSection("history") }
     Shortcut { sequences: Keymap.sequences("activity"); onActivated: shell.goSection("activity") }
-    Shortcut { sequences: Keymap.sequences("downloads"); onActivated: shell.goSection("downloads") }
+    Shortcut { sequences: Keymap.sequences("downloads"); enabled: Router.sectionAllowed("downloads"); onActivated: shell.goSection("downloads") }
     Shortcut { sequences: Keymap.sequences("settings"); onActivated: shell.goSection("settings") }
     Shortcut {
         sequences: Keymap.sequences("fullscreen")

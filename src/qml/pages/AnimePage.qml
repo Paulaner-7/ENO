@@ -59,12 +59,13 @@ Item {
             y: 24
             width: parent.width - 2 * Theme.gutter - (Theme.compact ? 0 : 330)
             spacing: 8
-            ScButton { text: qsTr("Browse"); iconName: "compass"; compact: true; onClicked: Router.openAnimeBrowse({}) }
-            ScButton { text: qsTr("Schedule"); iconName: "calendar"; compact: true; onClicked: Router.openAnimeSchedule() }
-            ScButton { visible: Theme.compact; text: qsTr("Search"); iconName: "search"; compact: true; onClicked: Router.openAnimeBrowse({}) }
-            ScButton { text: qsTr("Extensions"); iconName: "puzzle"; compact: true; onClicked: Router.openExtensions() }
+            ScButton { text: qsTr("Browse"); iconName: "compass"; compact: true; glassBezel: true; onClicked: Router.openAnimeBrowse({}) }
+            ScButton { text: qsTr("Calendario"); iconName: "calendar"; compact: true; glassBezel: true; onClicked: Router.openAnimeSchedule() }
+            ScButton { visible: Theme.compact; text: qsTr("Search"); iconName: "search"; compact: true; glassBezel: true; onClicked: Router.openAnimeBrowse({}) }
+            ScButton { text: qsTr("Extensions"); iconName: "puzzle"; compact: true; glassBezel: true; onClicked: Router.openExtensions() }
             IconButton {
                 iconName: "layout-dashboard"
+                filled: true
                 tip: qsTr("Edit page")
                 active: page.editing
                 onClicked: page.editing = !page.editing
@@ -314,11 +315,13 @@ Item {
                             variant: "primary"
                             text: qsTr("Watch now")
                             iconName: "play"
+                            glassBezel: true
                             onClicked: Router.openSeries(heroText.media, null)
                         }
                         ScButton {
                             text: heroText.media && Library.revision >= 0 && Library.isSaved(heroText.media.id) ? qsTr("In library") : qsTr("Add to library")
-                            iconName: "bookmark"
+                            iconName: heroText.media && Library.revision >= 0 && Library.isSaved(heroText.media.id) ? "bookmark-check" : "bookmark"
+                            glassBezel: true
                             onClicked: {
                                 if (Library.isSaved(heroText.media.id)) Library.remove(heroText.media.id)
                                 else Library.save(Anime.seriesFor(heroText.media))
@@ -425,7 +428,7 @@ Item {
                 label: qsTr("Airing today")
                 Shelf {
                     title: qsTr("Airing today")
-                    actionText: qsTr("Full schedule")
+                    actionText: qsTr("Calendario completo")
                     onAction: Router.openAnimeSchedule()
                     items: page.todayTask && page.todayTask.ok ? page.todayTask.result : []
                     loading: page.todayTask ? page.todayTask.loading : false

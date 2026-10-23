@@ -32,7 +32,7 @@ Item {
             spacing: 22
 
             PageHeader {
-                title: qsTr("Schedule")
+                title: qsTr("Calendario")
                 subtitle: qsTr("Episodes airing this week, in your time zone")
                 showBack: true
             }
@@ -75,6 +75,8 @@ Item {
                         background: Rectangle {
                             radius: Theme.radiusLg
                             color: row.hovered ? Theme.surface2 : "transparent"
+                            border.width: row.hovered ? 1 : 0
+                            border.color: Theme.border
                             Behavior on color { ColorAnimation { duration: Motion.fast } }
                         }
                         contentItem: Row {
@@ -96,6 +98,8 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 radius: 8
                                 source: row.modelData.coverSmall || row.modelData.cover
+                                scale: row.pressed ? 0.96 : row.hovered ? 1.06 : 1.0
+                                Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
                             }
                             Column {
                                 anchors.verticalCenter: parent.verticalCenter

@@ -1,5 +1,6 @@
 #include "Images.h"
 
+#include "NativeGlass.h"
 #include "Platform.h"
 #include "core/ImageCache.h"
 
@@ -326,6 +327,20 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
                 *size = target;
             return it.value();
         }
+    }
+    const QColor qcolor(color.isEmpty() ? QStringLiteral("#ffffff") : color);
+    QImage sfImage = renderSfSymbol(name, qcolor, target, false);
+    if (!sfImage.isNull()) {
+        QMutexLocker lock(&mutex);
+        if (rendered.size() > 512)
+            rendered.clear();
+        rendered.insert(renderKey, sfImage);
+        if (size)
+            *size = target;
+        return sfImage;
+    }
+    {
+        QMutexLocker lock(&mutex);
         if (!sources.contains(name)) {
             QFile file(QStringLiteral(":/icons/%1.svg").arg(name));
             sources.insert(name, file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray());

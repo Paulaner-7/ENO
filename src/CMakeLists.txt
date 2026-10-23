@@ -78,7 +78,9 @@ elseif(APPLE)
     # (Liquid Glass app icon); the compiled outputs are committed so builds don't need Xcode.
     set(SCANCORE_ICNS ${PROJECT_SOURCE_DIR}/packaging/macos/ENO.icns ${PROJECT_SOURCE_DIR}/packaging/macos/Assets.car)
     set_source_files_properties(${SCANCORE_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    list(APPEND SCANCORE_PLATFORM_SOURCES ${SCANCORE_ICNS})
+    list(APPEND SCANCORE_PLATFORM_SOURCES ${SCANCORE_ICNS} app/MacGlass.mm app/MacGlass.h app/NativeGlass.mm app/NativeGlass.h)
+else()
+    list(APPEND SCANCORE_PLATFORM_SOURCES app/NativeGlass.cpp app/NativeGlass.h)
 endif()
 
 qt_add_executable(scancore WIN32 MACOSX_BUNDLE main.cpp ${SCANCORE_PLATFORM_SOURCES})
@@ -148,6 +150,7 @@ qt_add_qml_module(scancore
         app/MpvPlayer.cpp app/MpvPlayer.h
         app/Novels.cpp app/Novels.h
         app/Presence.cpp app/Presence.h
+        app/NativeGlass.h
         app/Updater.cpp app/Updater.h
         app/WebBridge.cpp app/WebBridge.h
         core/Task.cpp core/Task.h
@@ -201,6 +204,7 @@ qt_add_resources(scancore assets
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon.png
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon-glass.png
         ${PROJECT_SOURCE_DIR}/resources/shaders/cover.frag.qsb
+        ${PROJECT_SOURCE_DIR}/resources/shaders/liquidglass.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/panel.vert.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/panel.frag.qsb)
 foreach(icon ${SCANCORE_ICONS})
@@ -265,6 +269,9 @@ if(ANDROID)
         QT_ANDROID_COMPILE_SDK_VERSION 37)
 else()
     target_link_libraries(scancore PRIVATE Qt6::Widgets)
+    if(APPLE)
+        target_link_libraries(scancore PRIVATE "-framework AppKit" "-framework QuartzCore")
+    endif()
 endif()
 
 if(SCANCORE_WITH_SYSTEM_WEBVIEW)

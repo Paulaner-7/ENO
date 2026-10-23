@@ -3,16 +3,18 @@ import QtQuick.Controls.Basic
 import ScanCore
 
 // Everything at a glance: continue where you left off, library updates and
-// what is new across comics, novels and anime.
+// what is new across comics, novels and anime (in ENO, anime only).
 Item {
     id: page
 
-    property var historyTask: Library.continueItems("", 24)
-    property var libraryTask: Library.entries("")
+    // ENO: anime only, so Home shows (and loads) nothing else.
+    readonly property string onlyMedia: Router.animeOnly ? "anime" : ""
+    property var historyTask: Library.continueItems(onlyMedia, 24)
+    property var libraryTask: Library.entries(onlyMedia)
     // A section removed in Edit page loads nothing.
-    readonly property bool comicsOn: (PageLayout.revision, !PageLayout.isRemoved("home", "comics"))
+    readonly property bool comicsOn: Router.mediaAllowed("comic") && (PageLayout.revision, !PageLayout.isRemoved("home", "comics"))
     readonly property bool animeOn: (PageLayout.revision, !PageLayout.isRemoved("home", "anime"))
-    readonly property bool novelsOn: (PageLayout.revision, !PageLayout.isRemoved("home", "novels"))
+    readonly property bool novelsOn: Router.mediaAllowed("novel") && (PageLayout.revision, !PageLayout.isRemoved("home", "novels"))
     // Only a change to the added shelves rebuilds them (not moving one).
     readonly property string extrasJson: (PageLayout.revision, JSON.stringify(PageLayout.extras("home")))
     property var latestTask: comicsOn ? Comics.latest(30) : null
@@ -46,14 +48,14 @@ Item {
         id: refresh
         interval: 400
         onTriggered: {
-            page.historyTask = Library.continueItems("", 24)
-            page.libraryTask = Library.entries("")
-            Story.refreshCards()
+            page.historyTask = Library.continueItems(page.onlyMedia, 24)
+            page.libraryTask = Library.entries(page.onlyMedia)
+            if (!Router.animeOnly) Story.refreshCards()
         }
     }
 
     ReadFromDialog { id: storyReadFrom }
-    Component.onCompleted: Story.refreshCards()
+    Component.onCompleted: if (!Router.animeOnly) Story.refreshCards()
 
     // Edit page: arrange the sections (PageLayout).
     property bool editing: false
@@ -81,22 +83,6 @@ Item {
             width: parent.width
             spacing: Theme.sectionGap
 
-            // Edit page, at the top right whatever comes first.
-            Item {
-                width: parent.width
-                height: editButton.height
-                IconButton {
-                    id: editButton
-                    anchors.right: parent.right
-                    anchors.rightMargin: Theme.gutter - 6
-                    y: 12
-                    iconName: "layout-dashboard"
-                    tip: qsTr("Edit page")
-                    active: page.editing
-                    onClicked: page.editing = !page.editing
-                }
-            }
-
             PageSection {
                 arranger: layout
                 key: "greeting"
@@ -106,11 +92,14 @@ Item {
                     spacing: 18
                     Item {
                         width: parent.width
-                        height: Theme.compact ? 70 : 110
+                        height: Math.max(heading.implicitHeight, quickLinks.implicitHeight) + 16
                         Column {
                             id: heading
-                            x: Theme.gutter
-                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.leftMargin: Theme.gutter
+                            anchors.right: quickLinks.left
+                            anchors.rightMargin: 16
+                            y: 12
                             spacing: 6
                             Text {
                                 text: Qt.formatDate(new Date(), "dddd, d MMMM")
@@ -120,39 +109,78 @@ Item {
                                 font.weight: Font.Medium
                                 font.capitalization: Font.AllUppercase
                                 font.letterSpacing: 1.2
+                                horizontalAlignment: Text.AlignLeft
                             }
                             Text {
+                                width: parent.width
                                 text: page.greeting()
                                 color: Theme.text
                                 font.family: Theme.fontDisplay
                                 font.pixelSize: Theme.compact ? 32 : 42
                                 font.weight: Font.Bold
                                 font.letterSpacing: -1
+                                elide: Text.ElideRight
+                                horizontalAlignment: Text.AlignLeft
                             }
                         }
-                        // Only when it fits beside the greeting (not on landscape phones).
+                        // Quick links and notification bell.
                         Row {
                             id: quickLinks
-                            visible: !Theme.compact && heading.width + width + 3 * Theme.gutter <= parent.width
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.gutter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 6
+                            anchors.bottom: heading.bottom
+                            anchors.bottomMargin: 4
                             spacing: 10
                             ScButton {
+                                visible: !Theme.compact
                                 text: qsTr("Anime")
                                 iconName: "tv"
+                                glassBezel: true
                                 onClicked: Router.go("anime")
                             }
                             ScButton {
+                                visible: !Theme.compact && Router.animeOnly
+                                text: qsTr("Calendario")
+                                iconName: "calendar"
+                                glassBezel: true
+                                onClicked: Router.openAnimeSchedule()
+                            }
+                            ScButton {
+                                visible: !Theme.compact && Router.sectionAllowed("comics")
                                 text: qsTr("Manga")
                                 iconName: "book-open"
+                                glassBezel: true
                                 onClicked: Router.go("comics")
                             }
                             ScButton {
+                                visible: !Theme.compact && Router.sectionAllowed("novels")
                                 text: qsTr("Novels")
                                 iconName: "book-text"
+                                glassBezel: true
                                 onClicked: Router.go("novels")
+                            }
+                            Item {
+                                width: notifButton.width
+                                height: notifButton.height
+                                anchors.verticalCenter: parent.verticalCenter
+                                IconButton {
+                                    id: notifButton
+                                    filled: true
+                                    iconName: Notifications.unread > 0 ? "bell-dot" : "bell"
+                                    tip: qsTr("Notifications")
+                                    onClicked: Router.go("notifications")
+                                }
+                                Rectangle {
+                                    visible: Notifications.unread > 0
+                                    anchors.top: notifButton.top
+                                    anchors.right: notifButton.right
+                                    anchors.topMargin: 4
+                                    anchors.rightMargin: 4
+                                    width: 8
+                                    height: 8
+                                    radius: 4
+                                    color: Theme.accent
+                                }
                             }
                         }
                     }
@@ -201,7 +229,7 @@ Item {
                             Text {
                                 width: parent.width
                                 wrapMode: Text.Wrap
-                                text: qsTr("Your year in comics, novels and anime")
+                                text: Router.animeOnly ? qsTr("Your year in anime") : qsTr("Your year in comics, novels and anime")
                                 color: Qt.rgba(1, 1, 1, 0.8)
                                 font.family: Theme.fontSans
                                 font.pixelSize: Theme.textSm
@@ -225,7 +253,7 @@ Item {
             PageSection {
                 arranger: layout
                 key: "resume"
-                label: qsTr("Last read or watched")
+                label: Router.animeOnly ? qsTr("Last watched") : qsTr("Last read or watched")
                 shown: page.history.length > 0
                 Loader {
                     width: parent.width
@@ -253,6 +281,8 @@ Item {
             PageSection {
                 arranger: layout
                 key: "story"
+                // Where an anime goes on as a comic or novel: not in ENO.
+                available: !Router.animeOnly
                 label: qsTr("Continue the story")
                 shown: Story.cards.length > 0
                 Column {
@@ -306,6 +336,7 @@ Item {
             PageSection {
                 arranger: layout
                 key: "comics"
+                available: Router.mediaAllowed("comic")
                 label: qsTr("Latest comic chapters")
                 Shelf {
                     title: qsTr("Latest comic chapters")
@@ -340,6 +371,7 @@ Item {
             PageSection {
                 arranger: layout
                 key: "novels"
+                available: Router.mediaAllowed("novel")
                 label: qsTr("Novels")
                 Column {
                     readonly property bool hasContent: page.novelsTask !== null
@@ -375,8 +407,9 @@ Item {
                     arranger: layout
                     key: modelData.key
                     label: modelData.label
+                    available: Router.mediaAllowed(modelData.media)
                     readonly property var service: modelData.media === "anime" ? Anime : modelData.media === "novel" ? Novels : Comics
-                    property var task: service.browse(modelData.source, modelData.listing, 1)
+                    property var task: available ? service.browse(modelData.source, modelData.listing, 1) : null
                     Shelf {
                         title: extraSection.modelData.label
                         items: extraSection.task && extraSection.task.ok ? extraSection.task.result.items : []

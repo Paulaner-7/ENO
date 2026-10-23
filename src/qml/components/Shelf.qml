@@ -36,7 +36,7 @@ Column {
         if (list) list.contentX = -list.leftMargin
     }
 
-    spacing: 14
+    spacing: 20
     width: parent ? parent.width : 800
     visible: hasContent
 
@@ -147,7 +147,10 @@ Column {
 
         ListView {
             id: list
-            anchors.fill: parent
+            x: 0
+            y: -22
+            width: parent.width
+            height: parent.height + 44
             visible: !shelf.grid && shelf.items.length > 0 && !shelf.loading && shelf.error.length === 0
             orientation: ListView.Horizontal
             flickableDirection: Flickable.HorizontalFlick
@@ -195,19 +198,27 @@ Column {
                 onWheel: (event) => list.scrollBy(-(event.angleDelta.y || event.angleDelta.x) * 1.4)
             }
 
-            delegate: CoverCard {
+            delegate: Item {
+                id: slot
                 required property var modelData
                 required property int index
                 width: shelf.cardWidth
                 height: list.height
-                item: modelData
-                order: list.scrolled ? 0 : index
-                animateIn: !shelf.settled
-                coverRatio: shelf.coverRatio
-                subtitle: shelf.look && !shelf.look.subtitles ? "" : shelf.subtitleFor(modelData)
-                badge: shelf.badgeFor(modelData)
-                progress: shelf.look && !shelf.look.progress ? -1 : shelf.progressFor(modelData)
-                onOpened: (it, cover) => shelf.opened(it, cover)
+                z: card.hovered || card.pressed ? 10 : 0
+                CoverCard {
+                    id: card
+                    y: 22
+                    width: parent.width
+                    height: parent.height - 44
+                    item: slot.modelData
+                    order: list.scrolled ? 0 : slot.index
+                    animateIn: !shelf.settled
+                    coverRatio: shelf.coverRatio
+                    subtitle: shelf.look && !shelf.look.subtitles ? "" : shelf.subtitleFor(slot.modelData)
+                    badge: shelf.badgeFor(slot.modelData)
+                    progress: shelf.look && !shelf.look.progress ? -1 : shelf.progressFor(slot.modelData)
+                    onOpened: (it, cover) => shelf.opened(it, cover)
+                }
             }
         }
 
@@ -216,8 +227,9 @@ Column {
         Rectangle {
             visible: list.visible && !Theme.compact && !Theme.layered
             anchors.left: parent.left
+            y: -22
             width: Theme.gutter + 24
-            height: parent.height
+            height: parent.height + 44
             opacity: list.contentX > list.originX - list.leftMargin + 4 ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: Motion.normal } }
             gradient: Gradient {
@@ -230,8 +242,9 @@ Column {
         Rectangle {
             visible: list.visible && !Theme.compact && !Theme.layered
             anchors.right: parent.right
+            y: -22
             width: Theme.gutter + 24
-            height: parent.height
+            height: parent.height + 44
             opacity: list.contentWidth > list.width && list.contentX < list.originX + list.contentWidth - list.width + list.rightMargin - 4 ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: Motion.normal } }
             gradient: Gradient {

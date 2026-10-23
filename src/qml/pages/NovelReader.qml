@@ -543,7 +543,7 @@ Rectangle {
         opacity: 0.8
     }
 
-    Rectangle {
+    Item {
         id: topBar
         z: 1
         width: parent.width
@@ -553,8 +553,15 @@ Rectangle {
         readonly property real rowY: reader.insetTop + 32
         height: 64 + (twoRows ? 46 : 0) + reader.insetTop
         y: reader.barsShown ? 0 : -height
-        color: Theme.alpha(reader.look.chrome, 0.94)
         Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+
+        LiquidGlass {
+            anchors.fill: parent
+            nativeEnabled: false
+            backdropItem: flick
+            radius: 0
+            tintColor: Theme.alpha(reader.look.chrome, 0.72)
+        }
         Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.alpha(reader.look.text, 0.08) }
 
         IconButton {
@@ -661,7 +668,12 @@ Rectangle {
         height: Math.min(parent.height - 120, 600)
         padding: 6
         onOpened: chapterList.positionViewAtIndex(reader.index, ListView.Center)
-        background: Rectangle { radius: Theme.radiusLg; color: Theme.surface; border.width: 1; border.color: Theme.borderStrong }
+        background: LiquidGlass {
+            nativeEnabled: false
+            backdropItem: flick
+            radius: Theme.radiusLg
+            tintColor: Theme.alpha(Theme.surface, 0.65)
+        }
         contentItem: ListView {
             id: chapterList
             clip: true
@@ -676,7 +688,7 @@ Rectangle {
                     chapterPopup.close()
                     reader.load(index)
                 }
-                background: Rectangle { radius: Theme.radiusSm; color: index === reader.index ? Theme.surface3 : parent.hovered ? Theme.surface2 : "transparent" }
+                background: Rectangle { radius: Theme.radiusSm; color: index === reader.index ? Theme.alpha(Theme.surface3, 0.75) : parent.hovered ? Theme.alpha(Theme.surface2, 0.65) : "transparent" }
                 contentItem: Text {
                     text: modelData.title
                     color: Theme.text
@@ -696,7 +708,12 @@ Rectangle {
         y: 70 + (topBar.twoRows ? 46 : 0) + reader.insetTop
         width: Math.min(340, parent.width - 32)
         padding: 20
-        background: Rectangle { radius: Theme.radiusLg; color: Theme.surface; border.width: 1; border.color: Theme.borderStrong }
+        background: LiquidGlass {
+            nativeEnabled: false
+            backdropItem: flick
+            radius: Theme.radiusLg
+            tintColor: Theme.alpha(Theme.surface, 0.65)
+        }
         enter: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast }

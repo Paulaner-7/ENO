@@ -13,25 +13,29 @@ StackView {
     pushEnter: Transition {
         ParallelAnimation {
             NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.normal; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "x"; from: 48; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "x"; from: 36; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "scale"; from: 0.985; to: 1; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
         }
     }
     pushExit: Transition {
         ParallelAnimation {
             NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Motion.normal; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "x"; from: 0; to: -28; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "x"; from: 0; to: -24; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "scale"; from: 1; to: 0.985; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
         }
     }
     popEnter: Transition {
         ParallelAnimation {
             NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.normal; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "x"; from: -28; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "x"; from: -24; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
+            NumberAnimation { property: "scale"; from: 0.985; to: 1; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
         }
     }
     popExit: Transition {
         ParallelAnimation {
             NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Motion.fast; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "x"; from: 0; to: 48; duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.accelerate }
+            NumberAnimation { property: "x"; from: 0; to: 36; duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.accelerate }
+            NumberAnimation { property: "scale"; from: 1; to: 0.985; duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.accelerate }
         }
     }
     replaceEnter: pushEnter

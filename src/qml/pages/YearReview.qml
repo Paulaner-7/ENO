@@ -54,7 +54,7 @@ Item {
 
             PageHeader {
                 title: qsTr("Your year")
-                subtitle: qsTr("Time, chapters and episodes, on every device you sync")
+                subtitle: Router.animeOnly ? qsTr("Time and episodes, on every device you sync") : qsTr("Time, chapters and episodes, on every device you sync")
                 showBack: true
                 Row {
                     spacing: 4
@@ -171,14 +171,13 @@ Item {
                         columnSpacing: 16
                         rowSpacing: 16
                         Repeater {
-                            model: page.stats ? [
-                                { label: qsTr("Chapters"), value: page.stats.total.comic + page.stats.total.novel },
+                            model: page.stats ? (Router.animeOnly ? [] : [{ label: qsTr("Chapters"), value: page.stats.total.comic + page.stats.total.novel }]).concat([
                                 { label: qsTr("Episodes"), value: page.stats.total.anime },
                                 { label: qsTr("Time"), value: page.duration(page.stats.total.seconds) },
                                 { label: qsTr("Days active"), value: page.stats.activeDays },
                                 { label: qsTr("Longest streak"), value: page.stats.longestStreak + (page.stats.longestStreak === 1 ? " day" : " days") },
                                 { label: qsTr("Busiest month"), value: page.busiestMonth >= 0 ? page.monthNames[page.busiestMonth] : "—" }
-                            ] : []
+                            ]) : []
                             Column {
                                 required property var modelData
                                 width: (cardBody.width - 32) / (cardBody.width > 520 ? 3 : 2)

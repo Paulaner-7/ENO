@@ -16,10 +16,11 @@ Item {
     readonly property int selectedCount: Object.keys(selection).length
     onMediaChanged: { selecting = false; selection = ({}) }
 
-    readonly property string media: App.settings.libraryMedia || "comic"
+    // ENO: anime only, whatever was picked before.
+    readonly property string media: Router.animeOnly ? "anime" : (App.settings.libraryMedia || "comic")
     readonly property string category: App.settings.libraryCategory || "all"
     readonly property string view: App.settings.libraryView || "grid"
-    readonly property string sort: App.settings.librarySort || "updates"
+    readonly property string sort: (Router.animeOnly && (!App.settings.librarySort || App.settings.librarySort === "updates")) ? "recent" : (App.settings.librarySort || "updates")
     readonly property var categories: Router.libraryCategories(media)
 
     // The last result, kept while a refresh runs.
@@ -53,11 +54,11 @@ Item {
         : (categories.find(c => c.value === category) || { label: "" }).label
 
     readonly property bool checking: checkTask ? checkTask.loading : false
-    readonly property var mediaOptions: [{ value: "comic", label: qsTr("Comics"), icon: "book-open" },
-        { value: "novel", label: qsTr("Novels"), icon: "book-text" }, { value: "anime", label: qsTr("Anime"), icon: "tv" }]
-    readonly property var sortOptions: [{ value: "updates", label: qsTr("New chapters first") },
+    readonly property var mediaOptions: Router.reachable([{ value: "comic", media: "comic", label: qsTr("Comics"), icon: "book-open" },
+        { value: "novel", media: "novel", label: qsTr("Novels"), icon: "book-text" }, { value: "anime", media: "anime", label: qsTr("Anime"), icon: "tv" }])
+    readonly property var sortOptions: (Router.animeOnly ? [] : [{ value: "updates", label: qsTr("New chapters first") }]).concat([
         { value: "recent", label: media === "anime" ? qsTr("Recently watched") : qsTr("Recently read") },
-        { value: "added", label: qsTr("Recently added") }, { value: "title", label: qsTr("Title A–Z") }]
+        { value: "added", label: qsTr("Recently added") }, { value: "title", label: qsTr("Title A–Z") }])
     readonly property var viewOptions: [{ value: "grid", icon: "layout-grid", label: qsTr("Grid") },
         { value: "compact", icon: "grid-2x2", label: qsTr("Compact grid") }, { value: "list", icon: "list", label: qsTr("List") }]
 
@@ -144,8 +145,8 @@ Item {
             PageHeader {
                 keepBeside: Theme.compact
                 title: qsTr("Library")
-                subtitle: page.all.length + qsTr(" saved")
-                    + (Library.unreadUpdates > 0 ? " · " + Library.unreadUpdates + qsTr(" new chapters") : "")
+                subtitle: (Router.animeOnly ? page.inMedia.length : page.all.length) + qsTr(" saved")
+                    + (Library.unreadUpdates > 0 ? " · " + Library.unreadUpdates + (Router.animeOnly ? qsTr(" new episodes") : qsTr(" new chapters")) : "")
                 ScButton {
                     visible: !Theme.compact
                     text: page.selecting ? qsTr("Done") : qsTr("Select")
@@ -160,8 +161,9 @@ Item {
                     variant: "ghost"
                     onClicked: Router.openUpcoming()
                 }
+                // New chapter checks are for comics and novels only.
                 ScButton {
-                    visible: !Theme.compact
+                    visible: !Theme.compact && !Router.animeOnly
                     text: page.checking ? qsTr("Checking…") : qsTr("Check for updates")
                     iconName: "refresh-cw"
                     loading: page.checking
@@ -189,7 +191,7 @@ Item {
                 }
                 IconButton {
                     id: checkButton
-                    visible: Theme.compact
+                    visible: Theme.compact && !Router.animeOnly
                     diameter: 40
                     filled: true
                     iconName: "refresh-cw"
@@ -209,7 +211,7 @@ Item {
             // Sources that stopped answering, or series saved twice.
             Rectangle {
                 id: careBanner
-                visible: Upkeep.attention > 0
+                visible: !Router.animeOnly && Upkeep.attention > 0
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 height: visible ? careRow.height + 20 : 0
@@ -250,7 +252,7 @@ Item {
             }
 
             Segmented {
-                visible: Theme.compact
+                visible: Theme.compact && page.mediaOptions.length > 1
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 fill: true
@@ -301,6 +303,7 @@ Item {
                 width: parent.width - 2 * Theme.gutter
                 spacing: 12
                 Segmented {
+                    visible: page.mediaOptions.length > 1
                     options: page.mediaOptions
                     value: page.media
                     onPicked: (v) => App.setSetting("libraryMedia", v)

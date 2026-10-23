@@ -173,7 +173,8 @@ SettingsPane {
 
     SettingsGroup {
         title: qsTr("Pages")
-        note: qsTr("Home, Comics, Novels and Anime each have an Edit page button: move, hide and restyle their sections there.")
+        note: Router.animeOnly ? qsTr("Home and Anime each have an Edit page button: move, hide and restyle their sections there.")
+                               : qsTr("Home, Comics, Novels and Anime each have an Edit page button: move, hide and restyle their sections there.")
         SettingRow {
             iconName: "rows-3"
             title: qsTr("Spacing")
@@ -240,6 +241,7 @@ SettingsPane {
             Toggle { checked: App.settings.reducedMotion === true; onToggled: App.setSetting("reducedMotion", checked) }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "book-open"
             title: qsTr("E-ink screen")
             description: qsTr("For Boox, Kobo and other e-paper devices: black on white, no animation, comics in pages and novels turned page by page with a tap on the sides.")
@@ -252,7 +254,7 @@ SettingsPane {
             }
         }
         SettingRow {
-            visible: App.settings.eink === true
+            visible: App.settings.eink === true && !Router.animeOnly
             iconName: "square"
             title: qsTr("Flash on page turns")
             description: qsTr("A moment of black when a comic page turns clears the last page's ghost.")
@@ -269,7 +271,8 @@ SettingsPane {
             Select {
                 model: [{ value: "home", label: "Home" }, { value: "comics", label: qsTr("Comics") }, { value: "novels", label: qsTr("Novels") },
                         { value: "anime", label: qsTr("Anime") }, { value: "library", label: qsTr("Library") }, { value: "history", label: qsTr("History") }]
-                value: App.settings.startSection || "home"
+                    .filter(o => Router.sectionAllowed(o.value))
+                value: Router.sectionAllowed(App.settings.startSection || "home") ? (App.settings.startSection || "home") : "home"
                 onPicked: (v) => App.setSetting("startSection", v)
             }
         }

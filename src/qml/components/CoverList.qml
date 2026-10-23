@@ -73,8 +73,8 @@ Item {
                 y: 2
                 radius: Theme.radiusLg
                 color: row.marked ? Theme.alpha(Theme.accent, 0.16) : row.hovered || row.visualFocus ? Theme.surface2 : "transparent"
-                border.width: row.marked ? 1 : 0
-                border.color: Theme.alpha(Theme.accent, 0.5)
+                border.width: row.marked || row.hovered ? 1 : 0
+                border.color: row.marked ? Theme.alpha(Theme.accent, 0.5) : Theme.border
                 Behavior on color { ColorAnimation { duration: Motion.fast } }
             }
             contentItem: Item {
@@ -87,10 +87,13 @@ Item {
                     source: row.entry ? (row.entry.cover || "") : ""
                     referer: row.referer
                     title: row.entry ? (row.entry.title || "") : ""
+                    scale: row.pressed ? 0.96 : row.hovered ? 1.06 : 1.0
+                    Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
                 }
                 Column {
                     anchors.left: cover.right
-                    anchors.leftMargin: 14
+                    anchors.leftMargin: row.hovered ? 17 : 14
+                    Behavior on anchors.leftMargin { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
                     anchors.right: badgeBox.left
                     anchors.rightMargin: 12
                     anchors.verticalCenter: parent.verticalCenter

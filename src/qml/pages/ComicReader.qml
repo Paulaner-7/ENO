@@ -1049,7 +1049,11 @@ Rectangle {
         height: Math.min(parent.height - 160 - reader.insetTop - reader.insetBottom, 560)
         padding: 6
         onOpened: chapterList.positionViewAtIndex(reader.index, ListView.Center)
-        background: Rectangle { radius: Theme.radiusLg; color: "#151517"; border.width: 1; border.color: "#2a2a30" }
+        background: LiquidGlass {
+            nativeEnabled: false
+            radius: Theme.radiusLg
+            tintColor: Qt.rgba(0.08, 0.08, 0.10, 0.70)
+        }
         enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast } }
         exit: Transition { NumberAnimation { property: "opacity"; to: 0; duration: Motion.fast } }
         contentItem: ListView {
@@ -1068,7 +1072,7 @@ Rectangle {
                 }
                 background: Rectangle {
                     radius: Theme.radiusSm
-                    color: index === reader.index ? "#2a2a30" : parent.hovered ? "#1f1f23" : "transparent"
+                    color: index === reader.index ? Qt.rgba(1, 1, 1, 0.14) : parent.hovered ? Qt.rgba(1, 1, 1, 0.08) : "transparent"
                 }
                 contentItem: Text {
                     text: modelData.title
@@ -1099,7 +1103,11 @@ Rectangle {
         y: topBar.height - 6
         width: Math.min(320, parent.width - 36)
         padding: 18
-        background: Rectangle { radius: Theme.radiusLg; color: "#151517"; border.width: 1; border.color: "#2a2a30" }
+        background: LiquidGlass {
+            nativeEnabled: false
+            radius: Theme.radiusLg
+            tintColor: Qt.rgba(0.08, 0.08, 0.10, 0.70)
+        }
         enter: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast }

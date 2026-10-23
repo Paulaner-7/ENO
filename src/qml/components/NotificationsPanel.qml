@@ -41,7 +41,9 @@ Popup {
     Timer { id: refresh; interval: 150; onTriggered: panel.reload() }
     Connections {
         target: panel.task
-        function onFinished(result) { panel.items = result }
+        function onFinished(result) {
+            panel.items = Router.animeOnly ? (result || []).filter(n => n.kind !== "chapters") : result
+        }
     }
 
     parent: Overlay.overlay
@@ -72,11 +74,10 @@ Popup {
         NumberAnimation { property: "opacity"; to: 0; duration: Motion.fast }
     }
 
-    background: Rectangle {
+    background: LiquidGlass {
+        nativeEnabled: false
         radius: Theme.radiusXl
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.borderStrong
+        interactive: false
     }
 
     contentItem: Item {
@@ -214,7 +215,7 @@ Popup {
             task: panel.items.length === 0 && panel.task && panel.task.loading ? panel.task : null
             empty: panel.task !== null && panel.task.ok && panel.items.length === 0
             emptyTitle: qsTr("Nothing new")
-            emptyText: qsTr("New chapters in your library, announcements and updates show up here.")
+            emptyText: Router.animeOnly ? qsTr("Announcements and updates show up here.") : qsTr("New chapters in your library, announcements and updates show up here.")
             emptyIcon: "bell"
         }
     }

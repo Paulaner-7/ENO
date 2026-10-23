@@ -2,23 +2,45 @@ import QtQuick
 import ScanCore
 
 // Floating card that appears when a new version is downloaded (or can be).
-Rectangle {
+Item {
     id: banner
     readonly property bool shown: Updater.state === "ready" || (Updater.state === "available" && !Updater.canInstall)
     property bool dismissed: false
 
     width: Math.min(parent.width - 32, 420)
     height: content.implicitHeight + 28
-    radius: Theme.radiusLg
-    color: Theme.surface
-    border.width: 1
-    border.color: Theme.borderStrong
     anchors.horizontalCenter: parent.horizontalCenter
     y: shown && !dismissed ? parent.height - height - 24 - (Theme.compact ? 70 : 0) : parent.height + 20
     opacity: shown && !dismissed ? 1 : 0
     visible: opacity > 0
     Behavior on y { NumberAnimation { duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
     Behavior on opacity { NumberAnimation { duration: Motion.normal } }
+
+    LiquidGlass {
+        anchors.fill: parent
+        zTier: 1
+        radius: Theme.radiusLg
+        interactive: true
+        trackPointer: true
+    }
+
+    NativeGlassButton {
+        anchors.fill: parent
+        visible: !Theme.eink && isSupported
+        glass: false
+        zTier: 1
+        layout: "toast"
+        passthrough: true
+        iconName: "download"
+        iconColor: Theme.accentInk
+        accentColor: Theme.accent
+        text: qsTr("Upstream SCANCORE ") + Updater.version + qsTr(" is out")
+        badgeText: qsTr("Ask Antigravity to sync ENO with this update.")
+        textColor: Theme.text
+        badgeTextColor: Theme.textMuted
+        fontSize: Theme.textMd
+        rightInset: actions.width + 26
+    }
 
     Row {
         id: content
@@ -62,9 +84,11 @@ Rectangle {
                 compact: true
                 variant: "primary"
                 text: qsTr("Release notes")
+                inGlassBar: true
+                zTier: 1
                 onClicked: App.openUrl(Updater.pageUrl)
             }
-            IconButton { iconName: "x"; diameter: 30; iconSize: 14; tip: qsTr("Later"); onClicked: banner.dismissed = true }
+            IconButton { iconName: "x"; diameter: 30; iconSize: 14; inGlassBar: true; zTier: 1; tip: qsTr("Later"); onClicked: banner.dismissed = true }
         }
     }
 }

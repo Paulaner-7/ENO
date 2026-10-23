@@ -5,7 +5,7 @@ import ScanCore
 SettingsPane {
     id: pane
     title: qsTr("Sources")
-    subtitle: qsTr("The sites SCANCORE reads from")
+    subtitle: Router.animeOnly ? qsTr("Anime extensions") : qsTr("The sites SCANCORE reads from")
     iconName: "globe"
 
     property var refreshTask: null
@@ -109,11 +109,12 @@ SettingsPane {
     }
 
     // Extensions from the repositories the user added.
-    readonly property var extensionRepos: { App.dependOn(Extensions.revision); return Extensions.repositories() }
-    readonly property int extensionCount: { App.dependOn(Extensions.revision); return Extensions.installed().length }
+    readonly property var extensionRepos: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.repositories()) }
+    readonly property int extensionCount: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.installed()).length }
     SettingsGroup {
         title: qsTr("Extensions")
-        note: qsTr("SCANCORE runs Mihon, Tachiyomi, Aniyomi and LNReader extensions from repositories you add. It has no repository of its own.")
+        note: Router.animeOnly ? qsTr("ENO runs Aniyomi anime extensions from repositories you add. It has no repository of its own.")
+                               : qsTr("SCANCORE runs Mihon, Tachiyomi, Aniyomi and LNReader extensions from repositories you add. It has no repository of its own.")
         SettingRow {
             iconName: "puzzle"
             title: qsTr("Extensions")
@@ -139,7 +140,9 @@ SettingsPane {
 
     // Comics and books on this device: the folders listed and searched.
     readonly property var folders: Array.from(App.settings.localFolders || [])
+    // ENO: anime only. Local files are comics and books, so not here.
     SettingsGroup {
+        visible: !Router.animeOnly
         title: qsTr("On this device")
         note: qsTr("Each folder or file in these folders is a series: folders of images, CBZ, CBR, 7z and PDF files for comics, and EPUB books for novels. ")
             + qsTr("Comics and Novels list them under On this device. CBR and 7z files need 7-Zip, unrar or bsdtar installed.")
@@ -182,10 +185,13 @@ SettingsPane {
         onAccepted: Router.openFile(selectedFile)
     }
 
+    // ENO: the built-in source list is comics and novels; only the adult
+    // switch (which extensions follow too) stays.
     SettingsGroup {
-        title: qsTr("Source list")
-        note: qsTr("Site addresses and availability come from the SCANCORE repository, so a moved or broken site can be fixed without a new release.")
+        title: Router.animeOnly ? qsTr("Adult content") : qsTr("Source list")
+        note: Router.animeOnly ? "" : qsTr("Site addresses and availability come from the SCANCORE repository, so a moved or broken site can be fixed without a new release.")
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "refresh-cw"
             title: qsTr("Version ") + App.manifestVersion
             description: pane.comicSources.length + qsTr(" comic and ") + pane.novelSources.length + qsTr(" novel sources built in.")
@@ -196,11 +202,13 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "globe"
             title: qsTr("Source languages")
             description: qsTr("Built-in sources in these languages are on. Series you already read keep opening whatever you choose.")
         }
         Flow {
+            visible: !Router.animeOnly
             x: 16
             width: parent.width - 32
             bottomPadding: 14
@@ -221,6 +229,7 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: !Router.animeOnly
             iconName: "languages"
             title: qsTr("Languages for “All sources”")
             description: qsTr("Which comic sources “All sources” searches and finds series on. Each source can still be picked on its own.")
@@ -233,7 +242,7 @@ SettingsPane {
         SettingRow {
             iconName: "eye"
             title: qsTr("Show adult sources")
-            description: qsTr("Lists sources marked 18+ in the comic source picker.")
+            description: Router.animeOnly ? qsTr("Lists extensions marked 18+.") : qsTr("Lists sources marked 18+ in the comic source picker.")
             Toggle { checked: App.settings.showNsfwSources === true; onToggled: App.setSetting("showNsfwSources", checked) }
         }
     }
@@ -276,7 +285,7 @@ SettingsPane {
     }
 
     SettingsGroup {
-        visible: App.platform !== "android"
+        visible: App.platform !== "android" && !Router.animeOnly
         title: qsTr("Extended novel sources")
         SettingRow {
             iconName: "book-text"
@@ -315,7 +324,7 @@ SettingsPane {
 
     // Series left on sources that are gone.
     SettingsGroup {
-        visible: pane.goneSources.length > 0
+        visible: pane.goneSources.length > 0 && !Router.animeOnly
         title: qsTr("No longer available")
         note: qsTr("Your progress on these series is kept. Move them to a source you have to read new chapters.")
         Repeater {
@@ -338,6 +347,7 @@ SettingsPane {
     }
 
     SearchField {
+        visible: !Router.animeOnly
         width: parent.width
         placeholderText: qsTr("Find a source")
         text: pane.sourceQuery
@@ -347,7 +357,7 @@ SettingsPane {
     SettingsGroup {
         id: comicGroup
         readonly property var visibleSources: pane.shown(pane.comicSources, pane.allComics)
-        visible: visibleSources.length > 0
+        visible: visibleSources.length > 0 && !Router.animeOnly
         title: qsTr("Comics")
         note: App.platform !== "android" ? "If a site asks for a browser check, the shield opens it inside SCANCORE once; the app then reuses the clearance." : ""
         Repeater {
@@ -365,7 +375,7 @@ SettingsPane {
     SettingsGroup {
         id: novelGroup
         readonly property var visibleSources: pane.shown(pane.novelSources, pane.allNovels)
-        visible: visibleSources.length > 0
+        visible: visibleSources.length > 0 && !Router.animeOnly
         title: qsTr("Novels")
         Repeater {
             model: novelGroup.visibleSources
@@ -380,7 +390,7 @@ SettingsPane {
     }
 
     Text {
-        visible: pane.sourceQuery.trim().length > 0 && !comicGroup.visible && !novelGroup.visible
+        visible: !Router.animeOnly && pane.sourceQuery.trim().length > 0 && !comicGroup.visible && !novelGroup.visible
         width: parent.width
         text: qsTr("No built-in source matches. Extension sources are on the Extensions page.")
         color: Theme.textMuted

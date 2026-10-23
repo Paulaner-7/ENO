@@ -35,8 +35,6 @@ Item {
     readonly property var progress: { App.dependOn(Library.revision); return Library.progressMap(seriesId) }
     readonly property bool saved: { App.dependOn(Library.revision); return Library.isSaved(seriesId) }
     property bool descending: false
-    // Episodes, Reviews or Discussion.
-    property string tab: "episodes"
     // Long series are shown 100 episodes at a time.
     property int range: 0
     readonly property int rangeSize: 100
@@ -201,47 +199,7 @@ Item {
                     tip: qsTr("Open on AniList")
                     onClicked: App.openUrl("https://anilist.co/anime/" + page.anilistId)
                 }
-                IconButton {
-                    visible: Trackers.anyConnected
-                    iconName: "link"
-                    filled: true
-                    tip: qsTr("Tracking")
-                    onClicked: tracking.open()
-                }
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
-            }
-
-            Segmented {
-                x: Theme.gutter
-                // Reviews and discussions are kept by AniList title.
-                visible: !page.fromSource
-                options: [{ value: "episodes", label: qsTr("Episodes") },
-                          { value: "reviews", label: qsTr("Reviews") },
-                          { value: "discussion", label: qsTr("Discussion") }]
-                value: page.tab
-                onPicked: (v) => page.tab = v
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "reviews"
-                visible: active
-                sourceComponent: Reviews {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "discussion"
-                visible: active
-                sourceComponent: Discussion {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
             }
 
             Item {
@@ -325,28 +283,48 @@ Item {
                         width: episodeFlow.cardWidth
                         height: width * 9 / 16 + 54
                         hoverEnabled: true
+                        z: hovered || pressed ? 10 : 0
                         // By key: a Repeater hands its delegates copies of the
                         // model's objects, so indexOf(modelData) is always -1.
                         onClicked: page.watch(page.episodes.findIndex(e => e.key === modelData.key))
                         background: null
-                        contentItem: Column {
-                            spacing: 8
+                        contentItem: Item {
                             Item {
+                                id: epThumbWrap
                                 width: ep.width
                                 height: width * 9 / 16
+                                y: ep.pressed ? -1 : ep.hovered ? -5 : 0
+                                scale: ep.pressed ? 0.97 : ep.hovered ? 1.038 : 1.0
+                                transformOrigin: Item.Center
+                                Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+                                Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
+
+                                Shadow {
+                                    target: epCover
+                                    lift: ep.pressed ? 0.3 : ep.hovered ? 1.1 : 0
+                                    visible: epCover.ready
+                                }
                                 Cover {
+                                    id: epCover
                                     anchors.fill: parent
                                     source: ep.modelData.image || page.media.banner || page.media.cover || ""
                                     title: ep.modelData.title
-                                    zoom: ep.hovered ? 1.05 : 1
-                                    Behavior on zoom { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
+                                    zoom: 1
                                 }
                                 Rectangle {
                                     anchors.fill: parent
                                     radius: Theme.radiusMd
                                     color: "black"
-                                    opacity: ep.hovered ? 0.35 : (ep.state && ep.state.completed ? 0.45 : 0)
+                                    opacity: ep.hovered ? 0.28 : (ep.state && ep.state.completed ? 0.45 : 0)
                                     Behavior on opacity { NumberAnimation { duration: Motion.normal } }
+                                }
+                                Rectangle {
+                                    anchors.fill: parent
+                                    radius: Theme.radiusMd
+                                    color: "transparent"
+                                    border.width: 1
+                                    border.color: ep.hovered ? Theme.alpha("#ffffff", Theme.dark ? 0.28 : 0.5) : Theme.alpha(Theme.text, 0.08)
+                                    Behavior on border.color { ColorAnimation { duration: Motion.normal } }
                                 }
                                 Rectangle {
                                     anchors.centerIn: parent
@@ -408,22 +386,28 @@ Item {
                                     }
                                 }
                             }
-                            Text {
+                            Column {
+                                y: epThumbWrap.height + 10 + (ep.hovered ? 2 : 0)
+                                Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
                                 width: ep.width
-                                text: ep.modelData.title
-                                color: Theme.text
-                                font.family: Theme.fontSans
-                                font.pixelSize: Theme.textSm
-                                font.weight: Font.DemiBold
-                                elide: Text.ElideRight
-                            }
-                            Text {
-                                width: ep.width
-                                text: ep.modelData.airDate ? App.relativeTime(ep.modelData.airDate)
-                                    : ep.modelData.released ? App.relativeTime(ep.modelData.released) : ep.modelData.filler ? qsTr("Filler") : ""
-                                color: Theme.textFaint
-                                font.family: Theme.fontSans
-                                font.pixelSize: Theme.textXs
+                                spacing: 3
+                                Text {
+                                    width: parent.width
+                                    text: ep.modelData.title
+                                    color: Theme.text
+                                    font.family: Theme.fontSans
+                                    font.pixelSize: Theme.textSm
+                                    font.weight: Font.DemiBold
+                                    elide: Text.ElideRight
+                                }
+                                Text {
+                                    width: parent.width
+                                    text: ep.modelData.airDate ? App.relativeTime(ep.modelData.airDate)
+                                        : ep.modelData.released ? App.relativeTime(ep.modelData.released) : ep.modelData.filler ? qsTr("Filler") : ""
+                                    color: Theme.textFaint
+                                    font.family: Theme.fontSans
+                                    font.pixelSize: Theme.textXs
+                                }
                             }
                         }
                     }
@@ -433,9 +417,8 @@ Item {
             StateView {
                 width: parent.width
                 height: visible ? 220 : 0
-                // Only on the episodes tab (StateView shows itself when needed).
-                task: page.tab !== "episodes" ? null : page.malTask && !page.malTask.ok ? page.malTask : page.episodesTask
-                empty: page.tab === "episodes" && page.episodesTask && page.episodesTask.ok && page.episodes.length === 0 && page.seasons.length === 0
+                task: page.malTask && !page.malTask.ok ? page.malTask : page.episodesTask
+                empty: page.episodesTask && page.episodesTask.ok && page.episodes.length === 0 && page.seasons.length === 0
                 emptyTitle: qsTr("No episodes yet")
                 emptyText: page.fromSource ? qsTr("The source lists no episodes for it.")
                     : page.media.nextEpisode ? qsTr("Episode ") + page.media.nextEpisode + qsTr(" airs ") + App.relativeTime(page.media.nextAiringAt) + "." : qsTr("This anime has not aired yet.")
@@ -453,6 +436,7 @@ Item {
 
             // Its comic and novel, and where it leaves off in them.
             StoryPanel {
+                visible: !Router.animeOnly
                 width: parent.width
                 seriesId: page.seriesId
                 media: "anime"

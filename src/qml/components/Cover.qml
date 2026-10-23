@@ -69,8 +69,8 @@ Item {
         property real zoom: root.zoom
         fragmentShader: "qrc:/shaders/cover.frag.qsb"
         opacity: root.ready ? 1 : 0
-        scale: (root.ready ? 1 : 1.03) * (root.zoom > 1 ? 1 + (root.zoom - 1) * 0.35 : 1)
+        scale: root.ready ? 1 : 0.985
         Behavior on opacity { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
-        Behavior on scale { NumberAnimation { duration: Motion.page; easing.type: Easing.OutCubic } }
+        Behavior on scale { NumberAnimation { duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } }
     }
 }

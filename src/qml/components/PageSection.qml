@@ -25,9 +25,12 @@ Item {
     readonly property bool hasLook: !!body && body.look !== undefined
 
     readonly property bool editing: !!arranger && arranger.editing
+    // Whether the section exists at all here (ENO turns off the comic and
+    // novel ones): when false it is never shown, not even while arranging.
+    property bool available: true
     // Taken off the page: not shown even while arranging, and the page
     // loads nothing for it.
-    readonly property bool removed: !!arranger && (PageLayout.revision, PageLayout.isRemoved(arranger.page, key))
+    readonly property bool removed: !available || (!!arranger && (PageLayout.revision, PageLayout.isRemoved(arranger.page, key)))
     // A source's listing the user added (removing it deletes it).
     readonly property bool extra: key.startsWith("src:")
     readonly property bool userHidden: !!arranger && (PageLayout.revision, PageLayout.isHidden(arranger.page, key))

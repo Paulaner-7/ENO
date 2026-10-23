@@ -15,9 +15,10 @@ Item {
     property var updateTask: null
     property var refreshTask: null
 
-    readonly property var repositories: { App.dependOn(Extensions.revision); return Extensions.repositories() }
-    readonly property var installedList: { App.dependOn(Extensions.revision); return Extensions.installed() }
-    readonly property var availableAll: { App.dependOn(Extensions.revision, App.settings.showNsfwSources); return page.tab === "available" ? Extensions.available() : [] }
+    // ENO: anime only, so only anime (Aniyomi) repositories and extensions.
+    readonly property var repositories: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.repositories()) }
+    readonly property var installedList: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.installed()) }
+    readonly property var availableAll: { App.dependOn(Extensions.revision, App.settings.showNsfwSources); return page.tab === "available" ? Router.reachable(Extensions.available()) : [] }
     readonly property var availableLanguages: {
         const seen = {}
         const out = [{ value: "", label: qsTr("All languages") }]

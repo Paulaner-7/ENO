@@ -148,15 +148,27 @@ Item {
             spacing: 8
             Repeater {
                 model: header.meta.filter(m => !!m)
-                Rectangle {
+                Item {
                     required property var modelData
                     readonly property bool isRating: String(modelData).startsWith("★ ")
                     height: 26
                     width: metaRow.implicitWidth + 18
-                    radius: 13
-                    color: isRating ? Theme.alpha(Theme.warning, 0.12) : Theme.alpha(Theme.text, 0.07)
-                    border.width: 1
-                    border.color: isRating ? Theme.alpha(Theme.warning, 0.3) : Theme.alpha(Theme.text, 0.06)
+                    LiquidGlass {
+                        anchors.fill: parent
+                        radius: 13
+                        glassStyle: "clear"
+                        autoBackdrop: false
+                        iconName: parent.isRating ? "star" : ""
+                        iconSize: 13
+                        iconColor: Theme.warning
+                        text: parent.isRating ? String(parent.modelData).slice(2) : String(parent.modelData)
+                        textColor: parent.isRating ? Theme.text : Theme.textMuted
+                        fontSize: Theme.textXs + 1
+                        bold: parent.isRating
+                        tintColor: parent.isRating
+                            ? Theme.alpha(Theme.warning, Theme.dark ? 0.18 : 0.22)
+                            : Theme.alpha(Theme.surface2, Theme.dark ? 0.55 : 0.72)
+                    }
                     Row {
                         id: metaRow
                         anchors.centerIn: parent
@@ -196,12 +208,14 @@ Item {
                 variant: "primary"
                 text: header.primaryText
                 iconName: "play"
+                glassBezel: true
                 loading: header.busy
                 onClicked: header.primary()
             }
             ScButton {
                 text: header.saved ? qsTr("In library") : qsTr("Add to library")
                 iconName: header.saved ? "bookmark-check" : "bookmark"
+                glassBezel: true
                 onClicked: header.toggleSaved()
             }
             // Where a saved series sits in the library, and favourites.
@@ -216,6 +230,8 @@ Item {
                 id: heart
                 visible: header.saved && !!header.series.id
                 readonly property bool on: { App.dependOn(Library.revision); return header.saved && Library.isFavourite(header.series.id) }
+                filled: true
+                active: on
                 iconName: "heart"
                 iconColor: on ? Theme.danger : Theme.textMuted
                 tip: on ? qsTr("Remove from favourites") : qsTr("Add to favourites")

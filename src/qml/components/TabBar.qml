@@ -17,7 +17,7 @@ Rectangle {
         { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "more", label: qsTr("More"), icon: "ellipsis" }
-    ]
+    ].filter(s => !s.key || Router.sectionAllowed(s.key))  // ENO: anime only
     readonly property int currentIndex: {
         const i = tabs.findIndex(t => t.key === current)
         return i >= 0 ? i : tabs.length - 1
@@ -96,7 +96,7 @@ Rectangle {
         width: 220
         padding: 6
         modal: true
-        background: Rectangle { radius: Theme.radiusLg; color: Theme.surface; border.width: 1; border.color: Theme.borderStrong }
+        background: LiquidGlass { nativeEnabled: false; radius: Theme.radiusLg }
         enter: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.fast }
@@ -108,10 +108,7 @@ Rectangle {
             Repeater {
                 model: [
                     { key: "search", label: qsTr("Search"), icon: "search" },
-                    { key: "notifications", label: qsTr("Notifications"), icon: "bell" },
-                    { key: "history", label: qsTr("History"), icon: "history" },
                     { key: "activity", label: qsTr("Activity"), icon: "activity" },
-                    { key: "downloads", label: qsTr("Downloads"), icon: "download" },
                     { key: "settings", label: qsTr("Settings"), icon: "settings" }
                 ]
                 delegate: ItemDelegate {

@@ -43,13 +43,17 @@ AbstractButton {
     }
 
     Shadow { z: -2; target: face; lift: button.hovered ? 1 : 0.4; strength: Theme.dark ? 0.8 : 0.25 }
-    background: Rectangle {
+    background: LiquidGlass {
         id: face
         radius: width / 2
-        color: button.hovered ? Theme.surface3 : Theme.surface2
-        border.width: 1
-        border.color: Theme.borderStrong
-        Behavior on color { ColorAnimation { duration: Motion.fast } }
+        backdropItem: button.flick
+        interactive: true
+        externalHovered: button.hovered
+        externalPressed: button.pressed
+        trackPointer: false
+        iconName: "arrow-up"
+        iconSize: 18
+        iconColor: Theme.text
     }
     contentItem: Item {
         Icon {

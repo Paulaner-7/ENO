@@ -131,15 +131,13 @@ ComboBox {
             boundsBehavior: Flickable.StopAtBounds
             ScrollIndicator.vertical: ScrollIndicator {}
         }
-        background: Rectangle {
-            radius: Theme.radiusMd
-            topLeftRadius: control.sheet ? Theme.radiusXl : Theme.radiusMd
-            topRightRadius: control.sheet ? Theme.radiusXl : Theme.radiusMd
-            bottomLeftRadius: control.sheet ? 0 : Theme.radiusMd
-            bottomRightRadius: control.sheet ? 0 : Theme.radiusMd
-            color: Theme.surface
-            border.width: control.sheet ? 0 : 1
-            border.color: Theme.borderStrong
+        background: Item {
+            LiquidGlass {
+                anchors.fill: parent
+                nativeEnabled: false
+                radius: control.sheet ? Theme.radiusXl : Theme.radiusMd
+                interactive: false
+            }
             Rectangle {
                 visible: control.sheet
                 anchors.horizontalCenter: parent.horizontalCenter

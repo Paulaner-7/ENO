@@ -20,13 +20,16 @@ Popup {
         const q = input.text.trim()
         const out = []
         if (q.length > 0) {
-            out.push({ group: qsTr("Search"), icon: "book-open", label: qsTr("Search comics for “") + q + "”", run: () => searchIn("comics", q) })
-            out.push({ group: qsTr("Search"), icon: "book-text", label: qsTr("Search novels for “") + q + "”", run: () => searchIn("novels", q) })
+            if (Router.sectionAllowed("comics"))
+                out.push({ group: qsTr("Search"), icon: "book-open", label: qsTr("Search comics for “") + q + "”", run: () => searchIn("comics", q) })
+            if (Router.sectionAllowed("novels"))
+                out.push({ group: qsTr("Search"), icon: "book-text", label: qsTr("Search novels for “") + q + "”", run: () => searchIn("novels", q) })
             out.push({ group: qsTr("Search"), icon: "tv", label: qsTr("Search anime for “") + q + "”", run: () => searchIn("anime", q) })
         }
         const lower = q.toLowerCase()
         for (const entry of recent) {
             if (out.length > 14) break
+            if (!Router.mediaAllowed(entry.media)) continue
             if (lower && !(entry.title || "").toLowerCase().includes(lower)) continue
             out.push({ group: qsTr("Recent"), icon: entry.media === "anime" ? "tv" : entry.media === "novel" ? "book-text" : "book-open",
                        label: entry.title, detail: entry.unitTitle || "", cover: entry.cover, run: () => Router.resume(entry) })
@@ -36,17 +39,25 @@ Popup {
                        ["activity", qsTr("Activity"), "activity"],
                        ["downloads", qsTr("Downloads"), "download"], ["settings", qsTr("Settings"), "settings"]]
         for (const [key, label, icon] of pages)
-            if (!lower || label.toLowerCase().includes(lower))
+            if (Router.sectionAllowed(key) && (!lower || label.toLowerCase().includes(lower)))
                 out.push({ group: qsTr("Pages"), icon: icon, label: qsTr("Go to ") + label, run: () => Router.go(key) })
+        if (!lower || qsTr("Downloads").toLowerCase().includes(lower))
+            out.push({ group: qsTr("Pages"), icon: "download", label: qsTr("Go to ") + qsTr("Downloads"), run: () => Router.openSettings("downloads") })
+        if (!lower || qsTr("History").toLowerCase().includes(lower))
+            out.push({ group: qsTr("Pages"), icon: "history", label: qsTr("Go to ") + qsTr("History"), run: () => Router.openHistory() })
+        if (!lower || qsTr("Calendario").toLowerCase().includes(lower) || "calendario".includes(lower) || "schedule".includes(lower))
+            out.push({ group: qsTr("Pages"), icon: "calendar", label: qsTr("Go to ") + qsTr("Calendario"), run: () => Router.openAnimeSchedule() })
         const commands = [
             { icon: Theme.dark ? "sun" : "moon", label: Theme.dark ? qsTr("Switch to the light theme") : qsTr("Switch to the dark theme"),
               run: () => App.setSetting("theme", Theme.dark ? "light" : "dark") },
             { icon: "sparkles", label: Motion.reduced ? qsTr("Turn animations back on") : qsTr("Reduce motion"),
               run: () => App.setSetting("reducedMotion", !Motion.reduced) },
-            { icon: "refresh-cw", label: qsTr("Check the library for new chapters"), run: () => checkLibrary() },
             { icon: "venetian-mask", label: App.settings.incognito === true ? qsTr("Turn incognito off") : qsTr("Turn incognito on"),
               run: () => Router.setIncognito(App.settings.incognito !== true) }
         ]
+        // New chapter checks are for comics and novels only.
+        if (!Router.animeOnly)
+            commands.push({ icon: "refresh-cw", label: qsTr("Check the library for new chapters"), run: () => checkLibrary() })
         if (Lock.enabled)
             commands.push({ icon: "lock", label: qsTr("Lock SCANCORE"), run: () => Lock.lockNow() })
         if (Account.signedIn)
@@ -120,11 +131,10 @@ Popup {
         }
     }
 
-    background: Rectangle {
+    background: LiquidGlass {
+        nativeEnabled: false
         radius: Theme.radiusXl
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.borderStrong
+        interactive: false
     }
 
     contentItem: Column {
@@ -134,7 +144,7 @@ Popup {
             height: 60
             leftPadding: 54
             rightPadding: 20
-            placeholderText: qsTr("Search comics, novels, anime or jump to a page")
+            placeholderText: Router.animeOnly ? qsTr("Search anime or jump to a page") : qsTr("Search comics, novels, anime or jump to a page")
             placeholderTextColor: Theme.textFaint
             color: Theme.text
             font.family: Theme.fontSans

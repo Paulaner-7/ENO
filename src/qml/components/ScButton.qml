@@ -11,6 +11,9 @@ AbstractButton {
     property bool loading: false
     property bool compact: false
     property bool iconAfter: false
+    property bool glassBezel: false
+    property bool inGlassBar: false
+    property int zTier: 0
 
     readonly property color fill: variant === "primary" ? Theme.accent
         : variant === "secondary" ? Theme.surface2
@@ -26,13 +29,38 @@ AbstractButton {
     font.pixelSize: compact ? Theme.textSm : Theme.textMd
     font.weight: Font.DemiBold
 
+    NativeGlassButton {
+        id: nativeBtn
+        anchors.fill: parent
+        visible: (control.glassBezel || control.inGlassBar) && !Theme.eink && !control.loading && isSupported
+        glass: control.glassBezel
+        zTier: control.zTier
+        iconName: control.iconName
+        iconSize: control.compact ? 14 : 16
+        iconColor: control.ink
+        iconAfter: control.iconAfter
+        text: control.text
+        textColor: control.ink
+        fontSize: control.compact ? Theme.textSm : Theme.textMd
+        bold: true
+        cornerRadius: height / 2
+        style: control.variant === "primary" ? "regular" : "clear"
+        interactive: true
+        fillColor: control.fill
+        tintColor: control.variant === "primary" ? Theme.alpha(Theme.accent, 0.36) : Qt.rgba(0, 0, 0, 0)
+        borderColor: control.variant === "ghost" || control.variant === "secondary" ? Theme.border : Qt.rgba(0, 0, 0, 0)
+        onClicked: control.clicked()
+    }
+
     background: Rectangle {
+        visible: !nativeBtn.visible
         radius: height / 2
         color: control.fill
-        border.width: control.variant === "ghost" ? 1 : 0
-        border.color: Theme.border
-        scale: control.pressed ? 0.97 : 1
-        Behavior on scale { NumberAnimation { duration: Motion.fast; easing.type: Easing.OutQuad } }
+        border.width: control.variant === "ghost" || (control.variant === "secondary" && control.hovered) ? 1 : 0
+        border.color: control.hovered ? Theme.borderStrong : Theme.border
+        scale: control.pressed ? 0.96 : control.hovered ? 1.02 : 1
+        Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
+        Behavior on border.color { ColorAnimation { duration: Motion.fast } }
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
@@ -52,6 +80,7 @@ AbstractButton {
     }
 
     contentItem: Item {
+        visible: !nativeBtn.visible
         implicitWidth: row.implicitWidth
         implicitHeight: row.implicitHeight
         Row {

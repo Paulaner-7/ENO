@@ -138,7 +138,9 @@ Dialog {
             visible: !dialog.task
             Text {
                 width: parent.width
-                text: qsTr("Paste the link from the repository's page, or the link to its index, repo.json or plugin list; several at once work too. SCANCORE reads Mihon, Tachiyomi, Aniyomi and LNReader repositories.")
+                text: Router.animeOnly
+                    ? qsTr("Paste the link from an Aniyomi anime repository's page, or the link to its index.min.json; several at once work too.")
+                    : qsTr("Paste the link from the repository's page, or the link to its index, repo.json or plugin list; several at once work too. SCANCORE reads Mihon, Tachiyomi, Aniyomi and LNReader repositories.")
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
@@ -244,9 +246,10 @@ Dialog {
                 onClicked: dialog.show(dialog.link, dialog.kind)
             }
             // Adding is quick; any installs carry on in the background.
-            readonly property int toInstall: dialog.preview && !dialog.preview.added ? dialog.preview.autoInstall.length : 0
+            readonly property bool mediaAllowed: !dialog.preview || Router.mediaAllowed(dialog.preview.media)
+            readonly property int toInstall: dialog.preview && mediaAllowed && !dialog.preview.added ? dialog.preview.autoInstall.length : 0
             ScButton {
-                visible: dialog.preview !== null
+                visible: dialog.preview !== null && parent.mediaAllowed
                 text: parent.toInstall > 0 ? qsTr("Add only") : qsTr("Add")
                 variant: parent.toInstall > 0 ? "secondary" : "primary"
                 loading: dialog.adding && !dialog.withInstall

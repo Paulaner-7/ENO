@@ -34,11 +34,10 @@ Popup {
     }
     exit: Transition { NumberAnimation { property: "opacity"; to: 0; duration: Motion.fast } }
 
-    background: Rectangle {
+    background: LiquidGlass {
+        nativeEnabled: false
         radius: Theme.radiusLg
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.borderStrong
+        interactive: false
     }
 
     contentItem: Column {

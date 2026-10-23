@@ -7,7 +7,8 @@ import ScanCore
 // rhythm suggests, day by day for the next two weeks.
 Item {
     id: page
-    property string media: "all"
+    // ENO: anime only.
+    property string media: Router.animeOnly ? "anime" : "all"
     property var task: Upkeep.radar(14)
     readonly property var days: {
         const all = task && task.ok ? task.result : []
@@ -53,6 +54,7 @@ Item {
             }
 
             Segmented {
+                visible: !Router.animeOnly
                 x: Theme.gutter
                 width: Theme.compact ? parent.width - 2 * Theme.gutter : implicitWidth
                 fill: Theme.compact
@@ -141,7 +143,7 @@ Item {
             }
 
             Text {
-                visible: page.task && page.task.ok && page.days.length > 0
+                visible: !Router.animeOnly && page.task && page.task.ok && page.days.length > 0
                 x: Theme.gutter
                 width: column.width - 2 * Theme.gutter
                 wrapMode: Text.Wrap

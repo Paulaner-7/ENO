@@ -8,6 +8,27 @@ QtObject {
     property var shell: null
     property string section: "home"
 
+    // ENO: anime only. Comics and novels stay in the code (services, pages,
+    // readers, database) but nothing in the interface leads to them; every
+    // way in (navigation, palette, shortcuts, links, files, resume) is
+    // turned away here or hidden where it is drawn. Set to false to bring
+    // them back.
+    readonly property bool animeOnly: true
+    // Whether a media ("comic", "novel", "anime") or section ("comics",
+    // "novels", …) can be reached.
+    function mediaAllowed(media) { return !animeOnly || media === "anime" }
+    function sectionAllowed(name) {
+        if (animeOnly && (name === "comics" || name === "novels")) return false
+        if (name === "downloads" || name === "history" || name === "notifications") return false
+        return true
+    }
+    // Drops the entries of a list ({media: …} maps) that cannot be reached.
+    function reachable(list) {
+        if (!animeOnly || !list) return list
+        return Array.from(list).filter(e => e && mediaAllowed(e.media))
+    }
+    function refuseMedia() { toast(qsTr("ENO is set up for anime only"), "info") }
+
     function go(name) { if (shell) shell.goSection(name) }
     // A page on top of the current section's stack.
     function push(path, props) { if (shell) shell.push(path, props || {}) }
@@ -17,12 +38,19 @@ QtObject {
         const address = String(url)
         const name = decodeURIComponent(address.replace(/[?#].*$/, "").replace(/\/$/, "").replace(/^.*\//, ""))
         const media = /\.epub$/i.test(name) ? "novel" : "comic"
+        if (!mediaAllowed(media)) { refuseMedia(); return }
         openSeries({ media: media, sourceUrl: address, source: "local", title: name.replace(/\.[^.]+$/, "").replace(/_/g, " ") }, null)
     }
     // Settings, at one category.
     function openSettings(category) {
         App.setSetting("settingsCategory", category)
         go("settings")
+    }
+    // Activity and history views.
+    property string activityTab: "activity"
+    function openHistory() {
+        activityTab = "history"
+        go("activity")
     }
     // The "Add repository" sheet, for a link or (empty) to paste one.
     function addRepository(link) { if (shell) shell.addRepository(link || "") }
@@ -53,6 +81,7 @@ QtObject {
     // item: a search/library map with id, media, sourceUrl, title, cover.
     function openSeries(item, fromCover) {
         if (!shell || !item) return
+        if (!mediaAllowed(item.media)) { refuseMedia(); return }
         if (item.media === "anime" && String(item.source || "").startsWith("aniyomi:"))
             shell.push("pages/AnimeDetails.qml", { sourceUrl: item.sourceUrl || item.url, summary: item }, fromCover, item.cover)
         else if (item.media === "anime")
@@ -64,10 +93,12 @@ QtObject {
     }
 
     function openComicReader(series, chapters, index) {
+        if (!mediaAllowed("comic")) { refuseMedia(); return }
         if (shell) shell.openImmersive("pages/ComicReader.qml", { series: series, chapters: chapters, index: index })
     }
 
     function openNovelReader(series, chapters, index) {
+        if (!mediaAllowed("novel")) { refuseMedia(); return }
         if (shell) shell.openImmersive("pages/NovelReader.qml", { series: series, chapters: chapters, index: index })
     }
 

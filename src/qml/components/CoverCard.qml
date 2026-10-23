@@ -33,6 +33,7 @@ AbstractButton {
     implicitHeight: width * coverRatio + textColumn.implicitHeight + 10
     hoverEnabled: true
     focusPolicy: Qt.TabFocus
+    z: hovered || pressed ? 10 : 0
 
     onClicked: opened(item, cover)
 
@@ -40,7 +41,7 @@ AbstractButton {
     opacity: 0
     transform: Translate { id: rise; y: 14 }
     Component.onCompleted: {
-        if (!animateIn || Motion.reduced || index >= 24) {
+        if (!animateIn || Motion.reduced || card.order >= 24) {
             opacity = 1
             rise.y = 0
             return
@@ -62,13 +63,16 @@ AbstractButton {
             id: coverWrap
             width: parent.width
             height: width * card.coverRatio
-            y: card.hovered ? -4 : 0
-            Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
+            y: card.pressed ? -1 : card.hovered ? -6 : 0
+            scale: card.pressed ? 0.965 : card.hovered ? 1.048 : 1.0
+            transformOrigin: Item.Center
+            Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+            Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
 
             // Soft shadow that deepens and spreads on hover.
             Shadow {
                 target: cover
-                lift: card.hovered ? 1 : 0
+                lift: card.pressed ? 0.3 : card.hovered ? 1.25 : 0
                 visible: cover.ready
             }
 
@@ -81,10 +85,20 @@ AbstractButton {
                 radius: Theme.radiusMd
                 // A saved series whose site moved its pictures.
                 onFailedChanged: if (failed && card.item.id && card.item.progressAt !== undefined) Library.refreshCover(card.item.id)
-                zoom: card.hovered ? 1.06 : 1
-                Behavior on zoom { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
-                scale: card.pressed ? 0.975 : 1
-                Behavior on scale { NumberAnimation { duration: Motion.fast } }
+                zoom: 1
+            }
+
+            // Subtle top-lit specular sheen when the cover lifts under the pointer.
+            Rectangle {
+                anchors.fill: cover
+                radius: Theme.radiusMd
+                opacity: card.hovered ? (Theme.dark ? 0.14 : 0.22) : 0
+                Behavior on opacity { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#ffffff" }
+                    GradientStop { position: 0.38; color: Theme.alpha("#ffffff", 0.0) }
+                    GradientStop { position: 1.0; color: Theme.alpha("#000000", 0.12) }
+                }
             }
 
             Rectangle {
@@ -92,7 +106,10 @@ AbstractButton {
                 radius: Theme.radiusMd
                 color: "transparent"
                 border.width: card.visualFocus || card.marked ? 2 : 1
-                border.color: card.visualFocus || card.marked ? Theme.accent : Theme.alpha(Theme.text, 0.06)
+                border.color: card.visualFocus || card.marked ? Theme.accent
+                    : card.hovered ? Theme.alpha("#ffffff", Theme.dark ? 0.28 : 0.55)
+                    : Theme.alpha(Theme.text, 0.08)
+                Behavior on border.color { ColorAnimation { duration: Motion.normal } }
             }
 
             // Selected: a wash and a check in the corner.
@@ -102,27 +119,39 @@ AbstractButton {
                 radius: Theme.radiusMd
                 color: Theme.alpha(Theme.accent, 0.22)
             }
-            Rectangle {
+            Item {
                 visible: card.marked
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: 8
                 width: 24
                 height: 24
-                radius: 12
-                color: Theme.accent
+                LiquidGlass {
+                    anchors.fill: parent
+                    nativeEnabled: false
+                    radius: 12
+                    glassStyle: "clear"
+                    autoBackdrop: false
+                    tintColor: Theme.alpha(Theme.accent, 0.82)
+                }
                 Icon { anchors.centerIn: parent; name: "check"; size: 14; color: Theme.accentInk }
             }
 
-            Rectangle {
+            Item {
                 visible: card.badge.length > 0
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.margins: 8
                 height: 22
                 width: badgeText.implicitWidth + 14
-                radius: 11
-                color: Theme.accent
+                LiquidGlass {
+                    anchors.fill: parent
+                    nativeEnabled: false
+                    radius: 11
+                    glassStyle: "clear"
+                    autoBackdrop: false
+                    tintColor: Theme.alpha(Theme.accent, 0.82)
+                }
                 Text {
                     id: badgeText
                     anchors.centerIn: parent
@@ -154,14 +183,15 @@ AbstractButton {
 
         Column {
             id: textColumn
-            anchors.top: coverWrap.bottom
-            anchors.topMargin: 10
+            y: coverWrap.height + 10 + (card.hovered ? 3 : 0)
+            Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
             width: parent.width
             spacing: 2
             Text {
                 width: parent.width
                 text: card.title
-                color: Theme.text
+                color: card.hovered ? Theme.text : Theme.alpha(Theme.text, 0.92)
+                Behavior on color { ColorAnimation { duration: Motion.fast } }
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textMd
                 font.weight: Font.DemiBold

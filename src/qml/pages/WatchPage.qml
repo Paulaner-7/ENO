@@ -755,17 +755,21 @@ Rectangle {
             onClicked: player.seek(watch.activeSkip.end)
         }
 
-        Rectangle {
+        Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 40
             width: 320
             height: 96
-            radius: Theme.radiusLg
-            color: "#141416"
-            border.width: 1
-            border.color: "#2a2a30"
             visible: !watch.phone && !watch.systemView && nextCountdown.running
+            LiquidGlass {
+                anchors.fill: parent
+                radius: Theme.radiusLg
+                backdropItem: player
+                interactive: true
+                trackPointer: true
+                tintColor: Qt.rgba(0.08, 0.08, 0.1, 0.58)
+            }
             Column {
                 anchors.fill: parent
                 anchors.margins: 16
@@ -841,6 +845,7 @@ Rectangle {
 
         IconButton {
             id: backButton
+            filled: true
             x: 12
             y: watch.phone || watch.docked ? Math.round((parent.height - height) / 2) : 14
             iconName: "arrow-left"
@@ -922,19 +927,21 @@ Rectangle {
                 }
             }
             Item { width: 8; height: 1 }
-            IconButton { iconName: "skip-back"; iconColor: "white"; enabled: watch.hasPrev; tip: qsTr("Previous episode") + watch.keyHint("player.prev"); onClicked: watch.load(watch.index - 1) }
-            IconButton { iconName: "skip-forward"; iconColor: "white"; enabled: watch.hasNext; tip: qsTr("Next episode") + watch.keyHint("player.next"); onClicked: watch.load(watch.index + 1) }
-            IconButton { iconName: "list"; iconColor: "white"; active: watch.sideOpen; tip: qsTr("Episodes"); onClicked: watch.sideOpen = !watch.sideOpen }
+            IconButton { filled: true; iconName: "skip-back"; iconColor: "white"; enabled: watch.hasPrev; tip: qsTr("Previous episode") + watch.keyHint("player.prev"); onClicked: watch.load(watch.index - 1) }
+            IconButton { filled: true; iconName: "skip-forward"; iconColor: "white"; enabled: watch.hasNext; tip: qsTr("Next episode") + watch.keyHint("player.next"); onClicked: watch.load(watch.index + 1) }
+            IconButton { filled: true; iconName: "list"; iconColor: "white"; active: watch.sideOpen; tip: qsTr("Episodes"); onClicked: watch.sideOpen = !watch.sideOpen }
             IconButton {
+                filled: true
                 visible: !watch.fromSource && (watch.hasSources || watch.nativeStream)
                 iconName: "server"
                 iconColor: "white"
                 tip: qsTr("Watch from")
                 onClicked: watchFrom.start(watch.media, false)
             }
-            IconButton { visible: !!watch.media.anilistId; iconName: "message-circle"; iconColor: "white"; tip: qsTr("Comments"); onClicked: comments.open() }
+            IconButton { filled: true; visible: !!watch.media.anilistId; iconName: "message-circle"; iconColor: "white"; tip: qsTr("Comments"); onClicked: comments.open() }
             ContinueOn { seriesId: watch.series.id || ""; iconColor: "white"; save: () => watch.saveProgress(true) }
             IconButton {
+                filled: true
                 visible: watch.nativeStream && !watch.offline && !!watch.provider.source && Anime.nativePlayerAvailable
                 iconName: !watch.downloadJob ? "download" : watch.downloadJob.status === "done" ? "check" : "loader-circle"
                 iconColor: "white"
@@ -943,6 +950,7 @@ Rectangle {
                 onClicked: watch.downloadEpisode()
             }
             IconButton {
+                filled: true
                 visible: watch.nativeStream && (watch.currentUrl.length > 0 || watch.casting)
                 iconName: "cast"
                 iconColor: watch.casting ? Theme.accent : "white"
@@ -950,6 +958,7 @@ Rectangle {
                 onClicked: watch.casting ? watch.stopCasting() : castPicker.open()
             }
             IconButton {
+                filled: true
                 id: outsideButton
                 visible: watch.canOpenOutside
                 iconName: "external-link"
@@ -958,6 +967,7 @@ Rectangle {
                 onClicked: watch.pickOutside(outsideButton)
             }
             IconButton {
+                filled: true
                 // A web player's page opens in the browser.
                 visible: !watch.nativeStream
                 iconName: "external-link"
@@ -967,6 +977,7 @@ Rectangle {
                 onClicked: App.openUrl(watch.currentUrl)
             }
             IconButton {
+                filled: true
                 iconName: watch.fullScreen ? "minimize" : "maximize"
                 iconColor: "white"
                 tip: (watch.fullScreen ? qsTr("Exit full screen") : qsTr("Full screen")) + watch.keyHint("player.fullscreen")
@@ -1037,11 +1048,20 @@ Rectangle {
         height: parent.height - y
         anchors.right: parent.right
         width: watch.sideOpen && watch.chromeShown ? 340 : 0
-        color: watch.docked ? "#0b0b0c" : Qt.rgba(0.055, 0.055, 0.063, 0.94)
+        color: watch.docked ? "#0b0b0c" : "transparent"
         radius: watch.docked ? 0 : Theme.radiusLg
         clip: true
         Behavior on width { enabled: !watch.docked; NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
         HoverHandler { id: sideHover }
+
+        LiquidGlass {
+            anchors.fill: parent
+            nativeEnabled: false
+            visible: !watch.docked
+            radius: Theme.radiusLg
+            backdropItem: stage
+            tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.66)
+        }
 
         ListView {
             WheelScroll {}

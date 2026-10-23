@@ -30,15 +30,22 @@ Item {
         NumberAnimation { target: rise; property: "y"; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
     }
 
+    Shadow {
+        target: panel
+        lift: hover.hovered ? 0.85 : 0.15
+    }
+
     Rectangle {
         id: panel
         x: Theme.gutter
+        y: hover.hovered ? -3 : 0
         width: parent.width - 2 * Theme.gutter
         height: parent.height
         radius: Theme.radiusXl
         color: Theme.surface
+        Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
 
-        // Blurred cover across the card.
+        // Cover artwork refracted and frosted through macOS 27 Liquid Glass.
         Image {
             id: backdrop
             anchors.fill: parent
@@ -48,51 +55,32 @@ Item {
             asynchronous: true
             visible: false
         }
-        // The card's rounded shape, for the backdrop.
-        Rectangle {
-            id: shape
+        LiquidGlass {
             anchors.fill: parent
+            nativeEnabled: false
             radius: panel.radius
-            visible: false
-            layer.enabled: true
-        }
-        // Blurred within the card's own bounds: by default the blur adds
-        // padding around the item, which spilled a glow outside the card and
-        // stretched the rounded mask over the larger area.
-        Item {
-            id: blurred
-            anchors.fill: parent
-            visible: false
-            layer.enabled: true
-            MultiEffect {
-                anchors.fill: parent
-                source: backdrop
-                autoPaddingEnabled: false
-                blurEnabled: true
-                blur: 1
-                blurMax: 48
-                saturation: 0.2
-            }
-        }
-        MultiEffect {
-            anchors.fill: parent
-            source: blurred
-            maskEnabled: true
-            maskSource: shape
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1.0
-            opacity: backdrop.status === Image.Ready ? (Theme.dark ? 0.5 : 0.35) : 0
-            Behavior on opacity { NumberAnimation { duration: 700 } }
+            backdropTexture: backdrop
+            autoBackdrop: false
+            blurMax: 52
+            interactive: true
+            externalHovered: hover.hovered
+            tintColor: Theme.alpha(Theme.surface, hover.hovered ? (Theme.dark ? 0.42 : 0.55) : (Theme.dark ? 0.52 : 0.65))
         }
         Rectangle {
             anchors.fill: parent
             radius: panel.radius
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                GradientStop { position: 0.0; color: Theme.alpha(Theme.surface, 0.35) }
-                GradientStop { position: 0.7; color: Theme.alpha(Theme.surface, 0.92) }
-                GradientStop { position: 1.0; color: Theme.surface }
+                GradientStop { position: 0.0; color: Theme.alpha(Theme.surface, 0.22) }
+                GradientStop { position: 0.68; color: Theme.alpha(Theme.surface, 0.86) }
+                GradientStop { position: 1.0; color: Theme.alpha(Theme.surface, 0.96) }
             }
+        }
+
+        Shadow {
+            target: cover
+            lift: hover.hovered ? 0.9 : 0.3
+            visible: cover.ready
         }
 
         Cover {
@@ -104,8 +92,8 @@ Item {
             radius: Theme.radiusMd
             source: card.entry.cover || ""
             title: card.entry.title || ""
-            scale: hover.hovered ? 1.03 : 1
-            Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutCubic } }
+            scale: hover.hovered ? 1.045 : 1
+            Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
         }
 
         Column {
@@ -180,12 +168,14 @@ Item {
             spacing: 8
             ScButton {
                 text: qsTr("Details")
+                glassBezel: true
                 onClicked: Router.openSeries(card.entry, cover)
             }
             ScButton {
                 variant: "primary"
                 iconName: "play"
                 text: qsTr("Continue")
+                glassBezel: true
                 onClicked: Router.resume(card.entry)
             }
         }

@@ -21,21 +21,24 @@ Item {
         { key: "keyboard", file: "KeyboardSettings.qml", title: qsTr("Keyboard"), subtitle: qsTr("Shortcuts"), icon: "keyboard", tint: "mono",
           keywords: "keys shortcuts keybinds hotkeys bindings", desktop: true },
         { key: "reading", file: "ReadingSettings.qml", title: qsTr("Reading"), subtitle: qsTr("Comic and novel readers"), icon: "book-open", tint: "ember",
-          keywords: "comic novel reader strip pages direction width gap font size line spacing justify sepia paper" },
+          keywords: "comic novel reader strip pages direction width gap font size line spacing justify sepia paper", reading: true },
         { key: "anime", file: "AnimeSettings.qml", title: qsTr("Anime"), subtitle: qsTr("Playback and skipping"), icon: "tv", tint: "rose",
           keywords: "player next episode autoplay countdown skip intro ending recap" },
-        { key: "library", file: "LibrarySettings.qml", title: qsTr("Library"), subtitle: qsTr("New chapters and notifications"), icon: "library", tint: "green",
+        { key: "library", file: "LibrarySettings.qml", title: qsTr("Library"), subtitle: Router.animeOnly ? qsTr("Lists and notifications") : qsTr("New chapters and notifications"), icon: "library", tint: "green",
           keywords: "updates new chapters check notifications tray background" },
         { key: "privacy", file: "PrivacySettings.qml", title: qsTr("Privacy"), subtitle: qsTr("Incognito mode and the app lock"), icon: "lock", tint: "rose",
           keywords: "incognito private history lock pin password fingerprint face biometric security" },
-        { key: "sources", file: "SourcesSettings.qml", title: qsTr("Sources"), subtitle: qsTr("The sites SCANCORE reads from"), icon: "globe", tint: "amber",
+        { key: "sources", file: "SourcesSettings.qml", title: qsTr("Sources"), subtitle: Router.animeOnly ? qsTr("Anime extensions") : qsTr("The sites SCANCORE reads from"), icon: "globe", tint: "amber",
           keywords: "sites nsfw manifest novel pack extensions" },
+        { key: "downloads", file: "DownloadsSettings.qml", title: qsTr("Downloads"), subtitle: qsTr("Saved episodes and queue"), icon: "download", tint: "sky",
+          keywords: "downloads queue offline episodes storage" },
         { key: "storage", file: "StorageSettings.qml", title: qsTr("Storage"), subtitle: qsTr("Cache, downloads and backups"), icon: "hard-drive", tint: "mono",
           keywords: "cache downloads folder backup restore export data" },
         { key: "about", file: "AboutSettings.qml", title: qsTr("About"), subtitle: qsTr("Version, updates and help"), icon: "info", tint: "mono",
           keywords: "version updates help licence discord welcome" }
     ]
-    readonly property var sections: allSections.filter(s => !s.desktop || App.platform !== "android")
+    // ENO: anime only, so no comic and novel reader settings.
+    readonly property var sections: allSections.filter(s => (!s.desktop || App.platform !== "android") && (!s.reading || !Router.animeOnly))
 
     function sectionFor(key) {
         for (const s of sections)
@@ -86,6 +89,7 @@ Item {
             return on.length ? on.join(" · ") + qsTr(" connected") : qsTr("Tracking and imports")
         }
         case "sources": return qsTr("Source list version ") + App.manifestVersion
+        case "downloads": return Downloads.sizeOnDisk()
         case "storage": return qsTr("Cache, downloads and backup")
         case "about": return qsTr("Version ") + App.version
         }
