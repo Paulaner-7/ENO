@@ -11,7 +11,6 @@
 #include <QImageReader>
 #include <QMutex>
 #include <QPainter>
-#include <QPainterPath>
 #include <QQuickWindow>
 #include <QSGGeometryNode>
 #include <QSGMaterial>
@@ -118,8 +117,8 @@ QSize decodedSize(const QSize &size, const QSize &requested, int maxWidth) {
 // `full`: set to whether the image came out at its own size (no sharper
 // decode to be had). `widthFor`, when given, says the width to decode at
 // once the image's own size is known.
-QImage decode(const QByteArray &data, const QSize &requested, int maxWidth, bool *full,
-              const std::function<int(const QSize &)> &widthFor, int cornerRadius) {
+QImage decode(const QByteArray &data, const QSize &requested, int maxWidth = 0, bool *full = nullptr,
+              const std::function<int(const QSize &)> &widthFor = {}) {
     QBuffer buffer;
     buffer.setData(data);
     buffer.open(QIODevice::ReadOnly);
@@ -157,35 +156,10 @@ QImage decode(const QByteArray &data, const QSize &requested, int maxWidth, bool
     QImage image = reader.read();
     if (image.isNull())
         throw Error(QStringLiteral("This image format could not be read."));
-    if (cornerRadius > 0 && requested.width() > 0 && requested.height() > 0) {
-        if (image.width() < requested.width() || image.height() < requested.height())
-            image = image.scaled(requested, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-        const int cropX = std::max(0, (image.width() - requested.width()) / 2);
-        const int cropY = std::max(0, (image.height() - requested.height()) / 2);
-        QImage rounded(requested, QImage::Format_ARGB32_Premultiplied);
-        rounded.fill(Qt::transparent);
-        QPainter painter(&rounded);
-        painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
-        QPainterPath path;
-        const qreal r = std::min<qreal>(cornerRadius, std::min(requested.width(), requested.height()) / 2.0);
-        path.addRoundedRect(QRectF(0, 0, requested.width(), requested.height()), r, r);
-        painter.setClipPath(path);
-        painter.drawImage(QPoint(0, 0), image, QRect(cropX, cropY, requested.width(), requested.height()));
-        return rounded;
-    }
     const auto targetFormat = image.hasAlphaChannel() ? QImage::Format_ARGB32_Premultiplied : QImage::Format_RGB32;
     if (image.format() != targetFormat)
         image = image.convertToFormat(targetFormat);
     return image;
-}
-
-QImage decode(const QByteArray &data, const QSize &requested, int maxWidth = 0, bool *full = nullptr,
-              const std::function<int(const QSize &)> &widthFor = {}) {
-    return decode(data, requested, maxWidth, full, widthFor, 0);
-}
-
-QImage decode(const QByteArray &data, const QSize &requested, int maxWidth, int cornerRadius) {
-    return decode(data, requested, maxWidth, nullptr, {}, cornerRadius);
 }
 
 QMutex &decodedCacheMutex() {
@@ -200,59 +174,105 @@ QCache<QString, QImage> &decodedCache() {
     return cache;
 }
 
-class RemoteResponse : public QQuickImageResponse, public QRunnable {
+QString decodedCacheKey(const QString &url, const QSize &size) {
+    return QStringLiteral("%1#%2x%3").arg(url).arg(size.width()).arg(size.height());
+}
+
+// A cover already decoded at this size, from the shelf that asked first.
+bool cachedDecode(const QString &url, const QSize &size, QImage *out) {
+    QMutexLocker lock(&decodedCacheMutex());
+    if (const auto *cached = decodedCache().object(decodedCacheKey(url, size))) {
+        if (out)
+            *out = *cached;
+        return true;
+    }
+    return false;
+}
+
+// A cover being fetched. The engine deletes a response it no longer wants
+// (the cover scrolled away) whenever it likes, also while the fetch runs or
+// before it starts, so the fetch is a job of its own: it shares this state
+// with the response and tells the response it is done only while the
+// response is known to be alive. Signalling from the response itself, on the
+// pool's thread, used a deleted object when a fast scroll dropped covers
+// (crash at 0x20 on a slow phone).
+struct RemoteState {
+    QMutex mutex;
+    QQuickImageResponse *response = nullptr; // null once it is deleted
+    QImage image;
+    QString error;
+};
+
+class RemoteResponse : public QQuickImageResponse {
 public:
-    RemoteResponse(QString url, QString referer, QSize size, int cornerRadius = 0)
-        : m_url(std::move(url)), m_referer(std::move(referer)), m_size(size), m_cornerRadius(cornerRadius),
-          m_cancel(std::make_shared<std::atomic_bool>(false)) {
-        setAutoDelete(false);
+    RemoteResponse(std::shared_ptr<RemoteState> state, CancelFlag cancel) : m_state(std::move(state)), m_cancel(std::move(cancel)) {
+        m_state->response = this;
+    }
+    ~RemoteResponse() override {
+        m_cancel->store(true);
+        QMutexLocker lock(&m_state->mutex);
+        m_state->response = nullptr;
     }
 
-    bool tryFromMemory() {
-        const auto key = cacheKey();
-        QMutexLocker lock(&decodedCacheMutex());
-        if (const auto *cached = decodedCache().object(key)) {
-            m_image = *cached;
-            return true;
-        }
-        return false;
+    QQuickTextureFactory *textureFactory() const override {
+        QMutexLocker lock(&m_state->mutex);
+        return QQuickTextureFactory::textureFactoryForImage(m_state->image);
     }
-
-    void finishImmediately() { emit finished(); }
-
-    void run() override {
-        CancelScope scope(m_cancel);
-        const auto key = cacheKey();
-        try {
-            m_image = decode(ImageCache::fetch(m_url, m_referer), m_size, 0, m_cornerRadius);
-            if (!m_image.isNull()) {
-                QMutexLocker lock(&decodedCacheMutex());
-                const int cost = int(std::min<qsizetype>(m_image.sizeInBytes(), 16 * 1024 * 1024));
-                decodedCache().insert(key, new QImage(m_image), std::max(1, cost));
-            }
-        } catch (const Error &e) {
-            m_error = e.message();
-        } catch (const std::exception &e) {
-            m_error = QString::fromUtf8(e.what());
-        }
-        emit finished();
+    QString errorString() const override {
+        QMutexLocker lock(&m_state->mutex);
+        return m_state->error;
     }
-
-    QQuickTextureFactory *textureFactory() const override { return QQuickTextureFactory::textureFactoryForImage(m_image); }
-    QString errorString() const override { return m_error; }
     void cancel() override { m_cancel->store(true); }
 
 private:
-    QString cacheKey() const {
-        return QStringLiteral("%1#%2x%3r%4").arg(m_url).arg(m_size.width()).arg(m_size.height()).arg(m_cornerRadius);
+    std::shared_ptr<RemoteState> m_state;
+    CancelFlag m_cancel;
+};
+
+class RemoteJob : public QRunnable {
+public:
+    RemoteJob(QString url, QString referer, QSize size, std::shared_ptr<RemoteState> state, CancelFlag cancel)
+        : m_url(std::move(url)), m_referer(std::move(referer)), m_size(size), m_state(std::move(state)), m_cancel(std::move(cancel)) {}
+
+    void run() override {
+        QImage image;
+        QString error;
+        if (m_cancel->load()) {
+            error = QStringLiteral("Cancelled");
+        } else {
+            CancelScope scope(m_cancel);
+            const auto key = decodedCacheKey(m_url, m_size);
+            try {
+                // Decoded once already, or being decoded right now for another
+                // shelf showing the same cover.
+                if (!cachedDecode(m_url, m_size, &image)) {
+                    image = decode(ImageCache::fetch(m_url, m_referer), m_size);
+                    if (!image.isNull()) {
+                        QMutexLocker lock(&decodedCacheMutex());
+                        const int cost = int(std::min<qsizetype>(image.sizeInBytes(), 16 * 1024 * 1024));
+                        decodedCache().insert(key, new QImage(image), std::max(1, cost));
+                    }
+                }
+            } catch (const Error &e) {
+                error = e.message();
+            } catch (const std::exception &e) {
+                error = QString::fromUtf8(e.what());
+            }
+        }
+        QMutexLocker lock(&m_state->mutex);
+        m_state->image = std::move(image);
+        m_state->error = error;
+        // Posted while the response cannot go away; a response deleted
+        // later drops the event with it.
+        if (auto *response = m_state->response)
+            QMetaObject::invokeMethod(response, &QQuickImageResponse::finished, Qt::QueuedConnection);
     }
 
+private:
     QString m_url;
     QString m_referer;
     QSize m_size;
-    int m_cornerRadius = 0;
-    QImage m_image;
-    QString m_error;
+    std::shared_ptr<RemoteState> m_state;
     CancelFlag m_cancel;
 };
 
@@ -294,13 +314,15 @@ QString RemoteImageProvider::encode(const QString &url, const QString &referer) 
 
 QQuickImageResponse *RemoteImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize) {
     const auto parts = id.split(QLatin1Char('~'));
-    const int cornerRadius = parts.size() > 2 ? parts.value(2).toInt() : 0;
-    auto *response = new RemoteResponse(unb64(parts.value(0)), unb64(parts.value(1)), requestedSize, cornerRadius);
-    if (response->tryFromMemory()) {
-        QMetaObject::invokeMethod(response, &RemoteResponse::finishImmediately, Qt::QueuedConnection);
+    auto state = std::make_shared<RemoteState>();
+    auto cancel = std::make_shared<std::atomic_bool>(false);
+    auto *response = new RemoteResponse(state, cancel);
+    if (cachedDecode(unb64(parts.value(0)), requestedSize, &state->image)) {
+        // Decoded before for another shelf: no trip to the pool at all.
+        QMetaObject::invokeMethod(response, &QQuickImageResponse::finished, Qt::QueuedConnection);
         return response;
     }
-    coverPool().start(response);
+    coverPool().start(new RemoteJob(unb64(parts.value(0)), unb64(parts.value(1)), requestedSize, state, cancel));
     return response;
 }
 

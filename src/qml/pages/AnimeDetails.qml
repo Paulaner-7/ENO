@@ -32,8 +32,27 @@ Item {
     readonly property var episodes: !episodesTask || !episodesTask.ok ? [] : fromSource ? episodesTask.result.episodes : episodesTask.result
     readonly property var seasons: fromSource && episodesTask && episodesTask.ok ? episodesTask.result.seasons : []
     readonly property bool hasSources: { App.dependOn(Extensions.revision); return Anime.sources().some(s => s.enabled) }
-    readonly property var progress: { App.dependOn(Library.revision); return Library.progressMap(seriesId) }
-    readonly property bool saved: { App.dependOn(Library.revision); return Library.isSaved(seriesId) }
+    // The library as of when this page was last in sight: while a reader or
+    // the player sits on top, progress saves every few seconds and would
+    // re-query and re-sort this page each time, out of sight.
+    property int libraryRevision: Library.revision
+    Connections {
+        target: Library
+        function onChanged() { if (page.visible) page.libraryRevision = Library.revision }
+    }
+    onVisibleChanged: if (visible) libraryRevision = Library.revision
+    // A value from here on, not a binding that follows every change.
+    Component.onCompleted: {
+        libraryRevision = Library.revision
+        // Opened straight from the player's "resume": the episodes are
+        // already there, so no task will finish to start it.
+        if (page.autoResume && page.episodesTask && page.episodesTask.ok) {
+            page.autoResume = false
+            page.watch(page.resumeInfo.index)
+        }
+    }
+    readonly property var progress: { App.dependOn(page.libraryRevision); return Library.progressMap(seriesId) }
+    readonly property bool saved: { App.dependOn(page.libraryRevision); return Library.isSaved(seriesId) }
     property bool descending: false
     // Long series are shown 100 episodes at a time.
     property int range: 0
@@ -49,7 +68,7 @@ Item {
     onDescendingChanged: range = 0
 
     readonly property var resumeInfo: {
-        App.dependOn(Library.revision)
+        App.dependOn(page.libraryRevision)
         if (episodes.length === 0) return { index: 0, label: qsTr("Watch"), detail: "" }
         const last = Library.lastProgress(seriesId)
         if (last && last.unitKey) {
@@ -120,13 +139,6 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        if (page.autoResume && page.episodesTask && page.episodesTask.ok) {
-            page.autoResume = false
-            page.watch(page.resumeInfo.index)
-        }
-    }
-
     Connections {
         target: page.episodesTask
         function onFinished() {
@@ -137,18 +149,46 @@ Item {
         }
     }
 
+    // Wide windows: the details in a column of their own on the left, the
+    // episodes beside them; each scrolls by itself.
+    readonly property bool wide: !Theme.compact && width >= 1100
+    SmoothFlickable {
+        id: side
+        visible: page.wide
+        width: page.wide ? Math.round(Math.min(520, Math.max(400, page.width * 0.36))) : 0
+        height: parent.height
+        contentHeight: page.wide ? header.height + 40 : 0
+    }
+    Rectangle {
+        visible: page.wide
+        x: side.width
+        width: 1
+        height: parent.height
+        color: Theme.border
+    }
+
     SmoothFlickable {
         id: flick
-        anchors.fill: parent
+        anchors.left: page.wide ? side.right : parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         contentHeight: column.height + 60
 
         Column {
             id: column
             width: parent.width
             spacing: 30
+            topPadding: page.wide ? 36 : 0
 
+            Item {
+                id: headerSlot
+                width: parent.width
+                height: page.wide ? 0 : header.height
             DetailsHeader {
                 id: header
+                parent: page.wide ? side.contentItem : headerSlot
+                stacked: Theme.compact || page.wide
                 series: Object.assign({}, page.media, { author: page.fromSource ? ((page.media.extra || {}).author || "") : (page.media.studios || []).join(", ") })
                 anilist: page.media
                 kicker: qsTr("Anime") + (page.fromSource ? " · " + (page.media.sourceLabel || "") : page.media.format ? " · " + page.media.format : "")
@@ -200,6 +240,7 @@ Item {
                     onClicked: App.openUrl("https://anilist.co/anime/" + page.anilistId)
                 }
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
+            }
             }
 
             Item {

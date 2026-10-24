@@ -113,6 +113,8 @@ public:
     QString label() const { return m_config.label; }
     QString language() const { return m_config.language; }
     bool enabled() const { return m_config.enabled; }
+    // From an installed extension (its engine is the extension kind).
+    bool isExtension() const { return m_config.engine == QLatin1String("mihon"); }
     virtual bool owns(const QUrl &url) const;
 
     virtual QList<Summary> search(const QString &query) = 0;

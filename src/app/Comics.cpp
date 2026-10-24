@@ -1,6 +1,7 @@
 #include "Comics.h"
 
 #include "App.h"
+#include "core/QuietSites.h"
 #include "Downloads.h"
 #include "Library.h"
 #include "Resolve.h"
@@ -17,6 +18,7 @@
 #include "sources/comics/Registry.h"
 
 #include <QCache>
+#include <optional>
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QElapsedTimer>
@@ -143,7 +145,7 @@ void Comics::prefetch(const QVariantList &panels, const QString &referer, int co
         urls.append(value.toMap().value(QStringLiteral("url")).toString());
     runInBackground([urls, referer] {
         for (const auto &url : urls)
-            if (!url.startsWith(QLatin1String("file:")))
+            if (!url.startsWith(QLatin1String("file:")) && !url.startsWith(QLatin1String("content:")))
                 try {
                     ImageCache::fetch(url, referer);
                 } catch (const Error &) {
@@ -153,7 +155,10 @@ void Comics::prefetch(const QVariantList &panels, const QString &referer, int co
 
 Task *Comics::search(const QString &query, const QString &only) {
     const auto q = query.simplified();
-    const auto language = only == QLatin1String("all") ? searchLanguage() : QString();
+    // "extensions": the installed extensions' sources only (beside a
+    // catalogue search, which has none of them).
+    const bool extensionsOnly = only == QLatin1String("extensions");
+    const auto language = only == QLatin1String("all") || extensionsOnly ? searchLanguage() : QString();
     const auto cacheKey = q.toLower() + QLatin1Char('|') + only + QLatin1Char('|') + language + QLatin1Char('|') + contentLanguage();
     {
         QMutexLocker lock(&g_searchMutex);
@@ -161,20 +166,32 @@ Task *Comics::search(const QString &query, const QString &only) {
             hit && QDateTime::currentSecsSinceEpoch() - g_searchTimes.value(cacheKey) < 180)
             return Task::resolved(*hit);
     }
-    return Task::run([q, only, language, cacheKey]() -> QVariant {
+    return Task::run([q, only, language, cacheKey, extensionsOnly]() -> QVariant {
         // Files on this device are listed without a search.
         if (q.isEmpty() && only != QLatin1String("local"))
             return QVariantMap{{"comics", QVariantList()}, {"providers", QVariantList()}};
         QList<std::shared_ptr<Source>> selected;
         for (const auto &source : Registry::all())
-            if (source->enabled() && (only == QLatin1String("all") ? inSearchLanguage(*source, language) : source->key() == only))
+            if (source->enabled() && (only == QLatin1String("all") ? inSearchLanguage(*source, language)
+                                      : extensionsOnly ? source->isExtension() && inSearchLanguage(*source, language)
+                                                       : source->key() == only))
                 selected.append(source);
+        if (selected.isEmpty() && extensionsOnly)
+            return QVariantMap{{"comics", QVariantList()}, {"providers", QVariantList()}};
         if (selected.isEmpty())
             throw Error(QStringLiteral("That source is unavailable."));
 
+        // Many sites at once: a browser check waits for its button (for as
+        // long as that source's call runs, past this search's time limit).
+        const bool many = selected.size() > 1;
         QList<std::function<QList<Summary>()>> jobs;
         for (const auto &source : selected)
-            jobs.append([source, q] { return source->search(q); });
+            jobs.append([source, q, many] {
+                std::optional<QuietSite> quiet;
+                if (many)
+                    quiet.emplace(source->config().base);
+                return source->search(q);
+            });
 
         struct Ranked {
             int tier;
@@ -252,6 +269,9 @@ Task *Comics::search(const QString &query, const QString &only) {
                 sinceReport.restart();
             }
         });
+        // One source: its own reason (a browser check, a site that is down).
+        if (!anyOk && selected.size() == 1 && !providerAt[0].value(QStringLiteral("error")).toString().isEmpty())
+            throw Error(providerAt[0].value(QStringLiteral("error")).toString(), 0, providerAt[0].value(QStringLiteral("verifyUrl")).toString());
         if (!anyOk)
             throw Error(QStringLiteral("Comic sources are unavailable right now. Check your connection and try again."));
         const auto result = snapshot();

@@ -779,6 +779,12 @@ void MpvPlayer::setLook(const QVariantMap &look) {
     const auto boxColor = box ? QStringLiteral("#B0000000") : QStringLiteral("#FF000000");
     if (mpv_set_property_string(mpv, "sub-outline-color", boxColor.toUtf8().constData()) < 0)
         setString(mpv, "sub-border-color", boxColor);
+    // How the picture fills the player: fit (all of it), crop (no bars),
+    // stretch, or original (its own pixels, centred).
+    const auto fit = look.value(QStringLiteral("fit")).toString();
+    setString(mpv, "keepaspect", fit == QLatin1String("stretch") ? QStringLiteral("no") : QStringLiteral("yes"));
+    setString(mpv, "panscan", fit == QLatin1String("crop") ? QStringLiteral("1.0") : QStringLiteral("0.0"));
+    setString(mpv, "video-unscaled", fit == QLatin1String("original") ? QStringLiteral("yes") : QStringLiteral("no"));
     // A list, so no separator (":" or ";" by system) gets in the way.
     const auto shaders = sharpenShaders(look.value(QStringLiteral("sharpen")).toString());
     QList<QByteArray> paths;

@@ -54,8 +54,8 @@ Item {
     // page's height, so that is what this follows.
     readonly property real offsetInView: {
         if (!view) return 0
-        void grid.y
-        void view.contentHeight
+        // A bare read would be dropped by the QML compiler (no update).
+        App.dependOn(grid.y, view.contentHeight)
         return grid.mapToItem(view.contentItem, 0, 0).y
     }
     readonly property int firstRow: {

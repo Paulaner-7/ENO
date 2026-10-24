@@ -70,9 +70,52 @@ SettingsPane {
         }
     }
 
+    // Anime opened from AniList or MyAnimeList: where they play.
+    readonly property string trackerPlayer: App.settings.animeTrackerPlayer || "builtin"
+    readonly property var matchSources: Array.from(App.settings.animeMatchSources || [])
+    readonly property var animeExtensions: { App.dependOn(Extensions.revision); return Anime.sources().filter(s => s.enabled).map(s => ({ key: s.key, label: s.label, language: s.language })) }
+    SettingsGroup {
+        visible: Anime.playerEngine !== ""
+        title: qsTr("Anime from AniList and MyAnimeList")
+        note: qsTr("What you pick under Watch from for an anime is remembered for it, whatever is set here.")
+        SettingRow {
+            iconName: "server"
+            title: qsTr("Play from")
+            description: trackerPlayer === "builtin" ? qsTr("The built-in servers. Extensions are looked in only when you choose Watch from.")
+                : trackerPlayer === "extensions" ? qsTr("Your anime extensions, when one clearly has it; otherwise you choose.")
+                : qsTr("Asks the first time each anime plays.")
+            Segmented {
+                options: [{ value: "builtin", label: qsTr("Built-in") }, { value: "extensions", label: qsTr("Extensions") }, { value: "ask", label: qsTr("Ask") }]
+                value: trackerPlayer
+                onPicked: (v) => App.setSetting("animeTrackerPlayer", v)
+            }
+        }
+        SettingRow {
+            visible: trackerPlayer !== "builtin" && animeExtensions.length > 1
+            iconName: "puzzle"
+            title: qsTr("Extensions to look in")
+            description: matchSources.length === 0 ? qsTr("All of them") : qsTr("%1 chosen").arg(matchSources.length)
+        }
+        Item {
+            visible: trackerPlayer !== "builtin" && animeExtensions.length > 1
+            width: parent.width
+            height: visible ? 48 : 0
+            SourceChips {
+                y: 4
+                sources: animeExtensions
+                ticked: matchSources
+                allLabel: qsTr("All extensions")
+                showLanguage: true
+                inset: 16
+                onPicked: (key) => App.setSetting("animeMatchSources", key === "all" ? []
+                    : matchSources.indexOf(key) >= 0 ? matchSources.filter(k => k !== key) : matchSources.concat([key]))
+            }
+        }
+    }
+
     SettingsGroup {
         title: qsTr("Quality and audio")
-        note: qsTr("What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's Quality and Audio buttons.")
+        note: qsTr("What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).")
         SettingRow {
             iconName: "settings"
             title: qsTr("Preferred quality")
@@ -149,6 +192,42 @@ SettingsPane {
                 value: App.settings.animeSharpen || "off"
                 onPicked: (v) => App.setSetting("animeSharpen", v)
             }
+        }
+        SettingRow {
+            iconName: "crop"
+            title: qsTr("Fit")
+            description: qsTr("How the picture fills the player. Also in the player's settings while watching.")
+            Select {
+                model: [{ value: "fit", label: qsTr("Fit") }, { value: "crop", label: qsTr("Crop to fill") },
+                        { value: "stretch", label: qsTr("Stretch") }, { value: "original", label: qsTr("Original size") }]
+                value: App.settings.playerFit || "fit"
+                onPicked: (v) => App.setSetting("playerFit", v)
+            }
+        }
+    }
+
+    // Touch gestures on the picture (SCANCORE's player on phones).
+    SettingsGroup {
+        visible: Anime.nativePlayerAvailable && App.platform === "android"
+        title: qsTr("Gestures")
+        note: qsTr("A tap shows or hides the controls. Brightness changes only while SCANCORE is open.")
+        SettingRow {
+            iconName: "move-vertical"
+            title: qsTr("Swipe for brightness, volume and seeking")
+            description: qsTr("Up or down on the left for brightness, on the right for volume; sideways to seek.")
+            Toggle { checked: App.settings.playerSwipes !== false; onToggled: App.setSetting("playerSwipes", checked) }
+        }
+        SettingRow {
+            iconName: "rotate-ccw"
+            title: qsTr("Double tap the sides to skip 10 seconds")
+            description: qsTr("A double tap in the middle pauses either way.")
+            Toggle { checked: App.settings.playerDoubleTapSeek !== false; onToggled: App.setSetting("playerDoubleTapSeek", checked) }
+        }
+        SettingRow {
+            iconName: "gauge"
+            title: qsTr("Hold for 2× speed")
+            description: qsTr("Plays twice as fast while your finger stays down.")
+            Toggle { checked: App.settings.playerHoldSpeed !== false; onToggled: App.setSetting("playerHoldSpeed", checked) }
         }
     }
 }

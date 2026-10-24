@@ -3,9 +3,14 @@ import QtQuick.Controls.Basic
 import ScanCore
 
 // Plays a video from an anime extension with SCANCORE's own player (libmpv,
-// MpvPlayer), with controls along the bottom: play, seek, time, subtitles,
-// audio, speed and volume. It shows the same face to WatchPage as the web
-// players (url, seek(), time(), interacted(), key()).
+// MpvPlayer), with controls along the bottom: play, episodes, seek, time,
+// volume, the settings panel (WatchPage's PlayerPanel, from
+// settingsSections()) and full screen. It shows the same face to WatchPage
+// as the web players (url, seek(), time(), interacted(), key()).
+// Phones: a tap shows or hides the controls; a double tap seeks 10 s on the
+// sides and pauses in the middle; holding plays at 2×; swiping up or down
+// sets the brightness (left half) or the volume (right half), and sideways
+// seeks (Settings → Anime → Gestures).
 Item {
     id: root
     property string url
@@ -22,7 +27,13 @@ Item {
     readonly property alias player: mpv
     // Playing now (WatchPage keeps the screen on meanwhile).
     readonly property bool playing: mpv.loaded && !mpv.paused && !mpv.ended
-    readonly property bool controlsShown: chromeShown || mpv.paused || mpv.buffering || seekBar.pressed || menu.visible
+    // The settings panel is open (WatchPage): the controls stay.
+    property bool panelOpen: false
+    property bool hasPrev: false
+    // Full screen now (WatchPage: phones in landscape, desktops' window).
+    property bool fullScreen: false
+    property bool hasNext: false
+    readonly property bool controlsShown: chromeShown || mpv.paused || mpv.buffering || seekBar.pressed || panelOpen
 
     signal time(real seconds, real total, string status)
     signal interacted()
@@ -31,6 +42,11 @@ Item {
     signal failed(string message)
     signal fullScreenRequested()
     signal alternativePicked(string id)
+    signal settingsRequested()
+    signal previousRequested()
+    signal nextRequested()
+    // A tap on the picture (phones): WatchPage shows or hides its chrome.
+    signal tapped()
 
     function seek(seconds) { mpv.seek(seconds) }
     function togglePause() { mpv.togglePause(); interacted() }
@@ -40,6 +56,51 @@ Item {
         mpv.volume = v
         App.setSetting("playerVolume", v)
         interacted()
+    }
+
+    // Quality, Audio, Subtitles, Speed and Fit for the settings panel
+    // (PlayerPanel's sections), as they are now.
+    function settingsSections() {
+        const out = []
+        const variants = mpv.tracks.filter(t => t.type === "video" && t.height > 0)
+            .sort((a, b) => b.height - a.height || (b.bitrate || 0) - (a.bitrate || 0))
+        const others = root.alternatives.length > 1 ? root.alternatives : []
+        if (variants.length > 1 || others.length > 0) {
+            const rate = (t) => t.bitrate > 0 ? (t.bitrate >= 1e6 ? (t.bitrate / 1e6).toFixed(1) + " Mb/s" : Math.round(t.bitrate / 1e3) + " kb/s") : ""
+            const choices = variants.length > 1 ? variants.map(t => ({ label: t.height + "p", detail: rate(t), selected: t.selected, pick: () => mpv.setTrack("video", t.id) })) : []
+            for (const o of others)
+                choices.push({ label: o.label, selected: o.current, pick: () => root.alternativePicked(o.id) })
+            const now = choices.find(c => c.selected)
+            out.push({ key: "quality", icon: "sliders-horizontal", label: qsTr("Quality"), value: now ? now.label : "", choices: choices })
+        }
+        const audio = mpv.tracks.filter(t => t.type === "audio")
+        if (audio.length > 1) {
+            const name = (t) => t.title || t.lang || qsTr("Track ") + t.id
+            const now = audio.find(t => t.selected)
+            out.push({ key: "audio", icon: "languages", label: qsTr("Audio"), value: now ? name(now) : "",
+                       choices: audio.map(t => ({ label: name(t), selected: t.selected, pick: () => mpv.setTrack("audio", t.id) })) })
+        }
+        const subs = mpv.tracks.filter(t => t.type === "sub")
+        if (subs.length > 0) {
+            const name = (t) => t.title || t.lang || qsTr("Track ") + t.id
+            const now = subs.find(t => t.selected)
+            out.push({ key: "subtitles", icon: "captions", label: qsTr("Subtitles"), value: now ? name(now) : qsTr("Off"),
+                       choices: [{ label: qsTr("Off"), selected: !now, pick: () => mpv.setTrack("sub", 0) }]
+                           .concat(subs.map(t => ({ label: name(t), selected: t.selected, pick: () => mpv.setTrack("sub", t.id) }))) })
+        }
+        const speeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+        const speedName = (v) => Math.abs(v - 1) < 0.01 ? qsTr("Normal") : v + "×"
+        out.push({ key: "speed", icon: "gauge", label: qsTr("Speed"), value: speedName(mpv.speed),
+                   choices: speeds.map(v => ({ label: speedName(v), selected: Math.abs(mpv.speed - v) < 0.01,
+                                               pick: () => { mpv.speed = v; App.setSetting("playerSpeed", v) } })) })
+        const fits = [{ value: "fit", label: qsTr("Fit"), detail: qsTr("The whole picture") },
+                      { value: "crop", label: qsTr("Crop to fill"), detail: qsTr("No black bars") },
+                      { value: "stretch", label: qsTr("Stretch"), detail: qsTr("Fills the screen, out of shape") },
+                      { value: "original", label: qsTr("Original size"), detail: qsTr("Its own pixels") }]
+        const fit = App.settings.playerFit || "fit"
+        out.push({ key: "fit", icon: "crop", label: qsTr("Fit"), value: (fits.find(f => f.value === fit) || fits[0]).label,
+                   choices: fits.map(f => ({ label: f.label, detail: f.detail, selected: f.value === fit, pick: () => App.setSetting("playerFit", f.value) })) })
+        return out
     }
 
     function keyHint(action) {
@@ -64,7 +125,7 @@ Item {
         subtitles: root.video.subtitles || []
         look: ({ subtitleScale: Number(App.settings.subtitleScale) || 1, subtitleOutline: Number(App.settings.subtitleOutline),
                  subtitleColor: App.settings.subtitleColor || "#ffffff", subtitleBox: App.settings.subtitleBox === true,
-                 sharpen: App.settings.animeSharpen || "off" })
+                 sharpen: App.settings.animeSharpen || "off", fit: App.settings.playerFit || "fit" })
         audio: root.video.audio || []
         startAt: root.startAt
         // Settings → Anime: the variant and audio language to start with.
@@ -81,18 +142,159 @@ Item {
         onErrorChanged: if (error) root.failed(error)
     }
 
-    // Desktop: a click pauses, a double click goes full screen. Phone: a
-    // tap shows the controls, a double tap on either side skips 10 s.
+    // Desktop: a click pauses, a double click goes full screen. Phones: the
+    // gestures above. The first tap on hidden controls only shows them.
     MouseArea {
+        id: touch
         anchors.fill: parent
         anchors.bottomMargin: bar.visible ? bar.height : 0
         acceptedButtons: Qt.LeftButton
-        Timer { id: clickDelay; interval: 220; onTriggered: root.phone ? root.interacted() : root.togglePause() }
-        onClicked: clickDelay.restart()
+        // What a press turned into: "" (still a tap), "seek", "brightness",
+        // "volume" or "hold" (2× while held).
+        property string gesture: ""
+        property point start
+        property real startLevel: 0
+        property real level: 0
+        property real seekTo: 0
+        property real speedBefore: 1
+        readonly property bool swipes: root.phone && App.settings.playerSwipes !== false
+        Timer { id: clickDelay; interval: 240; property real x: 0; onTriggered: root.phone ? root.tapped() : root.togglePause() }
+        Timer {
+            id: holdTimer
+            interval: 450
+            onTriggered: {
+                if (!root.phone || App.settings.playerHoldSpeed === false || touch.gesture !== "" || !mpv.loaded || mpv.paused) return
+                touch.gesture = "hold"
+                touch.speedBefore = mpv.speed
+                mpv.speed = 2
+                clickDelay.stop()
+            }
+        }
+        onPressed: (mouse) => {
+            gesture = ""
+            start = Qt.point(mouse.x, mouse.y)
+            holdTimer.restart()
+        }
+        onPositionChanged: (mouse) => {
+            const dx = mouse.x - start.x, dy = mouse.y - start.y
+            if (gesture === "" && swipes && Math.max(Math.abs(dx), Math.abs(dy)) > 18) {
+                holdTimer.stop()
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (mpv.duration > 0) gesture = "seek"
+                } else if (start.x < width / 2 && App.screenBrightness() >= 0) {
+                    gesture = "brightness"
+                    startLevel = App.screenBrightness()
+                } else {
+                    gesture = "volume"
+                    startLevel = App.mediaVolume()
+                }
+            }
+            if (gesture === "seek") {
+                // The width of the screen is a minute and a half.
+                seekTo = Math.max(0, Math.min(mpv.duration, mpv.position + dx / width * 90))
+            } else if (gesture === "brightness" || gesture === "volume") {
+                level = Math.max(0, Math.min(1, startLevel - dy / (height * 0.8)))
+                if (gesture === "brightness") App.setScreenBrightness(level)
+                else App.setMediaVolume(level)
+            }
+        }
+        onReleased: {
+            holdTimer.stop()
+            if (gesture === "seek") mpv.seek(seekTo)
+            if (gesture === "hold") mpv.speed = speedBefore
+            if (gesture !== "") root.interacted()
+        }
+        onCanceled: {
+            holdTimer.stop()
+            if (gesture === "hold") mpv.speed = speedBefore
+            gesture = ""
+        }
+        onClicked: (mouse) => {
+            if (gesture !== "") { gesture = ""; return }
+            clickDelay.x = mouse.x
+            clickDelay.restart()
+        }
         onDoubleClicked: (mouse) => {
             clickDelay.stop()
-            if (!root.phone) root.fullScreenRequested()
-            else root.seekBy(mouse.x < width / 2 ? -10 : 10)
+            if (gesture !== "") { gesture = ""; return }
+            if (!root.phone) { root.fullScreenRequested(); return }
+            const third = width / 3
+            if (mouse.x > third && mouse.x < 2 * third) root.togglePause()
+            else if (App.settings.playerDoubleTapSeek !== false) root.seekBy(mouse.x < third ? -10 : 10)
+            else root.togglePause()
+        }
+    }
+
+    // What a gesture does, while it does it.
+    Rectangle {
+        anchors.centerIn: parent
+        visible: touch.gesture === "seek"
+        width: seekText.implicitWidth + 32
+        height: 52
+        radius: 26
+        color: Qt.rgba(0, 0, 0, 0.6)
+        Text {
+            id: seekText
+            anchors.centerIn: parent
+            readonly property real delta: touch.seekTo - mpv.position
+            text: (delta < 0 ? "−" : "+") + root.formatTime(Math.abs(delta)) + "   " + root.formatTime(touch.seekTo) + " / " + root.formatTime(mpv.duration)
+            color: "white"
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textMd
+            font.weight: Font.DemiBold
+            font.features: { "tnum": 1 }
+        }
+    }
+    Rectangle {
+        anchors.verticalCenter: parent.verticalCenter
+        x: touch.gesture === "brightness" ? 32 : parent.width - width - 32
+        visible: touch.gesture === "brightness" || touch.gesture === "volume"
+        width: 44
+        height: Math.min(200, parent.height * 0.6)
+        radius: 22
+        color: Qt.rgba(0, 0, 0, 0.6)
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: levelIcon.top
+            anchors.bottomMargin: 10
+            width: 4
+            height: parent.height - 60
+            radius: 2
+            color: Qt.rgba(1, 1, 1, 0.25)
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: parent.height * touch.level
+                radius: 2
+                color: "white"
+            }
+        }
+        Icon {
+            id: levelIcon
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 12
+            name: touch.gesture === "brightness" ? "sun" : touch.level === 0 ? "volume-x" : "volume-2"
+            size: 18
+            color: "white"
+        }
+    }
+    Rectangle {
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: 24
+        visible: touch.gesture === "hold"
+        width: holdText.implicitWidth + 28
+        height: 36
+        radius: 18
+        color: Qt.rgba(0, 0, 0, 0.6)
+        Text {
+            id: holdText
+            anchors.centerIn: parent
+            text: qsTr("2× speed")
+            color: "white"
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+            font.weight: Font.DemiBold
         }
     }
 
@@ -233,10 +435,10 @@ Item {
             trackPointer: true
             backdropItem: mpv
             radius: height / 2
-            x: 2
+            x: leftControls.x - 6
             height: 46
-            width: playButton.width + (muteButton.visible ? muteButton.width + 2 : 0) + 12
-            anchors.verticalCenter: playButton.verticalCenter
+            width: leftControls.width + 12
+            anchors.verticalCenter: leftControls.verticalCenter
             tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
         }
         LiquidGlass {
@@ -255,6 +457,7 @@ Item {
         }
 
         Row {
+            id: leftControls
             x: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: root.phone ? 4 : 8
@@ -267,6 +470,24 @@ Item {
                 iconColor: "white"
                 tip: (mpv.paused ? qsTr("Play") : qsTr("Pause")) + root.keyHint("player.pause")
                 onClicked: mpv.ended ? mpv.seek(0) : root.togglePause()
+            }
+            IconButton {
+                inGlassBar: true
+                zTier: 1
+                iconName: "skip-back"
+                iconColor: "white"
+                enabled: root.hasPrev
+                tip: qsTr("Previous episode") + root.keyHint("player.prev")
+                onClicked: root.previousRequested()
+            }
+            IconButton {
+                inGlassBar: true
+                zTier: 1
+                iconName: "skip-forward"
+                iconColor: "white"
+                enabled: root.hasNext
+                tip: qsTr("Next episode") + root.keyHint("player.next")
+                onClicked: root.nextRequested()
             }
             IconButton {
                 id: muteButton
@@ -327,137 +548,24 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: root.phone ? 4 : 8
             spacing: 2
+            // Quality, audio, subtitles, speed, fit and more: one panel.
             IconButton {
                 inGlassBar: true
                 zTier: 1
-                id: subsButton
-                readonly property var subs: mpv.tracks.filter(t => t.type === "sub")
-                visible: subs.length > 0
-                iconName: "captions"
-                iconColor: subs.some(t => t.selected) ? "white" : "#a1a1aa"
-                tip: qsTr("Subtitles")
-                onClicked: menu.show(subsButton, [{ label: qsTr("Off"), selected: !subs.some(t => t.selected), pick: () => mpv.setTrack("sub", 0) }]
-                    .concat(subs.map(t => ({ label: t.title || t.lang || qsTr("Track ") + t.id, selected: t.selected, pick: () => mpv.setTrack("sub", t.id) }))))
-            }
-            IconButton {
-                inGlassBar: true
-                zTier: 1
-                id: audioButton
-                readonly property var tracks: mpv.tracks.filter(t => t.type === "audio")
-                visible: tracks.length > 1
-                iconName: "languages"
-                iconColor: "white"
-                tip: qsTr("Audio")
-                onClicked: menu.show(audioButton, tracks.map(t => ({ label: t.title || t.lang || qsTr("Track ") + t.id, selected: t.selected, pick: () => mpv.setTrack("audio", t.id) })))
-            }
-            // Quality: the stream's own variants (an HLS stream's
-            // resolutions) and the server's other videos.
-            IconButton {
-                id: qualityButton
-                readonly property var variants: mpv.tracks.filter(t => t.type === "video" && t.height > 0)
-                    .sort((a, b) => b.height - a.height || (b.bitrate || 0) - (a.bitrate || 0))
-                readonly property var others: root.alternatives.length > 1 ? root.alternatives : []
-                visible: variants.length > 1 || others.length > 0
                 iconName: "settings"
                 iconColor: "white"
-                tip: qsTr("Quality")
-                function label(t) {
-                    const rate = t.bitrate > 0 ? " · " + (t.bitrate >= 1e6 ? (t.bitrate / 1e6).toFixed(1) + " Mb/s" : Math.round(t.bitrate / 1e3) + " kb/s") : ""
-                    return t.height + "p" + rate
-                }
-                onClicked: {
-                    const items = variants.length > 1 ? variants.map(t => ({ label: label(t), selected: t.selected, pick: () => mpv.setTrack("video", t.id) })) : []
-                    for (const o of others)
-                        items.push({ label: o.label, selected: o.current, pick: () => root.alternativePicked(o.id) })
-                    menu.show(qualityButton, items)
-                }
-            }
-            IconButton {
-                inGlassBar: true
-                zTier: 1
-                id: speedButton
-                iconName: "gauge"
-                iconColor: mpv.speed !== 1 ? "white" : "#a1a1aa"
-                tip: qsTr("Speed")
-                onClicked: menu.show(speedButton, [0.5, 0.75, 1, 1.25, 1.5, 2].map(s => ({
-                    label: s === 1 ? qsTr("Normal") : s + "×", selected: Math.abs(mpv.speed - s) < 0.01,
-                    pick: () => { mpv.speed = s; App.setSetting("playerSpeed", s) } })))
+                tip: qsTr("Settings")
+                onClicked: { root.settingsRequested(); root.interacted() }
             }
             // Phones: landscape is full screen (WatchPage turns the phone).
             IconButton {
                 inGlassBar: true
                 zTier: 1
-                readonly property bool full: root.phone ? root.width > root.height
-                                                        : root.Window.window !== null && root.Window.window.visibility === Window.FullScreen
+                readonly property bool full: root.fullScreen
                 iconName: full ? "minimize" : "maximize"
                 iconColor: "white"
                 tip: full ? qsTr("Exit full screen") : qsTr("Full screen")
                 onClicked: { root.fullScreenRequested(); root.interacted() }
-            }
-        }
-    }
-
-    // A list of choices above a control button.
-    Popup {
-        id: menu
-        property var items: []
-        function show(button, list) {
-            items = list
-            const p = button.mapToItem(root, 0, 0)
-            x = Math.max(8, Math.min(root.width - width - 8, p.x + button.width / 2 - width / 2))
-            y = p.y - height - 8
-            open()
-        }
-        width: 200
-        height: Math.min(column.implicitHeight + 12, root.height - 100)
-        padding: 6
-        background: LiquidGlass {
-            nativeEnabled: false
-            radius: Theme.radiusMd
-            backdropItem: mpv
-            tintColor: Qt.rgba(0.08, 0.08, 0.1, 0.65)
-        }
-        contentItem: Flickable {
-            contentHeight: column.implicitHeight
-            clip: true
-            Column {
-                id: column
-                width: parent.width
-                Repeater {
-                    model: menu.items
-                    AbstractButton {
-                        id: choice
-                        required property var modelData
-                        width: column.width
-                        height: 34
-                        hoverEnabled: true
-                        onClicked: {
-                            modelData.pick()
-                            menu.close()
-                        }
-                        background: Rectangle { radius: Theme.radiusSm; color: choice.hovered ? "#222226" : "transparent" }
-                        contentItem: Row {
-                            spacing: 8
-                            leftPadding: 8
-                            Icon {
-                                anchors.verticalCenter: parent.verticalCenter
-                                name: "check"
-                                size: 14
-                                color: "white"
-                                opacity: choice.modelData.selected ? 1 : 0
-                            }
-                            Text {
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: choice.width - 40
-                                text: choice.modelData.label
-                                color: "white"
-                                elide: Text.ElideRight
-                                font.family: Theme.fontSans
-                                font.pixelSize: Theme.textSm
-                            }
-                        }
-                    }
-                }
             }
         }
     }

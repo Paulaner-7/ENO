@@ -7,17 +7,23 @@
 #include "core/ImageCache.h"
 #include "core/Http.h"
 #include "core/VideoSave.h"
+#include "extensions/Host.h"
 #include "sources/comics/Registry.h"
+#include "sources/local/Local.h"
+#include "sources/local/MihonLayout.h"
 
 #include <QCryptographicHash>
 #include <QDir>
 #include <QDirIterator>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLocale>
 #include <QMimeDatabase>
+#include <QMutex>
+#include <QRegularExpression>
 #include <QSaveFile>
 #include <QStandardPaths>
 
@@ -40,6 +46,13 @@ QString root() {
     if (!custom.isEmpty())
         return custom;
     return defaultRoot();
+}
+
+// A LIKE pattern for paths in the app's own downloads folder.
+QString ownPattern() {
+    auto prefix = root() + QLatin1Char('/');
+    prefix.replace(QLatin1Char('\\'), QLatin1String("\\\\")).replace(QLatin1Char('%'), QLatin1String("\\%")).replace(QLatin1Char('_'), QLatin1String("\\_"));
+    return prefix + QLatin1Char('%');
 }
 
 QString extensionFor(const QByteArray &contentType, const QString &url) {
@@ -79,6 +92,11 @@ Downloads::Downloads(QObject *parent) : QObject(parent) {
     QTimer::singleShot(1500, this, [this] {
         Database::exec(QStringLiteral("UPDATE downloads SET status = 'queued' WHERE status = 'running'"));
         pump();
+    });
+    // What Mihon downloaded since the last start (it may still be in use).
+    QTimer::singleShot(20000, this, [this] {
+        if (!local::folders().isEmpty() || linkedCount() > 0)
+            relinkMihon();
     });
 }
 
@@ -343,12 +361,23 @@ void Downloads::runJob(const QVariantMap &row, const CancelFlag &flag) {
 
 Task *Downloads::items() {
     return Task::run([]() -> QVariant {
+        // SCANCORE's own downloads one by one; chapters read from Mihon's
+        // folder one row per series (there can be thousands).
         auto rows = Database::query(QStringLiteral(
             "SELECT d.id, d.series_id AS seriesId, d.unit_key AS unitKey, d.unit_title AS unitTitle, d.unit_url AS unitUrl, "
             "d.status, d.done, d.total, d.error, d.created_at AS createdAt, s.title AS seriesTitle, s.cover, s.media, "
             "s.source_url AS sourceUrl, s.source, s.extra FROM downloads d LEFT JOIN series s ON s.id = d.series_id "
+            "WHERE d.status != 'done' OR d.path IS NULL OR d.path LIKE ? ESCAPE '\\' "
             "ORDER BY CASE d.status WHEN 'running' THEN 0 WHEN 'queued' THEN 1 WHEN 'failed' THEN 2 ELSE 3 END, "
-            "d.created_at DESC, d.id"));
+            "d.created_at DESC, d.id"),
+                                    {ownPattern()});
+        const auto linked = Database::query(QStringLiteral(
+            "SELECT -MIN(d.id) AS id, d.series_id AS seriesId, COUNT(*) AS linked, 'done' AS status, 1 AS done, 1 AS total, "
+            "MAX(d.created_at) AS createdAt, s.title AS seriesTitle, s.cover, s.media, s.source_url AS sourceUrl, s.source, s.extra "
+            "FROM downloads d LEFT JOIN series s ON s.id = d.series_id "
+            "WHERE d.status = 'done' AND d.path NOT LIKE ? ESCAPE '\\' GROUP BY d.series_id ORDER BY s.title COLLATE NOCASE"),
+                                                {ownPattern()});
+        rows.append(linked);
         // The series' extra (an AniList anime's id) as an object.
         for (auto &value : rows) {
             auto row = value.toMap();
@@ -357,6 +386,22 @@ Task *Downloads::items() {
         }
         return rows;
     });
+}
+
+void Downloads::unlinkSeries(const QString &seriesId) {
+    auto unlinked = Database::pref(QStringLiteral("mihon.unlinked")).toStringList();
+    const auto rows = Database::query(QStringLiteral("SELECT id, path FROM downloads WHERE series_id = ? AND status = 'done' AND path NOT LIKE ? ESCAPE '\\'"),
+                                      {seriesId, ownPattern()});
+    Database::transaction([&] {
+        for (const auto &value : rows) {
+            const auto row = value.toMap();
+            if (const auto path = row.value(QStringLiteral("path")).toString(); !unlinked.contains(path))
+                unlinked.append(path);
+            Database::query(QStringLiteral("DELETE FROM downloads WHERE id = ?"), {row.value(QStringLiteral("id"))});
+        }
+    });
+    Database::setPref(QStringLiteral("mihon.unlinked"), unlinked);
+    notify();
 }
 
 QVariantMap Downloads::states(const QString &seriesId) const {
@@ -373,9 +418,20 @@ QVariantMap Downloads::states(const QString &seriesId) const {
 }
 
 void Downloads::remove(int id) {
-    const auto row = Database::one(QStringLiteral("SELECT series_id, unit_key FROM downloads WHERE id = ?"), {id});
+    const auto row = Database::one(QStringLiteral("SELECT series_id, unit_key, path FROM downloads WHERE id = ?"), {id});
     if (row.isEmpty())
         return;
+    // The user's own files (Mihon's downloads) stay where they are; the
+    // chapter is remembered as unlinked so the next scan leaves it alone.
+    if (const auto path = row.value(QStringLiteral("path")).toString(); isExternal(path)) {
+        auto unlinked = Database::pref(QStringLiteral("mihon.unlinked")).toStringList();
+        if (!unlinked.contains(path))
+            unlinked.append(path);
+        Database::setPref(QStringLiteral("mihon.unlinked"), unlinked);
+        Database::exec(QStringLiteral("DELETE FROM downloads WHERE id = ?"), {id});
+        notify();
+        return;
+    }
     // Running: it stops, then goes (see runJob).
     if (m_running.contains(id)) {
         if (const auto flag = m_flags.value(id))
@@ -453,7 +509,273 @@ QString Downloads::sizeOnDisk() const {
     return QLocale().formattedDataSize(total);
 }
 
+bool Downloads::isExternal(const QString &path) {
+    return !path.isEmpty() && !path.startsWith(root() + QLatin1Char('/'));
+}
+
+
+namespace {
+
+// The chapters' pages, from the folder of images or CBZ Mihon saved.
+QVariantList externalPanels(const QString &path) {
+    QVariantList out;
+    try {
+        for (const auto &url : local::pages(path))
+            out.append(QVariantMap{{"url", url}, {"width", 0}, {"height", 0}});
+    } catch (const Error &) {
+        // Moved or deleted: the chapter reads from its source instead.
+    }
+    return out;
+}
+
+} // namespace
+
+int Downloads::linkedCount() const {
+    return Database::scalar(QStringLiteral("SELECT COUNT(*) FROM downloads WHERE status = 'done' AND path NOT LIKE ? ESCAPE '\\'"),
+                            {ownPattern()})
+        .toInt();
+}
+
+QVariantMap Downloads::mihonStatus() const {
+    auto status = Database::pref(QStringLiteral("mihon.link")).toMap();
+    status.insert(QStringLiteral("linking"), m_linking);
+    return status;
+}
+
+void Downloads::relinkMihon() {
+    if (m_linking) {
+        m_linkAgain = true;
+        return;
+    }
+    m_linking = true;
+    emit mihonChanged();
+    runInBackground([this] {
+        QVariantMap result;
+        QElapsedTimer timer;
+        timer.start();
+        try {
+            result = linkMihonNow();
+            qInfo().noquote() << "Mihon downloads:" << result.value(QStringLiteral("chapters")).toInt() << "chapters linked in"
+                              << timer.elapsed() << "ms";
+        } catch (const Error &e) {
+            result = {{"error", e.message()}};
+        }
+        QMetaObject::invokeMethod(this, [this, result]() mutable {
+            m_linking = false;
+            // Asked again while it ran (a folder added meanwhile): this
+            // result is not the last word.
+            if (std::exchange(m_linkAgain, false)) {
+                result.insert(QStringLiteral("more"), true);
+                relinkMihon();
+            }
+            linked(result);
+        });
+    });
+}
+
+void Downloads::linked(const QVariantMap &result) {
+    notify();
+    emit mihonChanged();
+    emit mihonLinked(result);
+}
+
+QVariantMap Downloads::linkMihonNow() {
+    using namespace local;
+    // One at a time (start-up, a folder added and an import can overlap).
+    static QMutex running;
+    QMutexLocker lock(&running);
+    struct Root {
+        QString chosen;
+        QString downloads;
+    };
+    QList<Root> roots;
+    for (const auto &folder : folders())
+        if (const auto downloads = mihon::downloadsFolder(folder); !downloads.isEmpty())
+            roots.append({folder, downloads});
+    int linkedSeries = 0, linkedChapters = 0, unmatchedSeries = 0, unmatchedChapters = 0;
+    // Every chapter file linked by this pass; links to anything else (gone
+    // from the folder, or its folder no longer chosen) are dropped below.
+    QSet<QString> linkedPaths;
+    // Series folders no library entry has, for "On this device".
+    QVariantList others;
+    QVariantMap rootsOut;
+    if (!roots.isEmpty()) {
+        // The comics the user has: the library, and what they have read.
+        struct Entry {
+            QString id;
+            QString source;
+        };
+        QHash<QString, QList<Entry>> byTitle;
+        QList<Entry> all;
+        for (const auto &value : Database::query(QStringLiteral(
+                 "SELECT id, title, source FROM series WHERE media = 'comic' AND (id IN (SELECT series_id FROM library) "
+                 "OR id IN (SELECT series_id FROM progress))"))) {
+            const auto row = value.toMap();
+            const Entry entry{row.value(QStringLiteral("id")).toString(), row.value(QStringLiteral("source")).toString()};
+            byTitle[mihon::normalized(row.value(QStringLiteral("title")).toString())].append(entry);
+            all.append(entry);
+        }
+        // "Name (EN)" for each source key, as Mihon names its folders.
+        QHash<QString, QPair<QString, QString>> sourceNames;
+        const auto sourceOf = [&](const QString &key) {
+            if (!sourceNames.contains(key)) {
+                const auto found = comics::Registry::byKey(key);
+                // Built-in sources name their language: "MangaDex (Español)".
+                auto label = found ? found->label() : QString();
+                label.remove(QRegularExpression(QStringLiteral(R"(\s*\([^)]*\)$)")));
+                sourceNames.insert(key, found ? qMakePair(mihon::normalized(label), found->language().toLower())
+                                              : qMakePair(QString(), QString()));
+            }
+            return sourceNames.value(key);
+        };
+        const auto sameSource = [&](const QString &key, const mihon::Source &folder) {
+            const auto [name, lang] = sourceOf(key);
+            return !name.isEmpty() && name == mihon::normalized(folder.name) &&
+                   (folder.lang.isEmpty() || lang.isEmpty() || lang == folder.lang || folder.lang == QLatin1String("all") ||
+                    lang.section(QLatin1Char('-'), 0, 0) == folder.lang.section(QLatin1Char('-'), 0, 0));
+        };
+        // Mihon's hash of each chapter address, for the series of one source
+        // (built when a folder's name matches no title: renamed series).
+        QHash<QString, QHash<QString, QString>> hashesBySource;
+        const auto hashOwners = [&](const mihon::Source &folder) -> const QHash<QString, QString> & {
+            const auto key = folder.name + QLatin1Char('|') + folder.lang;
+            if (!hashesBySource.contains(key)) {
+                QHash<QString, QString> owners;
+                for (const auto &entry : all) {
+                    if (!sameSource(entry.source, folder))
+                        continue;
+                    for (const auto &value : Database::query(QStringLiteral("SELECT url FROM units WHERE series_id = ?"), {entry.id})) {
+                        auto url = value.toMap().value(QStringLiteral("url")).toString();
+                        if (const auto wrapped = ext::unwrapUrl(url))
+                            url = wrapped->url;
+                        for (const auto &hash : mihon::hashesFor(url))
+                            owners.insert(hash, entry.id);
+                    }
+                }
+                hashesBySource.insert(key, owners);
+            }
+            return hashesBySource[key];
+        };
+        const auto unlinkedList = Database::pref(QStringLiteral("mihon.unlinked")).toStringList();
+        const QSet<QString> skip(unlinkedList.begin(), unlinkedList.end());
+        for (const auto &root : std::as_const(roots)) {
+            rootsOut.insert(root.chosen, root.downloads);
+            for (const auto &source : mihon::sources(root.downloads)) {
+                for (const auto &series : mihon::series(source)) {
+                    if (CancelScope::cancelled())
+                        throw Error(QStringLiteral("Cancelled"), 499);
+                    const auto found = mihon::chapters(series.path);
+                    if (found.isEmpty())
+                        continue;
+                    const auto candidates = byTitle.value(mihon::normalized(series.name));
+                    // The source it was downloaded from, else the only
+                    // library entry with that title, else the entry of that
+                    // source whose chapters Mihon's hashes name.
+                    QString chosen;
+                    for (const auto &candidate : candidates)
+                        if (sameSource(candidate.source, source)) {
+                            chosen = candidate.id;
+                            break;
+                        }
+                    if (chosen.isEmpty() && candidates.size() == 1)
+                        chosen = candidates.first().id;
+                    if (chosen.isEmpty()) {
+                        QHash<QString, int> votes;
+                        int hashed = 0;
+                        for (const auto &c : found)
+                            if (!c.hash.isEmpty()) {
+                                ++hashed;
+                                if (const auto owner = hashOwners(source).value(c.hash); !owner.isEmpty())
+                                    ++votes[owner];
+                            }
+                        int best = 0;
+                        for (auto it = votes.cbegin(); it != votes.cend(); ++it)
+                            if (it.value() > best) {
+                                best = it.value();
+                                chosen = it.key();
+                            }
+                        // Most of its chapters, not a stray collision.
+                        if (best * 2 < hashed)
+                            chosen.clear();
+                    }
+                    if (chosen.isEmpty()) {
+                        ++unmatchedSeries;
+                        others.append(QVariantMap{{"path", series.path}, {"name", series.name}, {"source", source.name}, {"root", root.chosen}});
+                        continue;
+                    }
+                    const auto units = Library::cachedUnits(chosen);
+                    QList<mihon::Unit> wanted;
+                    wanted.reserve(units.size());
+                    for (const auto &value : units) {
+                        const auto u = value.toMap();
+                        const auto url = u.value(QStringLiteral("url")).toString();
+                        const auto wrapped = ext::unwrapUrl(url);
+                        wanted.append({wrapped ? wrapped->url : url, u.value(QStringLiteral("title")).toString(),
+                                       u.value(QStringLiteral("scanlator")).toString(), u.value(QStringLiteral("number")).toString()});
+                    }
+                    const auto matches = mihon::matchChapters(found, wanted);
+                    int here = 0;
+                    Database::transaction([&] {
+                        for (int i = 0; i < found.size(); ++i) {
+                            if (matches[i] < 0) {
+                                ++unmatchedChapters;
+                                continue;
+                            }
+                            if (skip.contains(found[i].path) || skip.contains(series.path))
+                                continue;
+                            const auto unit = units[matches[i]].toMap();
+                            // A copy SCANCORE downloaded itself stays.
+                            Database::query(QStringLiteral(R"(
+                                INSERT INTO downloads(series_id, unit_key, unit_title, unit_url, status, done, total, path, created_at)
+                                VALUES(?, ?, ?, ?, 'done', 1, 1, ?, ?)
+                                ON CONFLICT(series_id, unit_key) DO UPDATE SET path = excluded.path, status = 'done', error = NULL
+                                    WHERE downloads.status != 'done' OR downloads.path IS NULL OR downloads.path = '' OR downloads.path = excluded.path
+                                        OR downloads.path NOT LIKE ? ESCAPE '\'
+                            )"),
+                                            {chosen, unit.value(QStringLiteral("key")).toString(), unit.value(QStringLiteral("title")).toString(),
+                                             unit.value(QStringLiteral("url")).toString(), found[i].path, Database::now(), ownPattern()});
+                            linkedPaths.insert(found[i].path);
+                            ++here;
+                        }
+                    });
+                    if (here > 0) {
+                        ++linkedSeries;
+                        linkedChapters += here;
+                    }
+                }
+            }
+        }
+    }
+    // Links whose file is no longer there (or no longer chosen).
+    QVariantList stale;
+    for (const auto &value : Database::query(QStringLiteral("SELECT id, path FROM downloads WHERE status = 'done' AND path NOT LIKE ? ESCAPE '\\'"),
+                                             {ownPattern()})) {
+        const auto row = value.toMap();
+        if (!linkedPaths.contains(row.value(QStringLiteral("path")).toString()))
+            stale.append(row.value(QStringLiteral("id")));
+    }
+    if (!stale.isEmpty())
+        Database::transaction([&] {
+            for (const auto &id : stale)
+                Database::query(QStringLiteral("DELETE FROM downloads WHERE id = ?"), {id});
+        });
+    const QVariantMap result{{"at", Database::now()},
+                             {"folders", int(roots.size())},
+                             {"roots", rootsOut},
+                             {"series", linkedSeries},
+                             {"chapters", linkedChapters},
+                             {"unmatchedSeries", unmatchedSeries},
+                             {"unmatchedChapters", unmatchedChapters}};
+    Database::setPref(QStringLiteral("mihon.link"), result);
+    Database::setPref(QStringLiteral("mihon.others"), others);
+    return result;
+}
+
 QVariantList Downloads::localPanels(const QString &seriesId, const QString &unitKey) {
+    const auto path = Database::scalar(QStringLiteral("SELECT path FROM downloads WHERE series_id = ? AND unit_key = ? AND status = 'done'"),
+                                       {seriesId, unitKey}).toString();
+    if (isExternal(path))
+        return externalPanels(path);
     const auto folder = unitFolder(seriesId, unitKey);
     QFile file(folder + QStringLiteral("/index.json"));
     if (!file.open(QIODevice::ReadOnly))

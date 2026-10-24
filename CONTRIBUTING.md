@@ -7,7 +7,19 @@ Thanks for helping. Bug reports go in [Issues](https://github.com/medium-gh/scan
 - CMake 3.28+, Ninja and a C++20 compiler (GCC 13+, Clang 17+ or MSVC 2022)
 - Qt 6.9+ with Qt Declarative, Qt SVG, Qt Image Formats and Qt WebEngine (Qt WebEngine is optional; without it the anime player and browser checks are disabled), plus Qt WebView on Windows and macOS, where the anime player uses the system's web view
 
-The README lists the [package commands per system](README.md#build-from-source). Android additionally needs Qt for Android, the Android SDK, NDK r27c and JDK 17 (see [Android](README.md#android)).
+- [lexbor](https://github.com/lexbor/lexbor), the HTML parser, is downloaded by CMake. A JDK 17 or newer, if installed, also builds the extension host (`host/`) and its tests.
+
+| System | Packages |
+| --- | --- |
+| Arch Linux | `sudo pacman -S cmake ninja qt6-base qt6-declarative qt6-svg qt6-imageformats qt6-webengine` |
+| Fedora | `sudo dnf install cmake ninja-build qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtsvg-devel qt6-qtimageformats qt6-qtwebengine-devel` |
+| Ubuntu, Debian | Needs Qt 6.9 or newer (else the [Qt Online Installer](https://www.qt.io/download-qt-installer)): `sudo apt install cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-svg-dev qt6-image-formats-plugins qt6-webengine-dev` |
+| macOS | `brew install cmake ninja qt` |
+| Windows | Qt 6.9+ for MSVC 2022 from the [Qt Online Installer](https://www.qt.io/download-qt-installer) (with Qt WebEngine, Qt WebView and Qt Image Formats); build from a *Developer PowerShell for VS 2022* with `-DCMAKE_PREFIX_PATH=C:\Qt\6.x.y\msvc2022_64` |
+
+Build options: `-DSCANCORE_WITH_WEBENGINE=OFF` leaves out the embedded browser (no anime player or browser checks), `-DSCANCORE_WITH_SYSTEM_WEBVIEW=OFF` the system web view player on Windows and macOS, `-DSCANCORE_WITH_BUNDLED_SOURCES=OFF` the bundled sources.
+
+Anime episodes are H.264. Distribution and Flathub builds of Qt WebEngine play it; the one in the Qt Online Installer does not, which is why Windows and macOS use the system's web view. On Linux, build against your distribution's Qt WebEngine, or one configured with `-DFEATURE_webengine_proprietary_codecs=ON` (see `.github/workflows/qtwebengine.yml`).
 
 ## Build and run
 
@@ -22,6 +34,32 @@ cmake --build --preset debug
 ```bash
 SCANCORE_START='{"section":"anime","screenshot":"/tmp/anime.png","delay":8000}' ./build/debug/bin/scancore
 ```
+
+### Android
+
+Needs the desktop Qt above (as the host), Qt for Android (same version, `android_arm64_v8a`, with Qt WebView and Qt Image Formats), the Android SDK, NDK r27c (`27.2.12479018`) and JDK 17.
+
+```bash
+export ANDROID_SDK_ROOT=~/Android/Sdk ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/27.2.12479018
+~/Qt/6.11.2/android_arm64_v8a/bin/qt-cmake -S . -B build/android -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+  -DQT_HOST_PATH=/usr -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DANDROID_NDK_ROOT=$ANDROID_NDK_ROOT
+cmake --build build/android --target apk
+```
+
+`QT_HOST_PATH` is your desktop Qt prefix (`/usr` on Arch, or something like `~/Qt/6.11.2/gcc_64`). A Debug APK installs without signing; OpenSSL for Android is fetched automatically.
+
+### How it fits together
+
+```
+src/core      HTTP (per-site limits, cancellation), HTML parsing, SQLite, image cache, background tasks
+src/sources   built-in sources, files on this device, the source manifest
+src/app       services the interface uses: Comics, Novels, Anime, Library, Downloads, Extensions, App…
+src/qml       the interface: theme, components, pages, phone layout
+host/         the extension host (Kotlin) for Mihon and Aniyomi extensions
+tests/        offline tests and the live source probe
+```
+
+Network requests run on worker pools and are cancelled when you leave a page; chapter pages decode off the interface thread. Everything you keep lives in one SQLite database in the app data folder. Pushing a tag such as `v2.11.0` runs [the release workflow](.github/workflows/release.yml).
 
 ## Test
 
@@ -61,7 +99,7 @@ Optional manifest fields for comic and novel entries:
 
 ## Translations
 
-Every string in the interface is wrapped in `qsTr()` and translated in each `i18n/scancore_*.ts`. After changing strings, run `cmake --build --preset debug --target update_translations` and fill in the new entries in every language; a new string should not ship untranslated. A new licence goes into `resources/licenses/` and `components.json` there.
+Every string in the interface is wrapped in `qsTr()` and translated in each `i18n/scancore_*.ts`. After changing strings, fill in the new entries in every language; a new string should not ship untranslated. A new licence goes into `resources/licenses/` and `components.json` there.
 
 For a source change, include the URL of a series that shows the problem and what you expected to see.
 

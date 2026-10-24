@@ -13,11 +13,17 @@ Item {
     property string current: "all"
     property var providers: ({})
     property bool showLanguage: false
+    // Several can be ticked: the keys ticked, none meaning "All" (picked()
+    // still says which chip was pressed; the caller updates the list).
+    property var ticked: null
+    property string allLabel: qsTr("All sources")
+    // Space before the first chip and after the last (0 inside a dialog).
+    property real inset: Theme.gutter
     // Wrapping is fine for a handful; past this the chips scroll.
     property int wrapLimit: 30
     signal picked(string key)
 
-    readonly property var entries: [{ key: "all", label: qsTr("All sources") }].concat(sources)
+    readonly property var entries: [{ key: "all", label: allLabel }].concat(sources)
     readonly property bool scrolls: Theme.compact || entries.length > wrapLimit
 
     width: parent ? parent.width : 400
@@ -34,7 +40,8 @@ Item {
     component SourceChip: Chip {
         required property var modelData
         text: root.label(modelData)
-        selected: root.current === modelData.key
+        selected: root.ticked ? (modelData.key === "all" ? root.ticked.length === 0 : root.ticked.indexOf(modelData.key) >= 0)
+                              : root.current === modelData.key
         detail: modelData.key === "all" ? "" : root.detail(modelData.key)
         onClicked: root.picked(modelData.key)
     }
@@ -44,8 +51,8 @@ Item {
         anchors.fill: parent
         orientation: ListView.Horizontal
         spacing: 8
-        leftMargin: Theme.gutter
-        rightMargin: Theme.gutter
+        leftMargin: root.inset
+        rightMargin: root.inset
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         // Built ahead a little so a fling does not show gaps.
@@ -57,8 +64,8 @@ Item {
     Flow {
         id: wrapped
         visible: !root.scrolls
-        x: Theme.gutter
-        width: parent.width - 2 * Theme.gutter
+        x: root.inset
+        width: parent.width - 2 * root.inset
         spacing: 8
         Repeater {
             model: root.scrolls ? [] : root.entries

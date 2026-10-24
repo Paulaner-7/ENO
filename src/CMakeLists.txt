@@ -8,6 +8,7 @@ add_library(scancore_core STATIC
     core/Http.cpp
     core/ImageCache.cpp
     core/Parallel.cpp
+    core/QuietSites.cpp
     core/Text.cpp
     core/StreamRelay.cpp
     core/VideoSave.cpp
@@ -37,6 +38,7 @@ add_library(scancore_core STATIC
     sources/local/Local.cpp
     sources/local/LocalComics.cpp
     sources/local/LocalNovels.cpp
+    sources/local/MihonLayout.cpp
     sources/novels/LnCrawl.cpp
     sources/novels/Registry.cpp
     sources/novels/TextBlocks.cpp
@@ -113,7 +115,7 @@ endif()
 if(NOT SCANCORE_WITH_SYSTEM_WEBVIEW)
     list(REMOVE_ITEM SCANCORE_QML qml/components/WebPlayerSystem.qml)
 endif()
-set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml
+set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml qml/PlayerPage.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(scancore

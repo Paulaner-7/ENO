@@ -59,6 +59,11 @@ struct Item {
     QVariantMap settings;
     QVariantMap reader;
     QJsonObject anime; // AniList media, for anime
+    // TachiyomiSY / Komikku: info edited there (title, author, cover…),
+    // which SCANCORE does not keep; the edited title is matched on too.
+    bool customInfo = false;
+    // TachiyomiSY / Komikku: a merged entry, brought in as its main part.
+    bool merged = false;
 
     QString title() const { return titles.value(0); }
 };
@@ -79,14 +84,24 @@ struct MihonBackup {
     // The backup's own lists (not SCANCORE's built-in ones), in its order,
     // even those no series is in.
     QStringList lists;
+    // Lists the backup hides (Komikku): SCANCORE ids, or "custom:<name>".
+    QStringList hiddenLists;
     QList<Repository> repositories;
+    // What TachiyomiSY and Komikku keep that SCANCORE has no place for:
+    // saved searches and feeds, and entries with edited info.
+    int savedSearches = 0;
+    int customInfo = 0;
+    int merged = 0;
 };
 
 // Mihon's Backup, and Aniyomi's (the same with anime): manga (1),
 // categories (2), sources (101), extension repositories (106); anime (3, or
 // 501 in older Aniyomi backups), their categories (4 or 502) and sources
-// (103 or 503). Entries outside the library are left out. Throws on a
-// damaged file.
+// (103 or 503). Entries outside the library are left out. TachiyomiSY and
+// Komikku backups are the same with their own fields: merged entries
+// (source 6969) come in as their main part, an entry backed up twice (a
+// merged entry's parts are written again) once, hidden categories (900)
+// hidden. Throws on a damaged file.
 MihonBackup parseMihonBackup(const QByteArray &data);
 QList<Item> parseMihon(const QByteArray &data);
 

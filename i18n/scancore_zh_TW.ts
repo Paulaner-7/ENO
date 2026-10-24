@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>來源有配音時用配音，否則用附字幕的原語言。</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>先播放什麼。來源的影片依名稱選擇，有多種解析度或音軌的串流會從所選的開始。觀看時可在播放器設定（齒輪）中變更。</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>適應</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>畫面如何填滿播放器。觀看時也可在播放器設定中變更。</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>裁切填滿</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>拉伸</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>原始大小</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>手勢</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>輕觸顯示或隱藏控制項。亮度僅在 SCANCORE 開啟時改變。</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>滑動調整亮度、音量和進度</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>左側上下滑動調亮度，右側調音量；橫向滑動調進度。</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>點兩下兩側快轉/倒轉 10 秒</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>無論如何，點兩下中間都會暫停。</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>長按 2 倍速</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>手指按住時以 2 倍速播放。</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>來自 AniList 和 MyAnimeList 的動畫</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>在「觀看來源」中為某部動畫所選的內容會被記住，與這裡的設定無關。</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>播放來源</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>內建伺服器。只有在選擇「觀看來源」時才會搜尋擴充功能。</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>你的動畫擴充功能：若某個擴充功能明確有這部動畫就用它，否則由你選擇。</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>每部動畫首次播放時詢問。</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>內建</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>擴充功能</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>詢問</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>要搜尋的擴充功能</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>全部</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>已選 %1 個</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>全部擴充功能</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>此系列</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>線條</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>懸浮</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>左側</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>右側</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>底部</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>顯示更多</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1 章</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 章</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>來自你的擴充功能：%1</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>%1 個仍在搜尋</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1 部在多個清單中，已放入第一個</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>%1 個隱藏清單維持隱藏</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>%1 個合併項目以其主要來源匯入</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>%1 部作品編輯過的標題、封面和簡介留在原應用程式中</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>%1 個已儲存的搜尋留在原應用程式中</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>Mihon、Komikku、TachiyomiSY、Tachiyomi 或 Aniyomi 備份</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>來自 更多 → 備份與還原 的 .tachibk 檔案（Komikku：更多 → 資料與儲存空間）。這裡已有擴充功能的作品會原樣還原。</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon、Komikku、TachiyomiSY、Tachiyomi 或 Aniyomi 備份 (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>從 Mihon 資料夾讀取的 %1 個已下載章節</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>Mihon 下載的章節</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>重新尋找</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>新增資料夾</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>選擇資料夾</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2674,6 +2866,22 @@
             <source>Delete</source>
             <translation>刪除</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>Mihon 資料夾中 %1 話</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 章</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>在 Mihon 資料夾中</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>不再從 Mihon 資料夾讀取這些（檔案會保留）</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2911,6 +3119,74 @@
         <message>
             <source>Link copied</source>
             <translation>已複製連結</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>全部儲存庫</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>1 個更新可用</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>%1 個更新可用</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>擴充功能已是最新</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>正在檢查儲存庫…</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>已檢查 %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>尚未檢查</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>受信任的擴充功能會自動更新</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>全部更新</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>檢查更新</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>全部類型</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>漫畫</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>小說</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>動畫</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>儲存庫</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>此儲存庫的擴充功能</translation>
         </message>
     </context>
     <context>
@@ -3971,6 +4247,30 @@
             <source>Remove list</source>
             <translation>移除清單</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>其中作品將移到 %1；不會從書庫移除任何內容。</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>閱讀</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>使用名稱 %1</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>隱藏清單</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>已隱藏 %1。其中作品仍在該清單與「全部」中；可在 設定 → 書庫 重新顯示。</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>復原</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4197,6 +4497,38 @@
         <message>
             <source>Add a list</source>
             <translation>新增清單</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>其中作品將移到 %1；不會從書庫移除任何內容。</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>閱讀</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>可重新命名、排序或隱藏任何清單，也可新增自己的清單。隱藏清單中的作品仍在該清單與「全部」中。閱讀、想讀、擱置、已完成和已棄無論叫什麼名字，對追蹤和備份的意義都不變。Mihon 和 LNReader 備份會帶上它們的清單。</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>已在書庫中隱藏</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>內建清單，原名 %1</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>在書庫中顯示</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>在書庫中隱藏</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>使用名稱 %1</translation>
         </message>
     </context>
     <context>
@@ -4432,6 +4764,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>正在查看 Mihon 的下載…</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>選擇 Mihon 的儲存資料夾，或其中的 downloads 資料夾。之後其章節會從書庫離線開啟，並保留你的進度。不會複製任何檔案。</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%2 部作品共 %1 話可從 Mihon 的資料夾離線開啟</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>不在書庫中的 %1 部作品位於「本裝置上」</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>Mihon 的儲存資料夾</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>該資料夾中沒有 Mihon 的下載。請選擇 Mihon 存放資料的資料夾（Mihon：更多 → 設定 → 資料與儲存空間 → 儲存位置），或其中的 downloads 資料夾。</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>來自 Mihon 的 %2 部作品共 %1 話現可離線開啟</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>Mihon 的下載位於「本裝置上」。匯入 Mihon 備份即可連結到你的書庫。</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4484,6 +4851,38 @@
         <message>
             <source>Import</source>
             <translation>匯入</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>從 %1 還原全部</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>你的清單依 %1 的順序匯入：%2。</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>%1 下載的章節</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>正在查看資料夾…</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>匯入後從它的資料夾離線讀取，並保留你的進度。不會複製任何檔案。</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>選擇它的儲存資料夾（更多 → 設定 → 資料與儲存空間），即可在這裡離線閱讀。不會複製任何檔案。</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>已選擇</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>選擇</translation>
         </message>
     </context>
     <context>
@@ -4543,6 +4942,54 @@
         <message>
             <source>Quality</source>
             <translation>畫質</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>適應</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>完整畫面</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>裁切填滿</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>無黑邊</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>拉伸</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>填滿螢幕，畫面變形</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>原始大小</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>原始像素</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>2 倍速</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>上一集</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>下一集</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
         </message>
     </context>
     <context>
@@ -5138,6 +5585,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>這是選用的。SCANCORE 內建漫畫、小說和動畫的來源，你可以略過這一步，之後想要更多時再新增儲存庫。</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>閱讀漫畫</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>選擇進度條</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>顯示你在章節中讀到哪裡，並可跳到某一頁。顏色、位置和濃度在 設定 → 閱讀 中。</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>保持關注</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>接收通知</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>你關注作品的新章節、擴充功能更新和消息，顯示在手機或電腦的通知中。</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新章節</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>當書庫中的作品有新章節或新集數時。</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>來自 SCANCORE 的消息</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>來自 scancore.onl 的公告。</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>允許通知</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>已允許通知</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>你的系統會顯示通知</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5234,6 +5733,21 @@
         <message>
             <source>Done</source>
             <translation>完成</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>返回</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>關閉</translation>
         </message>
     </context>
     <context>
@@ -5373,6 +5887,25 @@
         <message>
             <source>Cancel</source>
             <translation>取消</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>分頁</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>線條</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>懸浮</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>無</translation>
         </message>
     </context>
     <context>
@@ -5835,6 +6368,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>頁面模式：在中間點兩下放大，再點兩下縮小。</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>灰色</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>強調色</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>海洋</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>玫瑰</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>薄荷</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>漫畫進度條</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>顯示你在本章讀到哪裡。在閱讀器中點按或拖曳即可跳到某一頁。</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>顯示時機</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>始終顯示</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>隨控制項顯示</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>位置</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>左側</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>右側</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>底部</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>粗細</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>細</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>粗</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>濃度</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>調低後頁面會透出來。</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>顏色</translation>
         </message>
     </context>
     <context>
@@ -7066,6 +7679,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>沒有相符的內建來源。擴充功能的來源在「擴充功能」頁面。</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>擴充功能記錄</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>擴充功能自上次啟動以來回報的內容，包括錯誤。可附在錯誤回報中。</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>開啟</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>選擇 Mihon 的儲存資料夾也可以：它下載的章節會從你的書庫開啟。</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>Mihon 的下載 · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8176,6 +8809,10 @@
             <source>Close</source>
             <translation>關閉</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>全部擴充功能</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8350,6 +8987,18 @@
         <message>
             <source>Cast to a TV</source>
             <translation>投放到電視</translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>伺服器</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>關閉播放器</translation>
         </message>
     </context>
     <context>
@@ -8866,6 +9515,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>開啟擴充功能頁面來更新它們。</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>%1 已更新</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>已更新 %1 個擴充功能</translation>
         </message>
     </context>
     <context>

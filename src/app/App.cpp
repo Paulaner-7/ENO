@@ -1,12 +1,15 @@
 #include "App.h"
+#include "core/QuietSites.h"
 #include "KeepAwake.h"
 
 #include "WebBridge.h"
 #include "Images.h"
 #include "Announcements.h"
+#include "Downloads.h"
 #include "CrashLog.h"
 #include "Library.h"
 #include "Live.h"
+#include "Extensions.h"
 #include "Notifications.h"
 #include "Platform.h"
 #include "Profiler.h"
@@ -28,6 +31,7 @@
 #include <QNetworkInformation>
 #include <QClipboard>
 #include <QDateTime>
+#include <QHash>
 #include <QDesktopServices>
 #include <QDir>
 #include <QDirIterator>
@@ -75,6 +79,16 @@ const QVariantMap kDefaults{
     {"readerRailUnread", "#e4e4e7"},
     {"readerRailRead", "#8b8b94"},
     {"readerRailCurrent", "#000000"},
+    // Its look ("segments", "line", "floating"), edge ("left", "right",
+    // "bottom") and strength (0.3 see-through to 1 solid).
+    {"readerProgressLook", "segments"},
+    // Anime opened from AniList or MyAnimeList play from: "builtin" (the
+    // built-in servers; extensions only from Watch from), "extensions" (the
+    // ones in animeMatchSources, all when empty) or "ask".
+    {"animeTrackerPlayer", "builtin"},
+    {"animeMatchSources", QStringList()},
+    {"readerProgressEdge", "left"},
+    {"readerProgressOpacity", 0.85},
     // Readers open in full screen (their full screen button sets it).
     {"readerFullscreen", false},
     {"novelFont", "Literata"},
@@ -110,6 +124,12 @@ const QVariantMap kDefaults{
     {"subtitleBox", false},
     {"animeSharpen", "off"},
     {"playerSpeed", 1},
+    // How the picture fills the player (fit, crop, stretch, original) and
+    // the phone gestures in full screen (NativePlayer.qml).
+    {"playerFit", "fit"},
+    {"playerSwipes", true},
+    {"playerDoubleTapSeek", true},
+    {"playerHoldSpeed", true},
     {"autoSkip", false},
     {"animeSubLang", "it"},
     {"animeSubQuality", "high"},
@@ -195,6 +215,8 @@ const QVariantMap kDefaults{
 } // namespace
 
 App::App(QObject *parent) : QObject(parent) {
+    // Settings restored before the event loop runs are not changes.
+    QTimer::singleShot(0, this, [this] { m_running = true; });
     m_settings = kDefaults;
     for (auto it = kDefaults.begin(); it != kDefaults.end(); ++it)
         m_settings.insert(it.key(), Database::pref(QStringLiteral("setting.") + it.key(), it.value()));
@@ -257,6 +279,12 @@ App *App::instance() {
 QString App::version() const { return QCoreApplication::applicationVersion(); }
 
 QString App::platform() const {
+    // Development hook: SCANCORE_LOOK_AS=android lays the interface out as
+    // on a phone (screenshots of phone layouts on a computer); the phone's
+    // own services stay absent.
+    static const auto lookAs = qEnvironmentVariable("SCANCORE_LOOK_AS");
+    if (!lookAs.isEmpty())
+        return lookAs;
 #if defined(Q_OS_ANDROID)
     return QStringLiteral("android");
 #elif defined(Q_OS_WIN)
@@ -282,6 +310,20 @@ bool App::webEngine() const {
 void App::prepareWeb() const { installWebBridge(); }
 
 QVariantMap App::startAction() const {
+#if defined(Q_OS_ANDROID) && defined(QT_DEBUG)
+    // Android debug builds have no environment to pass: the same JSON in
+    // files/start.json (adb shell run-as …), read once and removed.
+    static const auto fromFile = [] {
+        QFile file(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/start.json"));
+        if (!file.open(QIODevice::ReadOnly))
+            return QVariantMap();
+        const auto map = QJsonDocument::fromJson(file.readAll()).object().toVariantMap();
+        file.remove();
+        return map;
+    }();
+    if (!fromFile.isEmpty())
+        return fromFile;
+#endif
     return QJsonDocument::fromJson(qgetenv("SCANCORE_START")).object().toVariantMap();
 }
 
@@ -309,6 +351,10 @@ void App::setSetting(const QString &key, const QVariant &input) {
         novels::Registry::rebuild();
         emit manifestChanged();
     }
+    // Mihon's downloads in a folder added (or no longer there after one is
+    // taken off the list).
+    if (key == QLatin1String("localFolders") && m_running)
+        Downloads::instance()->relinkMihon();
     if (key == QLatin1String("imageCacheMB")) {
         ImageCache::setBudget(std::max<qint64>(128, value.toLongLong()) * 1024 * 1024);
         // A smaller limit takes effect now, not at the next start.
@@ -361,11 +407,16 @@ bool App::protectedSite(const QString &url) const { return CookieJar::isProtecte
 
 void App::cancelSiteCheck(const QString &url) { answerReader(url, false); }
 
+
 // One window per site: requests that meet the same check wait on it together.
 // Not while SCANCORE is in the background, and not longer than 90 seconds.
 void App::askReader(const QString &url, std::function<void(const QJsonValue &)> answer) {
     if (qGuiApp->applicationState() != Qt::ApplicationActive || CookieJar::isProtected(QUrl(url)))
         return answer(QJsonObject{{"passed", false}});
+    // A search across many sources: not now (the host does not count it as
+    // the reader declining).
+    if (isQuietSite(url))
+        return answer(QJsonObject{{"passed", false}, {"quiet", true}});
     const auto host = QUrl(url).host();
     const bool open = m_readerChecks.contains(host);
     m_readerChecks[host].append(std::move(answer));
@@ -483,6 +534,10 @@ QString App::googleDrivePath() const {
         return accounts.first().toMap().value(QStringLiteral("path")).toString();
     return QString();
 }
+double App::screenBrightness() const { return platform::brightness(); }
+void App::setScreenBrightness(double level) const { platform::setBrightness(level); }
+double App::mediaVolume() const { return platform::mediaVolume(); }
+void App::setMediaVolume(double level) const { platform::setMediaVolume(level); }
 
 void App::copy(const QString &text) const { QGuiApplication::clipboard()->setText(text); }
 
@@ -505,14 +560,31 @@ QStringList App::chapterParts(const QStringList &titles) const {
 }
 
 QString App::relativeTime(const QVariant &when) const {
+    // Chapter lists ask for every row they show as they scroll: answers are
+    // kept for a minute, as parsing a date and reading the local time zone
+    // each time made rows slow to appear on phones.
+    static QHash<QString, QString> cache;
+    static qint64 cachedAt = 0;
+    const auto now = QDateTime::currentSecsSinceEpoch();
+    if (now - cachedAt > 60 || cache.size() > 4000) {
+        cache.clear();
+        cachedAt = now;
+    }
+    const auto key = when.toString();
+    if (const auto hit = cache.constFind(key); hit != cache.cend())
+        return hit.value();
     QDateTime time;
     if (when.typeId() == QMetaType::QString)
-        time = QDateTime::fromString(when.toString(), Qt::ISODate);
+        time = QDateTime::fromString(key, Qt::ISODate);
     else if (when.toLongLong() > 0)
         time = QDateTime::fromSecsSinceEpoch(when.toLongLong());
-    if (!time.isValid())
-        return {};
-    const auto secs = time.secsTo(QDateTime::currentDateTime());
+    const auto text = time.isValid() ? relativeText(time, now) : QString();
+    cache.insert(key, text);
+    return text;
+}
+
+QString App::relativeText(const QDateTime &time, qint64 now) {
+    const auto secs = now - time.toSecsSinceEpoch();
     if (secs < 0) {
         const auto ahead = -secs;
         if (ahead < 3600)
@@ -718,8 +790,18 @@ void App::startBackgroundWork() {
         const bool install = m_settings.value(QStringLiteral("autoUpdateExtensions")).toBool();
         runInBackground([install] {
             ext::Manager::refreshAll();
-            if (install)
-                ext::Manager::installTrustedUpdates();
+            // Updated by themselves: said, so it is not a surprise.
+            const auto updated = install ? ext::Manager::installTrustedUpdates() : QList<ext::Installed>();
+            if (!updated.isEmpty()) {
+                QStringList names;
+                for (const auto &i : updated)
+                    names.append(i.package.name);
+                Notifications::post({QStringLiteral("extensions"), QStringLiteral("extensions:updated"),
+                                     updated.size() == 1 ? tr("%1 was updated").arg(names.first())
+                                                         : tr("%1 extensions were updated").arg(updated.size()),
+                                     names.join(QStringLiteral(", ")), QVariantMap{{"page", "extensions"}}, false});
+            }
+            QMetaObject::invokeMethod(Extensions::instance(), [] { Extensions::instance()->notifyExtensionsChanged(); });
             // What is still waiting (new signing keys, or automatic
             // updates off).
             const int waiting = int(ext::Manager::updates().size());

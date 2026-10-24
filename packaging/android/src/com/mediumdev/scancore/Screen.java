@@ -1,7 +1,10 @@
 package com.mediumdev.scancore;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.provider.Settings;
 import android.os.Build;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -9,7 +12,8 @@ import android.view.WindowManager;
 import android.view.WindowInsetsController;
 
 // Turning the phone for the anime player's full screen (src/app/Platform.cpp,
-// WatchPage.qml), keeping the screen on, and the bars' icons.
+// WatchPage.qml), keeping the screen on, the bars' icons, and the player's
+// brightness and volume swipes.
 public final class Screen {
     private Screen() {}
 
@@ -21,6 +25,40 @@ public final class Screen {
             if (on) activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
+    }
+
+    // The window's brightness, 0 to 1, for the player's swipe; below 0 gives
+    // it back to the system. Only this window: the phone's setting stays.
+    public static void setBrightness(final Activity activity, final float level) {
+        activity.runOnUiThread(() -> {
+            WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+            params.screenBrightness = level < 0 ? WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE : Math.max(0.01f, Math.min(1f, level));
+            activity.getWindow().setAttributes(params);
+        });
+    }
+
+    // The brightness the window shows at: its own, else the system's.
+    public static float brightness(Activity activity) {
+        float own = activity.getWindow().getAttributes().screenBrightness;
+        if (own >= 0) return own;
+        try {
+            return Settings.System.getInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f;
+        } catch (Exception e) {
+            return 0.5f;
+        }
+    }
+
+    // Media volume, 0 to 1 (the phone's own, as its volume keys set it).
+    public static float mediaVolume(Activity activity) {
+        AudioManager audio = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        return max > 0 ? audio.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) max : 0;
+    }
+
+    public static void setMediaVolume(Activity activity, float level) {
+        AudioManager audio = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(Math.max(0f, Math.min(1f, level)) * max), 0);
     }
 
     // Status and navigation bar icons for the screen under them: light icons

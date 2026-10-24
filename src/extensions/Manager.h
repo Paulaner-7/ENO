@@ -91,7 +91,9 @@ public:
     static bool refresh(const QString &url);
     static void refreshAll();
     // Every extension the repositories list, the newest of each.
-    static QList<Package> available(std::optional<Kind> kind = std::nullopt);
+    // `repos`, when given, gets the repository each one is listed by (the
+    // one with its newest version), in the same order.
+    static QList<Package> available(std::optional<Kind> kind = std::nullopt, QStringList *repos = nullptr);
     static QString repositoryOf(Kind kind, const QString &pkg);
 
     // ---- extensions

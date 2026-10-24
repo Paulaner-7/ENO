@@ -10,6 +10,9 @@ Item {
     property string tab: "installed"
     property string query: ""
     property string language: ""
+    // Available: one kind (comic, novel, anime) and one repository, or all.
+    property string media: ""
+    property string repo: ""
     property var expanded: ({})
     property var runtimeTask: null
     property var updateTask: null
@@ -27,7 +30,22 @@ Item {
     }
     readonly property var availableList: {
         const q = query.trim().toLowerCase()
-        return availableAll.filter(p => (!language || p.languageName === language) && (!q || p.name.toLowerCase().indexOf(q) >= 0))
+        return availableAll.filter(p => (!language || p.languageName === language) && (!media || p.media === media)
+            && (!repo || p.repo === repo) && (!q || p.name.toLowerCase().indexOf(q) >= 0))
+    }
+    // The kinds the added repositories offer, for the kind chips.
+    readonly property var repoMedia: {
+        const seen = []
+        for (const r of repositories) if (seen.indexOf(r.media) < 0) seen.push(r.media)
+        return seen
+    }
+    readonly property var repoChoices: [{ value: "", label: qsTr("All repositories") }].concat(repositories.map(r => ({ value: r.url, label: r.name })))
+    // A repository's own page: what it offers.
+    function openRepository(url) {
+        repo = url
+        media = ""
+        language = ""
+        tab = "available"
     }
     // Installed ones by the extension's name, its sources' names or their sites.
     readonly property var installedShown: {
@@ -109,23 +127,72 @@ Item {
                 showBack: true
                 subtitle: page.installedList.length + (page.installedList.length === 1 ? qsTr(" installed") : qsTr(" installed"))
                     + " · " + page.repositories.length + (page.repositories.length === 1 ? qsTr(" repository") : qsTr(" repositories"))
+                ScButton { text: qsTr("Add repository"); iconName: "plus"; variant: "primary"; onClicked: Router.addRepository("") }
+            }
+
+            // Updates, where they are looked for: what is ready, or when
+            // the repositories were last checked, and a labelled button.
+            Rectangle {
+                visible: page.tab === "installed" && page.installedList.length > 0
+                x: Theme.gutter
+                width: list.width - 2 * Theme.gutter
+                height: visible ? updatesRow.implicitHeight + 24 : 0
+                radius: Theme.radiusLg
+                color: Extensions.updateCount > 0 ? Theme.alpha(Theme.accent, 0.08) : Theme.surface
+                border.width: 1
+                border.color: Extensions.updateCount > 0 ? Theme.alpha(Theme.accent, 0.3) : Theme.border
                 Row {
-                    spacing: 8
+                    id: updatesRow
+                    x: 14
+                    y: 12
+                    width: parent.width - 28
+                    spacing: 12
+                    Icon {
+                        anchors.verticalCenter: parent.verticalCenter
+                        name: Extensions.updateCount > 0 ? "download" : "check"
+                        size: 20
+                        color: Extensions.updateCount > 0 ? Theme.accent : Theme.success
+                    }
+                    Column {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width - 32 - updatesButton.width - 12
+                        spacing: 2
+                        Text {
+                            width: parent.width
+                            text: Extensions.updateCount > 0
+                                ? (Extensions.updateCount === 1 ? qsTr("1 update ready") : qsTr("%1 updates ready").arg(Extensions.updateCount))
+                                : qsTr("Extensions are up to date")
+                            color: Theme.text
+                            font.family: Theme.fontSans
+                            font.pixelSize: Theme.textSm
+                            font.weight: Font.DemiBold
+                            wrapMode: Text.Wrap
+                        }
+                        Text {
+                            width: parent.width
+                            text: (page.refreshTask && page.refreshTask.loading ? qsTr("Checking the repositories…")
+                                    : Extensions.checkedAt > 0 ? qsTr("Checked %1").arg(App.relativeTime(Extensions.checkedAt)) : qsTr("Not checked yet"))
+                                + (App.settings.autoUpdateExtensions !== false ? " · " + qsTr("trusted ones update by themselves") : "")
+                            color: Theme.textMuted
+                            font.family: Theme.fontSans
+                            font.pixelSize: Theme.textXs
+                            wrapMode: Text.Wrap
+                        }
+                    }
                     ScButton {
-                        visible: Extensions.updateCount > 0
-                        text: qsTr("Update all (") + Extensions.updateCount + ")"
-                        iconName: "download"
-                        loading: page.updateTask ? page.updateTask.loading : false
-                        onClicked: page.updateTask = Extensions.updateAll()
+                        id: updatesButton
+                        anchors.verticalCenter: parent.verticalCenter
+                        compact: true
+                        variant: Extensions.updateCount > 0 ? "primary" : "secondary"
+                        text: Extensions.updateCount > 0 ? qsTr("Update all") : qsTr("Check for updates")
+                        iconName: Extensions.updateCount > 0 ? "download" : "refresh-cw"
+                        loading: Extensions.updateCount > 0 ? (page.updateTask ? page.updateTask.loading : false)
+                                                            : (page.refreshTask ? page.refreshTask.loading : false)
+                        onClicked: {
+                            if (Extensions.updateCount > 0) page.updateTask = Extensions.updateAll()
+                            else page.refreshTask = Extensions.refreshRepositories()
+                        }
                     }
-                    IconButton {
-                        visible: page.repositories.length > 0
-                        iconName: "refresh-cw"
-                        tip: qsTr("Check repositories for updates")
-                        enabled: !(page.refreshTask && page.refreshTask.loading)
-                        onClicked: page.refreshTask = Extensions.refreshRepositories()
-                    }
-                    ScButton { text: qsTr("Add repository"); iconName: "plus"; variant: "primary"; onClicked: Router.addRepository("") }
                 }
             }
 
@@ -203,6 +270,51 @@ Item {
                         value: page.language
                         onPicked: (v) => page.language = v
                     }
+                }
+            }
+
+            // Available: by kind, repository and 18+.
+            ChipRow {
+                visible: page.tab === "available" && page.repositories.length > 0
+                width: list.width
+                Chip {
+                    visible: page.repoMedia.length > 1
+                    text: qsTr("All kinds")
+                    selected: page.media === ""
+                    onClicked: page.media = ""
+                }
+                Chip {
+                    visible: page.repoMedia.length > 1 && page.repoMedia.indexOf("comic") >= 0
+                    text: qsTr("Comics")
+                    iconName: "book-open"
+                    selected: page.media === "comic"
+                    onClicked: page.media = "comic"
+                }
+                Chip {
+                    visible: page.repoMedia.length > 1 && page.repoMedia.indexOf("novel") >= 0
+                    text: qsTr("Novels")
+                    iconName: "book-text"
+                    selected: page.media === "novel"
+                    onClicked: page.media = "novel"
+                }
+                Chip {
+                    visible: page.repoMedia.length > 1 && page.repoMedia.indexOf("anime") >= 0
+                    text: qsTr("Anime")
+                    iconName: "tv"
+                    selected: page.media === "anime"
+                    onClicked: page.media = "anime"
+                }
+                Select {
+                    visible: page.repositories.length > 1
+                    model: page.repoChoices
+                    value: page.repo
+                    title: qsTr("Repository")
+                    onPicked: (v) => page.repo = v
+                }
+                Chip {
+                    text: qsTr("18+")
+                    selected: App.settings.showNsfwSources === true
+                    onClicked: App.setSetting("showNsfwSources", !selected)
                 }
             }
 
@@ -624,6 +736,12 @@ Item {
                 color: hover.hovered ? Theme.surface2 : "transparent"
             }
             HoverHandler { id: hover }
+            // Its own page: the extensions it offers.
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: page.openRepository(row.repo.url)
+            }
             Rectangle {
                 id: badge
                 x: Theme.gutter
@@ -665,6 +783,11 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.gutter - 6
                 anchors.verticalCenter: parent.verticalCenter
+                IconButton {
+                    iconName: "chevron-right"
+                    tip: qsTr("Its extensions")
+                    onClicked: page.openRepository(row.repo.url)
+                }
                 IconButton {
                     iconName: "copy"
                     tip: qsTr("Copy link")

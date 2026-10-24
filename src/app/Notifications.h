@@ -59,6 +59,8 @@ public:
 
     // Asks Android (13 and later) to allow notifications, once.
     Q_INVOKABLE void askPermission();
+    // Whether the system shows them (Android asks first; always on desktops).
+    Q_INVOKABLE bool systemAllowed() const;
 
 signals:
     void changed();

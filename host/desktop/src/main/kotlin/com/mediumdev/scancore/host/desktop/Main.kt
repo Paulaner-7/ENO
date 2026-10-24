@@ -29,7 +29,7 @@ import java.io.PrintStream
 import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
 
-const val HOST_VERSION = "3"
+const val HOST_VERSION = "5"
 
 fun main(args: Array<String>) {
     val options = args.toList().zipWithNext().filter { it.first.startsWith("--") }.associate { it.first.removePrefix("--") to it.second }
@@ -67,6 +67,8 @@ fun setUp(
     startMainThread()
 
     AndroidCompatInitializer().init(HostNetwork.userAgent)
+    // Web views run in Chromium (downloaded on first use).
+    android.webkit.WebView.setProviderFactory { view -> CefRuntime.providerFor(view) }
     val app = Application()
     AndroidCompat().startApp(app)
 

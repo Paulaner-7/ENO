@@ -4,8 +4,11 @@
 #include "core/Backups.h"
 #include "core/Database.h"
 #include "core/Http.h"
+#include "core/ListOrder.h"
 #include "core/Migration.h"
 #include "core/Proto.h"
+#include "sources/local/Local.h"
+#include "sources/local/MihonLayout.h"
 #include "core/ThemeLook.h"
 #include "core/UpdateRules.h"
 
@@ -42,6 +45,73 @@ private slots:
     void initTestCase() {
         QVERIFY(m_dir.isValid());
         Database::open(m_dir.filePath(QStringLiteral("library.db")));
+    }
+
+    // Library lists in the user's order (issue #9): built-in and own lists
+    // together, new ones after their neighbour, hidden ones skipped when
+    // moving in the library.
+    void listOrder() {
+        const QStringList builtin{"reading", "planned", "paused", "completed", "dropped"};
+        QCOMPARE(lists::ordered(builtin + QStringList{"c-a"}, {}), builtin + QStringList{"c-a"});
+        // Stored by an older version: no order at all, or before c-b existed.
+        const QStringList stored{"c-a", "completed", "reading", "gone"};
+        QCOMPARE(lists::ordered(builtin + QStringList{"c-a", "c-b"}, stored),
+                 (QStringList{"c-a", "c-b", "completed", "dropped", "reading", "planned", "paused"}));
+        const QStringList order{"reading", "planned", "paused", "completed", "dropped", "c-a"};
+        QCOMPARE(lists::moved(order, {}, "c-a", -1, false), (QStringList{"reading", "planned", "paused", "completed", "c-a", "dropped"}));
+        QCOMPARE(lists::moved(order, {"dropped", "completed"}, "c-a", -1, true),
+                 (QStringList{"reading", "planned", "c-a", "paused", "completed", "dropped"}));
+        QCOMPARE(lists::moved(order, {}, "reading", -1, false), order);
+        QCOMPARE(lists::moved(order, {"planned", "paused", "completed", "dropped"}, "reading", 1, true),
+                 (QStringList{"planned", "paused", "completed", "dropped", "c-a", "reading"}));
+    }
+
+    // Mihon's downloads folder: sources, series, chapter folders and CBZ,
+    // matched to the chapters of a library entry by hash, name or number.
+    void mihonDownloads() {
+        QTemporaryDir tree;
+        QVERIFY(tree.isValid());
+        const auto touch = [&](const QString &relative) {
+            const auto path = tree.filePath(relative);
+            QVERIFY(QDir().mkpath(QFileInfo(path).path()));
+            QFile file(path);
+            QVERIFY(file.open(QIODevice::WriteOnly));
+            file.write("x");
+        };
+        const QString url1 = QStringLiteral("/chapter/one"), url2 = QStringLiteral("/chapter/two");
+        const auto hash1 = local::mihon::hashesFor(url1).first();
+        touch(QStringLiteral("downloads/Comix (EN)/Solo Leveling/Group_Chapter 1_%1/001.jpg").arg(hash1));
+        touch(QStringLiteral("downloads/Comix (EN)/Solo Leveling/Chapter 2.cbz"));
+        touch(QStringLiteral("downloads/Comix (EN)/Solo Leveling/Group_Chapter 3_ffffff.cbz"));
+        touch(QStringLiteral("downloads/Comix (EN)/Solo Leveling/Chapter 9_tmp/001.jpg"));
+        QVERIFY(local::mihon::isDownloads(tree.filePath(QStringLiteral("downloads"))));
+        QVERIFY(local::mihon::isDownloads(tree.filePath(QStringLiteral("downloads/Comix (EN)"))));
+        QVERIFY(!local::mihon::isDownloads(tree.filePath(QStringLiteral("downloads/Comix (EN)/Solo Leveling"))));
+        const auto sources = local::mihon::sources(tree.filePath(QStringLiteral("downloads")));
+        QCOMPARE(sources.size(), 1);
+        QCOMPARE(sources[0].name, QStringLiteral("Comix"));
+        QCOMPARE(sources[0].lang, QStringLiteral("en"));
+        const auto series = local::mihon::series(sources[0]);
+        QCOMPARE(series.size(), 1);
+        auto chapters = local::mihon::chapters(series[0].path);
+        QCOMPARE(chapters.size(), 3); // the unfinished "_tmp" one is left out
+        std::sort(chapters.begin(), chapters.end(), [](const auto &a, const auto &b) { return a.path < b.path; });
+        const QList<local::mihon::Unit> units{{url1, QStringLiteral("Chapter 1 renamed"), QStringLiteral("Group"), QStringLiteral("1")},
+                                              {url2, QStringLiteral("Chapter 2"), {}, QStringLiteral("2")},
+                                              {QStringLiteral("/chapter/three"), QStringLiteral("Chapter 3"), QStringLiteral("Group"), QStringLiteral("3")}};
+        QList<int> matched;
+        for (const auto &c : chapters)
+            matched.append(local::mihon::matchChapters({c}, units).first());
+        // "Chapter 2.cbz" (no scanlator), "Group_Chapter 1_<hash>" (by hash,
+        // though the title changed), "Group_Chapter 3_ffffff" (a hash that is
+        // not the address's, by name).
+        for (int i = 0; i < chapters.size(); ++i) {
+            const auto name = QFileInfo(chapters[i].path).fileName();
+            QCOMPARE(matched[i], name.contains(QLatin1String("Chapter 1")) ? 0 : name.contains(QLatin1String("Chapter 2")) ? 1 : 2);
+        }
+        QCOMPARE(local::mihon::chapterTitle(QStringLiteral("Group_Chapter 1_%1").arg(hash1)), QStringLiteral("Chapter 1"));
+        QCOMPARE(local::mihon::chapterTitle(QStringLiteral("Chapter 2.cbz")), QStringLiteral("Chapter 2"));
+        QCOMPARE(local::mihon::normalized(QStringLiteral("Re:Zero — Starting Life!")), local::mihon::normalized(QStringLiteral("Re_Zero  Starting Life")));
     }
 
     // Release radar: the next chapter from a series' rhythm.
@@ -374,6 +444,48 @@ private slots:
     // LNReader's zip: the novel on its plugin, chapters read by link, the
     // one part-way, bookmarks, the category; novels outside the library and
     // local ones left out.
+    // A real Komikku 1.14.1 backup made on the emulator (no user data):
+    // a merged entry (source 6969) and its parts written again after it,
+    // a hidden category, custom info, a saved search and feed, trackers
+    // and history.
+    void komikkuBackup() {
+        QFile file(QStringLiteral(SCANCORE_SOURCE_DIR "/tests/fixtures/komikku-1.14.1.tachibk"));
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const auto backup = backups::parseMihonBackup(local::gunzip(file.readAll()));
+        // Plain, Weekly, Finished, Hidden List; the merged entry is Plain's
+        // MangaDex entry, so it joins it; the merged child is not a favourite.
+        QStringList titles;
+        for (const auto &item : backup.items)
+            titles.append(item.title());
+        QCOMPARE(titles, (QStringList{"Plain Series", "Weekly Series", "Finished Series", "Hidden List Series"}));
+        QCOMPARE(backup.lists, (QStringList{"Weekly", "Secret", "Empty one"}));
+        QCOMPARE(backup.hiddenLists, QStringList{"custom:Secret"});
+        QCOMPARE(backup.savedSearches, 1);
+        QCOMPARE(backup.merged, 1);
+        QCOMPARE(backup.customInfo, 2);
+        const auto &plain = backup.items[0];
+        QCOMPARE(plain.extensionKey, QStringLiteral("mihon:2499283573021220255"));
+        QVERIFY(plain.merged);
+        QVERIFY(plain.titles.contains(QStringLiteral("Merged Thing")));
+        // The merged entry's list, as Plain itself had none.
+        QCOMPARE(plain.category, QStringLiteral("custom:Weekly"));
+        QCOMPARE(plain.anilistId, 30002);
+        QCOMPARE(plain.trackerIds.value("mangaupdates").toLongLong(), 123456);
+        QVERIFY(plain.doneLinks.contains(QStringLiteral("/chapter/c1")));
+        QVERIFY(plain.bookmarkLinks.contains(QStringLiteral("/chapter/c2")));
+        QVERIFY(plain.parts.contains(QStringLiteral("/chapter/c2")));
+        QCOMPARE(plain.readAt.value(QStringLiteral("/chapter/c1")), qint64(1791999900));
+        const auto &weekly = backup.items[1];
+        QCOMPARE(weekly.titles, (QStringList{"Weekly Series", "My Custom Title"}));
+        QCOMPARE(weekly.malId, 4242);
+        QCOMPARE(weekly.settings.value("hiddenScanlators").toStringList(), QStringList{"Bad Group"});
+        QCOMPARE(weekly.reader.value("readerMode").toString(), QStringLiteral("strip"));
+        // In Weekly (order 1) and Completed (2): the first by order.
+        QCOMPARE(backup.items[2].category, QStringLiteral("custom:Weekly"));
+        QCOMPARE(backup.items[2].otherCategories, QStringList{"completed"});
+        QCOMPARE(backup.items[3].category, QStringLiteral("custom:Secret"));
+    }
+
     void lnreaderBackup() {
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);

@@ -70,7 +70,10 @@ QJsonValue LineHost::call(const QString &method, const QJsonObject &params) {
                  '\n');
         throw error;
     };
-    const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(135);
+    // A host's own limit (Rpc.kt) and a little more: one series' details,
+    // chapters or pages may take minutes from sources that page through
+    // the site in a web view (Comix: 23 rounds for 471 chapters).
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(LineHost::slowCall(method) ? 315 : 135);
     std::unique_lock lock(waiting->mutex);
     while (!waiting->done) {
         if (CancelScope::cancelled()) {

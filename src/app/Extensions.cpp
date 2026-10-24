@@ -407,9 +407,16 @@ void Extensions::notifyExtensionsChanged() {
     emit extensionsChanged();
 }
 
+QString Extensions::hostLog() const {
+    const auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/extensions/host.log");
+    return QFileInfo(path).size() > 0 ? QUrl::fromLocalFile(path).toString() : QString();
+}
+
 QStringList Extensions::installing() const { return QStringList(m_installing.begin(), m_installing.end()); }
 
 int Extensions::updateCount() const { return int(ext::Manager::updates().size()); }
+
+qint64 Extensions::checkedAt() const { return Database::pref(QStringLiteral("extensions.checkedAt"), 0).toLongLong(); }
 
 void Extensions::setInstalling(const QString &id, bool on) {
     QMetaObject::invokeMethod(this, [this, id, on] {
@@ -592,8 +599,9 @@ void Extensions::stopInstalls() { m_stopQueue = true; }
 void Extensions::removeRepository(const QString &url) { ext::Manager::removeRepository(url); }
 
 Task *Extensions::refreshRepositories() {
-    return Task::run([]() -> QVariant {
+    return Task::run([this]() -> QVariant {
         ext::Manager::refreshAll();
+        QMetaObject::invokeMethod(this, [this] { notifyExtensionsChanged(); });
         return int(ext::Manager::updates().size());
     });
 }
@@ -649,8 +657,12 @@ QVariantList Extensions::available(const QString &kind) const {
         QVariantMap map;
     };
     QList<Row> rows;
-    for (const auto &p : ext::Manager::available(kindOf(kind))) {
-        const auto map = packageMap(p);
+    QStringList repos;
+    const auto packages = ext::Manager::available(kindOf(kind), &repos);
+    for (int i = 0; i < packages.size(); ++i) {
+        const auto &p = packages[i];
+        auto map = packageMap(p);
+        map.insert(QStringLiteral("repo"), repos.value(i));
         if (have.contains(map.value(QStringLiteral("id")).toString()) || (!adult && p.warning == ext::ContentWarning::Nsfw))
             continue;
         const auto base = baseLanguage(p.lang);

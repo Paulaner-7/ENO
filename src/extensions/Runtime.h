@@ -15,7 +15,7 @@ namespace sc::ext {
 // keep running the old host.
 class Runtime {
 public:
-    static constexpr const char *HostVersion = "3";
+    static constexpr const char *HostVersion = "5";
 
     // Where it is installed (<app data>/extensions/runtime).
     static void setDir(const QString &dir);

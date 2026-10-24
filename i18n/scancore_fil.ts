@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>Dub kapag mayroon ang source, o ang orihinal na wika na may subtitle.</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>Ano ang unang ipe-play. Pinipili ang mga video ng isang source ayon sa pangalan nila, at nagsisimula ang stream na may ilang resolution o audio track sa mga hiniling. Palitan ang alinman habang nanonood mula sa settings ng player (ang gear).</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Fit</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>Kung paano pinupuno ng larawan ang player. Nasa settings din ng player habang nanonood.</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>I-crop para mapuno</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Stretch</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Orihinal na laki</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>Mga galaw</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>Ipinapakita o itinatago ng isang tap ang mga kontrol. Nagbabago lang ang liwanag habang bukas ang SCANCORE.</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>Mag-swipe para sa liwanag, volume at pag-seek</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>Pataas o pababa sa kaliwa para sa liwanag, sa kanan para sa volume; patagilid para mag-seek.</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>I-double tap ang gilid para lumaktaw ng 10 segundo</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>Pinapahinto ng double tap sa gitna sa alinmang kaso.</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>I-hold para sa 2× bilis</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>Dobleng bilis habang nakadiin ang daliri mo.</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>Anime mula sa AniList at MyAnimeList</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>Ang pinili mo sa Panoorin mula sa para sa isang anime ay naaalala para dito, anuman ang setting dito.</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>I-play mula sa</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>Ang mga built-in na server. Hinahanapan lang ang mga extension kapag pinili mo ang Panoorin mula sa.</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>Ang mga anime extension mo, kapag malinaw na nasa isa ito; kung hindi, ikaw ang pipili.</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>Nagtatanong sa unang pag-play ng bawat anime.</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>Built-in</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Mga extension</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>Magtanong</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>Mga extension na hahanapan</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>Lahat</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>%1 ang napili</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Lahat ng extension</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>ito</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>Linya</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Lumulutang</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Kaliwa</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Kanan</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Ibaba</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>Ipakita pa</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1 kabanata</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 kabanata</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>%1 mula sa mga extension mo</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>%1 ang naghahanap pa</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1 ang nasa ilang listahan at nasa una na</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>%1 nakatagong listahan ang mananatiling nakatago</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>%1 pinagsamang entry ang pumasok bilang pangunahing source nila</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>maiiwan sa kabilang app ang mga in-edit na pamagat, cover at paglalarawan ng %1 serye</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>%1 naka-save na search ang maiiwan sa kabilang app</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>Backup ng Mihon, Komikku, TachiyomiSY, Tachiyomi o Aniyomi</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>Isang .tachibk file mula sa More → Backup and restore (Komikku: More → Data and storage). Babalik nang eksakto ang mga serye mula sa extension na mayroon ka rito.</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Backup ng Mihon, Komikku, TachiyomiSY, Tachiyomi o Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>%1 na-download na kabanata na binabasa mula sa folder ng Mihon</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>Mga kabanatang na-download sa Mihon</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Maghanap ulit</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>Idagdag ang folder</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>Pumili ng folder</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2666,6 +2858,22 @@
             <source>Delete</source>
             <translation>Burahin</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>%1 sa folder ng Mihon</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 kabanata</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>Nasa folder ng Mihon</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>Ihinto ang pagbasa ng mga ito mula sa folder ng Mihon (mananatili ang mga file)</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2903,6 +3111,74 @@
         <message>
             <source>Link copied</source>
             <translation>Nakopya ang link</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>Lahat ng repository</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>1 update ang handa</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>%1 update ang handa</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>Updated ang mga extension</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>Tinitingnan ang mga repository…</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>Na-check %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>Hindi pa na-check</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>kusang nag-a-update ang mga pinagkakatiwalaan</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>I-update lahat</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>Maghanap ng mga update</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>Lahat ng uri</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>Komiks</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Nobela</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>Anime</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>Repository</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>Mga extension nito</translation>
         </message>
     </context>
     <context>
@@ -3963,6 +4239,30 @@
             <source>Remove list</source>
             <translation>Alisin ang listahan</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Lilipat sa %1 ang mga serye nito; walang aalisin sa library mo.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Pagbabasa</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Gamitin ang pangalang %1</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>Itago ang listahan</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>Nakatago ang %1. Nananatili roon at sa Lahat ang mga serye nito; ipinapakita itong muli ng Settings → Library.</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>I-undo</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4189,6 +4489,38 @@
         <message>
             <source>Add a list</source>
             <translation>Magdagdag ng listahan</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Lilipat sa %1 ang mga serye nito; walang aalisin sa library mo.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Pagbabasa</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>Palitan ang pangalan, ayusin, o itago ang anumang listahan, at magdagdag ng sarili mo. Nananatili roon at sa Lahat ang mga serye ng nakatagong listahan. Pinapanatili ng Pagbabasa, Balak basahin, Naka-hold, Natapos at Itinigil ang kahulugan nila para sa mga tracker at backup, anuman ang pangalan nila. Dala ng mga backup ng Mihon at LNReader ang mga listahan nila.</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>Nakatago sa library</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>Built-in na listahan, dating tinawag na %1</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>Ipakita sa library</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>Itago sa library</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Gamitin ang pangalang %1</translation>
         </message>
     </context>
     <context>
@@ -4424,6 +4756,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>Tinitingnan ang mga download ng Mihon…</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>Piliin ang storage folder ng Mihon, o ang downloads folder sa loob nito. Bubukas ang mga kabanata nito nang offline mula sa library mo, kasama ang progreso mo. Walang kinokopya.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%1 kabanata ng %2 serye ang bumubukas na offline mula sa folder ng Mihon</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>%1 serye na wala sa library mo ay nasa Sa device na ito</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>Storage folder ng Mihon</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>Walang download ng Mihon sa folder na iyon. Piliin ang folder kung saan nakatago ang data ng Mihon (Mihon: More → Settings → Data and storage → Storage location), o ang downloads folder sa loob nito.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>%1 kabanata ng %2 serye mula sa Mihon ang bumubukas na offline</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>Nasa Sa device na ito ang mga download ng Mihon. Mag-import ng backup ng Mihon para maiugnay ang mga ito sa library mo.</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4476,6 +4843,38 @@
         <message>
             <source>Import</source>
             <translation>I-import</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>Ibalik ang lahat mula sa %1</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>Darating ang mga listahan mo sa pagkakasunod ng %1: %2.</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>Mga kabanatang na-download sa %1</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>Tinitingnan ang folder…</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>Binabasa mula sa folder nito pagkatapos ng import, offline at kasama ang progreso mo. Walang kinokopya.</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>Piliin ang storage folder nito (More → Settings → Data and storage) para mabasa ang mga ito dito nang offline. Walang kinokopya.</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>Napili</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Pumili</translation>
         </message>
     </context>
     <context>
@@ -4535,6 +4934,54 @@
         <message>
             <source>Quality</source>
             <translation>Kalidad</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Fit</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>Ang buong larawan</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>I-crop para mapuno</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>Walang itim na bar</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Stretch</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>Pinupuno ang screen, hindi tama ang hugis</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Orihinal na laki</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>Sarili nitong mga pixel</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>2× bilis</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>Nakaraang episode</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>Susunod na episode</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Settings</translation>
         </message>
     </context>
     <context>
@@ -5130,6 +5577,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>Opsyonal ito. May sariling built-in na sources ang SCANCORE para sa comics, nobela at anime, kaya puwede mong laktawan ang hakbang na ito at magdagdag ng repository mamaya kung gusto mo pa.</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>Pagbabasa ng komiks</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>Pumili ng progress bar</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>Ipinapakita nito kung gaano ka na kalayo sa kabanata at dinadala ka sa isang pahina. Nasa Settings → Pagbabasa ang mga kulay, gilid at lakas.</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>Manatiling updated</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>Maabisuhan</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>Mga bagong kabanata ng sinusundan mo, update ng extension at balita, sa mga notification ng phone o computer mo.</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Mga bagong kabanata</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>Kapag may bagong kabanata o episode ang mga serye sa library mo.</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>Balita mula sa SCANCORE</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>Mga anunsyo mula sa scancore.onl.</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>Payagan ang mga notification</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>Pinapayagan ang mga notification</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>Ipinapakita ito ng system mo</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5226,6 +5725,21 @@
         <message>
             <source>Done</source>
             <translation>Tapos</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>Bumalik</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Settings</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Isara</translation>
         </message>
     </context>
     <context>
@@ -5365,6 +5879,25 @@
         <message>
             <source>Cancel</source>
             <translation>Kanselahin</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>Mga pahina</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Linya</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Lumulutang</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>Wala</translation>
         </message>
     </context>
     <context>
@@ -5827,6 +6360,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>Sa mga pahina: ang double tap sa gitna ay nagzo-zoom in, ang isa pa ay zoom out.</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>Abo</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>Accent</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>Karagatan</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>Rosas</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>Mint</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>Progress bar ng komiks</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>Gaano ka na kalayo sa kabanata. I-tap o i-drag ito sa reader para pumunta sa isang pahina.</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>Ipakita</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>Palagi</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>Kasama ang controls</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>Gilid</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Kaliwa</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Kanan</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Ibaba</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>Kapal</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>Manipis</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>Makapal</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>Lakas</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>Mas mababa, mas lumilitaw ang pahina sa likod.</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>Mga kulay</translation>
         </message>
     </context>
     <context>
@@ -7051,6 +7664,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>Walang tugmang built-in na source. Nasa page ng Extensions ang mga source ng extension.</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>Log ng mga extension</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>Ang iniulat ng mga extension mula nang huling mag-start, kasama ang mga error. Ilakip ito sa isang bug report.</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Buksan</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>Puwede rin ang storage folder ng Mihon: bumubukas mula sa library mo ang mga kabanatang na-download nito.</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>Mga download ng Mihon · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8161,6 +8794,10 @@
             <source>Close</source>
             <translation>Isara</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Lahat ng extension</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8335,6 +8972,18 @@
         <message>
             <source>EP </source>
             <translation>EP </translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>Server</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Settings</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>Isara ang player</translation>
         </message>
     </context>
     <context>
@@ -8858,6 +9507,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>Buksan ang Extensions para i-update sila.</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>Na-update ang %1</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>%1 extension ang na-update</translation>
         </message>
     </context>
     <context>

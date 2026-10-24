@@ -32,6 +32,8 @@ bool charging();
 bool notify(const QString &title, const QString &body, const QString &tag);
 // Android 13 and later: ask once to allow notifications.
 void askNotificationPermission();
+// Whether the system shows SCANCORE's notifications (Android 13+ asks).
+bool notificationsAllowed();
 
 // The anime player's web view, just created: lets its video start with sound
 // and the page go full screen (see WebPlayer.java). `prepared` runs on the GUI
@@ -63,6 +65,13 @@ QImage decodeImage(const QByteArray &data);
 // The player's full screen on phones: "landscape", "portrait" (until the
 // phone is held upright) or "" (the system's rotation setting).
 void setOrientation(const QString &mode);
+// The player's swipes (Android; elsewhere brightness() is -1 and nothing
+// changes): the window's brightness 0-1 (below 0: the system's again) and
+// the media volume 0-1.
+double brightness();
+void setBrightness(double level);
+double mediaVolume();
+void setMediaVolume(double level);
 // Light status/navigation bar icons for a dark screen, dark ones for a light one.
 void setBarIcons(bool darkScreen);
 

@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>ソースにあれば吹き替え、なければ字幕付きの原語。</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>最初に再生するもの。ソースの動画は名前で選ばれ、複数の解像度や音声トラックがあるストリームは指定したもので始まります。視聴中はプレーヤーの設定（歯車）からどちらも変更できます。</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>全体を表示</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>映像をプレーヤーにどう収めるか。視聴中はプレーヤーの設定からも変えられます。</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>切り抜いて全体表示</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>引き伸ばす</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>元のサイズ</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>ジェスチャー</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>タップでコントロールを表示・非表示。明るさは SCANCORE を開いている間だけ変わります。</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>スワイプで明るさ・音量・シーク</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>左側の上下で明るさ、右側で音量、横でシーク。</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>左右をダブルタップで10秒スキップ</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>中央のダブルタップはいつでも一時停止です。</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>長押しで2倍速</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>指を置いている間、2倍速で再生します。</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>AniList と MyAnimeList のアニメ</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>アニメごとに「視聴元」で選んだものは、ここの設定に関係なく記憶されます。</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>再生元</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>内蔵サーバー。拡張機能は「視聴元」を選んだときだけ検索します。</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>アニメの拡張機能。はっきり見つかればそれを使い、そうでなければ選びます。</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>各アニメを初めて再生するときに確認します。</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>内蔵</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>拡張機能</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>確認する</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>検索する拡張機能</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>すべて</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>%1 件を選択</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>すべての拡張機能</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>このシリーズ</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>ライン</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>フローティング</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>左</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>右</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>下</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>もっと見る</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1チャプター</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1チャプター</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>拡張機能から %1 件</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>%1 件がまだ検索中</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1件は複数のリストに入っていたため、最初のリストに入れました</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>非表示のリスト %1 件は非表示のままです</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>統合エントリ %1 件はメインのソースとして取り込まれました</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>%1 作品の編集したタイトル・表紙・説明は元のアプリに残ります</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>保存した検索 %1 件は元のアプリに残ります</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>Mihon・Komikku・TachiyomiSY・Tachiyomi・Aniyomi のバックアップ</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>「その他 → バックアップと復元」の .tachibk ファイル（Komikku：「その他 → データとストレージ」）。ここにある拡張機能の作品は元のまま戻ります。</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon・Komikku・TachiyomiSY・Tachiyomi・Aniyomi のバックアップ (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>Mihon のフォルダーから読む %1 話のダウンロード</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>Mihon でダウンロードした話</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>もう一度探す</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>フォルダーを追加</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>フォルダーを選択</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2674,6 +2866,22 @@
             <source>Delete</source>
             <translation>削除</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>Mihon のフォルダーに %1 話</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1チャプター</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>Mihon のフォルダー内</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>Mihon のフォルダーから読むのをやめる（ファイルは残ります）</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2911,6 +3119,74 @@
         <message>
             <source>Link copied</source>
             <translation>リンクをコピーしました</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>すべてのリポジトリ</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>1 件の更新があります</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>%1 件の更新があります</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>拡張機能は最新です</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>リポジトリを確認中…</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>確認済み %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>まだ確認していません</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>信頼済みのものは自動で更新されます</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>すべて更新</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>アップデートを確認</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>すべての種類</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>コミック</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>小説</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>アニメ</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>リポジトリ</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>このリポジトリの拡張機能</translation>
         </message>
     </context>
     <context>
@@ -3971,6 +4247,30 @@
             <source>Remove list</source>
             <translation>リストを削除</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>作品は %1 に移ります。ライブラリからは何も削除されません。</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>読書</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>%1 の名前を使う</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>リストを非表示</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>%1 を非表示にしました。作品はそのリストと「すべて」に残ります。設定 → ライブラリで再表示できます。</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>元に戻す</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4197,6 +4497,38 @@
         <message>
             <source>Add a list</source>
             <translation>リストを追加</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>作品は %1 に移ります。ライブラリからは何も削除されません。</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>読書</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>どのリストも名前の変更・並べ替え・非表示ができ、自分のリストも追加できます。非表示リストの作品はそのリストと「すべて」に残ります。読書・読む予定・保留・完了・中断は、名前を変えてもトラッカーやバックアップでの意味は変わりません。Mihon と LNReader のバックアップはリストも持ってきます。</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>ライブラリで非表示</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>内蔵リスト（元の名前：%1）</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>ライブラリに表示</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>ライブラリで非表示にする</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>%1 の名前を使う</translation>
         </message>
     </context>
     <context>
@@ -4432,6 +4764,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>Mihon のダウンロードを確認中…</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>Mihon のストレージフォルダー、またはその中の downloads フォルダーを選んでください。そのチャプターがライブラリから進捗付きでオフラインで開けます。コピーはしません。</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%2 シリーズ、%1 話が Mihon のフォルダーからオフラインで開けます</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>ライブラリにない %1 シリーズは「このデバイス」にあります</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>Mihon のストレージフォルダー</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>そのフォルダーに Mihon のダウンロードはありません。Mihon がデータを保存するフォルダー（Mihon：もっと見る → 設定 → データとストレージ → 保存場所）、またはその中の downloads フォルダーを選んでください。</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>Mihon の %2 シリーズ、%1 話がオフラインで開けるようになりました</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>Mihon のダウンロードは「このデバイス」にあります。Mihon のバックアップをインポートするとライブラリに結び付きます。</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4484,6 +4851,38 @@
         <message>
             <source>Import</source>
             <translation>インポート</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>%1 からすべて戻す</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>リストは %1 の順に取り込まれます：%2。</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>%1 でダウンロードした話</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>フォルダーを確認中…</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>インポート後はそのフォルダーから、オフラインで進捗付きで読みます。コピーはしません。</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>ここでオフラインで読むには、ストレージフォルダー（もっと見る → 設定 → データとストレージ）を選んでください。コピーはしません。</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>選択済み</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>選択</translation>
         </message>
     </context>
     <context>
@@ -4543,6 +4942,54 @@
         <message>
             <source>Quality</source>
             <translation>画質</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>全体を表示</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>映像全体</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>切り抜いて全体表示</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>黒帯なし</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>引き伸ばす</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>画面いっぱいに引き伸ばし（縦横比が変わります）</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>元のサイズ</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>元のピクセルのまま</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>2倍速</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>前のエピソード</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>次のエピソード</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
         </message>
     </context>
     <context>
@@ -5138,6 +5585,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>これは任意です。SCANCORE にはコミック・小説・アニメの組み込みソースがあるので、この手順は飛ばして、もっと欲しくなったら後でリポジトリを追加できます。</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>コミックを読む</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>進捗バーを選ぶ</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>チャプターのどこまで読んだかを示し、ページへ移動できます。色・位置・濃さは 設定 → 読書 にあります。</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>最新情報を受け取る</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>通知を受け取る</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>フォロー中の作品の新しいチャプター、拡張機能の更新、お知らせを、スマホやパソコンの通知で。</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新しいチャプター</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>ライブラリのシリーズに新しいチャプターやエピソードが出たとき。</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>SCANCORE からのお知らせ</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>scancore.onl からのお知らせ。</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>通知を許可</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>通知は許可されています</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>システムが表示します</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5234,6 +5733,21 @@
         <message>
             <source>Done</source>
             <translation>完了</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>戻る</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
         </message>
     </context>
     <context>
@@ -5373,6 +5887,25 @@
         <message>
             <source>Cancel</source>
             <translation>キャンセル</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>ページ</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>ライン</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>フローティング</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>なし</translation>
         </message>
     </context>
     <context>
@@ -5835,6 +6368,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>ページ表示で：中央をダブルタップで拡大、もう一度で縮小。</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>グレー</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>アクセント</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>オーシャン</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>ローズ</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>ミント</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>コミックの進捗バー</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>チャプターのどこまで読んだかを示します。リーダーでタップまたはドラッグするとそのページへ移動します。</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>表示</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>常に表示</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>操作ボタンと一緒</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>位置</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>左</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>右</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>下</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>太さ</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>細い</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>太い</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>濃さ</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>下げるとページが透けて見えます。</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>色</translation>
         </message>
     </context>
     <context>
@@ -7066,6 +7679,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>一致する組み込みソースはありません。拡張機能のソースは「拡張機能」ページにあります。</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>拡張機能のログ</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>拡張機能が前回の起動以降に報告した内容（エラーを含む）。不具合報告に添付してください。</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>開く</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>Mihon のストレージフォルダーでも大丈夫です：ダウンロード済みのチャプターがライブラリから開けます。</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>Mihon のダウンロード · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8176,6 +8809,10 @@
             <source>Close</source>
             <translation>閉じる</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>すべての拡張機能</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8350,6 +8987,18 @@
         <message>
             <source>Cast to a TV</source>
             <translation>テレビにキャスト</translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>サーバー</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>プレーヤーを閉じる</translation>
         </message>
     </context>
     <context>
@@ -8866,6 +9515,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>拡張機能を開いて更新してください。</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>%1 を更新しました</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>%1 個の拡張機能を更新しました</translation>
         </message>
     </context>
     <context>

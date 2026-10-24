@@ -10,7 +10,8 @@ class QQuickWindow;
 
 namespace sc {
 
-// Development hook: SCANCORE_PROFILE=1 (with start-up steps in main.cpp)
+// Development hook: SCANCORE_PROFILE=1 (Android: the debug.scancore.profile
+// property; with start-up steps in main.cpp)
 // also reports, while the app runs, each with the page on screen and how
 // long since it opened:
 // - frames whose rendering (sync to swap) took over 24 ms,

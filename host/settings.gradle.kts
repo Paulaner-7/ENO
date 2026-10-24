@@ -19,6 +19,12 @@ dependencyResolutionManagement {
         maven("https://jitpack.io") {
             content { includeGroup("com.github.zhanghai.quickjs-java") }
         }
+        // JetBrains' JCEF (the web view extensions open on computers, as in
+        // Suwayomi); its native part comes with JetBrains Runtime, downloaded
+        // on first use.
+        maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") {
+            content { includeGroup("org.jetbrains.intellij.deps.jcef") }
+        }
     }
 }
 

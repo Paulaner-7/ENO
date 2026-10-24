@@ -28,9 +28,14 @@ Item {
     property var mergeTask: null
 
     function reload() { task = Upkeep.report() }
+    // Library changes come every couple of seconds while reading (progress):
+    // a page out of sight (another section, under a reader or the player)
+    // only notes them and reloads once it shows again.
+    property bool libraryStale: false
+    onVisibleChanged: if (visible && libraryStale) { libraryStale = false; reloadTimer.restart() }
     Connections {
         target: Library
-        function onChanged() { reloadTimer.restart() }
+        function onChanged() { if (page.visible) reloadTimer.restart(); else page.libraryStale = true }
     }
     Timer { id: reloadTimer; interval: 600; onTriggered: page.reload() }
 

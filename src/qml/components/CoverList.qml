@@ -31,8 +31,8 @@ Item {
     readonly property int slots: Math.min(items.length, windowRows)
     readonly property real offsetInView: {
         if (!view) return 0
-        void list.y
-        void view.contentHeight
+        // A bare read would be dropped by the QML compiler (no update).
+        App.dependOn(list.y, view.contentHeight)
         return list.mapToItem(view.contentItem, 0, 0).y
     }
     readonly property int firstIndex: {

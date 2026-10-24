@@ -10,6 +10,7 @@
 #include "Trackers.h"
 #include "Upkeep.h"
 #include "core/Database.h"
+#include "core/ListOrder.h"
 #include "core/Migration.h"
 #include "core/Parallel.h"
 #include "core/Text.h"
@@ -247,9 +248,60 @@ qint64 Library::categoriesChangedAt() {
     return Database::pref(kCategoriesKey).toMap().value(QStringLiteral("changed")).toLongLong();
 }
 
+QVariantMap Library::storedListLayout() {
+    return Database::pref(kCategoriesKey).toMap().value(QStringLiteral("layout")).toMap();
+}
+
+const QStringList &Library::builtinCategories() {
+    static const QStringList lists{QStringLiteral("reading"), QStringLiteral("planned"), QStringLiteral("paused"),
+                                   QStringLiteral("completed"), QStringLiteral("dropped")};
+    return lists;
+}
+
 void Library::storeCategories(const QVariantList &categories, qint64 changedAt) {
-    Database::setPref(kCategoriesKey, QVariantMap{{QStringLiteral("list"), categories}, {QStringLiteral("changed"), changedAt}});
-    QMetaObject::invokeMethod(instance(), [] { instance()->notifyChanged(); }, Qt::QueuedConnection);
+    storeCategories(categories, changedAt, storedListLayout());
+}
+
+void Library::storeCategories(const QVariantList &categories, qint64 changedAt, const QVariantMap &layout) {
+    QVariantMap value{{QStringLiteral("list"), categories}, {QStringLiteral("changed"), changedAt}};
+    if (!layout.isEmpty())
+        value.insert(QStringLiteral("layout"), layout);
+    Database::setPref(kCategoriesKey, value);
+    QMetaObject::invokeMethod(
+        instance(),
+        [] {
+            ++instance()->m_listsRevision;
+            emit instance()->listsChanged();
+            instance()->notifyChanged();
+        },
+        Qt::QueuedConnection);
+}
+
+namespace {
+
+QString listId(const QVariant &c) { return c.toMap().value(QStringLiteral("id")).toString(); }
+
+QStringList orderedLists(const QVariantList &custom, const QVariantMap &layout) {
+    QStringList all = Library::builtinCategories();
+    for (const auto &c : custom)
+        all.append(listId(c));
+    return lists::ordered(all, layout.value(QStringLiteral("order")).toStringList());
+}
+
+// Own lists stored in the shown order too, for older versions and exports.
+QVariantList inOrder(QVariantList custom, const QStringList &order) {
+    std::stable_sort(custom.begin(), custom.end(),
+                     [&](const QVariant &a, const QVariant &b) { return order.indexOf(listId(a)) < order.indexOf(listId(b)); });
+    return custom;
+}
+
+} // namespace
+
+QVariantMap Library::listLayout() const {
+    const auto custom = storedCategories();
+    auto layout = storedListLayout();
+    layout.insert(QStringLiteral("order"), orderedLists(custom, layout));
+    return layout;
 }
 
 QString Library::categoryNamed(const QString &name) {
@@ -257,10 +309,16 @@ QString Library::categoryNamed(const QString &name) {
     if (wanted.isEmpty())
         return QStringLiteral("reading");
     QMutexLocker lock(&g_categoriesMutex);
+    // A built-in list under the name it was given here (a backup made
+    // after renaming it).
+    const auto names = storedListLayout().value(QStringLiteral("names")).toMap();
+    for (auto it = names.begin(); it != names.end(); ++it)
+        if (it.value().toString().compare(wanted, Qt::CaseInsensitive) == 0)
+            return it.key();
     auto list = storedCategories();
     for (const auto &c : std::as_const(list))
         if (c.toMap().value(QStringLiteral("name")).toString().compare(wanted, Qt::CaseInsensitive) == 0)
-            return c.toMap().value(QStringLiteral("id")).toString();
+            return listId(c);
     const auto id = QStringLiteral("c-") + QUuid::createUuid().toString(QUuid::Id128).left(10);
     list.append(QVariantMap{{QStringLiteral("id"), id}, {QStringLiteral("name"), wanted.left(60)}});
     storeCategories(list, Database::now());
@@ -277,12 +335,23 @@ QString Library::addCategory(const QString &name) {
 
 void Library::renameCategory(const QString &id, const QString &name) {
     const auto wanted = name.trimmed().left(60);
-    if (wanted.isEmpty())
-        return;
     QMutexLocker lock(&g_categoriesMutex);
     auto list = storedCategories();
+    if (builtinCategories().contains(id)) {
+        auto layout = storedListLayout();
+        auto names = layout.value(QStringLiteral("names")).toMap();
+        if (wanted.isEmpty())
+            names.remove(id);
+        else
+            names.insert(id, wanted);
+        layout.insert(QStringLiteral("names"), names);
+        storeCategories(list, Database::now(), layout);
+        return;
+    }
+    if (wanted.isEmpty())
+        return;
     for (auto &c : list)
-        if (c.toMap().value(QStringLiteral("id")) == id) {
+        if (listId(c) == id) {
             auto m = c.toMap();
             m.insert(QStringLiteral("name"), wanted);
             c = m;
@@ -291,10 +360,18 @@ void Library::renameCategory(const QString &id, const QString &name) {
 }
 
 void Library::removeCategory(const QString &id) {
+    if (builtinCategories().contains(id))
+        return;
     QMutexLocker lock(&g_categoriesMutex);
     auto list = storedCategories();
-    list.removeIf([&](const QVariant &c) { return c.toMap().value(QStringLiteral("id")) == id; });
-    storeCategories(list, Database::now());
+    list.removeIf([&](const QVariant &c) { return listId(c) == id; });
+    auto layout = storedListLayout();
+    for (const auto *key : {"order", "hidden"}) {
+        auto ids = layout.value(QLatin1String(key)).toStringList();
+        if (ids.removeAll(id) > 0)
+            layout.insert(QLatin1String(key), ids);
+    }
+    storeCategories(list, Database::now(), layout);
     Database::exec(QStringLiteral("UPDATE library SET category = 'reading', changed_at = ? WHERE category = ?"), {Database::now(), id});
     for (const auto *key : {"updateLists", "autoDownloadLists"}) {
         auto lists = App::instance()->settings().value(QLatin1String(key)).toList();
@@ -305,18 +382,36 @@ void Library::removeCategory(const QString &id) {
         App::instance()->setSetting(QStringLiteral("libraryCategory"), QStringLiteral("all"));
 }
 
-void Library::moveCategory(const QString &id, int by) {
+void Library::moveCategory(const QString &id, int by, bool skipHidden) {
     QMutexLocker lock(&g_categoriesMutex);
-    auto list = storedCategories();
-    int at = -1;
-    for (int i = 0; i < list.size(); ++i)
-        if (list[i].toMap().value(QStringLiteral("id")) == id)
-            at = i;
-    const int to = at + by;
-    if (at < 0 || to < 0 || to >= list.size())
+    const auto list = storedCategories();
+    auto layout = storedListLayout();
+    auto order = orderedLists(list, layout);
+    const auto before = order;
+    order = lists::moved(order, layout.value(QStringLiteral("hidden")).toStringList(), id, by, skipHidden);
+    if (order == before)
         return;
-    list.move(at, to);
-    storeCategories(list, Database::now());
+    layout.insert(QStringLiteral("order"), order);
+    storeCategories(inOrder(list, order), Database::now(), layout);
+}
+
+void Library::setCategoryHidden(const QString &id, bool hidden) {
+    {
+        QMutexLocker lock(&g_categoriesMutex);
+        const auto list = storedCategories();
+        auto layout = storedListLayout();
+        auto ids = layout.value(QStringLiteral("hidden")).toStringList();
+        if (ids.contains(id) == hidden)
+            return;
+        if (hidden)
+            ids.append(id);
+        else
+            ids.removeAll(id);
+        layout.insert(QStringLiteral("hidden"), ids);
+        storeCategories(list, Database::now(), layout);
+    }
+    if (hidden && App::instance()->settings().value(QStringLiteral("libraryCategory")) == id)
+        App::instance()->setSetting(QStringLiteral("libraryCategory"), QStringLiteral("all"));
 }
 
 bool Library::isFavourite(const QString &seriesId) const {
@@ -490,13 +585,14 @@ void Library::saveProgress(const QVariantMap &series, const QVariantMap &unit, c
         Activity::unitFinished(seriesId.section(QLatin1Char(':'), 0, 0));
         Trackers::unitFinished(seriesId);
         // "Delete once read": the downloads of chapters finished before this
-        // one go (this one may still be open).
+        // one go (this one may still be open). Mihon's files stay.
         if (App::instance()->settings().value(QStringLiteral("deleteAfterRead")).toBool())
-            for (const auto &value : Database::query(QStringLiteral("SELECT d.unit_key FROM downloads d JOIN progress p ON p.series_id = d.series_id "
+            for (const auto &value : Database::query(QStringLiteral("SELECT d.unit_key, d.path FROM downloads d JOIN progress p ON p.series_id = d.series_id "
                                                                     "AND p.unit_key = d.unit_key WHERE d.series_id = ? AND d.status = 'done' "
                                                                     "AND p.completed = 1 AND d.unit_key != ?"),
                                                      {seriesId, key}))
-                Downloads::instance()->removeUnit(seriesId, value.toMap().value(QStringLiteral("unit_key")).toString());
+                if (!Downloads::isExternal(value.toMap().value(QStringLiteral("path")).toString()))
+                    Downloads::instance()->removeUnit(seriesId, value.toMap().value(QStringLiteral("unit_key")).toString());
     }
     notifyChanged();
 }

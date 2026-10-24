@@ -4,6 +4,8 @@ import com.mediumdev.scancore.host.ExtensionHost
 import com.mediumdev.scancore.host.HostError
 import com.sun.net.httpserver.HttpServer
 import eu.kanade.tachiyomi.network.HostNetwork
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -187,6 +189,23 @@ class HostTest {
         val fetched = call("fetchImage", mapOf("page" to pages[1].jsonObject, "target" to target.path)).jsonObject
         assertEquals("image/png", fetched["contentType"]!!.jsonPrimitive.content)
         assertEquals(File(fixtures, "image.png").readBytes().toList(), target.readBytes().toList())
+    }
+
+    // The series page asks for details and chapters at once; a source that
+    // refuses two updates of one series at a time (Keiyoushi's) still
+    // answers both, from one update.
+    @Test
+    fun detailsAndChaptersTogether() {
+        val (details, chapters) =
+            runBlocking(Dispatchers.IO) {
+                val d = async { call("details", mapOf("url" to "/series/1")) }
+                val c = async { call("chapters", mapOf("url" to "/series/1")) }
+                d.await() to c.await()
+            }
+        assertEquals("A. Writer", details.jsonObject["author"]!!.jsonPrimitive.content)
+        assertEquals(2, chapters.jsonArray.size)
+        // And one after the other, as before.
+        assertEquals(2, call("chapters", mapOf("url" to "/series/1")).jsonArray.size)
     }
 
     private fun setting(key: String) = call("preferences").jsonArray.map { it.jsonObject }.single { it["key"]!!.jsonPrimitive.content == key }

@@ -228,8 +228,7 @@ void configureHighRefreshRate(QQuickWindow *window) {
 // by step, up to the first frame on screen.
 static QElapsedTimer g_startClock;
 static void startStep(const char *step) {
-    static const bool on = qEnvironmentVariableIsSet("SCANCORE_PROFILE");
-    if (on)
+    if (sc::Profiler::enabled())
         qInfo("start-up: %-22s %5lld ms", step, g_startClock.elapsed());
 }
 

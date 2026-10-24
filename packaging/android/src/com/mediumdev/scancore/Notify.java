@@ -19,7 +19,7 @@ public final class Notify {
 
     private Notify() {}
 
-    private static boolean allowed(Context context) {
+    public static boolean allowed(Context context) {
         return Build.VERSION.SDK_INT < 33 || context.checkSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 

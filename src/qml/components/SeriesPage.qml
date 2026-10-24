@@ -38,12 +38,21 @@ Item {
     // Until the site answers, the chapter list saved last time (if any).
     readonly property var storedChapters: Library.storedUnits(seriesId)
     readonly property var chapters: task && task.ok ? task.result.chapters : storedChapters
-    readonly property var progress: { App.dependOn(Library.revision); return Library.progressMap(seriesId) }
+    // The library as of when this page was last in sight: while a reader or
+    // the player sits on top, progress saves every few seconds and would
+    // re-query and re-sort this page each time, out of sight.
+    property int libraryRevision: Library.revision
+    Connections {
+        target: Library
+        function onChanged() { if (page.visible) page.libraryRevision = Library.revision }
+    }
+    onVisibleChanged: if (visible) libraryRevision = Library.revision
+    readonly property var progress: { App.dependOn(page.libraryRevision); return Library.progressMap(seriesId) }
     readonly property var downloads: { App.dependOn(Downloads.revision); return Downloads.states(seriesId) }
-    readonly property bool saved: { App.dependOn(Library.revision); return Library.isSaved(seriesId) }
-    readonly property var bookmarks: { App.dependOn(Library.revision); return Library.bookmarks(seriesId) }
+    readonly property bool saved: { App.dependOn(page.libraryRevision); return Library.isSaved(seriesId) }
+    readonly property var bookmarks: { App.dependOn(page.libraryRevision); return Library.bookmarks(seriesId) }
     // This series' own chapter list settings: sort and filters.
-    readonly property var chapterSettings: { App.dependOn(Library.revision); return Library.seriesSettings(seriesId) }
+    readonly property var chapterSettings: { App.dependOn(page.libraryRevision); return Library.seriesSettings(seriesId) }
     readonly property bool descending: chapterSettings.sort !== "asc"
     readonly property bool onlyUnread: chapterSettings.onlyUnread === true
     readonly property bool onlyDownloaded: chapterSettings.onlyDownloaded === true
@@ -98,7 +107,7 @@ Item {
     }
 
     readonly property var resumeInfo: {
-        App.dependOn(Library.revision)
+        App.dependOn(page.libraryRevision)
         if (chapters.length === 0) return { index: 0, label: page.media === "novel" ? qsTr("Start reading") : qsTr("Start reading"), detail: "" }
         const last = Library.lastProgress(seriesId)
         if (last && last.unitKey) {
@@ -220,6 +229,8 @@ Item {
     // Continue straight from the saved chapter list; the fresh one replaces
     // it on this page when it arrives.
     Component.onCompleted: {
+        // A value from here on, not a binding that follows every change.
+        libraryRevision = Library.revision
         if (autoResume && storedChapters.length > 0) {
             autoResume = false
             Qt.callLater(() => page.openAt(page.resumeInfo.index))
@@ -484,7 +495,7 @@ Item {
             // titles: one tap to pick the entry.
             Rectangle {
                 id: missNotice
-                readonly property var misses: { App.dependOn(Trackers.services, Library.revision); return page.local ? [] : Trackers.misses(page.seriesId) }
+                readonly property var misses: { App.dependOn(Trackers.services, page.libraryRevision); return page.local ? [] : Trackers.misses(page.seriesId) }
                 readonly property var names: misses.map(k => k === "comick" ? qsTr("Comick") : (Trackers.services.find(s => s.key === k) || { label: k }).label)
                 visible: misses.length > 0
                 x: Theme.gutter
@@ -825,13 +836,18 @@ Item {
                 id: cellRow
                 x: line.modelData.cells ? Theme.gutter - 3 : 0
                 height: line.lineHeight
+                // By count, not the cells themselves: a line the list reuses
+                // for another row keeps its UnitRows and only rebinds them,
+                // where a new array made the Repeater build them again, a
+                // row created per chapter scrolled in (the lag in #9).
                 Repeater {
                     id: cellRepeater
                     onItemAdded: line.measure()
-                    model: line.cells
+                    model: line.cells.length
                     delegate: UnitRow {
                         id: unitRow
-                        required property var modelData
+                        required property int index
+                        readonly property var modelData: line.cells[index] || line.cells[0]
                         cell: !!line.modelData.cells
                         width: cell ? (list.width - 2 * Theme.gutter + 6) / page.columns : list.width
                         height: line.lineHeight

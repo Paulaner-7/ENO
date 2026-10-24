@@ -40,6 +40,8 @@ const QHash<QString, QStringList> &choices() {
         {"roundness", {"square", "subtle", "default", "round"}},
         {"coverSize", {"small", "default", "large"}},
         {"motionSpeed", {"relaxed", "default", "snappy"}},
+        {"readerProgressLook", {"segments", "line", "floating"}},
+        {"readerProgressEdge", {"left", "right", "bottom"}},
     };
     return c;
 }
@@ -64,6 +66,8 @@ QJsonObject sanitizeSettings(const QJsonObject &in) {
         out.insert("textScale", std::clamp(in.value("textScale").toDouble(), 0.8, 1.4));
     if (in.value("readerProgressWidth").isDouble())
         out.insert("readerProgressWidth", std::clamp(int(std::lround(in.value("readerProgressWidth").toDouble())), 2, 12));
+    if (in.value("readerProgressOpacity").isDouble())
+        out.insert("readerProgressOpacity", std::clamp(in.value("readerProgressOpacity").toDouble(), 0.3, 1.0));
     const auto novelTheme = in.value("novelTheme").toString();
     if (isWord(novelTheme, 24))
         out.insert("novelTheme", novelTheme);

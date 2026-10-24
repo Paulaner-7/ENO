@@ -2,6 +2,10 @@
 
 #include <QQuickWindow>
 
+#ifdef Q_OS_ANDROID
+#include <sys/system_properties.h>
+#endif
+
 namespace sc {
 
 namespace {
@@ -11,7 +15,16 @@ constexpr int kWatchMs = 20;
 } // namespace
 
 bool Profiler::enabled() {
-    static const bool on = qEnvironmentVariableIsSet("SCANCORE_PROFILE");
+    static const bool on = [] {
+#ifdef Q_OS_ANDROID
+        // Apps get no environment there: `adb shell setprop
+        // debug.scancore.profile 1` before starting it (debug builds log).
+        char value[PROP_VALUE_MAX] = {};
+        if (__system_property_get("debug.scancore.profile", value) > 0 && value[0] == '1')
+            return true;
+#endif
+        return qEnvironmentVariableIsSet("SCANCORE_PROFILE");
+    }();
     return on;
 }
 

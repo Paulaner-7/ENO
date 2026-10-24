@@ -16,6 +16,10 @@
 #include <QSaveFile>
 #include <QStandardPaths>
 #include <QUrl>
+#ifdef Q_OS_ANDROID
+#include <QJniObject>
+#include <QCoreApplication>
+#endif
 #include <QtCore/private/qzipreader_p.h>
 #include <QtCore/private/qzipwriter_p.h>
 
@@ -52,7 +56,21 @@ QString cacheFor(const QFileInfo &info) {
 // one), in reading order.
 QStringList imagesUnder(const QString &dir, bool recursive) {
     QStringList found;
-    QDirIterator it(dir, QDir::Files, recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
+    if (!recursive) {
+        // By name: a content:// address has no file name in it.
+        QList<Entry> images;
+        for (const auto &entry : entries(dir))
+            if (!entry.dir && isImage(entry.name))
+                images.append(entry);
+        QCollator collator;
+        collator.setNumericMode(true);
+        collator.setCaseSensitivity(Qt::CaseInsensitive);
+        std::sort(images.begin(), images.end(), [&](const Entry &a, const Entry &b) { return collator.compare(a.name, b.name) < 0; });
+        for (const auto &entry : images)
+            found.append(entry.path);
+        return found;
+    }
+    QDirIterator it(dir, QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         const auto path = it.next();
         if (isImage(path) && !path.contains(QLatin1String("__MACOSX")))
@@ -65,10 +83,16 @@ QStringList imagesUnder(const QString &dir, bool recursive) {
     return found;
 }
 
+// A file's address for the image loader: Android's content:// addresses
+// (folders chosen there) as they are.
+QString addressOf(const QString &path) {
+    return path.startsWith(QLatin1String("content:")) ? path : QUrl::fromLocalFile(path).toString();
+}
+
 QStringList asFileUrls(const QStringList &paths) {
     QStringList urls;
     for (const auto &path : paths)
-        urls.append(QUrl::fromLocalFile(path).toString());
+        urls.append(addressOf(path));
     return urls;
 }
 
@@ -170,6 +194,30 @@ QStringList unpacked(const QFileInfo &info) {
 
 } // namespace
 
+QList<Entry> entries(const QString &dir) {
+    QList<Entry> out;
+#ifdef Q_OS_ANDROID
+    if (dir.startsWith(QLatin1String("content:"))) {
+        const auto listed = QJniObject::callStaticObjectMethod("com/mediumdev/scancore/Folders", "list",
+                                                               "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;",
+                                                               QNativeInterface::QAndroidApplication::context().object(),
+                                                               QJniObject::fromString(dir).object<jstring>());
+        if (listed.isValid()) {
+            for (const auto &line : listed.toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts)) {
+                const auto parts = line.split(QLatin1Char('\t'));
+                if (parts.size() == 3 && !parts[0].startsWith(QLatin1Char('.')))
+                    out.append({parts[2], parts[0], parts[1] == QLatin1String("1")});
+            }
+            return out;
+        }
+    }
+#endif
+    for (const auto &info : QDir(dir).entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+        if (!info.fileName().startsWith(QLatin1Char('.')))
+            out.append({info.absoluteFilePath(), info.fileName(), info.isDir()});
+    return out;
+}
+
 QStringList folders() {
     QStringList out;
     for (const auto &value : Database::pref(QStringLiteral("setting.localFolders")).toList())
@@ -223,7 +271,7 @@ QStringList pages(const QString &path) {
     if (kZip.contains(s) || kOtherArchives.contains(s))
         return asFileUrls(unpacked(info));
     if (isImage(path))
-        return {QUrl::fromLocalFile(path).toString()};
+        return {addressOf(path)};
     throw Error(QStringLiteral("SCANCORE cannot open %1 files.").arg(s.toUpper()));
 }
 
@@ -232,7 +280,7 @@ QString cover(const QString &path) {
     if (info.isDir()) {
         const auto images = imagesUnder(path, false);
         if (!images.isEmpty())
-            return QUrl::fromLocalFile(images.first()).toString();
+            return addressOf(images.first());
         // The first chapter inside.
         QStringList entries;
         for (const auto &entry : QDir(path).entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))

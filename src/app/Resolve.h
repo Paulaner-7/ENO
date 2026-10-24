@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Parallel.h"
+#include "core/QuietSites.h"
 #include "core/Text.h"
 
 #include <QSet>
@@ -10,6 +11,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <type_traits>
 
 namespace sc {
@@ -26,11 +28,26 @@ inline bool resolveAsks(const QString &scope, const QString &key, bool enabled, 
     return enabled && key == scope;
 }
 
-// Search results that carry the other names a source lists a series under.
-// A named concept on the type: MSVC gets a requires-expression on a local
-// variable inside a lambda wrong (always false).
+// A source's site, for QuietSite (comic sources keep it in their config,
+// anime sources answer it themselves).
+template <typename SourcePtr>
+QString siteOf(const SourcePtr &source) {
+    if constexpr (requires { source->baseUrl(); })
+        return source->baseUrl();
+    else if constexpr (requires { source->config().base; })
+        return source->config().base;
+    else
+        return {};
+}
+
+// Search results that carry the other names a source lists a series under,
+// and how many chapters it has there. A named concept on the type: MSVC
+// gets a requires-expression on a local variable inside a lambda wrong
+// (always false).
 template <typename T>
 concept HasOtherNames = requires(const T &item) { item.names; };
+template <typename T>
+concept HasUnitCount = requires(const T &item) { item.units; };
 
 // "Read from" for a catalogue title: the series on the given sources listed
 // under any of its names. The main name is asked everywhere first; other
@@ -100,10 +117,17 @@ QVariantList resolveAcross(const QList<SourcePtr> &sources, const QStringList &t
         for (const auto &source : sources)
             if (!done.contains(source->key())) {
                 asked.append(source);
-                jobs.append([source, name = names[round]] {
+                jobs.append([source, name = names[round], many = sources.size() > 1] {
+                    // Many sites at once: a browser check waits for its own
+                    // button, for as long as this source's call runs.
+                    std::optional<QuietSite> quiet;
+                    if (many)
+                        quiet.emplace(siteOf(source));
                     Hit hits;
                     for (const auto &item : source->search(name)) {
-                        QStringList hit{item.title, item.url, item.cover};
+                        QStringList hit{item.title, item.url, item.cover, QStringLiteral("0")};
+                        if constexpr (HasUnitCount<std::decay_t<decltype(item)>>)
+                            hit[3] = QString::number(item.units);
                         if constexpr (HasOtherNames<std::decay_t<decltype(item)>>)
                             hit += item.names;
                         hits.append(hit);
@@ -117,19 +141,21 @@ QVariantList resolveAcross(const QList<SourcePtr> &sources, const QStringList &t
                 return;
             if (done.contains(asked[i]->key()))
                 return;
-            // A hit is [title, url, cover, other names...]: a source may list
-            // it under a translated name the catalogue does not have. A hit
-            // named so comes first; one only known by such a name (a spin-off
-            // can carry its series' name) only when none is.
+            // A hit is [title, url, cover, chapters, other names...]: a
+            // source may list it under a translated name the catalogue does
+            // not have. A hit named so comes first; one only known by such a
+            // name (a spin-off can carry its series' name) only when none is.
+            // Among hits named alike, the one with the most chapters: an
+            // aggregator (Kagane) lists a series once per uploader, some with
+            // only a few chapters.
             const QStringList *pick = nullptr;
+            const auto fuller = [](const QStringList &a, const QStringList *b) { return !b || a[3].toInt() > b->at(3).toInt(); };
             for (const auto &hit : *result.value)
-                if (wanted.contains(normalizedTitle(hit[0]))) {
+                if (wanted.contains(normalizedTitle(hit[0])) && fuller(hit, pick))
                     pick = &hit;
-                    break;
-                }
             for (int h = 0; !pick && h < result.value->size(); ++h) {
                 const auto &hit = result.value->at(h);
-                if (std::any_of(hit.begin() + 3, hit.end(), [&](const QString &n) { return wanted.contains(normalizedTitle(n)); }))
+                if (std::any_of(hit.begin() + 4, hit.end(), [&](const QString &n) { return wanted.contains(normalizedTitle(n)); }))
                     pick = &hit;
             }
             if (pick) {

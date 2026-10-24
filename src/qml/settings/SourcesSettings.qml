@@ -130,6 +130,14 @@ SettingsPane {
             description: qsTr("Paste a repository link, or open one from a repository's page with SCANCORE.")
             ScButton { text: qsTr("Add"); onClicked: Router.addRepository("") }
         }
+        // For bug reports: what extensions reported (computers).
+        SettingRow {
+            visible: App.platform !== "android" && pane.hostLog !== ""
+            iconName: "file-text"
+            title: qsTr("Extension log")
+            description: qsTr("What the extensions reported since they last started, errors included. Attach it to a bug report.")
+            ScButton { text: qsTr("Open"); variant: "ghost"; onClicked: App.openUrl(pane.hostLog) }
+        }
         SettingRow {
             iconName: "refresh-cw"
             title: qsTr("Update extensions automatically")
@@ -141,18 +149,23 @@ SettingsPane {
     // Comics and books on this device: the folders listed and searched.
     readonly property var folders: Array.from(App.settings.localFolders || [])
     // ENO: anime only. Local files are comics and books, so not here.
+    readonly property string hostLog: { App.dependOn(Extensions.revision); return Extensions.hostLog() }
     SettingsGroup {
         visible: !Router.animeOnly
         title: qsTr("On this device")
         note: qsTr("Each folder or file in these folders is a series: folders of images, CBZ, CBR, 7z and PDF files for comics, and EPUB books for novels. ")
             + qsTr("Comics and Novels list them under On this device. CBR and 7z files need 7-Zip, unrar or bsdtar installed.")
+            + " " + qsTr("Mihon's storage folder works too: the chapters it downloaded open from your library.")
         Repeater {
             model: pane.folders
             SettingRow {
                 required property string modelData
                 iconName: "folder-open"
-                title: modelData.replace(/^.*[\/\\]/, "") || modelData
-                description: modelData
+                // Android: "content://…/tree/primary%3AMihon" is "Mihon".
+                title: (/^content:/.test(modelData) ? decodeURIComponent(modelData.replace(/^.*\/(tree|document)\//, "")).replace(/^[^:]*:/, "")
+                                                    : modelData).replace(/^.*[\/\\]/, "") || modelData
+                // Mihon's folder: its chapters count as downloads (Downloads.relinkMihon).
+                description: (Downloads.mihon.roots || {})[modelData] ? qsTr("Mihon's downloads · ") + modelData : modelData
                 IconButton {
                     iconName: "x"
                     tip: qsTr("Stop listing this folder")

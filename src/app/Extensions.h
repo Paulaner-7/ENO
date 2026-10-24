@@ -39,6 +39,8 @@ class Extensions : public QObject {
     // Extensions being installed or updated right now ("<kind>:<pkg>").
     Q_PROPERTY(QStringList installing READ installing NOTIFY extensionsChanged)
     Q_PROPERTY(int updateCount READ updateCount NOTIFY extensionsChanged)
+    // When the repositories were last read for updates (seconds), or 0.
+    Q_PROPERTY(qint64 checkedAt READ checkedAt NOTIFY extensionsChanged)
     // Extensions installing in the background (after adding a repository):
     // how many in all and how many are done; both 0 when none are.
     Q_PROPERTY(int queueTotal READ queueTotal NOTIFY queueChanged)
@@ -61,10 +63,14 @@ public:
     // Downloads (or updates) the Extensions runtime, about 100 MB.
     Q_INVOKABLE sc::Task *installRuntime();
     Q_INVOKABLE void removeRuntime();
+    // Computers: what the extension host and its extensions wrote since it
+    // last started (stack traces), as a file:// address, or "" before then.
+    Q_INVOKABLE QString hostLog() const;
 
     int revision() const { return m_revision; }
     QStringList installing() const;
     int updateCount() const;
+    qint64 checkedAt() const;
 
     // ---- repositories and extensions (the Extensions page)
     // [{url, name, kind, media, website, domain, count, error}]

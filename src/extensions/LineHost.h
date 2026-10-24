@@ -4,6 +4,7 @@
 
 #include <QByteArray>
 #include <QHash>
+#include <QStringList>
 
 #include <atomic>
 #include <functional>
@@ -29,6 +30,14 @@ QString extensionAgent();
 class LineHost : public Host {
 public:
     QJsonValue call(const QString &method, const QJsonObject &params) override;
+    // Calls about one series (details, chapters, pages, episodes, hosters),
+    // which may take minutes: Rpc.kt's longer limit.
+    static bool slowCall(const QString &method) {
+        static const QStringList slow{QStringLiteral("details"), QStringLiteral("chapters"), QStringLiteral("pages"),
+                                      QStringLiteral("episodes"), QStringLiteral("seasons"), QStringLiteral("hosters"),
+                                      QStringLiteral("hosterVideos")};
+        return slow.contains(method);
+    }
 
     // The host's own questions ({"ask": n, "method", "params"}, see Rpc.kt),
     // such as a browser check to pass. Called on the thread lines arrive on;

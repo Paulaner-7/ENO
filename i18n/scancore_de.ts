@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>Eine Synchronfassung, wenn die Quelle eine hat, oder die Originalsprache mit Untertiteln.</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>Was zuerst abgespielt wird. Die Videos einer Quelle werden nach ihren Namen gewählt, und ein Stream mit mehreren Auflösungen oder Tonspuren beginnt mit den gewünschten. Beides lässt sich beim Schauen in den Einstellungen des Players (Zahnrad) ändern.</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Einpassen</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>Wie das Bild den Player füllt. Auch beim Schauen in den Einstellungen des Players.</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>Zuschneiden und füllen</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Strecken</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Originalgröße</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>Gesten</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>Ein Tippen zeigt oder verbirgt die Steuerung. Die Helligkeit ändert sich nur, solange SCANCORE offen ist.</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>Wischen für Helligkeit, Lautstärke und Spulen</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>Links hoch oder runter für die Helligkeit, rechts für die Lautstärke; seitwärts zum Spulen.</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>Doppeltippen an den Seiten springt 10 Sekunden</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>Ein Doppeltippen in der Mitte pausiert in jedem Fall.</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>Halten für 2× Geschwindigkeit</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>Spielt doppelt so schnell, solange dein Finger liegen bleibt.</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>Anime von AniList und MyAnimeList</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>Was du unter Ansehen bei für einen Anime wählst, wird für ihn gemerkt, egal was hier eingestellt ist.</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>Abspielen von</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>Die eingebauten Server. Erweiterungen werden nur durchsucht, wenn du Ansehen bei wählst.</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>Deine Anime-Erweiterungen, wenn eine ihn eindeutig hat; sonst wählst du.</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>Fragt beim ersten Abspielen jedes Animes.</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>Eingebaut</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Erweiterungen</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>Fragen</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>Erweiterungen, die durchsucht werden</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>Alle</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>%1 ausgewählt</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Alle Erweiterungen</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>sie</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>Linie</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Schwebend</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Links</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Rechts</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Unten</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>Mehr anzeigen</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1 Kapitel</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 Kapitel</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>%1 aus deinen Erweiterungen</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>%1 suchen noch</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1 waren in mehreren Listen und sind jetzt in der ersten</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>%1 ausgeblendete Listen bleiben ausgeblendet</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>%1 zusammengeführte Einträge kamen als ihre Hauptquelle</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>bearbeitete Titel, Cover und Beschreibungen von %1 Serien bleiben in der anderen App</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>%1 gespeicherte Suchen bleiben in der anderen App</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>Backup von Mihon, Komikku, TachiyomiSY, Tachiyomi oder Aniyomi</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>Eine .tachibk-Datei aus Mehr → Sichern und wiederherstellen (Komikku: Mehr → Daten und Speicher). Serien von einer Erweiterung, die du hier hast, kommen genau so zurück, wie sie waren.</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Backup von Mihon, Komikku, TachiyomiSY, Tachiyomi oder Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>%1 heruntergeladene Kapitel aus Mihons Ordner</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>Von Mihon heruntergeladene Kapitel</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Erneut suchen</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>Ordner hinzufügen</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>Ordner wählen</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2674,6 +2866,22 @@
             <source>Delete</source>
             <translation>Löschen</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>%1 in Mihons Ordner</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 Kapitel</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>In Mihons Ordner</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>Nicht mehr aus Mihons Ordner lesen (die Dateien bleiben)</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2911,6 +3119,74 @@
         <message>
             <source>Link copied</source>
             <translation>Link kopiert</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>Alle Repositorys</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>1 Update bereit</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>%1 Updates bereit</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>Erweiterungen sind aktuell</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>Repositorys werden geprüft …</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>Geprüft %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>Noch nicht geprüft</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>vertrauenswürdige aktualisieren sich selbst</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>Alle aktualisieren</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>Nach Updates suchen</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>Alle Arten</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>Comics</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Romane</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>Anime</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>Repository</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>Seine Erweiterungen</translation>
         </message>
     </context>
     <context>
@@ -3971,6 +4247,30 @@
             <source>Remove list</source>
             <translation>Liste entfernen</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Ihre Serien wandern nach %1; nichts wird aus deiner Bibliothek entfernt.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Lesen</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Den Namen %1 verwenden</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>Liste ausblenden</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>%1 ist ausgeblendet. Ihre Serien bleiben darauf und unter Alle; unter Einstellungen → Bibliothek lässt sie sich wieder einblenden.</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>Rückgängig</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4197,6 +4497,38 @@
         <message>
             <source>Add a list</source>
             <translation>Liste hinzufügen</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Ihre Serien wandern nach %1; nichts wird aus deiner Bibliothek entfernt.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Lesen</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>Benenne jede Liste um, ordne sie neu oder blende sie aus, und füge eigene hinzu. Die Serien einer ausgeblendeten Liste bleiben darauf und unter Alle. Lesen, Will ich lesen, Pausiert, Abgeschlossen und Abgebrochen behalten ihre Bedeutung für Tracker und Backups, wie auch immer sie heißen. Backups von Mihon und LNReader bringen ihre Listen mit.</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>In der Bibliothek ausgeblendet</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>Eingebaute Liste, ursprünglich %1</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>In der Bibliothek zeigen</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>In der Bibliothek ausblenden</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Den Namen %1 verwenden</translation>
         </message>
     </context>
     <context>
@@ -4432,6 +4764,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>Mihons Downloads werden durchsucht …</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>Wähle Mihons Speicherordner oder den Download-Ordner darin. Seine Kapitel öffnen sich dann offline aus deiner Bibliothek, mit deinem Fortschritt. Nichts wird kopiert.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%1 Kapitel aus %2 Serien offline aus Mihons Ordner</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>%1 Serien, die nicht in deiner Bibliothek sind, stehen unter Auf diesem Gerät</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>Mihons Speicherordner</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>In diesem Ordner sind keine Mihon-Downloads. Wähle den Ordner, in dem Mihon seine Daten ablegt (Mihon: Mehr → Einstellungen → Daten und Speicher → Speicherort), oder den Download-Ordner darin.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>%1 Kapitel aus %2 Serien von Mihon jetzt offline lesbar</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>Mihons Downloads stehen unter Auf diesem Gerät. Importiere ein Mihon-Backup, um sie mit deiner Bibliothek zu verknüpfen.</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4484,6 +4851,38 @@
         <message>
             <source>Import</source>
             <translation>Importieren</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>Alles aus %1 zurückholen</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>Deine Listen kommen in der Reihenfolge von %1: %2.</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>Von %1 heruntergeladene Kapitel</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>Ordner wird durchsucht …</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>Wird nach dem Import aus seinem Ordner gelesen, offline und mit deinem Fortschritt. Nichts wird kopiert.</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>Wähle seinen Speicherordner (Mehr → Einstellungen → Daten und Speicher), um sie hier offline zu lesen. Nichts wird kopiert.</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>Gewählt</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Wählen</translation>
         </message>
     </context>
     <context>
@@ -4543,6 +4942,54 @@
         <message>
             <source>Quality</source>
             <translation>Qualität</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Einpassen</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>Das ganze Bild</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>Zuschneiden und füllen</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>Keine schwarzen Balken</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Strecken</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>Füllt den Bildschirm, verzerrt</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Originalgröße</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>Seine eigenen Pixel</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>2× Geschwindigkeit</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>Vorherige Folge</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>Nächste Folge</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Einstellungen</translation>
         </message>
     </context>
     <context>
@@ -5138,6 +5585,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>Das ist freiwillig. SCANCORE bringt eigene eingebaute Quellen für Comics, Romane und Anime mit. Du kannst diesen Schritt überspringen und später eine Quellensammlung hinzufügen, wenn du mehr möchtest.</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>Comics lesen</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>Wähle eine Fortschrittsleiste</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>Sie zeigt, wie weit du im Kapitel bist, und bringt dich zu einer Seite. Farben, Rand und Stärke findest du unter Einstellungen → Lesen.</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>Auf dem Laufenden bleiben</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>Benachrichtigt werden</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>Neue Kapitel von dem, was du verfolgst, Erweiterungs-Updates und Neuigkeiten, in den Benachrichtigungen deines Handys oder Computers.</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Neue Kapitel</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>Wenn Serien in deiner Bibliothek neue Kapitel oder Folgen bekommen.</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>Neuigkeiten von SCANCORE</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>Ankündigungen von scancore.onl.</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>Benachrichtigungen erlauben</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>Benachrichtigungen sind erlaubt</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>Dein System zeigt sie an</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5234,6 +5733,21 @@
         <message>
             <source>Done</source>
             <translation>Fertig</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>Zurück</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Einstellungen</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Schließen</translation>
         </message>
     </context>
     <context>
@@ -5373,6 +5887,25 @@
         <message>
             <source>Cancel</source>
             <translation>Abbrechen</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>Seiten</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Linie</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Schwebend</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>Keiner</translation>
         </message>
     </context>
     <context>
@@ -5835,6 +6368,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>Auf Seiten: Doppeltippen in die Mitte zoomt hinein, nochmal zoomt heraus.</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>Grau</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>Akzent</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>Ozean</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>Rosé</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>Minze</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>Fortschrittsleiste für Comics</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>Wie weit du im Kapitel bist. Tippe oder ziehe im Reader darauf, um zu einer Seite zu springen.</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>Anzeigen</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>Immer</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>Mit Steuerung</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>Rand</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Links</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Rechts</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Unten</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>Dicke</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>Dünn</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>Dick</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>Stärke</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>Weniger lässt die Seite durchscheinen.</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>Farben</translation>
         </message>
     </context>
     <context>
@@ -7066,6 +7679,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>Keine eingebaute Quelle passt. Quellen aus Erweiterungen findest du auf der Seite Erweiterungen.</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>Erweiterungsprotokoll</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>Was die Erweiterungen seit ihrem letzten Start gemeldet haben, Fehler eingeschlossen. Hänge es an einen Fehlerbericht an.</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Öffnen</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>Mihons Speicherordner geht auch: Die heruntergeladenen Kapitel öffnen sich aus deiner Bibliothek.</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>Mihons Downloads · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8176,6 +8809,10 @@
             <source>Close</source>
             <translation>Schließen</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Alle Erweiterungen</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8350,6 +8987,18 @@
         <message>
             <source>Cast to a TV</source>
             <translation>Auf einen Fernseher streamen</translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>Server</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Einstellungen</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>Player schließen</translation>
         </message>
     </context>
     <context>
@@ -8866,6 +9515,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>Öffne Erweiterungen, um sie zu aktualisieren.</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>%1 wurde aktualisiert</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>%1 Erweiterungen wurden aktualisiert</translation>
         </message>
     </context>
     <context>

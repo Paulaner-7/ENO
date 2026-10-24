@@ -40,8 +40,10 @@ Item {
     }
     // Measuring walks the whole downloads folder, so only when what is saved
     // changes, not on every page of a running download.
-    readonly property int savedCount: items.filter(i => i.status === "done").length
+    // Chapters read from Mihon's folder come as one row per series.
+    readonly property int savedCount: items.reduce((n, i) => n + (i.status === "done" ? (i.linked || 1) : 0), 0)
     onSavedCountChanged: sizeText = Downloads.sizeOnDisk()
+    readonly property int linkedCount: items.reduce((n, i) => n + (i.linked || 0), 0)
     readonly property int failedCount: items.filter(i => i.status === "failed").length
 
     ListView {
@@ -59,7 +61,8 @@ Item {
             spacing: 14
             PageHeader {
                 title: qsTr("Downloads")
-                subtitle: page.items.filter(i => i.status === "done").length + qsTr(" saved · ") + page.sizeText
+                subtitle: (page.savedCount - page.linkedCount) + qsTr(" saved · ") + page.sizeText
+                    + (page.linkedCount > 0 ? " · " + qsTr("%1 in Mihon's folder").arg(page.linkedCount) : "")
                 Row {
                     spacing: 8
                     ScButton { visible: page.failedCount > 0; text: qsTr("Retry failed"); iconName: "refresh-cw"; onClicked: Downloads.retryFailed() }
@@ -146,7 +149,8 @@ Item {
                 spacing: 6
                 Text {
                     width: parent.width
-                    text: (row.modelData.seriesTitle || "") + " · " + (row.modelData.unitTitle || "")
+                    text: (row.modelData.seriesTitle || "") + " · "
+                        + (row.modelData.linked ? qsTr("%1 chapters").arg(row.modelData.linked) : (row.modelData.unitTitle || ""))
                     color: Theme.text
                     font.family: Theme.fontSans
                     font.pixelSize: Theme.textMd
@@ -179,6 +183,7 @@ Item {
                                 : row.count.done + qsTr(" of ") + row.count.total + qsTr(" pages"))
                             : row.modelData.status === "queued" ? qsTr("Waiting")
                             : row.modelData.status === "failed" ? (row.modelData.error || qsTr("Failed"))
+                            : row.modelData.linked ? qsTr("In Mihon's folder")
                             : qsTr("Saved ") + App.relativeTime(row.modelData.createdAt)
                         color: row.modelData.status === "failed" ? Theme.danger : Theme.textMuted
                         font.family: Theme.fontSans
@@ -202,7 +207,19 @@ Item {
                     onClicked: Router.openSeries({ media: row.modelData.media, sourceUrl: row.modelData.sourceUrl, title: row.modelData.seriesTitle, cover: row.modelData.cover, source: row.modelData.source, extra: row.modelData.extra || {} }, cover)
                 }
                 // While it runs: it stops, and what it had goes.
-                IconButton { iconName: "trash"; tip: row.modelData.status === "running" ? qsTr("Stop and delete") : qsTr("Delete"); onClicked: Downloads.remove(row.modelData.id) }
+                IconButton {
+                    visible: !row.modelData.linked
+                    iconName: "trash"
+                    tip: row.modelData.status === "running" ? qsTr("Stop and delete") : qsTr("Delete")
+                    onClicked: Downloads.remove(row.modelData.id)
+                }
+                // Mihon's files are never deleted from here.
+                IconButton {
+                    visible: !!row.modelData.linked
+                    iconName: "x"
+                    tip: qsTr("Stop reading these from Mihon's folder (the files stay)")
+                    onClicked: Downloads.unlinkSeries(row.modelData.seriesId)
+                }
             }
         }
     }

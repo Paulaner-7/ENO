@@ -31,6 +31,7 @@ class App : public QObject {
     Q_PROPERTY(QVariantMap startAction READ startAction CONSTANT)
 
 public:
+
     static App *instance();
     static App *create(QQmlEngine *, QJSEngine *) { return instance(); }
 
@@ -78,6 +79,11 @@ public:
     // full screen (see Platform.h). Nothing elsewhere.
     Q_INVOKABLE void prepareWebPlayer() const;
     Q_INVOKABLE void setOrientation(const QString &mode) const;
+    // The player's swipes on phones (see platform::brightness).
+    Q_INVOKABLE double screenBrightness() const;
+    Q_INVOKABLE void setScreenBrightness(double level) const;
+    Q_INVOKABLE double mediaVolume() const;
+    Q_INVOKABLE void setMediaVolume(double level) const;
     Q_INVOKABLE void setBarIcons(bool darkScreen) const;
     // Keeps the screen on while `holder` wants it (a playing video).
     Q_INVOKABLE void keepAwake(const QString &holder, bool on) const;
@@ -108,6 +114,7 @@ public:
     Q_INVOKABLE QString reportIssueUrl(const QString &text) const;
     Q_INVOKABLE void notify(const QString &title, const QString &body);
     Q_INVOKABLE QString relativeTime(const QVariant &when) const;
+    static QString relativeText(const QDateTime &time, qint64 now);
     // The part each chapter title names ("volume", "chapter", "extra"; see
     // chapterPart in core/Text.h), for the Volumes / Chapters / Extras tabs.
     Q_INVOKABLE QStringList chapterParts(const QStringList &titles) const;
@@ -177,6 +184,7 @@ private:
     QVariantMap m_settings;
     QTimer m_libraryTimer;
     bool m_batteryRestricted = false;
+    bool m_running = false;
     QSystemTrayIcon *m_tray = nullptr;
 };
 

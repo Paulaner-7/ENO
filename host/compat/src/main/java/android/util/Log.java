@@ -92,7 +92,12 @@ public final class Log {
         return log(priority, tag, msg);
     }
 
+    // SCANCORE: SCANCORE_HOST_LOG=1 also writes extensions' log lines to
+    // stderr (the app keeps them in extensions/host.log).
+    private static final boolean TO_STDERR = "1".equals(System.getenv("SCANCORE_HOST_LOG"));
+
     private static int log(int level, String tag, String msg) {
+        if (TO_STDERR) System.err.println(java.time.LocalTime.now() + " " + formatLog(tag, msg));
         logger.atLevel(intToLevel(level)).log(formatLog(tag, msg));
         return tag.length() + msg.length(); //Not accurate, but never used anyways
     }
@@ -102,6 +107,7 @@ public final class Log {
     }
 
     private static int log(int level, String tag, String msg, Throwable t) {
+        if (TO_STDERR) System.err.println(java.time.LocalTime.now() + " " + formatLog(tag, msg) + "\n" + getStackTraceString(t));
         logger.atLevel(intToLevel(level)).setCause(t).log(formatLog(tag, msg));
         return tag.length() + msg.length(); //Not accurate, but never used anyways
     }

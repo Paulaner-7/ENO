@@ -144,6 +144,18 @@
   "file": "MIT.txt"
  },
  {
+  "name": "JetBrains JCEF",
+  "use": "The web view extensions open on desktop",
+  "licence": "BSD-3-Clause",
+  "file": "BSD-3-Clause.txt"
+ },
+ {
+  "name": "Chromium Embedded Framework, Chromium (in a JetBrains Runtime release)",
+  "use": "That web view, downloaded the first time a source needs it",
+  "licence": "BSD-3-Clause (Chromium: various)",
+  "file": "BSD-3-Clause.txt"
+ },
+ {
   "name": "OpenJDK runtime",
   "use": "The desktop Extensions runtime (a separate download)",
   "licence": "GPL-2.0 with Classpath Exception",

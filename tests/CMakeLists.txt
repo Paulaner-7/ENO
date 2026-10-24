@@ -16,6 +16,7 @@ endif()
 # The library on a scratch database: moving series between sources.
 qt_add_executable(scancore_library_tests tst_library.cpp)
 target_link_libraries(scancore_library_tests PRIVATE scancore_core Qt6::Test Qt6::CorePrivate)
+target_compile_definitions(scancore_library_tests PRIVATE SCANCORE_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 add_test(NAME library COMMAND scancore_library_tests)
 
 # Anime episodes saved for offline playback (HLS, files).

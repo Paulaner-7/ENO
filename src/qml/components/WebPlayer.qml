@@ -3,10 +3,11 @@ import QtQuick.Window
 import QtWebEngine
 import ScanCore
 
-// Hosts a provider's player page inside a small wrapper document. The
-// wrapper polls the player's postMessage API (getTime / seek) so the app
-// can resume, auto-advance and skip intros. Pop-ups and navigation away
-// from the player are blocked.
+// Hosts a provider's player page inside a small wrapper document
+// (PlayerPage). The wrapper polls the player's postMessage API (getTime /
+// seek) so the app can resume, auto-advance and skip intros. Pop-ups and
+// navigation away from the player are blocked; touch screens get the tap
+// shield.
 Item {
     id: root
     property string url
@@ -23,23 +24,8 @@ Item {
         web.runJavaScript("window.scSeek && window.scSeek(" + Number(seconds) + ")")
     }
 
-    function wrapper(src) {
-        const safe = String(src).replace(/"/g, "&quot;").replace(/</g, "&lt;")
-        return "<!doctype html><html><head><meta charset='utf-8'>"
-            + "<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100%;height:100%}</style>"
-            + "</head><body><iframe id='f' src=\"" + safe + "\" allow='autoplay; fullscreen; encrypted-media; picture-in-picture' allowfullscreen referrerpolicy='origin'></iframe>"
-            + "<script>"
-            + "window.__sc={t:0,d:0,s:'',fs:false,h264:!!(window.MediaSource&&MediaSource.isTypeSupported('video/mp4; codecs=\\\"avc1.42E01E\\\"'))};var f=document.getElementById('f');"
-            + "addEventListener('message',function(e){if(e.source!==f.contentWindow)return;var x=e.data;"
-            + "if(typeof x==='string'){try{x=JSON.parse(x)}catch(_){return}}if(!x)return;"
-            + "if(x.currentTime!==undefined){__sc.t=+x.currentTime||0;__sc.d=+x.duration||0}"
-            + "if(x.playerStatus)__sc.s=String(x.playerStatus);"
-            + "if(x.zenCommand==='toggleFullscreen'){__sc.fs=true;}"
-            + "if(x.zenCommand==='getFullscreenState'){try{f.contentWindow.postMessage({zenFullscreenState:!!window.__sc.isFs},'*')}catch(_){}}"
-            + "});"
-            + "setInterval(function(){try{f.contentWindow.postMessage({command:'getTime'},'*')}catch(_){}},1000);"
-            + "window.scSeek=function(v){f.contentWindow.postMessage({command:'seek',value:v},'*')};"
-            + "</script></body></html>"
+    function host(address) {
+        return String(address).replace(/^[a-z]+:\/\//i, "").replace(/[\/?#].*$/, "").toLowerCase()
     }
 
     // Before the first url: shares cookies and the user agent.
@@ -47,7 +33,7 @@ Item {
 
     onUrlChanged: {
         reportedUnsupported = false
-        if (url) web.loadHtml(wrapper(url), "https://reanime.to/")
+        if (url) web.loadHtml(PlayerPage.wrapper(url, Theme.touch, false), "https://reanime.to/")
     }
 
     WebEngineView {
@@ -61,9 +47,14 @@ Item {
 
         onNewWindowRequested: (request) => { /* block pop-up ads */ }
         onNavigationRequested: (request) => {
-            // Keep the top frame on the wrapper; frames may navigate freely.
-            if (request.isMainFrame && request.url.toString() !== "about:blank"
-                && !request.url.toString().startsWith("data:") && !request.url.toString().startsWith("https://reanime.to/"))
+            // Keep the top frame on the wrapper, and the player's frame on its
+            // site: a link clicked or form sent there that leaves it is an ad.
+            const target = request.url.toString()
+            if (request.isMainFrame && target !== "about:blank" && !target.startsWith("data:") && !target.startsWith("https://reanime.to/"))
+                request.reject()
+            else if (!request.isMainFrame && root.host(target) !== root.host(root.url)
+                     && (request.navigationType === WebEngineNavigationRequest.LinkClickedNavigation
+                         || request.navigationType === WebEngineNavigationRequest.FormSubmittedNavigation))
                 request.reject()
         }
         onFullScreenRequested: (request) => {

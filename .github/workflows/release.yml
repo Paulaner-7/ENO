@@ -282,10 +282,13 @@ jobs:
             dist/*.dmg
           if-no-files-found: error
 
+  # Built beside the other packages (it used to wait for publish, and with
+  # it for every other job); only its upload to the release waits
+  # (appimage-release).
   appimage:
     name: Linux AppImage
-    needs: [version, webengine, libmpv, publish]
-    if: ${{ !cancelled() && needs.version.result == 'success' && needs.version.outputs.reuse == '' && needs.webengine.result == 'success' && needs.webengine.outputs.available == 'true' && (needs.publish.result == 'success' || needs.version.outputs.test == 'true') }}
+    needs: [version, webengine, libmpv]
+    if: ${{ !cancelled() && needs.version.result == 'success' && needs.version.outputs.reuse == '' && needs.webengine.result == 'success' && needs.webengine.outputs.available == 'true' }}
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v5
@@ -402,16 +405,27 @@ jobs:
           fi
           mkdir -p dist && mv SCANCORE-*.AppImage dist/
 
-      - name: Keep the test build's AppImage
-        if: needs.version.outputs.test == 'true'
+      # A test build keeps it (the tag publishes it from there); a release
+      # hands it to appimage-release.
+      - name: Keep the AppImage
         uses: actions/upload-artifact@v4
         with:
           name: scancore-AppImage
           path: dist/*.AppImage
           if-no-files-found: error
 
-      - name: Add AppImage to release
-        if: needs.version.outputs.test != 'true'
+  # The AppImage built by this run, added once the release exists.
+  appimage-release:
+    name: Add AppImage to release
+    needs: [version, appimage, publish]
+    if: ${{ !cancelled() && needs.version.outputs.test != 'true' && needs.version.outputs.reuse == '' && needs.appimage.result == 'success' && needs.publish.result == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: scancore-AppImage
+          path: dist
+      - name: Upload
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "${{ github.event.inputs.tag || github.ref_name }}" dist/*.AppImage --repo "$GITHUB_REPOSITORY" --clobber

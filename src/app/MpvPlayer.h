@@ -55,7 +55,8 @@ class MpvPlayer : public QQuickFramebufferObject {
     // usual place); raised while controls cover the bottom.
     Q_PROPERTY(int subtitlePosition READ subtitlePosition WRITE setSubtitlePosition NOTIFY subtitlePositionChanged)
     // How subtitles and the picture look (Settings → Anime): {subtitleScale,
-    // subtitleOutline, subtitleColor, subtitleBox, sharpen: off|fast|hq}.
+    // subtitleOutline, subtitleColor, subtitleBox, sharpen: off|fast|hq,
+    // fit: fit|crop|stretch|original}.
     // Subtitles with their own styling (ASS) keep it, apart from the size.
     Q_PROPERTY(QVariantMap look READ look WRITE setLook NOTIFY lookChanged)
     // [{id, type: video|audio|sub, title, lang, selected, external,

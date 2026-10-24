@@ -1,6 +1,8 @@
 #include "Anime.h"
 
 #include "App.h"
+
+#include <optional>
 #include "Library.h"
 #include "Platform.h"
 #include "MpvPlayer.h"
@@ -1115,13 +1117,14 @@ Task *Anime::sourceAnime(const QString &url, const QVariantMap &summary) {
     });
 }
 
-Task *Anime::watchFrom(const QVariantMap &media) {
-    return Task::run([media]() -> QVariant {
+Task *Anime::watchFrom(const QVariantMap &media, const QStringList &only) {
+    return Task::run([media, only]() -> QVariant {
         const auto language = Database::pref(QStringLiteral("setting.sourceLanguages")).toString();
         QList<std::shared_ptr<ext::AnimeSource>> sources;
         QStringList keys;
         for (const auto &source : anime::Registry::all())
-            if (source->enabled() && (language.isEmpty() || baseLanguage(source->config().language) == language)) {
+            if (source->enabled() && (only.isEmpty() ? language.isEmpty() || baseLanguage(source->config().language) == language
+                                                     : only.contains(source->key()))) {
                 sources.append(source);
                 keys.append(source->key());
             }

@@ -44,8 +44,10 @@ SettingsPane {
         }
     }
 
-    // The user's own lists (issue #9), after the built-in ones.
-    readonly property var ownLists: { App.dependOn(Library.revision); return Array.from(Library.customCategories()) }
+    // Every list in the library's order (issue #9): the built-in ones can
+    // be renamed, moved and hidden; the user's own can be removed too.
+    readonly property var allLists: Router.libraryCategories("comic", true)
+    readonly property int ownCount: allLists.filter(l => l.custom).length
     ConfirmDialog {
         id: listName
         property string listId: ""
@@ -59,35 +61,55 @@ SettingsPane {
     ConfirmDialog {
         id: listRemove
         property var list: null
-        heading: list ? qsTr("Remove the list %1?").arg(list.name) : ""
-        message: qsTr("Its series move to Reading; nothing is removed from your library.")
+        heading: list ? qsTr("Remove the list %1?").arg(list.label) : ""
+        message: qsTr("Its series move to %1; nothing is removed from your library.")
+            .arg((pane.allLists.find(c => c.value === "reading") || { label: qsTr("Reading") }).label)
         confirmText: qsTr("Remove")
         destructive: true
-        onConfirmed: Library.removeCategory(list.id)
+        onConfirmed: Library.removeCategory(list.value)
     }
 
     SettingsGroup {
-        title: qsTr("Your lists")
-        note: qsTr("Lists of your own sit beside Reading, Plan to read, On hold, Completed and Dropped, for comics, novels and anime. Mihon and LNReader backups bring theirs along. Long-press or right-click one in the library to change it there.")
+        title: qsTr("Lists")
+        note: qsTr("Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.")
         Repeater {
-            model: pane.ownLists
+            model: pane.allLists
             SettingRow {
                 required property var modelData
                 required property int index
-                iconName: "list"
-                title: modelData.name
+                iconName: modelData.custom ? "list" : "bookmark"
+                title: modelData.label
+                description: modelData.hidden ? qsTr("Hidden from the library")
+                    : modelData.renamed ? qsTr("Built-in list, first called %1").arg(modelData.defaultLabel) : ""
+                opacity: modelData.hidden ? 0.7 : 1
                 Row {
                     spacing: 2
-                    IconButton { iconName: "pencil"; tip: qsTr("Rename"); onClicked: listName.ask(modelData.id, modelData.name) }
-                    IconButton { iconName: "chevron-up"; tip: qsTr("Move up"); enabled: index > 0; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.id, -1) }
-                    IconButton { iconName: "chevron-down"; tip: qsTr("Move down"); enabled: index < pane.ownLists.length - 1; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.id, 1) }
-                    IconButton { iconName: "trash"; tip: qsTr("Remove list"); onClicked: { listRemove.list = modelData; listRemove.open() } }
+                    IconButton { iconName: "pencil"; tip: qsTr("Rename"); onClicked: listName.ask(modelData.value, modelData.label) }
+                    IconButton {
+                        iconName: modelData.hidden ? "eye-off" : "eye"
+                        tip: modelData.hidden ? qsTr("Show in the library") : qsTr("Hide from the library")
+                        active: modelData.hidden
+                        onClicked: Library.setCategoryHidden(modelData.value, !modelData.hidden)
+                    }
+                    IconButton { iconName: "chevron-up"; tip: qsTr("Move up"); enabled: index > 0; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.value, -1) }
+                    IconButton { iconName: "chevron-down"; tip: qsTr("Move down"); enabled: index < pane.allLists.length - 1; opacity: enabled ? 1 : 0.35; onClicked: Library.moveCategory(modelData.value, 1) }
+                    // Built-in lists cannot go: the space keeps the columns.
+                    IconButton {
+                        iconName: modelData.custom ? "trash" : "rotate-ccw"
+                        tip: modelData.custom ? qsTr("Remove list") : qsTr("Use the name %1").arg(modelData.defaultLabel)
+                        enabled: modelData.custom || modelData.renamed
+                        opacity: enabled ? 1 : 0
+                        onClicked: {
+                            if (modelData.custom) { listRemove.list = modelData; listRemove.open() }
+                            else Library.renameCategory(modelData.value, "")
+                        }
+                    }
                 }
             }
         }
         SettingRow {
             iconName: "plus"
-            title: pane.ownLists.length ? qsTr("Add another list") : qsTr("Add a list")
+            title: pane.ownCount ? qsTr("Add another list") : qsTr("Add a list")
             ScButton { text: qsTr("New list"); iconName: "plus"; onClicked: listName.ask("", "") }
         }
     }
@@ -100,7 +122,7 @@ SettingsPane {
         width: Math.min(520, pane.width - 120)
         spacing: 6
         Repeater {
-            model: Router.libraryCategories("comic")
+            model: Router.libraryCategories("comic", true)
             Chip {
                 required property var modelData
                 text: modelData.label

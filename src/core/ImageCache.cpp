@@ -93,6 +93,11 @@ void ImageCache::setRefererWriter(const QString &scheme, RefererWriter writer) {
 QByteArray ImageCache::fetch(const QString &url, const QString &referer) {
     if (url.startsWith(QLatin1String("pdfpage:")))
         return local::renderPdfPage(url);
+    // Android: files in a folder chosen there are content:// addresses.
+    if (url.startsWith(QLatin1String("content:"))) {
+        QFile file(url);
+        return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+    }
     if (url.startsWith(QLatin1String("file:")) || url.startsWith(QLatin1Char('/'))) {
         QFile file(url.startsWith(QLatin1String("file:")) ? QUrl(url).toLocalFile() : url);
         return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();

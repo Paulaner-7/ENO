@@ -15,20 +15,29 @@ namespace sc::backups {
 
 namespace {
 // A category (Mihon and Aniyomi): its order (what entries refer to) and name.
-std::pair<qint64, QString> parseCategory(QByteArrayView bytes) {
-    Proto c(bytes);
-    QString name;
+struct Category {
     qint64 order = 0;
+    QString name;
+    bool hidden = false; // Komikku (900)
+};
+Category parseCategory(QByteArrayView bytes) {
+    Proto c(bytes);
+    Category out;
     while (c.next()) {
         if (c.field() == 1)
-            name = c.text();
+            out.name = c.text();
         else if (c.field() == 2)
-            order = qint64(c.varint());
+            out.order = qint64(c.varint());
+        else if (c.field() == 900)
+            out.hidden = c.varint() != 0;
         else
             c.skip();
     }
-    return {order, name};
+    return out;
 }
+
+// TachiyomiSY's merged source: an entry made of other entries.
+constexpr quint64 kMergedSource = 6969;
 
 // An entry's category orders: repeated varints, packed or not.
 void readOrders(Proto &m, QList<qint64> &out) {
@@ -95,6 +104,14 @@ bool parseEntry(QByteArrayView bytes, bool anime, quint64 &source, Item &item, Q
     QString title;
     qint64 viewer = 0;
     QStringList hidden;
+    // A merged entry's parts: {source, url, main part}.
+    struct Merged {
+        quint64 source = 0;
+        QString url;
+        bool info = false;
+    };
+    QList<Merged> parts;
+    QString customTitle;
     while (m.next()) {
         switch (m.field()) {
         case 1: source = m.varint(); break;
@@ -204,6 +221,35 @@ bool parseEntry(QByteArrayView bytes, bool anime, quint64 &source, Item &item, Q
                 hidden.append(name);
             break;
         }
+        // TachiyomiSY / Komikku: BackupMergedMangaReference (is the info
+        // entry 1, url 7, source 8).
+        case 600: {
+            Proto ref(m.bytes());
+            Merged part;
+            while (ref.next()) {
+                switch (ref.field()) {
+                case 1: part.info = ref.varint() != 0; break;
+                case 7: part.url = ref.text(); break;
+                case 8: part.source = ref.varint(); break;
+                default: ref.skip();
+                }
+            }
+            if (part.source != kMergedSource && !part.url.isEmpty())
+                parts.append(part);
+            break;
+        }
+        // Edited info: title 800; status 602, cover 603, artist 801,
+        // author 802, description 804, genres 805.
+        case 800: customTitle = m.text().trimmed(); item.customInfo = true; break;
+        case 602:
+        case 603:
+        case 801:
+        case 802:
+        case 804:
+        case 805:
+            item.customInfo = true;
+            m.skip();
+            break;
         default: m.skip();
         }
     }
@@ -212,6 +258,19 @@ bool parseEntry(QByteArrayView bytes, bool anime, quint64 &source, Item &item, Q
     if (!favorite || title.isEmpty())
         return false;
     item.titles = {title};
+    if (!customTitle.isEmpty() && customTitle.compare(title, Qt::CaseInsensitive) != 0)
+        item.titles.append(customTitle);
+    // A merged entry: its main part (else its first) on that part's source,
+    // so it opens there; the parts' read chapters keep their own links.
+    if (source == kMergedSource) {
+        if (parts.isEmpty())
+            return false;
+        const auto main = std::find_if(parts.begin(), parts.end(), [](const Merged &p) { return p.info; });
+        const auto &part = main != parts.end() ? *main : parts.first();
+        source = part.source;
+        item.url = part.url;
+        item.merged = true;
+    }
     item.count = int(tracked);
     // Chapter list and reader settings are for comics; the anime page has
     // its own.
@@ -245,6 +304,42 @@ Repository parseRepository(QByteArrayView bytes) {
 
 } // namespace
 
+namespace {
+// The same series backed up twice: what either copy knows.
+void mergeInto(Item &into, const Item &other) {
+    for (const auto &t : other.titles)
+        if (!into.titles.contains(t, Qt::CaseInsensitive))
+            into.titles.append(t);
+    if (into.cover.isEmpty())
+        into.cover = other.cover;
+    into.doneLinks.unite(other.doneLinks);
+    into.bookmarkLinks.unite(other.bookmarkLinks);
+    for (auto it = other.parts.cbegin(); it != other.parts.cend(); ++it)
+        if (!into.parts.contains(it.key()) && !into.doneLinks.contains(it.key()))
+            into.parts.insert(it.key(), it.value());
+    for (auto it = other.readAt.cbegin(); it != other.readAt.cend(); ++it)
+        into.readAt.insert(it.key(), std::max(into.readAt.value(it.key()), it.value()));
+    for (const auto n : other.numbers)
+        if (!into.numbers.contains(n))
+            into.numbers.append(n);
+    into.count = std::max(into.count, other.count);
+    into.anilistId = into.anilistId ? into.anilistId : other.anilistId;
+    into.malId = into.malId ? into.malId : other.malId;
+    for (auto it = other.trackerIds.cbegin(); it != other.trackerIds.cend(); ++it)
+        if (!into.trackerIds.contains(it.key()))
+            into.trackerIds.insert(it.key(), it.value());
+    into.updatedAt = std::max(into.updatedAt, other.updatedAt);
+    if (other.addedAt > 0 && (into.addedAt == 0 || other.addedAt < into.addedAt))
+        into.addedAt = other.addedAt;
+    if (into.settings.isEmpty())
+        into.settings = other.settings;
+    if (into.reader.isEmpty())
+        into.reader = other.reader;
+    into.customInfo = into.customInfo || other.customInfo;
+    into.merged = into.merged || other.merged;
+}
+} // namespace
+
 // SCANCORE's list for a category name from another app ("Reading",
 // "Plan to watch", "On hold"…); empty when it says nothing about it.
 QString categoryNamed(const QString &name) {
@@ -271,6 +366,7 @@ MihonBackup parseMihonBackup(const QByteArray &data) {
     QHash<quint64, QString> animeSourceNames;
     QMap<qint64, QString> categoryNames;
     QMap<qint64, QString> animeCategoryNames;
+    QStringList hiddenNames;
     struct Entry {
         quint64 source = 0;
         Item item;
@@ -300,8 +396,10 @@ MihonBackup parseMihonBackup(const QByteArray &data) {
             const auto [id, name] = sourceOf(backup.bytes());
             (f == 101 ? sourceNames : animeSourceNames).insert(id, name);
         } else if (f == 2 || f == 4 || f == 502) {
-            const auto [order, name] = parseCategory(backup.bytes());
-            (f == 2 ? categoryNames : animeCategoryNames).insert(order, name);
+            const auto category = parseCategory(backup.bytes());
+            (f == 2 ? categoryNames : animeCategoryNames).insert(category.order, category.name);
+            if (category.hidden)
+                hiddenNames.append(category.name);
         } else if (f == 1 || f == 3 || f == 501) {
             Entry entry;
             if (parseEntry(backup.bytes(), f != 1, entry.source, entry.item, entry.categories))
@@ -309,6 +407,11 @@ MihonBackup parseMihonBackup(const QByteArray &data) {
         } else if (f == 106) {
             if (auto repo = parseRepository(backup.bytes()); repo.url.startsWith(QLatin1String("https://")))
                 out.repositories.append(repo);
+        } else if (f == 600) {
+            // TachiyomiSY / Komikku saved searches (their feeds, 610, are
+            // the same searches shown on Browse).
+            ++out.savedSearches;
+            backup.skip();
         } else {
             backup.skip();
         }
@@ -329,9 +432,32 @@ MihonBackup parseMihonBackup(const QByteArray &data) {
         for (const auto &name : *names)
             if (const auto list = listFor(name); list.startsWith(QLatin1String("custom:")) && !out.lists.contains(list.mid(7), Qt::CaseInsensitive))
                 out.lists.append(list.mid(7));
+    for (const auto &name : std::as_const(hiddenNames))
+        if (const auto list = listFor(name); !list.isEmpty() && !out.hiddenLists.contains(list))
+            out.hiddenLists.append(list);
     const auto finish = [&](QList<Entry> &entries, const QHash<quint64, QString> &names, const QMap<qint64, QString> &categories,
                             const QString &kind) {
+        // One entry per series: Komikku writes a merged entry's parts
+        // again after it, and a merged entry becomes its main part.
+        QHash<QPair<quint64, QString>, int> seen;
+        QList<Entry> unique;
         for (auto &entry : entries) {
+            const auto key = qMakePair(entry.source, entry.item.url);
+            const auto at = seen.value(key, -1);
+            if (at < 0) {
+                seen.insert(key, int(unique.size()));
+                unique.append(entry);
+                continue;
+            }
+            mergeInto(unique[at].item, entry.item);
+            for (const auto c : std::as_const(entry.categories))
+                if (!unique[at].categories.contains(c))
+                    unique[at].categories.append(c);
+        }
+        entries = unique;
+        for (auto &entry : entries) {
+            out.customInfo += entry.item.customInfo ? 1 : 0;
+            out.merged += entry.item.merged ? 1 : 0;
             auto &item = entry.item;
             item.sourceName = names.value(entry.source);
             item.sourceId = entry.source;

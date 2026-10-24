@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>เสียงพากย์เมื่อแหล่งมีให้ หรือภาษาต้นฉบับพร้อมคำบรรยาย</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>สิ่งที่เล่นก่อน วิดีโอของแหล่งจะเลือกจากชื่อ และสตรีมที่มีหลายความละเอียดหรือแทร็กเสียงจะเริ่มที่ตัวที่ขอไว้ เปลี่ยนได้ขณะดูจากการตั้งค่าเครื่องเล่น (ไอคอนเฟือง)</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>พอดี</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>ภาพเต็มเครื่องเล่นแบบไหน ปรับได้ในการตั้งค่าเครื่องเล่นขณะดูด้วย</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>ครอปให้เต็ม</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>ยืด</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>ขนาดเดิม</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>ท่าทาง</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>แตะเพื่อแสดงหรือซ่อนปุ่มควบคุม ความสว่างเปลี่ยนเฉพาะตอนที่ SCANCORE เปิดอยู่</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>ปัดเพื่อปรับความสว่าง เสียง และเลื่อน</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>ขึ้นหรือลงทางซ้ายเพื่อปรับความสว่าง ทางขวาเพื่อปรับเสียง ปัดด้านข้างเพื่อเลื่อน</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>แตะสองครั้งด้านข้างเพื่อข้าม 10 วินาที</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>แตะสองครั้งตรงกลางเพื่อหยุดชั่วคราวเสมอ</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>กดค้างเพื่อเล่น 2×</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>เล่นเร็วขึ้นสองเท่าขณะที่นิ้วยังแตะอยู่</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>อนิเมะจาก AniList และ MyAnimeList</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>สิ่งที่คุณเลือกใน ดูจาก สำหรับอนิเมะแต่ละเรื่องจะถูกจำไว้ ไม่ว่าตั้งค่าตรงนี้อย่างไร</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>เล่นจาก</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>เซิร์ฟเวอร์ในตัว ค้นหาในส่วนขยายเฉพาะเมื่อคุณเลือก ดูจาก</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>ส่วนขยายอนิเมะของคุณ เมื่อมีส่วนขยายหนึ่งที่มีแน่ชัด ไม่เช่นนั้นคุณเลือกเอง</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>ถามเมื่อเล่นอนิเมะแต่ละเรื่องครั้งแรก</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>ในตัว</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>ส่วนขยาย</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>ถาม</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>ส่วนขยายที่จะค้นหา</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>ทั้งหมด</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>เลือกแล้ว %1</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>ส่วนขยายทั้งหมด</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>เรื่องนี้</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>เส้น</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>ลอย</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>ซ้าย</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>ขวา</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>ล่าง</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>แสดงเพิ่มเติม</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1 ตอน</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 ตอน</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>%1 จากส่วนขยายของคุณ</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>ยังค้นหาอยู่ %1</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1 เรื่องอยู่หลายรายการ จึงใส่ไว้ในรายการแรก</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>รายการที่ซ่อน %1 รายการยังคงซ่อนอยู่</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>รายการที่รวมกัน %1 รายการเข้ามาเป็นแหล่งหลัก</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>ชื่อเรื่อง ปก และคำอธิบายที่แก้ไขของ %1 เรื่องอยู่ในแอปเดิม</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>การค้นหาที่บันทึกไว้ %1 รายการอยู่ในแอปเดิม</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>ไฟล์สำรองของ Mihon, Komikku, TachiyomiSY, Tachiyomi หรือ Aniyomi</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>ไฟล์ .tachibk จาก เพิ่มเติม → สำรองและกู้คืน (Komikku: เพิ่มเติม → ข้อมูลและพื้นที่เก็บ) เรื่องจากส่วนขยายที่คุณมีที่นี่จะกลับมาเหมือนเดิมทุกอย่าง</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>ไฟล์สำรองของ Mihon, Komikku, TachiyomiSY, Tachiyomi หรือ Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>ตอนที่ดาวน์โหลดไว้ %1 ตอนอ่านจากโฟลเดอร์ของ Mihon</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>ตอนที่ดาวน์โหลดใน Mihon</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>ค้นหาอีกครั้ง</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>เพิ่มโฟลเดอร์</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>เลือกโฟลเดอร์</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2666,6 +2858,22 @@
             <source>Delete</source>
             <translation>ลบ</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>%1 ในโฟลเดอร์ของ Mihon</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 ตอน</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>ในโฟลเดอร์ของ Mihon</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>หยุดอ่านจากโฟลเดอร์ของ Mihon (ไฟล์ยังอยู่)</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2903,6 +3111,74 @@
         <message>
             <source>Link copied</source>
             <translation>คัดลอกลิงก์แล้ว</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>ทุกคลัง</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>มีอัปเดตพร้อม 1 รายการ</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>มีอัปเดตพร้อม %1 รายการ</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>ส่วนขยายเป็นเวอร์ชันล่าสุด</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>กำลังตรวจคลัง…</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>ตรวจแล้ว %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>ยังไม่ได้ตรวจ</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>ส่วนขยายที่เชื่อถือจะอัปเดตเอง</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>อัปเดตทั้งหมด</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>ตรวจหาการอัปเดต</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>ทุกประเภท</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>การ์ตูน</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>นิยาย</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>อนิเมะ</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>คลัง</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>ส่วนขยายของคลังนี้</translation>
         </message>
     </context>
     <context>
@@ -3963,6 +4239,30 @@
             <source>Remove list</source>
             <translation>ลบรายการ</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>เรื่องในนั้นจะย้ายไป %1 ไม่มีอะไรถูกลบออกจากคลัง</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>การอ่าน</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>ใช้ชื่อ %1</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>ซ่อนรายการ</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>ซ่อน %1 แล้ว เรื่องในนั้นยังอยู่ในรายการนั้นและใน ทั้งหมด; การตั้งค่า → คลัง แสดงกลับได้</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>เลิกทำ</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4189,6 +4489,38 @@
         <message>
             <source>Add a list</source>
             <translation>เพิ่มรายการ</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>เรื่องในนั้นจะย้ายไป %1 ไม่มีอะไรถูกลบออกจากคลัง</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>การอ่าน</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>เปลี่ยนชื่อ จัดลำดับ หรือซ่อนรายการใดก็ได้ และเพิ่มรายการของคุณเอง เรื่องในรายการที่ซ่อนยังอยู่ในรายการนั้นและใน ทั้งหมด การอ่าน วางแผนจะอ่าน พักไว้ จบแล้ว และเลิกแล้ว ยังมีความหมายเดิมสำหรับตัวติดตามและไฟล์สำรองไม่ว่าจะตั้งชื่ออะไร ไฟล์สำรองของ Mihon และ LNReader นำรายการมาด้วย</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>ซ่อนจากคลัง</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>รายการในตัว เดิมชื่อ %1</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>แสดงในคลัง</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>ซ่อนจากคลัง</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>ใช้ชื่อ %1</translation>
         </message>
     </context>
     <context>
@@ -4424,6 +4756,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>กำลังดูดาวน์โหลดของ Mihon…</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>เลือกโฟลเดอร์จัดเก็บของ Mihon หรือโฟลเดอร์ downloads ข้างใน แล้วตอนต่าง ๆ จะเปิดแบบออฟไลน์จากคลังของคุณพร้อมความคืบหน้า ไม่มีการคัดลอกใด ๆ</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%1 ตอนจาก %2 เรื่องเปิดแบบออฟไลน์จากโฟลเดอร์ของ Mihon</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>%1 เรื่องที่ไม่อยู่ในคลังของคุณอยู่ใน บนอุปกรณ์นี้</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>โฟลเดอร์จัดเก็บของ Mihon</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>ไม่มีดาวน์โหลดของ Mihon ในโฟลเดอร์นั้น เลือกโฟลเดอร์ที่ Mihon เก็บข้อมูล (Mihon: เพิ่มเติม → การตั้งค่า → ข้อมูลและพื้นที่จัดเก็บ → ตำแหน่งจัดเก็บ) หรือโฟลเดอร์ downloads ข้างใน</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>ตอนที่ %1 จาก %2 เรื่องของ Mihon เปิดแบบออฟไลน์ได้แล้ว</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>ดาวน์โหลดของ Mihon อยู่ใน บนอุปกรณ์นี้ นำเข้าข้อมูลสำรองของ Mihon เพื่อเชื่อมเข้ากับคลังของคุณ</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4476,6 +4843,38 @@
         <message>
             <source>Import</source>
             <translation>นำเข้า</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>นำทุกอย่างกลับมาจาก %1</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>รายการของคุณมาตามลำดับของ %1: %2</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>ตอนที่ดาวน์โหลดใน %1</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>กำลังดูโฟลเดอร์…</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>อ่านจากโฟลเดอร์ของแอปหลังนำเข้า แบบออฟไลน์พร้อมความคืบหน้า ไม่มีการคัดลอกใด ๆ</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>เลือกโฟลเดอร์จัดเก็บของแอป (เพิ่มเติม → การตั้งค่า → ข้อมูลและพื้นที่จัดเก็บ) เพื่ออ่านที่นี่แบบออฟไลน์ ไม่มีการคัดลอกใด ๆ</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>เลือกแล้ว</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>เลือก</translation>
         </message>
     </context>
     <context>
@@ -4535,6 +4934,54 @@
         <message>
             <source>Quality</source>
             <translation>คุณภาพ</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>พอดี</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>ภาพทั้งหมด</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>ครอปให้เต็ม</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>ไม่มีแถบดำ</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>ยืด</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>เต็มจอ แต่ภาพผิดสัดส่วน</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>ขนาดเดิม</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>พิกเซลเดิมของภาพ</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>ความเร็ว 2×</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>ตอนก่อนหน้า</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>ตอนถัดไป</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>การตั้งค่า</translation>
         </message>
     </context>
     <context>
@@ -5130,6 +5577,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>ขั้นตอนนี้ไม่บังคับ SCANCORE มีแหล่งในตัวสำหรับการ์ตูน นิยาย และอนิเมะอยู่แล้ว คุณจึงข้ามขั้นตอนนี้และเพิ่มคลังภายหลังได้หากต้องการมากกว่านี้</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>การอ่านการ์ตูน</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>เลือกแถบความคืบหน้า</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>แสดงว่าคุณอ่านตอนนี้ไปแค่ไหนและพาไปยังหน้าได้ สี ขอบ และความเข้มอยู่ใน การตั้งค่า → การอ่าน</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>ติดตามข่าวสาร</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>รับการแจ้งเตือน</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>ตอนใหม่ของเรื่องที่คุณติดตาม อัปเดตส่วนขยาย และข่าว ในการแจ้งเตือนของโทรศัพท์หรือคอมพิวเตอร์</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>ตอนใหม่</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>เมื่อเรื่องในคลังของคุณมีตอนใหม่</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>ข่าวจาก SCANCORE</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>ประกาศจาก scancore.onl</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>อนุญาตการแจ้งเตือน</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>อนุญาตการแจ้งเตือนแล้ว</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>ระบบของคุณแสดงการแจ้งเตือน</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5226,6 +5725,21 @@
         <message>
             <source>Done</source>
             <translation>เสร็จ</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>ย้อนกลับ</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>การตั้งค่า</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>ปิด</translation>
         </message>
     </context>
     <context>
@@ -5365,6 +5879,25 @@
         <message>
             <source>Cancel</source>
             <translation>ยกเลิก</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>หน้า</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>เส้น</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>ลอย</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>ไม่มี</translation>
         </message>
     </context>
     <context>
@@ -5827,6 +6360,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>ในโหมดหน้า: แตะสองครั้งตรงกลางเพื่อซูมเข้า แตะอีกครั้งเพื่อซูมออก</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>เทา</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>สีเน้น</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>มหาสมุทร</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>ชมพู</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>มิ้นต์</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>แถบความคืบหน้าของการ์ตูน</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>คุณอ่านตอนนี้ไปแค่ไหนแล้ว แตะหรือลากบนแถบในตัวอ่านเพื่อไปยังหน้านั้น</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>แสดง</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>ตลอดเวลา</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>พร้อมตัวควบคุม</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>ขอบ</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>ซ้าย</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>ขวา</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>ล่าง</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>ความหนา</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>บาง</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>หนา</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>ความเข้ม</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>ค่าน้อยลงจะเห็นหน้าทะลุผ่าน</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>สี</translation>
         </message>
     </context>
     <context>
@@ -7051,6 +7664,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>ไม่มีแหล่งในตัวที่ตรงกัน แหล่งจากส่วนขยายอยู่ในหน้าส่วนขยาย</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>บันทึกของส่วนขยาย</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>สิ่งที่ส่วนขยายรายงานตั้งแต่เริ่มทำงานครั้งล่าสุด รวมข้อผิดพลาด แนบไปกับรายงานบั๊กได้</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>เปิด</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>ใช้โฟลเดอร์จัดเก็บของ Mihon ก็ได้: ตอนที่ดาวน์โหลดไว้จะเปิดจากคลังของคุณ</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>ดาวน์โหลดของ Mihon · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8161,6 +8794,10 @@
             <source>Close</source>
             <translation>ปิด</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>ส่วนขยายทั้งหมด</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8335,6 +8972,18 @@
         <message>
             <source>EP </source>
             <translation>ตอน </translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>เซิร์ฟเวอร์</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>การตั้งค่า</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>ปิดเครื่องเล่น</translation>
         </message>
     </context>
     <context>
@@ -8858,6 +9507,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>เปิดส่วนขยายเพื่ออัปเดต</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>อัปเดต %1 แล้ว</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>อัปเดตส่วนขยายแล้ว %1 รายการ</translation>
         </message>
     </context>
     <context>

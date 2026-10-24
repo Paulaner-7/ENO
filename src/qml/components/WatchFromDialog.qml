@@ -19,6 +19,16 @@ Dialog {
     readonly property var seasons: seasonsTask && seasonsTask.ok ? seasonsTask.result.seasons : []
     readonly property bool builtIn: Anime.playerEngine !== ""
     readonly property var current: Anime.provider(media.anilistId || 0)
+    // The extensions looked in: ticked chips, none = all (starts from
+    // Settings → Anime).
+    property var ticked: []
+    readonly property var extensionSources: { App.dependOn(Extensions.revision); return Anime.sources().filter(s => s.enabled).map(s => ({ key: s.key, label: s.label, language: s.language })) }
+    function search() { task = Anime.watchFrom(media, ticked) }
+    function tick(key) {
+        if (key === "all") ticked = []
+        else ticked = ticked.indexOf(key) >= 0 ? ticked.filter(k => k !== key) : ticked.concat([key])
+        search()
+    }
 
     // The provider picked ({source, url, title, sourceLabel}; empty for the
     // built-in player).
@@ -33,7 +43,8 @@ Dialog {
         picked = false
         seasonsTask = null
         seasonsOf = null
-        task = Anime.watchFrom(entry)
+        ticked = Array.from(App.settings.animeMatchSources || []).filter(k => extensionSources.some(s => s.key === k))
+        search()
         // Quietly, it only shows when there is a choice to make.
         if (!quiet) open()
         else if (task.done) task.ok ? decide(task.result) : open()
@@ -178,6 +189,18 @@ Dialog {
                 font.pixelSize: Theme.textSm
                 wrapMode: Text.Wrap
             }
+        }
+
+        // Which extensions to look in.
+        SourceChips {
+            visible: !dialog.seasonsOf && dialog.extensionSources.length > 1
+            width: parent.width
+            sources: dialog.extensionSources
+            ticked: dialog.ticked
+            allLabel: qsTr("All extensions")
+            inset: 0
+            showLanguage: true
+            onPicked: (key) => dialog.tick(key)
         }
 
         Spinner {

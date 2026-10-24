@@ -139,4 +139,6 @@ void Notifications::withdraw(const QString &key) {
 
 void Notifications::askPermission() { platform::askNotificationPermission(); }
 
+bool Notifications::systemAllowed() const { return platform::notificationsAllowed(); }
+
 } // namespace sc

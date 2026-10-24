@@ -75,11 +75,16 @@ fun sqliteNative(): String {
     }
 }
 
-val hostVersion = "3"
+val hostVersion = "5"
 
 val runtimeImage by tasks.registering {
     dependsOn("installDist")
     val out = layout.buildDirectory.dir("runtime/scancore-extensions-runtime")
+    // The host's jars: without them as inputs, a rebuilt host never reached
+    // the image.
+    inputs.dir(layout.buildDirectory.dir("install/scancore-host/lib"))
+    inputs.property("modules", runtimeModules)
+    inputs.property("hostVersion", hostVersion)
     outputs.dir(out)
     doLast {
         val dir = out.get().asFile

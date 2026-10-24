@@ -1341,6 +1341,114 @@
             <source>A dub when the source has one, or the original language with subtitles.</source>
             <translation>Bản lồng tiếng khi nguồn có, hoặc ngôn ngữ gốc kèm phụ đề.</translation>
         </message>
+        <message>
+            <source>What plays first. A source's videos are chosen by their names, and a stream with several resolutions or audio tracks starts on the ones asked for. Change either while watching from the player's settings (the gear).</source>
+            <translation>Thứ được phát trước. Video của nguồn được chọn theo tên, và luồng có nhiều độ phân giải hoặc rãnh âm thanh bắt đầu ở cái được yêu cầu. Đổi khi đang xem từ cài đặt trình phát (bánh răng).</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Vừa khung</translation>
+        </message>
+        <message>
+            <source>How the picture fills the player. Also in the player's settings while watching.</source>
+            <translation>Cách hình lấp đầy trình phát. Cũng có trong cài đặt trình phát khi đang xem.</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>Cắt để lấp đầy</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Kéo giãn</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Kích thước gốc</translation>
+        </message>
+        <message>
+            <source>Gestures</source>
+            <translation>Cử chỉ</translation>
+        </message>
+        <message>
+            <source>A tap shows or hides the controls. Brightness changes only while SCANCORE is open.</source>
+            <translation>Chạm để hiện hoặc ẩn điều khiển. Độ sáng chỉ thay đổi khi SCANCORE đang mở.</translation>
+        </message>
+        <message>
+            <source>Swipe for brightness, volume and seeking</source>
+            <translation>Vuốt để chỉnh độ sáng, âm lượng và tua</translation>
+        </message>
+        <message>
+            <source>Up or down on the left for brightness, on the right for volume; sideways to seek.</source>
+            <translation>Lên hoặc xuống bên trái để chỉnh độ sáng, bên phải để chỉnh âm lượng; ngang để tua.</translation>
+        </message>
+        <message>
+            <source>Double tap the sides to skip 10 seconds</source>
+            <translation>Chạm hai lần hai bên để tua 10 giây</translation>
+        </message>
+        <message>
+            <source>A double tap in the middle pauses either way.</source>
+            <translation>Chạm hai lần ở giữa luôn tạm dừng.</translation>
+        </message>
+        <message>
+            <source>Hold for 2× speed</source>
+            <translation>Giữ để phát 2×</translation>
+        </message>
+        <message>
+            <source>Plays twice as fast while your finger stays down.</source>
+            <translation>Phát nhanh gấp đôi khi bạn còn giữ ngón tay.</translation>
+        </message>
+        <message>
+            <source>Anime from AniList and MyAnimeList</source>
+            <translation>Anime từ AniList và MyAnimeList</translation>
+        </message>
+        <message>
+            <source>What you pick under Watch from for an anime is remembered for it, whatever is set here.</source>
+            <translation>Lựa chọn ở Xem từ cho mỗi anime được ghi nhớ, bất kể cài đặt ở đây.</translation>
+        </message>
+        <message>
+            <source>Play from</source>
+            <translation>Phát từ</translation>
+        </message>
+        <message>
+            <source>The built-in servers. Extensions are looked in only when you choose Watch from.</source>
+            <translation>Máy chủ có sẵn. Chỉ tìm trong tiện ích khi bạn chọn Xem từ.</translation>
+        </message>
+        <message>
+            <source>Your anime extensions, when one clearly has it; otherwise you choose.</source>
+            <translation>Tiện ích anime của bạn, khi một tiện ích rõ ràng có nó; nếu không bạn tự chọn.</translation>
+        </message>
+        <message>
+            <source>Asks the first time each anime plays.</source>
+            <translation>Hỏi lần đầu phát mỗi anime.</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>Có sẵn</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Tiện ích</translation>
+        </message>
+        <message>
+            <source>Ask</source>
+            <translation>Hỏi</translation>
+        </message>
+        <message>
+            <source>Extensions to look in</source>
+            <translation>Tiện ích để tìm</translation>
+        </message>
+        <message>
+            <source>All of them</source>
+            <translation>Tất cả</translation>
+        </message>
+        <message>
+            <source>%1 chosen</source>
+            <translation>Đã chọn %1</translation>
+        </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Tất cả tiện ích</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1761,6 +1869,26 @@
             <source>it</source>
             <translation>bộ này</translation>
         </message>
+        <message>
+            <source>Line</source>
+            <translation>Đường</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Nổi</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Trái</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Phải</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Dưới</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -1883,6 +2011,22 @@
         <message>
             <source>Show more</source>
             <translation>Xem thêm</translation>
+        </message>
+        <message>
+            <source>1 chapter</source>
+            <translation>1 chương</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 chương</translation>
+        </message>
+        <message>
+            <source>%1 from your extensions</source>
+            <translation>%1 từ tiện ích của bạn</translation>
+        </message>
+        <message>
+            <source>%1 still searching</source>
+            <translation>%1 vẫn đang tìm</translation>
         </message>
     </context>
     <context>
@@ -2336,6 +2480,54 @@
             <source>%1 were in several lists and are in the first</source>
             <translation>%1 bộ nằm trong nhiều danh sách và được đặt vào danh sách đầu</translation>
         </message>
+        <message>
+            <source>%1 hidden lists stay hidden</source>
+            <translation>%1 danh sách ẩn vẫn được ẩn</translation>
+        </message>
+        <message>
+            <source>%1 merged entries came in as their main source</source>
+            <translation>%1 mục gộp được nhập theo nguồn chính</translation>
+        </message>
+        <message>
+            <source>edited titles, covers and descriptions of %1 series stay in the other app</source>
+            <translation>tiêu đề, ảnh bìa và mô tả đã sửa của %1 truyện vẫn ở ứng dụng kia</translation>
+        </message>
+        <message>
+            <source>%1 saved searches stay in the other app</source>
+            <translation>%1 tìm kiếm đã lưu vẫn ở ứng dụng kia</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup</source>
+            <translation>Bản sao lưu Mihon, Komikku, TachiyomiSY, Tachiyomi hoặc Aniyomi</translation>
+        </message>
+        <message>
+            <source>A .tachibk file from More → Backup and restore (Komikku: More → Data and storage). Series from an extension you have here come back exactly as they were.</source>
+            <translation>Một tệp .tachibk từ Thêm → Sao lưu và khôi phục (Komikku: Thêm → Dữ liệu và bộ nhớ). Truyện từ tiện ích bạn có ở đây trở lại đúng như cũ.</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Bản sao lưu Mihon, Komikku, TachiyomiSY, Tachiyomi hoặc Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters read from Mihon's folder</source>
+            <translation>%1 chương đã tải đọc từ thư mục của Mihon</translation>
+        </message>
+        <message>
+            <source>Chapters Mihon downloaded</source>
+            <translation>Chương đã tải trong Mihon</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Tìm lại</translation>
+        </message>
+        <message>
+            <source>Add folder</source>
+            <translation>Thêm thư mục</translation>
+        </message>
+        <message>
+            <source>Choose folder</source>
+            <translation>Chọn thư mục</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2674,6 +2866,22 @@
             <source>Delete</source>
             <translation>Xóa</translation>
         </message>
+        <message>
+            <source>%1 in Mihon's folder</source>
+            <translation>%1 trong thư mục của Mihon</translation>
+        </message>
+        <message>
+            <source>%1 chapters</source>
+            <translation>%1 chương</translation>
+        </message>
+        <message>
+            <source>In Mihon's folder</source>
+            <translation>Trong thư mục của Mihon</translation>
+        </message>
+        <message>
+            <source>Stop reading these from Mihon's folder (the files stay)</source>
+            <translation>Ngừng đọc các chương này từ thư mục của Mihon (tệp vẫn còn)</translation>
+        </message>
     </context>
     <context>
         <name>EditPageBar</name>
@@ -2911,6 +3119,74 @@
         <message>
             <source>Link copied</source>
             <translation>Đã sao chép liên kết</translation>
+        </message>
+        <message>
+            <source>All repositories</source>
+            <translation>Tất cả kho</translation>
+        </message>
+        <message>
+            <source>1 update ready</source>
+            <translation>1 bản cập nhật sẵn sàng</translation>
+        </message>
+        <message>
+            <source>%1 updates ready</source>
+            <translation>%1 bản cập nhật sẵn sàng</translation>
+        </message>
+        <message>
+            <source>Extensions are up to date</source>
+            <translation>Tiện ích đã mới nhất</translation>
+        </message>
+        <message>
+            <source>Checking the repositories…</source>
+            <translation>Đang kiểm tra kho…</translation>
+        </message>
+        <message>
+            <source>Checked %1</source>
+            <translation>Đã kiểm tra %1</translation>
+        </message>
+        <message>
+            <source>Not checked yet</source>
+            <translation>Chưa kiểm tra</translation>
+        </message>
+        <message>
+            <source>trusted ones update by themselves</source>
+            <translation>tiện ích tin cậy tự cập nhật</translation>
+        </message>
+        <message>
+            <source>Update all</source>
+            <translation>Cập nhật tất cả</translation>
+        </message>
+        <message>
+            <source>Check for updates</source>
+            <translation>Kiểm tra cập nhật</translation>
+        </message>
+        <message>
+            <source>All kinds</source>
+            <translation>Mọi loại</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>Truyện tranh</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Tiểu thuyết</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>Anime</translation>
+        </message>
+        <message>
+            <source>Repository</source>
+            <translation>Kho</translation>
+        </message>
+        <message>
+            <source>18+</source>
+            <translation>18+</translation>
+        </message>
+        <message>
+            <source>Its extensions</source>
+            <translation>Tiện ích của kho này</translation>
         </message>
     </context>
     <context>
@@ -3971,6 +4247,30 @@
             <source>Remove list</source>
             <translation>Xóa danh sách</translation>
         </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Truyện trong đó chuyển sang %1; không gì bị xóa khỏi thư viện.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Đọc</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Dùng tên %1</translation>
+        </message>
+        <message>
+            <source>Hide list</source>
+            <translation>Ẩn danh sách</translation>
+        </message>
+        <message>
+            <source>%1 is hidden. Its series stay on it and under All; Settings → Library shows it again.</source>
+            <translation>Đã ẩn %1. Truyện trong đó vẫn ở đó và trong Tất cả; Cài đặt → Thư viện để hiện lại.</translation>
+        </message>
+        <message>
+            <source>Undo</source>
+            <translation>Hoàn tác</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4197,6 +4497,38 @@
         <message>
             <source>Add a list</source>
             <translation>Thêm danh sách</translation>
+        </message>
+        <message>
+            <source>Its series move to %1; nothing is removed from your library.</source>
+            <translation>Truyện trong đó chuyển sang %1; không gì bị xóa khỏi thư viện.</translation>
+        </message>
+        <message>
+            <source>Reading</source>
+            <translation>Đọc</translation>
+        </message>
+        <message>
+            <source>Rename, reorder or hide any list, and add your own. A hidden list's series stay on it and under All. Reading, Plan to read, On hold, Completed and Dropped keep their meaning for trackers and backups whatever they are called. Mihon and LNReader backups bring their lists along.</source>
+            <translation>Đổi tên, sắp xếp lại hoặc ẩn bất kỳ danh sách nào, và thêm danh sách riêng. Truyện của danh sách ẩn vẫn ở đó và trong Tất cả. Đọc, Dự định đọc, Tạm hoãn, Hoàn thành và Bỏ dở giữ nguyên ý nghĩa với trình theo dõi và bản sao lưu dù đặt tên gì. Bản sao lưu Mihon và LNReader mang theo danh sách.</translation>
+        </message>
+        <message>
+            <source>Hidden from the library</source>
+            <translation>Ẩn khỏi thư viện</translation>
+        </message>
+        <message>
+            <source>Built-in list, first called %1</source>
+            <translation>Danh sách có sẵn, tên gốc %1</translation>
+        </message>
+        <message>
+            <source>Show in the library</source>
+            <translation>Hiện trong thư viện</translation>
+        </message>
+        <message>
+            <source>Hide from the library</source>
+            <translation>Ẩn khỏi thư viện</translation>
+        </message>
+        <message>
+            <source>Use the name %1</source>
+            <translation>Dùng tên %1</translation>
         </message>
     </context>
     <context>
@@ -4432,6 +4764,41 @@
         </message>
     </context>
     <context>
+        <name>MihonFolderPicker</name>
+        <message>
+            <source>Looking through Mihon's downloads…</source>
+            <translation>Đang xem các bản tải của Mihon…</translation>
+        </message>
+        <message>
+            <source>Choose Mihon's storage folder, or the downloads folder in it. Its chapters then open offline from your library, with your progress. Nothing is copied.</source>
+            <translation>Chọn thư mục lưu trữ của Mihon, hoặc thư mục downloads bên trong. Các chương sẽ mở ngoại tuyến từ thư viện của bạn, kèm tiến độ. Không sao chép gì cả.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series open offline from Mihon's folder</source>
+            <translation>%1 chương của %2 bộ mở ngoại tuyến từ thư mục của Mihon</translation>
+        </message>
+        <message>
+            <source>%1 series not in your library are under On this device</source>
+            <translation>%1 bộ không có trong thư viện nằm ở Trên thiết bị này</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder</source>
+            <translation>Thư mục lưu trữ của Mihon</translation>
+        </message>
+        <message>
+            <source>No Mihon downloads in that folder. Choose the folder Mihon keeps its data in (Mihon: More → Settings → Data and storage → Storage location), or the downloads folder inside it.</source>
+            <translation>Không có bản tải Mihon trong thư mục đó. Chọn thư mục Mihon lưu dữ liệu (Mihon: Thêm → Cài đặt → Dữ liệu và bộ nhớ → Vị trí lưu trữ), hoặc thư mục downloads bên trong.</translation>
+        </message>
+        <message>
+            <source>%1 chapters of %2 series from Mihon now open offline</source>
+            <translation>%1 chương của %2 bộ từ Mihon giờ mở ngoại tuyến</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads are under On this device. Import a Mihon backup to link them to your library.</source>
+            <translation>Bản tải của Mihon nằm ở Trên thiết bị này. Nhập bản sao lưu Mihon để liên kết chúng với thư viện.</translation>
+        </message>
+    </context>
+    <context>
         <name>MihonImportDialog</name>
         <message>
             <source>Bring back everything from Mihon</source>
@@ -4484,6 +4851,38 @@
         <message>
             <source>Import</source>
             <translation>Nhập</translation>
+        </message>
+        <message>
+            <source>Bring back everything from %1</source>
+            <translation>Đưa mọi thứ về từ %1</translation>
+        </message>
+        <message>
+            <source>Your lists come along in %1's order: %2.</source>
+            <translation>Danh sách của bạn đến theo thứ tự của %1: %2.</translation>
+        </message>
+        <message>
+            <source>Chapters %1 downloaded</source>
+            <translation>Chương đã tải trong %1</translation>
+        </message>
+        <message>
+            <source>Looking through the folder…</source>
+            <translation>Đang xem thư mục…</translation>
+        </message>
+        <message>
+            <source>Read from its folder after the import, offline and with your progress. Nothing is copied.</source>
+            <translation>Đọc từ thư mục của ứng dụng sau khi nhập, ngoại tuyến và kèm tiến độ. Không sao chép gì cả.</translation>
+        </message>
+        <message>
+            <source>Choose its storage folder (More → Settings → Data and storage) to read them here offline. Nothing is copied.</source>
+            <translation>Chọn thư mục lưu trữ của ứng dụng (Thêm → Cài đặt → Dữ liệu và bộ nhớ) để đọc ngoại tuyến tại đây. Không sao chép gì cả.</translation>
+        </message>
+        <message>
+            <source>Chosen</source>
+            <translation>Đã chọn</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Chọn</translation>
         </message>
     </context>
     <context>
@@ -4543,6 +4942,54 @@
         <message>
             <source>Quality</source>
             <translation>Chất lượng</translation>
+        </message>
+        <message>
+            <source>Fit</source>
+            <translation>Vừa khung</translation>
+        </message>
+        <message>
+            <source>The whole picture</source>
+            <translation>Toàn bộ hình</translation>
+        </message>
+        <message>
+            <source>Crop to fill</source>
+            <translation>Cắt để lấp đầy</translation>
+        </message>
+        <message>
+            <source>No black bars</source>
+            <translation>Không có viền đen</translation>
+        </message>
+        <message>
+            <source>Stretch</source>
+            <translation>Kéo giãn</translation>
+        </message>
+        <message>
+            <source>Fills the screen, out of shape</source>
+            <translation>Lấp đầy màn hình, méo hình</translation>
+        </message>
+        <message>
+            <source>Original size</source>
+            <translation>Kích thước gốc</translation>
+        </message>
+        <message>
+            <source>Its own pixels</source>
+            <translation>Điểm ảnh gốc</translation>
+        </message>
+        <message>
+            <source>2× speed</source>
+            <translation>Tốc độ 2×</translation>
+        </message>
+        <message>
+            <source>Previous episode</source>
+            <translation>Tập trước</translation>
+        </message>
+        <message>
+            <source>Next episode</source>
+            <translation>Tập tiếp theo</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Cài đặt</translation>
         </message>
     </context>
     <context>
@@ -5138,6 +5585,58 @@
             <source>This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.</source>
             <translation>Bước này không bắt buộc. SCANCORE có sẵn nguồn tích hợp cho truyện tranh, tiểu thuyết và anime, nên bạn có thể bỏ qua và thêm kho sau nếu muốn nhiều hơn.</translation>
         </message>
+        <message>
+            <source>Reading comics</source>
+            <translation>Đọc truyện tranh</translation>
+        </message>
+        <message>
+            <source>Pick a progress bar</source>
+            <translation>Chọn thanh tiến độ</translation>
+        </message>
+        <message>
+            <source>It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.</source>
+            <translation>Cho biết bạn đọc đến đâu trong chương và đưa bạn đến một trang. Màu, cạnh và độ đậm nằm ở Cài đặt → Đọc.</translation>
+        </message>
+        <message>
+            <source>Stay in the loop</source>
+            <translation>Cập nhật tin tức</translation>
+        </message>
+        <message>
+            <source>Get notified</source>
+            <translation>Nhận thông báo</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.</source>
+            <translation>Chương mới của những gì bạn theo dõi, cập nhật tiện ích và tin tức, trong thông báo của điện thoại hoặc máy tính.</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Chương mới</translation>
+        </message>
+        <message>
+            <source>When the series in your library get new chapters or episodes.</source>
+            <translation>Khi các bộ trong thư viện có chương hoặc tập mới.</translation>
+        </message>
+        <message>
+            <source>News from SCANCORE</source>
+            <translation>Tin từ SCANCORE</translation>
+        </message>
+        <message>
+            <source>Announcements from scancore.onl.</source>
+            <translation>Thông báo từ scancore.onl.</translation>
+        </message>
+        <message>
+            <source>Allow notifications</source>
+            <translation>Cho phép thông báo</translation>
+        </message>
+        <message>
+            <source>Notifications are allowed</source>
+            <translation>Đã cho phép thông báo</translation>
+        </message>
+        <message>
+            <source>Your system shows them</source>
+            <translation>Hệ thống của bạn hiển thị chúng</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5234,6 +5733,21 @@
         <message>
             <source>Done</source>
             <translation>Xong</translation>
+        </message>
+    </context>
+    <context>
+        <name>PlayerPanel</name>
+        <message>
+            <source>Back</source>
+            <translation>Quay lại</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Cài đặt</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Đóng</translation>
         </message>
     </context>
     <context>
@@ -5373,6 +5887,25 @@
         <message>
             <source>Cancel</source>
             <translation>Hủy</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProgressBarPicker</name>
+        <message>
+            <source>Pages</source>
+            <translation>Trang</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Đường</translation>
+        </message>
+        <message>
+            <source>Floating</source>
+            <translation>Nổi</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>Không có</translation>
         </message>
     </context>
     <context>
@@ -5835,6 +6368,86 @@
         <message>
             <source>On pages: a double tap in the middle zooms in, another zooms out.</source>
             <translation>Ở chế độ trang: chạm hai lần vào giữa để phóng to, lần nữa để thu nhỏ.</translation>
+        </message>
+        <message>
+            <source>Grey</source>
+            <translation>Xám</translation>
+        </message>
+        <message>
+            <source>Accent</source>
+            <translation>Màu nhấn</translation>
+        </message>
+        <message>
+            <source>Ocean</source>
+            <translation>Đại dương</translation>
+        </message>
+        <message>
+            <source>Rose</source>
+            <translation>Hồng</translation>
+        </message>
+        <message>
+            <source>Mint</source>
+            <translation>Bạc hà</translation>
+        </message>
+        <message>
+            <source>Comic progress bar</source>
+            <translation>Thanh tiến độ truyện tranh</translation>
+        </message>
+        <message>
+            <source>How far through the chapter you are. Tap or drag along it in the reader to go to a page.</source>
+            <translation>Bạn đã đọc đến đâu trong chương. Chạm hoặc kéo trên thanh trong trình đọc để đến một trang.</translation>
+        </message>
+        <message>
+            <source>Show it</source>
+            <translation>Hiển thị</translation>
+        </message>
+        <message>
+            <source>Always</source>
+            <translation>Luôn hiện</translation>
+        </message>
+        <message>
+            <source>With controls</source>
+            <translation>Cùng nút điều khiển</translation>
+        </message>
+        <message>
+            <source>Edge</source>
+            <translation>Cạnh</translation>
+        </message>
+        <message>
+            <source>Left</source>
+            <translation>Trái</translation>
+        </message>
+        <message>
+            <source>Right</source>
+            <translation>Phải</translation>
+        </message>
+        <message>
+            <source>Bottom</source>
+            <translation>Dưới</translation>
+        </message>
+        <message>
+            <source>Thickness</source>
+            <translation>Độ dày</translation>
+        </message>
+        <message>
+            <source>Thin</source>
+            <translation>Mỏng</translation>
+        </message>
+        <message>
+            <source>Thick</source>
+            <translation>Dày</translation>
+        </message>
+        <message>
+            <source>Strength</source>
+            <translation>Độ đậm</translation>
+        </message>
+        <message>
+            <source>Lower lets the page show through.</source>
+            <translation>Thấp hơn để trang hiện xuyên qua.</translation>
+        </message>
+        <message>
+            <source>Colours</source>
+            <translation>Màu</translation>
         </message>
     </context>
     <context>
@@ -7066,6 +7679,26 @@
             <source>No built-in source matches. Extension sources are on the Extensions page.</source>
             <translation>Không có nguồn tích hợp nào khớp. Nguồn từ tiện ích mở rộng nằm ở trang Tiện ích mở rộng.</translation>
         </message>
+        <message>
+            <source>Extension log</source>
+            <translation>Nhật ký tiện ích</translation>
+        </message>
+        <message>
+            <source>What the extensions reported since they last started, errors included. Attach it to a bug report.</source>
+            <translation>Những gì tiện ích báo cáo kể từ lần khởi động gần nhất, kể cả lỗi. Đính kèm vào báo cáo lỗi.</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Mở</translation>
+        </message>
+        <message>
+            <source>Mihon's storage folder works too: the chapters it downloaded open from your library.</source>
+            <translation>Thư mục lưu trữ của Mihon cũng được: các chương đã tải mở từ thư viện của bạn.</translation>
+        </message>
+        <message>
+            <source>Mihon's downloads · </source>
+            <translation>Bản tải của Mihon · </translation>
+        </message>
     </context>
     <context>
         <name>StateView</name>
@@ -8176,6 +8809,10 @@
             <source>Close</source>
             <translation>Đóng</translation>
         </message>
+        <message>
+            <source>All extensions</source>
+            <translation>Tất cả tiện ích</translation>
+        </message>
     </context>
     <context>
         <name>WatchPage</name>
@@ -8350,6 +8987,18 @@
         <message>
             <source>Cast to a TV</source>
             <translation>Truyền tới TV</translation>
+        </message>
+        <message>
+            <source>Server</source>
+            <translation>Máy chủ</translation>
+        </message>
+        <message>
+            <source>Settings</source>
+            <translation>Cài đặt</translation>
+        </message>
+        <message>
+            <source>Close player</source>
+            <translation>Đóng trình phát</translation>
         </message>
     </context>
     <context>
@@ -8866,6 +9515,14 @@
         <message>
             <source>Open Extensions to update them.</source>
             <translation>Mở Tiện ích để cập nhật chúng.</translation>
+        </message>
+        <message>
+            <source>%1 was updated</source>
+            <translation>Đã cập nhật %1</translation>
+        </message>
+        <message>
+            <source>%1 extensions were updated</source>
+            <translation>Đã cập nhật %1 tiện ích</translation>
         </message>
     </context>
     <context>

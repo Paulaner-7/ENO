@@ -44,7 +44,9 @@ class ReaderBrowserCheck(
         if (cookies.isNotEmpty()) HostNetwork.cookieJar.saveFromResponse(url, cookies)
         val after = clearance(url)
         val passed = !after.isNullOrBlank() && after != before
-        if (!passed) declined[url.host] = now + 10 * 60_000
+        // Not shown at all (a search across many sources) is not declined.
+        val quiet = answer?.get("quiet")?.jsonPrimitive?.content == "true"
+        if (!passed && !quiet) declined[url.host] = now + 10 * 60_000
         return passed
     }
 

@@ -2,6 +2,7 @@
 
 #include <QByteArray>
 #include <QHash>
+#include <QList>
 #include <QString>
 #include <QStringList>
 
@@ -15,6 +16,15 @@ namespace sc::local {
 
 // The folders chosen in Settings (the localFolders setting).
 QStringList folders();
+
+// What a folder holds (no "." entries), with Android's content://
+// folders read in one query to their provider.
+struct Entry {
+    QString path;
+    QString name;
+    bool dir = false;
+};
+QList<Entry> entries(const QString &dir);
 
 bool isImage(const QString &name);
 // An archive or document that holds a chapter's pages.

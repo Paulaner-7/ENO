@@ -137,7 +137,7 @@ class RpcServer(
             scope.launch(start = kotlinx.coroutines.CoroutineStart.LAZY) {
                 val answer =
                     try {
-                        val result = withTimeout(callTimeoutMs) { handler(method, params) }
+                        val result = withTimeout(if (method in slowCalls) SLOW_CALL_MS else callTimeoutMs) { handler(method, params) }
                         buildJsonObject {
                             put("id", id)
                             put("result", result)
@@ -218,6 +218,12 @@ class RpcServer(
         message?.let { Regex("\"([^\"]+)\"").find(it)?.groupValues?.get(1) ?: it.substringBefore(':').trim() }
             ?.ifEmpty { null } ?: "the site"
 }
+
+// Calls about one series, which may take minutes from sources that page
+// through the site in a web view (Comix: 23 rounds for 471 chapters); the
+// app waits a little longer than this (LineHost.cpp).
+private val slowCalls = setOf("details", "chapters", "pages", "episodes", "seasons", "hosters", "hosterVideos")
+private const val SLOW_CALL_MS = 300_000L
 
 // A failure with a message for the user.
 class HostError(

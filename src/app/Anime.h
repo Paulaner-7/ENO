@@ -81,7 +81,8 @@ public:
     // of its names, content language first: {matches: [{source,
     // sourceLabel, language, preferred, url, title, cover, referer,
     // seasons}], contentLanguage}
-    Q_INVOKABLE sc::Task *watchFrom(const QVariantMap &media);
+    // Only `keys` (anime source keys) when given, else every enabled one.
+    Q_INVOKABLE sc::Task *watchFrom(const QVariantMap &media, const QStringList &keys = {});
     // The source an AniList anime plays from ({source, url, title,
     // sourceLabel}), {builtIn: true} when the built-in servers were picked,
     // or an empty map when nothing was (or the source is gone). An empty

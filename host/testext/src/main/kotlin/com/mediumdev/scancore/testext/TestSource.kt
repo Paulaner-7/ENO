@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.SMangaUpdate
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -35,6 +36,7 @@ import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -62,6 +64,26 @@ class TestSource :
             .build()
 
     private fun Response.obj(): JsonObject = json.parseToJsonElement(body.string()).jsonObject
+
+    // As Keiyoushi's sources (KeiSource) do: one update per series at a
+    // time. The series page asks for details and chapters together.
+    private val updating = ConcurrentHashMap<String, Boolean>()
+
+    override suspend fun getMangaUpdate(
+        manga: SManga,
+        chapters: List<SChapter>,
+        fetchDetails: Boolean,
+        fetchChapters: Boolean,
+    ): SMangaUpdate {
+        check(updating.putIfAbsent(manga.url, true) == null) { "getMangaUpdate must not be called concurrently for same manga" }
+        try {
+            // A slow site: a second call would arrive while this one runs.
+            Thread.sleep(300)
+            return super.getMangaUpdate(manga, chapters, fetchDetails, fetchChapters)
+        } finally {
+            updating.remove(manga.url)
+        }
+    }
 
     private fun mangas(response: Response): MangasPage {
         val root = response.obj()

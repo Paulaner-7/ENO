@@ -279,6 +279,10 @@ ApplicationWindow {
         // background, as Back does on an app's first screen. Android does not
         // close an app's last window.
         function systemBack() {
+            // A reader or the player may have its own steps first (the
+            // player: its panel, then full screen).
+            const page = immersive.currentItem
+            if (immersive.depth > 0 && page && typeof page.handleBack === "function" && page.handleBack()) return
             if (back() || App.platform !== "android") return
             if (section !== "home") goSection("home")
             else App.moveToBackground()

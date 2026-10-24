@@ -138,17 +138,21 @@ AbstractButton {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 2
 
-            Item {
-                width: 34
-                height: 34
-                visible: row.download !== null && row.download.status === "running"
-                Spinner { anchors.centerIn: parent; size: 16 }
-                Text {
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: 16
-                    text: row.download ? row.download.done + "/" + row.download.total : ""
-                    color: Theme.textFaint
-                    font.pixelSize: 9
+            // Built only while it downloads (a list has hundreds of rows).
+            Loader {
+                active: row.download !== null && row.download.status === "running"
+                visible: active
+                sourceComponent: Item {
+                    width: 34
+                    height: 34
+                    Spinner { anchors.centerIn: parent; size: 16 }
+                    Text {
+                        anchors.centerIn: parent
+                        anchors.verticalCenterOffset: 16
+                        text: row.download ? row.download.done + "/" + row.download.total : ""
+                        color: Theme.textFaint
+                        font.pixelSize: 9
+                    }
                 }
             }
             IconButton {

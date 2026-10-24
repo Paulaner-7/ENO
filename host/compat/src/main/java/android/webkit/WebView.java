@@ -1063,6 +1063,20 @@ public class WebView extends AbsoluteLayout
         return mProvider.getViewDelegate().onHoverEvent(event);
     }
 
+    // SCANCORE: touches an extension sends (Comix's simulated taps) reach the
+    // page as real ones, and display metrics come from the default screen.
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (mProvider instanceof xyz.nulldev.androidcompat.webkit.KcefWebViewProvider)
+            return ((xyz.nulldev.androidcompat.webkit.KcefWebViewProvider) mProvider).dispatchTouch(event);
+        return false;
+    }
+
+    @Override
+    public android.content.res.Resources getResources() {
+        return android.content.res.Resources.getSystem();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mProvider.getViewDelegate().onTouchEvent(event);

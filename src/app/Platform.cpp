@@ -310,6 +310,15 @@ void askNotificationPermission() {
 #endif
 }
 
+bool notificationsAllowed() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kNotifyClass, "allowed", "(Landroid/content/Context;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object());
+#else
+    return true;
+#endif
+}
+
 void setWebPlayerPrepared(std::function<void()> prepared) { g_webPlayerPrepared = std::move(prepared); }
 
 void prepareWebPlayer() {
@@ -331,6 +340,42 @@ void setOrientation(const QString &mode) {
                                        QJniObject::fromString(mode).object<jstring>());
 #else
     Q_UNUSED(mode)
+#endif
+}
+
+double brightness() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jfloat>(kScreenClass, "brightness", "(Landroid/app/Activity;)F",
+                                                QNativeInterface::QAndroidApplication::context().object());
+#else
+    return -1;
+#endif
+}
+
+void setBrightness(double level) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "setBrightness", "(Landroid/app/Activity;F)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jfloat(level));
+#else
+    Q_UNUSED(level)
+#endif
+}
+
+double mediaVolume() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jfloat>(kScreenClass, "mediaVolume", "(Landroid/app/Activity;)F",
+                                                QNativeInterface::QAndroidApplication::context().object());
+#else
+    return -1;
+#endif
+}
+
+void setMediaVolume(double level) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "setMediaVolume", "(Landroid/app/Activity;F)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jfloat(level));
+#else
+    Q_UNUSED(level)
 #endif
 }
 

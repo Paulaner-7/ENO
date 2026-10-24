@@ -12,7 +12,14 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.SMangaUpdate
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.JsonArray
@@ -180,6 +187,63 @@ class ExtensionHost(
 
     private fun catalogue(source: Source) = source as? CatalogueSource ?: throw HostError("${source.name} cannot be browsed.", 501)
 
+    // A series' details and chapters come from one getMangaUpdate, and
+    // Keiyoushi's sources refuse a second one for the same series while one
+    // runs ("must not be called concurrently for same manga"): the series
+    // page asks for details and chapters at once, so every such source
+    // failed there. Calls for a series that arrive within a moment of each
+    // other are made into one asking for all they want (as Mihon does);
+    // later ones wait their turn. The fetch runs on its own, so one caller
+    // giving up does not leave the others without an answer.
+    private class MangaUpdateJob(
+        var details: Boolean,
+        var chapters: Boolean,
+    ) {
+        val result = CompletableDeferred<SMangaUpdate>()
+        var started = false
+    }
+
+    private val updateJobs = HashMap<String, MangaUpdateJob>()
+    private val updateLocks = ConcurrentHashMap<String, Mutex>()
+    private val updateScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private suspend fun mangaUpdate(
+        source: Source,
+        url: String,
+        details: Boolean,
+        chapters: Boolean,
+    ): SMangaUpdate {
+        val key = "${source.id}|$url"
+        val (job, first) =
+            synchronized(updateJobs) {
+                val waiting = updateJobs[key]?.takeIf { !it.started }
+                if (waiting != null) {
+                    waiting.details = waiting.details || details
+                    waiting.chapters = waiting.chapters || chapters
+                    waiting to false
+                } else {
+                    MangaUpdateJob(details, chapters).also { updateJobs[key] = it } to true
+                }
+            }
+        if (first) {
+            updateScope.launch {
+                delay(UPDATE_GATHER_MS)
+                updateLocks.getOrPut(key) { Mutex() }.withLock {
+                    synchronized(updateJobs) {
+                        job.started = true
+                        if (updateJobs[key] === job) updateJobs.remove(key)
+                    }
+                    try {
+                        job.result.complete(source.getMangaUpdate(manga(source, url), emptyList(), job.details, job.chapters))
+                    } catch (e: Throwable) {
+                        job.result.completeExceptionally(e)
+                    }
+                }
+            }
+        }
+        return job.result.await()
+    }
+
     private fun manga(
         source: Source,
         url: String,
@@ -221,12 +285,12 @@ class ExtensionHost(
                 )
             }
             "details" -> {
-                val update = source.getMangaUpdate(manga(source, params.string("url")), emptyList(), fetchDetails = true, fetchChapters = false)
+                val update = mangaUpdate(source, params.string("url"), details = true, chapters = false)
                 remember(source, listOf(update.manga))
                 Codec.details(update.manga, base(source))
             }
             "chapters" -> {
-                val update = source.getMangaUpdate(manga(source, params.string("url")), emptyList(), fetchDetails = false, fetchChapters = true)
+                val update = mangaUpdate(source, params.string("url"), details = false, chapters = true)
                 for (c in update.chapters) if (c.memo.isNotEmpty()) memos.putChapter(source.id, c.url, c.memo)
                 Codec.chapters(update.chapters)
             }
@@ -279,6 +343,9 @@ class ExtensionHost(
         return JsonPrimitive(cookies.size)
     }
 }
+
+// How long a series' first details or chapters call waits for the other.
+private const val UPDATE_GATHER_MS = 150L
 
 // An image response straight into the file SCANCORE's image cache names.
 fun writeImage(

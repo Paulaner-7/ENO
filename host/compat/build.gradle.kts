@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.imageio.webp)
     implementation(libs.sqlite.jdbc)
     implementation(libs.rhino)
+    api(libs.jcef)
     implementation(libs.apk.parser)
     implementation(libs.dex2jar.translator)
     implementation(libs.dex2jar.tools)

@@ -18,7 +18,10 @@ import ScanCore
 // Desktops dock the bar above the video and the episode list beside it; in
 // full screen they hide until the pointer reaches the top edge.
 // Phone portrait puts the controls and episodes below a 16:9 player;
-// landscape goes full screen with a slim rail.
+// landscape is full screen, its controls over the video (a strip above a
+// system web view, which nothing can cover). Hidden controls take no taps:
+// the first tap only shows them. Settings and actions are one panel
+// (PlayerPanel).
 Rectangle {
     id: watch
     property var media: ({})
@@ -38,8 +41,10 @@ Rectangle {
     property bool offline: false
     readonly property bool nativeStream: !!provider.source || offline
     readonly property bool hasSources: { App.dependOn(Extensions.revision); return Anime.sources().some(s => s.enabled) }
-    // "Watch from" is asked once, the first time an episode plays here.
+    // "Watch from" is asked once, the first time an episode plays here, unless
+    // tracker anime play from the built-in servers (Settings → Anime).
     property bool asked: false
+    readonly property string trackerPlayer: Anime.playerEngine === "" ? "extensions" : (App.settings.animeTrackerPlayer || "builtin")
     readonly property bool finding: watchFrom.quiet && !!watchFrom.task && watchFrom.task.loading
     readonly property var series: fromSource ? media : Anime.seriesFor(media)
     property var streamsTask: null
@@ -78,6 +83,17 @@ Rectangle {
     // hiding it resizes the video.
     property bool idle: false
     readonly property bool chromeShown: !player.item || unsupported || (nativeStream && !currentUrl) || (docked ? !fullScreen || !idle : !idle)
+    // Shown long enough to be meant: a tap that brings the controls back
+    // must not also press the one under the finger (the player closed when
+    // a hidden back button was pressed).
+    property bool chromeSettled: chromeShown
+    onChromeShownChanged: {
+        chromeSettled = false
+        if (chromeShown) settleTimer.restart()
+    }
+    Timer { id: settleTimer; interval: 350; onTriggered: watch.chromeSettled = watch.chromeShown }
+    // Phone landscape: full screen, the controls over the video.
+    readonly property bool immersed: phone && landscape
 
     // The server chips: ReAnime's servers, or every video of the hosters
     // that answered (and a chip for each hoster that only loads on request).
@@ -160,9 +176,10 @@ Rectangle {
             currentUrl = local.url
         } else if (nativeStream)
             videosTask = Anime.videos(provider.source, fromSource ? episodes[i].url : "", fromSource ? "" : provider.url, Number(episodes[i].number))
-        else if (!fromSource && !provider.builtIn && hasSources && !asked) {
+        else if (!fromSource && !provider.builtIn && hasSources && !asked && trackerPlayer !== "builtin") {
             asked = true
-            watchFrom.start(media, true)
+            // Extensions: picks by itself when one clearly has it; ask: shows the choice.
+            watchFrom.start(media, trackerPlayer === "extensions")
         } else
             streamsTask = Anime.streams(media.anilistId, episodes[i].number)
         Presence.show("anime", series.title || "", qsTr("Episode ") + (episodes[i].number || ""))
@@ -192,6 +209,8 @@ Rectangle {
         if (castDevice) Cast.stop()
         if (phone && fullScreen) Window.window.showNormal()
         if (phone) App.setOrientation("")
+        // The brightness a swipe set was the player's only.
+        if (phone) App.setScreenBrightness(-1)
     }
 
     // Phones: landscape is full screen, by turning the phone or with the
@@ -406,7 +425,10 @@ Rectangle {
                   (series.title || "") + " · " + qsTr("Episode ") + (episode.number || ""), series.cover || media.cover || "",
                   position > 5 ? position : resumeAt)
     }
-    onCurrentUrlChanged: if (castDevice && currentUrl) castCurrent()
+    onCurrentUrlChanged: {
+        if (castDevice && currentUrl) castCurrent()
+        if (panel.opened) fillPanel()
+    }
     function stopCasting() {
         // This device goes on from where the TV was.
         if (Cast.position > 5) resumeAt = Cast.position
@@ -545,6 +567,60 @@ Rectangle {
         Router.back()
     }
 
+    // Android's Back: the panel closes, then full screen ends, then the
+    // player closes (Main asks before popping the page).
+    function handleBack() {
+        if (panel.back() || comments.visible && (comments.close(), true)) return true
+        if (phone && landscape) {
+            toggleFullScreen()
+            return true
+        }
+        if (fullScreen) {
+            Window.window.showNormal()
+            return true
+        }
+        saveProgress(true)
+        return false
+    }
+
+    // A tap on the video (phones): the controls show, or hide again.
+    function toggleChrome() {
+        if (chromeShown && !idle) {
+            idleTimer.stop()
+            idle = true
+        } else {
+            wake()
+        }
+    }
+
+    // The settings panel: the player's own settings, the server and the
+    // episodes, then the page's actions.
+    function openPanel(section) {
+        fillPanel()
+        panel.open(section)
+        wake()
+    }
+    // What the panel lists; again while it is open when the episode or its
+    // video changes (auto-next, a new server), so it never shows the last one.
+    onIndexChanged: if (panel.opened) fillPanel()
+    function fillPanel() {
+        const sections = nativeStream && player.item && player.item.settingsSections ? player.item.settingsSections() : []
+        if (streams.length > 1)
+            sections.push({ key: "server", icon: "server", label: qsTr("Server"), value: (streams.find(s => isCurrent(s)) || { quality: "" }).quality, stay: false,
+                            choices: streams.map(s => ({ label: s.quality, selected: isCurrent(s), pick: () => pickServer(s) })) })
+        if (episodes.length > 1)
+            sections.push({ key: "episodes", icon: "list", label: qsTr("Episodes"), value: qsTr("Episode ") + (episode.number || ""),
+                            choices: episodes.map((e, i) => ({ label: qsTr("Episode ") + e.number, detail: e.title && !String(e.title).startsWith("Episode") ? e.title : "",
+                                                               selected: i === index, pick: () => load(i) })) })
+        const actions = []
+        if (!fromSource && (hasSources || nativeStream))
+            actions.push({ icon: "server", label: qsTr("Watch from…"), run: () => watchFrom.start(media, false) })
+        for (const item of moreItems())
+            actions.push({ icon: item.icon, label: item.text, enabled: item.enabled, run: item.run })
+        panel.sections = sections
+        panel.actions = actions
+    }
+
     function leave() {
         exit()
     }
@@ -613,9 +689,9 @@ Rectangle {
     Item {
         id: stage
         x: 0
-        y: watch.phone ? (watch.landscape ? 0 : bar.height)
-         : (watch.docked && !watch.systemView) ? (watch.fullScreen ? Math.max(edge.visible ? edge.height : 0, bar.y + bar.height) : (watch.chromeShown ? bar.height : edge.visible ? edge.height : 0)) : 0
-        width: watch.phone && watch.landscape ? watch.width - rail.width
+        y: watch.phone ? (watch.landscape ? (strip.visible ? strip.height : 0) : bar.height)
+         : (watch.docked && !watch.systemView) ? (watch.chromeShown ? bar.height : edge.visible ? edge.height : 0) : 0
+        width: watch.phone && watch.landscape ? watch.width
              : (watch.docked && !watch.systemView) ? watch.width - side.width : watch.width
         height: watch.phone && !watch.landscape ? Math.round(Math.min(watch.width * 9 / 16, watch.height * 0.45))
               : watch.height - y
@@ -625,20 +701,20 @@ Rectangle {
             anchors.fill: parent
             // A system web view draws above everything in the window, so it
             // steps aside while the comments panel is open.
-            visible: !(watch.systemView && comments.visible)
+            visible: !(watch.systemView && (comments.visible || panel.opened))
+            // SCANCORE's player stays for the whole page (servers and
+            // episodes change under it); a web player comes with its page.
+            // One binding decides, so the two never mix while it changes.
+            // Casting: the TV plays, so this one does not.
             source: watch.casting ? "" : watch.nativeStream ? "../components/NativePlayer.qml"
                   : watch.currentUrl.length === 0 || Anime.playerEngine === "" ? ""
                   : watch.systemView ? "../components/WebPlayerSystem.qml" : "../components/WebPlayer.qml"
             onLoaded: {
                 item.url = Qt.binding(() => watch.currentUrl)
-                if (watch.nativeStream) {
-                    item.video = Qt.binding(() => watch.currentVideo)
-                    item.startAt = Qt.binding(() => watch.resumeAt > 5 ? watch.resumeAt : 0)
-                    item.chromeShown = Qt.binding(() => watch.chromeShown)
-                    item.alternatives = Qt.binding(() => watch.alternatives)
-                    return
-                }
-                if (watch.systemView) {
+                if (!watch.nativeStream) {
+                    // ENO's system web player draws its own chrome inside the
+                    // page (top bar, drawer): hand it the episode's context.
+                    if (!watch.systemView) return
                     item.mediaTitle = Qt.binding(() => watch.media.title || "")
                     item.episodeLine = Qt.binding(() => watch.episodeLine)
                     item.hasPrev = Qt.binding(() => watch.hasPrev)
@@ -651,7 +727,16 @@ Rectangle {
                     item.activeSkip = Qt.binding(() => watch.activeSkip)
                     item.episodesList = Qt.binding(() => watch.episodes)
                     item.currentIndex = Qt.binding(() => watch.index)
+                    return
                 }
+                item.video = Qt.binding(() => watch.currentVideo)
+                item.startAt = Qt.binding(() => watch.resumeAt > 5 ? watch.resumeAt : 0)
+                item.chromeShown = Qt.binding(() => watch.chromeShown)
+                item.alternatives = Qt.binding(() => watch.alternatives)
+                item.hasPrev = Qt.binding(() => watch.hasPrev)
+                item.hasNext = Qt.binding(() => watch.hasNext)
+                item.panelOpen = Qt.binding(() => panel.opened)
+                item.fullScreen = Qt.binding(() => watch.immersed || watch.fullScreen)
             }
             function seek(seconds) { if (item) item.seek(seconds) }
             Connections {
@@ -672,6 +757,10 @@ Rectangle {
                 function onSkipClicked(toSeconds) { player.seek(toSeconds) }
                 function onEpisodeSelected(idx) { watch.load(idx) }
                 function onAlternativePicked(id) { watch.pickServer(watch.streams.find(s => s.id === id)) }
+                function onSettingsRequested() { watch.openPanel() }
+                function onPreviousRequested() { if (watch.hasPrev) watch.load(watch.index - 1) }
+                function onNextRequested() { watch.nextEpisode() }
+                function onTapped() { watch.toggleChrome() }
             }
         }
         CastOverlay {
@@ -791,7 +880,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.rightMargin: 40
             anchors.bottomMargin: 80
-            visible: !watch.phone && !watch.systemView && watch.showSkip
+            visible: (!watch.phone || watch.immersed) && !watch.systemView && watch.showSkip
             variant: "primary"
             iconName: "skip-forward"
             text: watch.skipLabel
@@ -804,7 +893,7 @@ Rectangle {
             anchors.margins: 40
             width: 320
             height: 96
-            visible: !watch.phone && !watch.systemView && nextCountdown.running
+            visible: (!watch.phone || watch.immersed) && !watch.systemView && nextCountdown.running
             LiquidGlass {
                 anchors.fill: parent
                 radius: Theme.radiusLg
@@ -855,24 +944,16 @@ Rectangle {
     Rectangle {
         id: bar
         width: parent.width
-        height: watch.phone ? 52 : watch.docked ? 64 : 96
+        height: watch.phone ? 52 : watch.docked ? 64 : 72
         y: watch.phone ? 0 : (watch.docked && watch.fullScreen) ? (watch.chromeShown ? 0 : -height) : 0
-        opacity: watch.phone || (!watch.fullScreen) || watch.chromeShown ? 1 : 0
-        visible: !watch.systemView && (watch.phone ? !watch.landscape : (opacity > 0.001 && y > -height))
-        Behavior on y {
-            NumberAnimation {
-                duration: Motion.slow
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Motion.emphasized
-            }
-        }
-        Behavior on opacity {
-            NumberAnimation {
-                duration: Motion.slow
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Motion.emphasized
-            }
-        }
+        opacity: watch.phone || watch.docked || watch.chromeShown ? 1 : 0
+        // A system web view is drawn above the Qt scene, so the bar steps
+        // aside for it (its own chrome lives inside the page).
+        visible: !watch.systemView && (watch.phone ? !watch.landscape : watch.docked ? (watch.chromeShown || y > -height) : opacity > 0.01)
+        // Fading or just back: looks, takes no clicks (see chromeSettled).
+        enabled: watch.phone || watch.docked || watch.chromeSettled
+        Behavior on y { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+        Behavior on opacity { enabled: !watch.phone && !watch.docked; NumberAnimation { duration: Motion.slow } }
         color: watch.phone || watch.docked ? "#0b0b0c" : "transparent"
         gradient: watch.phone || watch.docked ? null : barShade
         Gradient {
@@ -1186,15 +1267,16 @@ Rectangle {
                         diameter: 40
                         onClicked: watchFrom.start(watch.media, false)
                     }
-                    IconButton { iconName: "skip-back"; iconColor: "white"; diameter: 40; enabled: watch.hasPrev; onClicked: watch.load(watch.index - 1) }
-                    IconButton { iconName: "skip-forward"; iconColor: "white"; diameter: 40; enabled: watch.hasNext; onClicked: watch.load(watch.index + 1) }
+                    // Our own player's bar has these; a web player has none.
+                    IconButton { visible: !watch.nativeStream; iconName: "skip-back"; iconColor: "white"; diameter: 40; enabled: watch.hasPrev; onClicked: watch.load(watch.index - 1) }
+                    IconButton { visible: !watch.nativeStream; iconName: "skip-forward"; iconColor: "white"; diameter: 40; enabled: watch.hasNext; onClicked: watch.load(watch.index + 1) }
                     IconButton {
-                        id: phoneMore
-                        iconName: "ellipsis"
+                        visible: !watch.nativeStream
+                        iconName: "settings"
                         iconColor: "white"
                         diameter: 40
-                        visible: watch.moreItems().length > 0
-                        onClicked: moreMenu.openAt(phoneMore, phoneMore.width - 240, phoneMore.height, watch.moreItems())
+                        tip: qsTr("Settings")
+                        onClicked: watch.openPanel()
                     }
                 }
             }
@@ -1242,31 +1324,129 @@ Rectangle {
         }
     }
 
-    // Phone landscape: the player is full screen; a thin rail keeps the
-    // essentials reachable without covering the video. It hides with the
-    // rest of the chrome and comes back when the video is tapped.
-    Rectangle {
-        id: rail
-        visible: watch.phone && watch.landscape && watch.chromeShown
-        width: visible ? 56 : 0
-        height: parent.height
-        anchors.right: parent.right
-        color: "#0b0b0c"
+    // Phone landscape: the close button, the title and the settings over
+    // the video's top, with the rest of the controls (the player's bar).
+    // A system web view cannot be covered: the same as a strip above it,
+    // while the controls show.
+    component LandscapeTop: Item {
+        id: top
+        property bool overVideo: true
+        height: 56
+        Rectangle {
+            anchors.fill: parent
+            visible: top.overVideo
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.75) }
+                GradientStop { position: 1.0; color: "transparent" }
+            }
+        }
+        Rectangle { anchors.fill: parent; visible: !top.overVideo; color: "#0b0b0c" }
+        IconButton {
+            id: closeButton
+            x: 8
+            anchors.verticalCenter: parent.verticalCenter
+            diameter: 44
+            iconName: "arrow-left"
+            iconColor: "white"
+            tip: qsTr("Close player")
+            onClicked: watch.exit()
+        }
         Column {
-            anchors.centerIn: parent
-            spacing: 14
-            IconButton { iconName: "arrow-left"; iconColor: "white"; diameter: 44; onClicked: watch.exit() }
-            IconButton {
-                iconName: "chevron-right"
-                iconColor: "white"
-                diameter: 44
-                filled: true
-                visible: watch.showSkip
+            anchors.left: closeButton.right
+            anchors.leftMargin: 6
+            anchors.right: topActions.left
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            Text {
+                width: parent.width
+                text: watch.media.title || ""
+                color: "white"
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.textMd
+                font.weight: Font.DemiBold
+                elide: Text.ElideRight
+            }
+            Text {
+                width: parent.width
+                text: watch.episodeLine
+                color: "#a1a1aa"
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.textSm
+                elide: Text.ElideRight
+            }
+        }
+        Row {
+            id: topActions
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
+            // A web player has no bar of ours: skip and next sit here.
+            ScButton {
+                visible: !top.overVideo && watch.showSkip
+                compact: true
+                variant: "primary"
+                iconName: "skip-forward"
+                text: watch.skipLabel
                 onClicked: player.seek(watch.activeSkip.end)
             }
-            IconButton { iconName: "skip-forward"; iconColor: "white"; diameter: 44; enabled: watch.hasNext; onClicked: watch.nextEpisode() }
-            IconButton { iconName: "minimize"; iconColor: "white"; diameter: 44; tip: qsTr("Exit full screen"); onClicked: watch.toggleFullScreen() }
+            ScButton {
+                visible: !top.overVideo && nextCountdown.running
+                compact: true
+                variant: "primary"
+                text: qsTr("Next in ") + Math.ceil(nextCountdown.remaining) + "s"
+                onClicked: watch.nextEpisode()
+            }
+            IconButton {
+                visible: !top.overVideo
+                diameter: 44
+                iconName: "skip-forward"
+                iconColor: "white"
+                enabled: watch.hasNext
+                tip: qsTr("Next episode")
+                onClicked: watch.nextEpisode()
+            }
+            // Over our own player its bar has these.
+            IconButton {
+                visible: !top.overVideo
+                diameter: 44
+                iconName: "settings"
+                iconColor: "white"
+                tip: qsTr("Settings")
+                onClicked: watch.openPanel()
+            }
+            IconButton {
+                visible: !top.overVideo
+                diameter: 44
+                iconName: "minimize"
+                iconColor: "white"
+                tip: qsTr("Exit full screen")
+                onClicked: watch.toggleFullScreen()
+            }
         }
+    }
+    LandscapeTop {
+        id: overlayTop
+        parent: stage
+        z: 4
+        width: stage.width
+        visible: watch.immersed && !watch.systemView && opacity > 0.01
+        opacity: watch.chromeShown ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: Motion.normal } }
+        enabled: watch.chromeSettled
+    }
+    LandscapeTop {
+        id: strip
+        overVideo: false
+        width: watch.width
+        visible: watch.immersed && watch.systemView && watch.chromeShown
+        enabled: watch.chromeSettled
+    }
+
+    PlayerPanel {
+        id: panel
+        parent: watch.phone ? watch : stage
+        onOpenedChanged: if (!opened) watch.wake()
     }
 
     CommentsPanel {

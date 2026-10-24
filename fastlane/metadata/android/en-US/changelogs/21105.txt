@@ -1,0 +1,5 @@
+• Rename, reorder and hide built-in lists
+• Komikku and TachiyomiSY backups import cleanly
+• Player: no more closing by accident, one settings panel, fit modes
+• Swipe for brightness, volume and seeking; hold for 2× speed
+• Smoother on slow phones; Keiyoushi extensions show chapters

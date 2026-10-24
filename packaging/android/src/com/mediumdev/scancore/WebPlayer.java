@@ -12,9 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.os.Message;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 // The anime player's web view (src/qml/components/WebPlayerSystem.qml), which
@@ -24,7 +29,10 @@ import android.widget.FrameLayout;
 // - pages are told full screen is not supported unless the web view's client
 //   shows the page's full screen view. That view now covers the window, in
 //   landscape and without the system bars, until the player leaves full
-//   screen or Back is pressed.
+//   screen or Back is pressed;
+// - a pop-up the player's ads open (on the first tap) loads in the web view
+//   itself, so an ad site replaced the player. Pop-ups are now refused, and
+//   the page cannot leave the player wrapper (WebPlayerSystem.qml).
 public final class WebPlayer {
     private WebPlayer() {}
 
@@ -59,7 +67,12 @@ public final class WebPlayer {
             WebChromeClient client = web.getWebChromeClient();
             if (client instanceof Client) return 0;
             web.getSettings().setMediaPlaybackRequiresUserGesture(false);
+            // With several windows allowed, window.open asks onCreateWindow
+            // (refused) instead of loading the pop-up here.
+            web.getSettings().setSupportMultipleWindows(true);
+            web.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
             web.setWebChromeClient(new Client(activity, web, client));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) web.setWebViewClient(new Guard(web.getWebViewClient()));
             return 1;
         }
         int prepared = 0;
@@ -69,6 +82,53 @@ public final class WebPlayer {
                 prepared += prepareIn(activity, group.getChildAt(i));
         }
         return prepared;
+    }
+
+    // Qt's own page client (load progress and errors reach QML through it),
+    // with the page kept on the player wrapper: the wrapper is loaded as
+    // HTML on https://reanime.to/ (WebPlayerSystem.qml), so a link or script
+    // that sends the whole page elsewhere is an ad and goes nowhere. Frames
+    // inside it (the player) are not affected.
+    private static final class Guard extends WebViewClient {
+        private final WebViewClient qt;
+
+        Guard(WebViewClient qt) {
+            this.qt = qt;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (request.isForMainFrame()) {
+                String url = request.getUrl().toString();
+                if (!url.startsWith("https://reanime.to/") && !url.startsWith("about:") && !url.startsWith("data:")) return true;
+            }
+            return qt != null && qt.shouldOverrideUrlLoading(view, request);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            if (qt != null) qt.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if (qt != null) qt.onPageFinished(view, url);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            if (qt != null) qt.onReceivedError(view, request, error);
+        }
+
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse response) {
+            if (qt != null) qt.onReceivedHttpError(view, request, response);
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+            if (qt != null) qt.onLoadResource(view, url);
+        }
     }
 
     // Qt's own client (title, progress and icon reach QML through it) with
@@ -113,6 +173,12 @@ public final class WebPlayer {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             if (qt != null) qt.onReceivedTitle(view, title);
+        }
+
+        // Ads' pop-ups: never.
+        @Override
+        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+            return false;
         }
 
         @Override

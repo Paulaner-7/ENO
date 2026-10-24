@@ -657,26 +657,34 @@ void Manager::refreshAll() {
         } catch (const Error &) {
             // Kept with the repository as its error.
         }
+    // For "checked … ago" on the Extensions page.
+    Database::setPref(QStringLiteral("extensions.checkedAt"), Database::now());
 }
 
-QList<Package> Manager::available(std::optional<Kind> kind) {
+QList<Package> Manager::available(std::optional<Kind> kind, QStringList *repos) {
     return reading([&](const State &s) {
         QHash<QString, int> at;
         QList<Package> out;
+        QStringList from;
         for (const auto &r : s.repos) {
             if (kind && r.repo.kind != *kind)
                 continue;
             for (const auto &p : r.packages) {
                 const auto key = id(p.kind, p.pkg);
                 if (const auto i = at.value(key, -1); i >= 0) {
-                    if (p.versionCode > out[i].versionCode)
+                    if (p.versionCode > out[i].versionCode) {
                         out[i] = p;
+                        from[i] = r.repo.url;
+                    }
                 } else {
                     at.insert(key, int(out.size()));
                     out.append(p);
+                    from.append(r.repo.url);
                 }
             }
         }
+        if (repos)
+            *repos = from;
         return out;
     });
 }

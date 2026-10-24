@@ -14,6 +14,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 
 namespace sc::ext {
@@ -38,6 +39,10 @@ struct ProcessHost::State {
     QTimer *idle = nullptr;
     QByteArray buffer;
     QByteArray errors;
+    // Everything the host wrote to stderr since it started (extensions'
+    // stack traces), for Extensions → Diagnostics: <root>/../host.log, at
+    // most about 1 MB.
+    std::unique_ptr<QFile> log;
 
     void ensureThread() {
         std::call_once(started, [this] {
@@ -62,6 +67,9 @@ struct ProcessHost::State {
         process = new QProcess(context);
         buffer.clear();
         errors.clear();
+        log = std::make_unique<QFile>(QDir(launch.root).filePath(QStringLiteral("../host.log")));
+        if (!log->open(QIODevice::WriteOnly | QIODevice::Truncate))
+            log.reset();
         QStringList args = launch.jvmArgs;
         args << QStringLiteral("-cp") << QDir(launch.libDir).filePath(QStringLiteral("*")) << QString::fromLatin1(kMainClass)
              << QStringLiteral("--root") << launch.root;
@@ -81,7 +89,12 @@ struct ProcessHost::State {
             }
         });
         QObject::connect(process, &QProcess::readyReadStandardError, context, [this, p = process] {
-            errors += p->readAllStandardError();
+            const auto chunk = p->readAllStandardError();
+            errors += chunk;
+            if (log && log->size() < 1024 * 1024) {
+                log->write(chunk);
+                log->flush();
+            }
             if (errors.size() > 8192)
                 errors = errors.right(4096);
         });

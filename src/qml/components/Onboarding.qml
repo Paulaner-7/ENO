@@ -5,15 +5,16 @@ import ScanCore
 
 // First-run welcome: the interface language, what SCANCORE does, the tracker
 // to keep, extensions (a repository link, if the reader has one), a quick
-// look-and-feel choice, an optional scancore.onl account, and a few tips. Shown until finished or
-// skipped; Settings can show it again.
+// look-and-feel choice, the comic progress bar, notifications, an optional
+// scancore.onl account, and a few tips. Shown until finished or skipped;
+// Settings can show it again.
 Rectangle {
     id: root
     property int step: App.startAction.onboardingStep || 0
     property int direction: 1
-    readonly property int steps: 7
+    readonly property int steps: 9
     // The account step, which has its own Continue.
-    readonly property int accountIndex: 5
+    readonly property int accountIndex: 7
     signal finished()
 
     color: Theme.base
@@ -86,7 +87,7 @@ Rectangle {
 
         Repeater {
             id: pages
-            model: [welcomeStep, mediaStep, trackerStep, extensionsStep, styleStep, accountStep, doneStep]
+            model: [welcomeStep, mediaStep, trackerStep, extensionsStep, styleStep, barStep, notifyStep, accountStep, doneStep]
             delegate: Loader {
                 id: pageLoader
                 required property var modelData
@@ -612,7 +613,112 @@ Rectangle {
         }
     }
 
-    // 6. Account.
+    // 6. The comic progress bar, picked by looking at it (or none).
+    Component {
+        id: barStep
+        Flickable {
+            contentHeight: barColumn.height + 60
+            clip: true
+            Column {
+                id: barColumn
+                x: Theme.gutter
+                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
+                width: Math.min(parent.width - 2 * Theme.gutter, 640)
+                spacing: 26
+                Heading {
+                    kicker: qsTr("Reading comics")
+                    title: qsTr("Pick a progress bar")
+                    body: qsTr("It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.")
+                }
+                ProgressBarPicker {
+                    width: parent.width
+                    // Phones: two by two, big enough to tell the bars apart.
+                    tileWidth: Theme.compact ? Math.min(170, Math.floor((width - spacing) / 2)) : Math.min(140, Math.floor((width - 3 * spacing) / 4))
+                }
+            }
+        }
+    }
+
+    // 7. Notifications: what comes in, and the system's permission.
+    Component {
+        id: notifyStep
+        Flickable {
+            id: notifyPage
+            contentHeight: notifyColumn.height + 60
+            clip: true
+            // Read again when SCANCORE comes back from the system's question.
+            readonly property bool allowed: { App.dependOn(Qt.application.state); return Notifications.systemAllowed() }
+            Column {
+                id: notifyColumn
+                x: Theme.gutter
+                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
+                width: Math.min(parent.width - 2 * Theme.gutter, 640)
+                spacing: 22
+                Heading {
+                    kicker: qsTr("Stay in the loop")
+                    title: qsTr("Get notified")
+                    body: qsTr("New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.")
+                }
+                Repeater {
+                    model: [
+                        { key: "notifyUpdates", icon: "bell", title: qsTr("New chapters"), detail: qsTr("When the series in your library get new chapters or episodes.") },
+                        { key: "announcements", icon: "megaphone", title: qsTr("News from SCANCORE"), detail: qsTr("Announcements from scancore.onl.") }]
+                    Row {
+                        required property var modelData
+                        width: notifyColumn.width
+                        spacing: 14
+                        Rectangle {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 36; height: 36; radius: 10
+                            color: Theme.surface2
+                            Icon { anchors.centerIn: parent; name: modelData.icon; size: 17; color: Theme.textMuted }
+                        }
+                        Column {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width - 50 - notifyToggle.width - 14
+                            spacing: 2
+                            Text { width: parent.width; text: modelData.title; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; font.weight: Font.DemiBold; wrapMode: Text.Wrap }
+                            Text { width: parent.width; text: modelData.detail; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm; wrapMode: Text.Wrap }
+                        }
+                        Toggle {
+                            id: notifyToggle
+                            anchors.verticalCenter: parent.verticalCenter
+                            checked: App.settings[modelData.key] !== false
+                            onToggled: App.setSetting(modelData.key, checked)
+                        }
+                    }
+                }
+                // Android asks once; the answer shows here.
+                Row {
+                    spacing: 12
+                    ScButton {
+                        visible: !notifyPage.allowed
+                        variant: "primary"
+                        iconName: "bell"
+                        text: qsTr("Allow notifications")
+                        onClicked: {
+                            App.setSetting("notificationsAsked", true)
+                            Notifications.askPermission()
+                        }
+                    }
+                    Row {
+                        visible: notifyPage.allowed
+                        spacing: 8
+                        Icon { anchors.verticalCenter: parent.verticalCenter; name: "check"; size: 18; color: Theme.success }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: App.platform === "android" ? qsTr("Notifications are allowed") : qsTr("Your system shows them")
+                            color: Theme.text
+                            font.family: Theme.fontSans
+                            font.pixelSize: Theme.textMd
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 8. Account.
     Component {
         id: accountStep
         Flickable {
@@ -653,7 +759,7 @@ Rectangle {
         }
     }
 
-    // 7. Done.
+    // 9. Done.
     Component {
         id: doneStep
         Item {

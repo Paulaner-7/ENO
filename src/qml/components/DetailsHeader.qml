@@ -16,6 +16,8 @@ Item {
     property bool saved: false
     property bool busy: false
     property string coverReferer: ""
+    // Cover above the text (phones, and a details column beside episodes).
+    property bool stacked: Theme.compact
     readonly property alias coverItem: cover
     default property alias extraActions: actionsRow.data
     signal primary()
@@ -89,9 +91,9 @@ Item {
 
     Item {
         id: coverBox
-        x: Theme.compact ? (header.width - width) / 2 : Theme.gutter
-        y: Theme.compact ? 64 : 76
-        width: Theme.compact ? 150 : header.width > 1100 ? 230 : 190
+        x: header.stacked ? (header.width - width) / 2 : Theme.gutter
+        y: header.stacked ? 64 : 76
+        width: Theme.compact ? 150 : header.stacked ? 190 : header.width > 1100 ? 230 : 190
         height: width * 1.5
         Shadow { target: cover; lift: 1; strength: Theme.dark ? 0.9 : 0.3 }
         Cover {
@@ -106,9 +108,9 @@ Item {
 
     Column {
         id: info
-        x: Theme.compact ? Theme.gutter : coverBox.x + coverBox.width + 36
+        x: header.stacked ? Theme.gutter : coverBox.x + coverBox.width + 36
         width: header.width - x - Theme.gutter
-        y: Theme.compact ? coverBox.y + coverBox.height + 22 : coverBox.y + 14
+        y: header.stacked ? coverBox.y + coverBox.height + 22 : coverBox.y + 14
         spacing: 14
 
         opacity: 0
@@ -135,7 +137,7 @@ Item {
             text: header.series.title || ""
             color: Theme.text
             font.family: Theme.fontDisplay
-            font.pixelSize: Theme.compact ? 26 : header.width > 1100 ? 40 : 32
+            font.pixelSize: Theme.compact ? 26 : header.stacked ? 30 : header.width > 1100 ? 40 : 32
             font.weight: Font.Bold
             font.letterSpacing: -0.8
             wrapMode: Text.Wrap
@@ -222,7 +224,8 @@ Item {
             Select {
                 visible: header.saved && !!header.series.id
                 implicitWidth: 168
-                model: Router.libraryCategories(header.series.media)
+                // Visible lists, and the one the series is on even if hidden.
+                model: Router.libraryCategories(header.series.media, false, value)
                 value: { App.dependOn(Library.revision); return header.saved ? (Library.category(header.series.id) || "reading") : "reading" }
                 onPicked: (v) => Library.setCategory(header.series.id, v)
             }

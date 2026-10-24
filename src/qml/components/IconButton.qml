@@ -76,7 +76,15 @@ AbstractButton {
         }
     }
 
-    ToolTip.visible: tip.length > 0 && (hovered || nativeBtn.hovered)
-    ToolTip.delay: 600
-    ToolTip.text: tip
+    // Made only while a pointer rests on it: the attached ToolTip built a
+    // popup for every button, which a chapter list makes by the hundred.
+    Loader {
+        active: control.tip.length > 0 && (control.hovered || nativeBtn.hovered)
+        sourceComponent: ToolTip {
+            parent: control
+            visible: true
+            delay: 600
+            text: control.tip
+        }
+    }
 }

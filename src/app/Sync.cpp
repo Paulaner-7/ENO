@@ -318,8 +318,10 @@ QJsonObject Sync::snapshot() {
             {"bookmarks", bookmarks},
             {"bookmarksRemoved", bookmarksRemoved},
             {"seriesSettings", seriesSettings},
-            // The user's own library lists: [[{id, name}…], changed].
-            {"categories", QJsonArray{QJsonArray::fromVariantList(Library::storedCategories()), Library::categoriesChangedAt()}},
+            // The user's own library lists: [[{id, name}…], changed, {order,
+            // hidden, names}]. Versions before 2.10.0 read the first two.
+            {"categories", QJsonArray{QJsonArray::fromVariantList(Library::storedCategories()), Library::categoriesChangedAt(),
+                                      QJsonObject::fromVariantMap(Library::storedListLayout())}},
             {"activity", Activity::rowsForSync()}};
 }
 
@@ -519,7 +521,9 @@ int Sync::merge(const QJsonObject &s) {
         // The user's own lists: the latest change wins, as a whole.
         const auto categories = s.value("categories").toArray();
         if (categories.size() >= 2 && categories.at(1).toInteger() > Library::categoriesChangedAt()) {
-            Library::storeCategories(categories.at(0).toArray().toVariantList(), categories.at(1).toInteger());
+            // From an older version (no layout): this device's layout stays.
+            Library::storeCategories(categories.at(0).toArray().toVariantList(), categories.at(1).toInteger(),
+                                     categories.size() >= 3 ? categories.at(2).toObject().toVariantMap() : Library::storedListLayout());
             ++changes;
         }
 
