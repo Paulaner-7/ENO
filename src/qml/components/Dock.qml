@@ -5,7 +5,7 @@ import ScanCore
 
 // Navigation as a floating dock along the top or bottom of the window: every
 // section as an icon that grows under the pointer, with its name above (or
-// below) it, a highlight that slides to the current one, and search and
+// below) it, an icon that fills in for the current one, and search and
 // settings at the ends. Over a page the dock is liquid glass: a live, blurred
 // capture of what passes underneath, washed with the theme colour and edged
 // with a light rim.
@@ -60,34 +60,6 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
         onWheel: (wheel) => wheel.accepted = true
-    }
-
-    // Sliding highlight behind the current section.
-    Rectangle {
-        id: highlight
-        readonly property Item target: {
-            for (let i = 0; i < buttons.count; ++i) {
-                const it = buttons.itemAt(i)
-                if (it && it.key === dock.current) return it
-            }
-            return null
-        }
-        visible: target !== null
-        width: 46
-        height: 46
-        radius: 23
-        y: (dock.height - height) / 2
-        x: target ? row.x + target.x + (target.width - width) / 2 : 0
-        color: Theme.alpha(Theme.text, Theme.dark ? 0.1 : 0.08)
-        Behavior on x { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
-        Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: dock.side === "top" ? -5 : parent.height + 2
-            width: 16
-            height: 3
-            radius: 2
-            color: Theme.accent
-        }
     }
 
     Row {

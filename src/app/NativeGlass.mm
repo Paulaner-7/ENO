@@ -657,23 +657,10 @@ bool computeEffectiveVisibility(QQuickItem *item, QRectF *outSceneRect, qreal *o
 
     // 4. Dock item layout
     if (layout == QLatin1String("dock")) {
+        // The current section is told by the filled symbol alone (sfSymbolForEnoName
+        // swaps in the .fill variant); there is no pill behind it and no accent
+        // bar, and hover shows only through the icon growing.
         const bool active = self.owner->active();
-        if (active) {
-            NSRect pillRect = NSMakeRect((b.size.width - 44.0) / 2.0, (b.size.height - 44.0) / 2.0, 44.0, 44.0);
-            NSBezierPath *pill = [NSBezierPath bezierPathWithOvalInRect:pillRect];
-            [[nsColorFromQColor(self.owner->textColor()) colorWithAlphaComponent:0.11] setFill];
-            [pill fill];
-
-            [nsColorFromQColor(self.owner->accentColor()) setFill];
-            CGFloat barY = (self.owner->indicatorSide() == QLatin1String("top")) ? 1.0 : (b.size.height - 4.0);
-            NSBezierPath *bar = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect((b.size.width - 16.0) / 2.0, barY, 16.0, 3.0) xRadius:1.5 yRadius:1.5];
-            [bar fill];
-        } else if (self.hovered) {
-            NSRect pillRect = NSMakeRect((b.size.width - 42.0) / 2.0, (b.size.height - 42.0) / 2.0, 42.0, 42.0);
-            NSBezierPath *pill = [NSBezierPath bezierPathWithOvalInRect:pillRect];
-            [[nsColorFromQColor(self.owner->textColor()) colorWithAlphaComponent:0.06] setFill];
-            [pill fill];
-        }
 
         NSString *sym = sfSymbolForEnoName(self.owner->iconName(), active);
         CGFloat scale = self.pressed ? 0.86 : (self.hovered ? 1.15 : 1.0);
