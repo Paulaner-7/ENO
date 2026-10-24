@@ -59,6 +59,25 @@ Even if upstream touched these files, **always preserve** ENO's customizations:
 5. **UI Branding & Custom Features (`src/qml/`)**:
    - Keep `"ENO"` in `Main.qml`, `Sidebar.qml`, `SettingsPage.qml`, `AboutSettings.qml`, `UpdateBanner.qml`, plus any custom QML pages, components, C++ services, or sources the user has added to ENO.
 
+### Excluded Scope: Manga & Novels Are Never Merged
+
+ENO is anime only (`Router.animeOnly`), so upstream work on the Comics/Manga and Novels sections is **dropped, not merged**. Once the merge is staged (and before committing), pin these paths back to ENO's version:
+
+```bash
+git checkout HEAD -- src/sources/comics src/sources/bundled/comics \
+                     src/sources/novels src/sources/bundled/novels \
+                     src/qml/pages/ComicsPage.qml src/qml/pages/ComicDetails.qml \
+                     src/qml/pages/ComicReader.qml src/qml/pages/NovelsPage.qml \
+                     src/qml/pages/NovelDetails.qml src/qml/pages/NovelReader.qml \
+                     src/qml/settings/ReadingSettings.qml
+```
+
+- This also drops comic/novel files upstream adds under those folders; check `git status` for comic/novel additions elsewhere and leave them out too.
+- `sources/manifest.json`: take upstream's `version`/`updated` and its `anime` block, but keep ENO's `comics`/`novels` lists (`enoExclusive` covers comics). Never add an upstream comic/novel source.
+- `tests/fixtures/` and `tests/tst_parsing.cpp`: keep the manga/novel fixtures ENO already has; drop upstream manga/novel fixtures and their cases. Anime fixtures and cases are merged normally.
+- Everything shared is still merged: `src/core/**`, `src/app/**`, `src/sources/anime/**`, `src/sources/catalogue/**`, `src/sources/local/**`, the build system, i18n and docs.
+- If pinning a path breaks the build (a shared header changed under it) or a test, apply the smallest compatibility fix that makes Debug/Release build and `ctest` pass — never to bring manga/novel behaviour or entry points back.
+
 ---
 
 ## Step 4: Compile, Run Tests, and Commit
