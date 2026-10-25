@@ -482,6 +482,7 @@ void App::finishSiteCheck(const QString &url) {
 void App::askBatteryUnrestricted() const { platform::askBatteryUnrestricted(); }
 
 void App::prepareWebPlayer() const { platform::prepareWebPlayer(); }
+bool App::closeWebPlayerMenu() const { return platform::closeWebPlayerMenu(); }
 
 void App::setOrientation(const QString &mode) const { platform::setOrientation(mode); }
 

@@ -1,6 +1,11 @@
 find_package(Qt6 REQUIRED COMPONENTS Test)
 # Real QML controls and page bindings with deterministic service boundaries.
-find_program(SCANCORE_QMLTESTRUNNER qmltestrunner HINTS "${QT6_INSTALL_PREFIX}/bin")
+# Qt 6's own first: Linux distributions keep Qt 5's runner on the PATH (Arch:
+# /usr/bin), and it needs versioned imports.
+find_program(SCANCORE_QMLTESTRUNNER qmltestrunner
+    HINTS "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}" "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_LIBEXECS}" "${QT6_INSTALL_PREFIX}/bin"
+    NO_DEFAULT_PATH)
+find_program(SCANCORE_QMLTESTRUNNER qmltestrunner)
 if(SCANCORE_QMLTESTRUNNER)
     add_test(NAME inline_catalogue COMMAND ${CMAKE_COMMAND}
         -DSOURCE_DIR=${PROJECT_SOURCE_DIR} -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}

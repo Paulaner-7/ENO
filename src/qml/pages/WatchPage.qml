@@ -593,12 +593,15 @@ Rectangle {
         Router.leave(watch)
     }
 
-    // Android's Back: the panel closes, then full screen ends, then the
-    // player closes (Main asks before popping the page). A TV skips the
-    // middle step: it is always on its side and cannot turn to portrait, so
-    // Back only ever tried to and the player could not be left.
+    // Android's Back: the panel closes (or the web player's own menu), then
+    // full screen ends, then the player closes (Main asks before popping the
+    // page). A TV skips the middle step: it is always on its side and cannot
+    // turn to portrait, so Back only ever tried to and the player could not
+    // be left.
     function handleBack() {
         if (panel.back() || comments.visible && (comments.close(), true)) return true
+        // The site's own menu (quality, subtitles) in the web player.
+        if (systemView && App.closeWebPlayerMenu()) return true
         if (phone && landscape && !App.tv) {
             toggleFullScreen()
             return true

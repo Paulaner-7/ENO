@@ -355,6 +355,15 @@ void prepareWebPlayer() {
 #endif
 }
 
+bool closeWebPlayerMenu() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kWebPlayerClass, "closeMenu", "(Landroid/app/Activity;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object());
+#else
+    return false;
+#endif
+}
+
 void setOrientation(const QString &mode) {
 #ifdef Q_OS_ANDROID
     QJniObject::callStaticMethod<void>(kScreenClass, "orient", "(Landroid/app/Activity;Ljava/lang/String;)V",

@@ -87,6 +87,8 @@ public:
     // Android: the anime player's web view, and turning the phone for its
     // full screen (see Platform.h). Nothing elsewhere.
     Q_INVOKABLE void prepareWebPlayer() const;
+    // Back: the player's own menu closes first (true if one was open).
+    Q_INVOKABLE bool closeWebPlayerMenu() const;
     Q_INVOKABLE void setOrientation(const QString &mode) const;
     // The player's swipes on phones (see platform::brightness).
     Q_INVOKABLE double screenBrightness() const;

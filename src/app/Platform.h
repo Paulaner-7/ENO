@@ -40,6 +40,9 @@ bool notificationsAllowed();
 // thread once that is done (or no web view turned up).
 void prepareWebPlayer();
 void setWebPlayerPrepared(std::function<void()> prepared);
+// Back while the player's own menu (in its page) is open: closes that menu
+// and answers true; false when none is open.
+bool closeWebPlayerMenu();
 // Volume keys go to `pressed` (true for volume down) instead of changing the
 // volume, while on (the comic reader's page turning).
 void setVolumeKeys(bool on);

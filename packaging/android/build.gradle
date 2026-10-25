@@ -30,6 +30,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     //noinspection GradleDependency
     implementation 'androidx.core:core:1.17.0'
+    // A script in the web player's frames (WebPlayer.java), so Back closes
+    // the player's own menu first.
+    implementation 'androidx.webkit:webkit:1.15.0'
     // Page translation on the phone (MlKit.java): text recognition through
     // Play services (its models live there, not in the APK) and the
     // on-device translator.

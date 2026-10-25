@@ -25,6 +25,13 @@ Rectangle {
         direction = next > step ? 1 : -1
         step = next
     }
+    // Back (Android's Back, Alt+Left): the previous step; false on the first.
+    function back() {
+        if (leave.running) return true
+        if (step === 0) return false
+        go(step - 1)
+        return true
+    }
     function finish() {
         App.setSetting("onboarded", true)
         leave.start()

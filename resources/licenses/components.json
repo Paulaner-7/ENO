@@ -96,6 +96,12 @@
   "file": "Apache-2.0.txt"
  },
  {
+  "name": "AndroidX WebKit",
+  "use": "Back in the anime player's own menus on Android",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
   "name": "QuickJS, quickjs-java",
   "use": "JavaScript in extensions on Android",
   "licence": "MIT / Apache-2.0",

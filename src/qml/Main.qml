@@ -307,6 +307,17 @@ ApplicationWindow {
         // background, as Back does on an app's first screen. Android does not
         // close an app's last window.
         function systemBack() {
+            // The welcome: its previous step. On its first step, Back closes
+            // it when Settings showed it again, or, on the first run, sends
+            // SCANCORE to the background as on any first screen (nothing
+            // behind it moves).
+            if (onboarding.item) {
+                if (!onboarding.item.back()) {
+                    if (App.settings.onboarded === true) onboarding.item.finish()
+                    else if (App.platform === "android") App.moveToBackground()
+                }
+                return
+            }
             // A reader or the player may have its own steps first (the
             // player: its panel, then full screen).
             const page = immersive.currentItem
