@@ -8,16 +8,24 @@ Item {
     property string query: ""
     property string source: App.settings.comicSource || "all"
     property var searchTask: null
+    property var browseTask: null
+    property var browseItems: []
+    property int browsePage: 0
+    property bool browseHasNext: true
+    property int browseGeneration: 0
+    readonly property bool browsingSource: source !== "all" && source !== "local" && query.length === 0
+        && sources.some(s => s.key === source && s.canBrowse)
     // The results so far: sources answer one by one, so the grid fills
     // while the slower ones are still searching.
-    readonly property var found: !searchTask ? null : searchTask.ok ? searchTask.result : searchTask.loading ? (searchTask.partial || null) : null
+    readonly property var found: browsingSource ? ({ comics: browseItems, providers: [] })
+        : !searchTask ? null : searchTask.ok ? searchTask.result : searchTask.loading ? (searchTask.partial || null) : null
     // Beside a catalogue search: the installed extensions, searched too (the
     // catalogue does not know their titles), streamed in as they answer.
     property var extensionTask: null
     readonly property var extensionFound: !extensionTask ? null : extensionTask.ok ? extensionTask.result
         : extensionTask.loading ? (extensionTask.partial || null) : null
     readonly property bool hasExtensions: sources.some(s => String(s.key).startsWith("mihon:"))
-    readonly property int stillSearching: found && searchTask.loading ? (found.pending || 0) : 0
+    readonly property int stillSearching: found && searchTask && searchTask.loading ? (found.pending || 0) : 0
     property int latestLimit: 36
     property var latestTask: Comics.latest(latestLimit)
     property var historyTask: Library.continueItems("comic", 16)
@@ -51,7 +59,7 @@ Item {
     property bool catalogFailed: false
     readonly property bool catalogResults: !!searchTask && searchTask.ok && !catalogFailed && useCatalog && query.length > 0
     readonly property bool browsingLocal: source === "local" && query.length === 0
-    readonly property bool searching: !editing && (query.length > 0 || source === "local")
+    readonly property bool searching: !editing && (query.length > 0 || source === "local" || browsingSource)
     // Edit page: arrange the sections (PageLayout).
     property bool editing: false
     PageArranger { id: topLayout; page: "comics-top"; column: column; editing: page.editing; defaults: ["search", "sources"] }
@@ -62,7 +70,26 @@ Item {
         editing: page.editing
         defaults: ["recent", "continue", "trending", "popular", "newest", "completed", "top", "manhwa", "manhua", "latest"]
     }
-    Component.onCompleted: if (source === "local") run("")
+    Component.onCompleted: if (source === "local" || browsingSource) run("")
+
+    function moreSource() {
+        if (!browsingSource || (browseTask && browseTask.loading) || !browseHasNext) return
+        const generation = browseGeneration
+        const next = browsePage + 1
+        browseTask = Comics.browse(source, "popular", next)
+        browseTask.finished.connect((result) => {
+            if (generation !== page.browseGeneration) return
+            const seen = new Set(page.browseItems.map(item => item.id))
+            const fresh = result.items.filter(item => {
+                if (seen.has(item.id)) return false
+                seen.add(item.id)
+                return true
+            })
+            page.browseItems = page.browseItems.concat(fresh)
+            page.browsePage = next
+            page.browseHasNext = result.hasNextPage
+        })
+    }
 
     function search(text) {
         field.text = text
@@ -78,11 +105,18 @@ Item {
             return
         }
         query = trimmed
+        browseGeneration += 1
+        if (browseTask && browseTask.loading) browseTask.cancel()
+        browseTask = null
+        browseItems = []
+        browsePage = 0
+        browseHasNext = true
         if (query.length > 0) recent.remember(query)
         catalogFailed = false
         searchTask = query.length > 0 && useCatalog ? Comics.catalog(query)
             : query.length > 0 || source === "local" ? Comics.search(query, source) : null
         extensionTask = query.length > 0 && useCatalog && hasExtensions ? Comics.search(query, "extensions") : null
+        if (browsingSource) moreSource()
         flick.scrollTo(0)
     }
 
@@ -171,7 +205,7 @@ Item {
                     onPicked: (key) => {
                         page.source = key
                         App.setSetting("comicSource", key)
-                        if (key === "all" || page.searching || key === "local") page.run(page.query)
+                        page.run(page.query)
                     }
                 }
             }
@@ -190,6 +224,7 @@ Item {
                         x: Theme.gutter
                         text: !page.found ? ""
                             : page.browsingLocal ? page.found.comics.length + qsTr(" on this device")
+                            : page.browsingSource ? page.found.comics.length + " · " + ((page.sources.find(s => s.key === page.source) || {}).label || "")
                             : page.catalogResults ? qsTr("%1 titles for “%2” from %3's catalogue").arg(page.found.comics.length).arg(page.query).arg(page.catalogLabel)
                             : page.found.comics.length + qsTr(" results for “") + page.query + "”"
                                 + (page.catalogFailed ? qsTr(" · %1 is unavailable, so your sources were searched").arg(page.catalogLabel) : "")
@@ -234,6 +269,7 @@ Item {
                 }
 
                 CoverGrid {
+                    keyboardNavigation: page.browsingSource
                     items: page.found ? page.found.comics : []
                     subtitleFor: (it) => it.catalog
                         ? [it.type, it.status, it.lastChapter ? qsTr("Ch. ") + it.lastChapter : ""].filter(s => s).join(" · ")
@@ -243,15 +279,21 @@ Item {
 
                 StateView {
                     width: parent.width
-                    task: page.searchTask
-                    empty: page.searchTask && page.searchTask.ok && page.found.comics.length === 0
+                    task: page.browsingSource ? page.browseTask : page.searchTask
+                    empty: (page.browsingSource ? page.browseTask && page.browseTask.ok : page.searchTask && page.searchTask.ok) && page.found.comics.length === 0
                            && !(page.extensionFound && (page.extensionFound.comics.length > 0 || page.extensionTask.loading))
                     emptyTitle: page.browsingLocal ? qsTr("No comics on this device yet") : qsTr("No comics found")
                     emptyText: page.browsingLocal
                         ? qsTr("Choose the folders that hold your comics in Settings → Sources. Folders of images, CBZ, CBR and PDF files all work.")
                         : qsTr("Try a shorter title or another source. You can also paste a series link.")
                     emptyIcon: page.browsingLocal ? "folder-open" : "search"
-                    onRetry: page.run(page.query)
+                    onRetry: page.browsingSource ? page.moreSource() : page.run(page.query)
+                }
+                ScButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    visible: page.browsingSource && page.browseTask && page.browseTask.ok && page.browseHasNext
+                    text: qsTr("Show more")
+                    onClicked: page.moreSource()
                 }
                 // Your extensions' results, under the catalogue's.
                 Text {

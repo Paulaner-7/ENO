@@ -18,6 +18,24 @@ Item {
     property var progressFor: (item) => -1
     // Whether a card is picked in a selection.
     property var markedFor: (item) => false
+    property bool keyboardNavigation: false
+    function focusIndex(index) {
+        if (index < 0 || index >= items.length) return false
+        if (view) {
+            const top = offsetInView + Math.floor(index / columns) * rowStride
+            if (top < view.contentY) view.contentY = top
+            else if (top + cardHeight > view.contentY + view.height)
+                view.contentY = top + cardHeight - view.height
+        }
+        for (let i = 0; i < cards.count; ++i) {
+            const card = cards.itemAt(i)
+            if (card.itemIndex === index) {
+                card.forceActiveFocus(Qt.TabFocusReason)
+                return true
+            }
+        }
+        return false
+    }
     signal opened(var item, Item coverItem)
 
     // Covers rise in when the grid first fills; refreshes and filtering after
@@ -66,6 +84,7 @@ Item {
     readonly property int firstIndex: Math.max(0, firstRow) * columns
 
     Repeater {
+        id: cards
         model: grid.slots
         delegate: CoverCard {
             id: card
@@ -89,6 +108,21 @@ Item {
             progress: card.entry ? grid.progressFor(card.entry) : -1
             marked: card.entry ? grid.markedFor(card.entry) : false
             order: card.itemIndex
+            Keys.onPressed: (event) => {
+                if (!grid.keyboardNavigation) return
+                let next = card.itemIndex
+                switch (event.key) {
+                case Qt.Key_Left: next -= 1; break
+                case Qt.Key_Right: next += 1; break
+                case Qt.Key_Up: next -= grid.columns; break
+                case Qt.Key_Down: next += grid.columns; break
+                case Qt.Key_Return:
+                case Qt.Key_Enter:
+                case Qt.Key_Select: card.opened(card.item, card.coverItem); event.accepted = true; return
+                default: return
+                }
+                event.accepted = grid.focusIndex(next)
+            }
             onOpened: (it, cover) => grid.opened(it, cover)
         }
     }

@@ -1,4 +1,12 @@
 find_package(Qt6 REQUIRED COMPONENTS Test)
+# Real QML controls and page bindings with deterministic service boundaries.
+find_program(SCANCORE_QMLTESTRUNNER qmltestrunner HINTS "${QT6_INSTALL_PREFIX}/bin")
+if(SCANCORE_QMLTESTRUNNER)
+    add_test(NAME inline_catalogue COMMAND ${CMAKE_COMMAND}
+        -DSOURCE_DIR=${PROJECT_SOURCE_DIR} -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+        -DQMLTESTRUNNER=${SCANCORE_QMLTESTRUNNER}
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/qml/run.cmake)
+endif()
 # Parsers of the bundled sources, and "Read from" over them.
 if(SCANCORE_WITH_BUNDLED_SOURCES)
     qt_add_executable(scancore_tests tst_parsing.cpp)
