@@ -2,6 +2,14 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.13.1 — 2026-10-25
+
+Back does what you expect in the anime player's own menus and on the welcome screens.
+
+- **Anime player (built-in servers, Android)**: Back closes the player's own menu (quality, subtitles, speed) first, also in full screen, instead of closing the whole player.
+- **Welcome screens**: Back goes to the previous step. On the first step it leaves SCANCORE in the background, as on any first screen, or closes the welcome when Settings opened it again.
+- **Sources** show their catalogue right below the source chips when you pick one. Thanks to Fpsroxas (#27).
+
 ## 2.13.0 — 2026-10-25
 
 Friends, reactions and shared lists; two readers side by side; voices, translation and sharper scans that work on the computer with nothing sent anywhere; and glass.

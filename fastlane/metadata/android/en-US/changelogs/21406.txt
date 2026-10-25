@@ -1,0 +1,3 @@
+• Back closes the anime player's own menu first
+• Back goes to the previous welcome step
+• Sources show their catalogue below the source chips

@@ -52,6 +52,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.13.1" date="2026-10-25">
+      <description>
+        <p>Back closes the anime player's own menu before the player, and goes to the previous step on the welcome screens. Sources show their catalogue right below the source chips.</p>
+      </description>
+    </release>
     <release version="2.13.0" date="2026-10-25">
       <description>
         <p>Friends and lists shared by link, reactions on a page, two readers side by side, natural voices and page translation that work offline on the computer, sharper downloaded scans, key profiles per series, and glass menus.</p>
