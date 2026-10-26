@@ -16,9 +16,13 @@ Rectangle {
         { key: "comics", label: qsTr("Comics"), icon: "book-open" },
         { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
+        { key: "music", label: qsTr("Music"), icon: "volume-2" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "more", label: qsTr("More"), icon: "ellipsis" }
-    ].filter(t => Router.sectionShown(t.key))
+    ].filter(t => Router.sectionShown(t.key)
+                  // Six tabs at most: Music waits in More while all three
+                  // other media show.
+                  && (t.key !== "music" || Array.from(App.settings.shownMedia || ["comic", "novel", "anime"]).length < 3))
     readonly property int currentIndex: {
         const i = tabs.findIndex(t => t.key === current)
         return i >= 0 ? i : tabs.length - 1
@@ -107,14 +111,15 @@ Rectangle {
         transformOrigin: Item.BottomRight
         contentItem: Column {
             Repeater {
-                model: [
+                model: (Router.sectionShown("music") && !bar.tabs.some(t => t.key === "music")
+                        ? [{ key: "music", label: qsTr("Music"), icon: "volume-2" }] : []).concat([
                     { key: "search", label: qsTr("Search"), icon: "search" },
                     { key: "notifications", label: qsTr("Notifications"), icon: "bell" },
                     { key: "history", label: qsTr("History"), icon: "history" },
                     { key: "activity", label: qsTr("Activity"), icon: "activity" },
                     { key: "downloads", label: qsTr("Downloads"), icon: "download" },
                     { key: "settings", label: qsTr("Settings"), icon: "settings" }
-                ]
+                ])
                 delegate: ItemDelegate {
                     required property var modelData
                     width: 208

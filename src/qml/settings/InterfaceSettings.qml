@@ -290,6 +290,15 @@ SettingsPane {
                 }
             }
         }
+        SettingRow {
+            iconName: "volume-2"
+            title: qsTr("Music (preview)")
+            description: qsTr("Anime openings and endings with their lyrics, and a player that keeps going while you read. Still being built.")
+            Toggle {
+                checked: App.settings.musicSection === true
+                onToggled: App.setSetting("musicSection", checked)
+            }
+        }
     }
 
     SettingsGroup {

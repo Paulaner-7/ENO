@@ -76,6 +76,9 @@ public:
     // API.
     static bool supported();
     static void setSceneSupported(bool supported);
+    // Android: FFmpeg and mpv reach Java through the VM, once per process
+    // (also for AudioPlayer). Returns mpv's config folder; "" elsewhere.
+    static QString prepareAndroid();
 
     Renderer *createRenderer() const override;
 

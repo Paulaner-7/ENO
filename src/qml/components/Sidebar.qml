@@ -22,6 +22,7 @@ Rectangle {
         { key: "comics", label: qsTr("Comics"), icon: "book-open" },
         { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
+        { key: "music", label: qsTr("Music"), icon: "volume-2" },
         { key: "divider" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "history", label: qsTr("History"), icon: "history" },

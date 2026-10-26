@@ -415,7 +415,7 @@ ApplicationWindow {
 
             Repeater {
                 id: sectionRepeater
-                model: ["home", "comics", "novels", "anime", "library", "history", "activity", "downloads", "settings"]
+                model: ["home", "comics", "novels", "anime", "music", "library", "history", "activity", "downloads", "settings"]
                 delegate: Loader {
                     id: sectionLoader
                     required property string modelData
@@ -445,6 +445,7 @@ ApplicationWindow {
                                 case "comics": return "pages/ComicsPage.qml"
                                 case "novels": return "pages/NovelsPage.qml"
                                 case "anime": return "pages/AnimePage.qml"
+                                case "music": return "pages/MusicPage.qml"
                                 case "library": return "pages/LibraryPage.qml"
                                 case "history": return "pages/HistoryPage.qml"
                                 case "activity": return "pages/ActivityPage.qml"
@@ -628,6 +629,20 @@ ApplicationWindow {
         }
     }
 
+    // The song playing, over the pages (not over a reader or the player),
+    // above the phone's tabs or a bottom dock; the incognito badge sits
+    // above it.
+    MiniPlayer {
+        id: miniPlayer
+        parent: shellView
+        z: 4
+        visible: MusicQueue.active && immersive.depth === 0
+        width: Math.min(parent.width - 24, 560)
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: parent.height - height - 10 - (retroBar.visible ? retroBar.barHeight : tabBar.visible ? tabBar.height
+            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0)
+    }
+
     // Incognito badge over the pages, at the bottom (readers say it in
     // their own header).
     AbstractButton {
@@ -637,8 +652,8 @@ ApplicationWindow {
         visible: App.settings.incognito === true
         anchors.horizontalCenter: parent.horizontalCenter
         // Above the phone's tabs or a bottom dock, clear of page headers.
-        y: parent.height - height - 12 - (retroBar.visible ? retroBar.barHeight : tabBar.visible ? tabBar.height
-            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0)
+        y: (miniPlayer.visible ? miniPlayer.y - 8 : parent.height - 12 - (retroBar.visible ? retroBar.barHeight : tabBar.visible ? tabBar.height
+            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0)) - height
         height: 28
         width: badgeRow.implicitWidth + 22
         hoverEnabled: true

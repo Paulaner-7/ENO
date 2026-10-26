@@ -237,11 +237,44 @@ Item {
                 x: Theme.gutter
                 // Reviews and discussions are kept by AniList title.
                 visible: !page.fromSource
-                options: [{ value: "episodes", label: qsTr("Episodes") },
-                          { value: "reviews", label: qsTr("Reviews") },
-                          { value: "discussion", label: qsTr("Discussion") }]
+                options: [{ value: "episodes", label: qsTr("Episodes") }]
+                    // Its openings and endings (Music, a preview).
+                    .concat(App.settings.musicSection === true && Music.animeSongsAvailable && page.anilistId > 0
+                            ? [{ value: "songs", label: qsTr("Songs") }] : [])
+                    .concat([{ value: "reviews", label: qsTr("Reviews") }, { value: "discussion", label: qsTr("Discussion") }])
                 value: page.tab
                 onPicked: (v) => page.tab = v
+            }
+            Loader {
+                x: Theme.gutter - 8
+                width: parent.width - 2 * Theme.gutter + 16
+                active: page.tab === "songs"
+                visible: active
+                sourceComponent: Column {
+                    id: songs
+                    property var task: Music.animeSongs(page.anilistId, page.media.idMal || 0)
+                    readonly property var list: task && task.ok ? task.result : []
+                    Repeater {
+                        model: songs.list
+                        SongRow {
+                            required property var modelData
+                            required property int index
+                            width: songs.width
+                            song: modelData
+                            showAnime: false
+                            onPlayed: MusicQueue.playList(songs.list, index)
+                        }
+                    }
+                    StateView {
+                        width: parent.width
+                        task: songs.task
+                        empty: !!songs.task && songs.task.ok && songs.list.length === 0
+                        emptyTitle: qsTr("No songs for this anime yet")
+                        emptyText: qsTr("Openings and endings come from AnimeThemes.")
+                        emptyIcon: "volume-x"
+                        onRetry: songs.task = Music.animeSongs(page.anilistId, page.media.idMal || 0)
+                    }
+                }
             }
             Loader {
                 x: Theme.gutter

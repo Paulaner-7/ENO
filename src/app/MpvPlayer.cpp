@@ -309,6 +309,14 @@ bool MpvPlayer::supported() {
 
 void MpvPlayer::setSceneSupported(bool supported) { g_sceneSupported = supported; }
 
+QString MpvPlayer::prepareAndroid() {
+#if defined(SCANCORE_HAVE_MPV) && defined(Q_OS_ANDROID)
+    return androidSetup();
+#else
+    return {};
+#endif
+}
+
 MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_core(std::make_shared<MpvCore>()) {
     m_core->item = this;
 #ifdef SCANCORE_HAVE_MPV

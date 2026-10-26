@@ -121,7 +121,7 @@ endif()
 if(NOT SCANCORE_WITH_SYSTEM_WEBVIEW)
     list(REMOVE_ITEM SCANCORE_QML qml/components/WebPlayerSystem.qml)
 endif()
-set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/retro/Retro.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml qml/PlayerPage.qml
+set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/retro/Retro.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml qml/PlayerPage.qml qml/MusicQueue.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(scancore
@@ -143,6 +143,8 @@ qt_add_qml_module(scancore
         app/SingleInstance.cpp app/SingleInstance.h
         app/Announcements.cpp app/Announcements.h
         app/Notifications.cpp app/Notifications.h
+        app/Music.cpp app/Music.h
+        app/AudioPlayer.cpp app/AudioPlayer.h
         app/Platform.cpp app/Platform.h
         app/KeepAwake.cpp app/KeepAwake.h
         app/Profiler.cpp app/Profiler.h

@@ -13,6 +13,8 @@ QtObject {
     // reader left them out (welcome, Settings → Interface); a link or key
     // still opens them.
     function sectionShown(section) {
+        // Music is a preview, turned on in Settings → Interface.
+        if (section === "music") return App.settings.musicSection === true
         const media = { comics: "comic", novels: "novel", anime: "anime" }[section]
         if (!media) return true
         const shown = Array.from(App.settings.shownMedia || [])
@@ -162,6 +164,12 @@ QtObject {
         shell.push("pages/AnimeDetails.qml", { anilistId: state.anime.anilistId,
                                                summary: { title: state.anime.title, cover: state.anime.cover || "" },
                                                partyEpisode: Number(state.episode) || 1 })
+    }
+    // The song playing, full screen; with a song, that song (and, with
+    // `video`, its video).
+    function openNowPlaying(song, video) {
+        if (song && (!MusicQueue.current || MusicQueue.current.id !== song.id)) MusicQueue.playSong(song)
+        if (shell) shell.openImmersive("pages/NowPlayingPage.qml", { startWithVideo: !!video })
     }
     function openWatch(media, episodes, index) {
         if (shell) shell.openImmersive("pages/WatchPage.qml", { media: media, episodes: episodes, index: index })
