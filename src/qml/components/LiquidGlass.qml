@@ -41,6 +41,13 @@ Item {
     property color textColor: Theme.text
     property int fontSize: Theme.textXs + 1
     property bool bold: false
+    // Where the native plate draws its text; the QML fallback leaves it to
+    // the caller's own labels.
+    property string textAlign: "center"
+    property int textRightPadding: 8
+    // True while the real macOS glass is drawing (so Qt labels inside it can
+    // step aside instead of showing through it).
+    readonly property bool nativeActive: nativePlate.visible
 
     // Blur radius in pixels for the frosted interior.
     property int blurMax: isClear ? 44 : 76
@@ -120,6 +127,8 @@ Item {
         textColor: glass.textColor
         fontSize: glass.fontSize
         bold: glass.bold
+        textAlign: glass.textAlign
+        textRightPadding: glass.textRightPadding
         visible: glass.nativeEnabled && !Theme.eink && isSupported && glass.visible && glass.opacity > 0.01
     }
 

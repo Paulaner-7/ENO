@@ -52,8 +52,6 @@ QtObject {
         { id: "player.pause", scope: "player", label: qsTr("Play or pause"), keys: ["Space", "K"] },
         { id: "player.forward", scope: "player", label: qsTr("Forward 10 seconds"), keys: ["Right", "L"] },
         { id: "player.backward", scope: "player", label: qsTr("Back 10 seconds"), keys: ["Left", "J"] },
-        { id: "player.volumeUp", scope: "player", label: qsTr("Volume up"), keys: ["Up"] },
-        { id: "player.volumeDown", scope: "player", label: qsTr("Volume down"), keys: ["Down"] },
         { id: "player.mute", scope: "player", label: qsTr("Mute"), keys: ["M"] }
     ]
         // ENO: anime only, so no Comics/Novels pages or reader keys.

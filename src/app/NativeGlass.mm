@@ -359,6 +359,8 @@ bool computeEffectiveVisibility(QQuickItem *item, QRectF *outSceneRect, qreal *o
 @property (nonatomic, strong) NSColor *textColor;
 @property (nonatomic, assign) int fontSize;
 @property (nonatomic, assign) BOOL bold;
+@property (nonatomic, copy) NSString *textAlign;
+@property (nonatomic, assign) int textRightPadding;
 @end
 
 @implementation PlateContentView
@@ -385,7 +387,10 @@ bool computeEffectiveVisibility(QQuickItem *item, QRectF *outSceneRect, qreal *o
     CGFloat iconW = hasIcon ? self.iconSize : 0.0;
     CGFloat spacing = (hasIcon && hasText) ? 5.0 : 0.0;
     CGFloat totalW = iconW + spacing + textSize.width;
-    CGFloat startX = std::max<CGFloat>(4.0, (b.size.width - totalW) / 2.0);
+    const BOOL right = hasText && [self.textAlign isEqualToString:@"right"];
+    CGFloat startX = right ? b.size.width - totalW - self.textRightPadding
+                           : (b.size.width - totalW) / 2.0;
+    startX = std::max<CGFloat>(4.0, startX);
 
     if (hasIcon) {
         NSRect iconRect = NSMakeRect(startX, (b.size.height - iconW) / 2.0, iconW, iconW);
@@ -1039,6 +1044,22 @@ void NativeGlassPlate::setBold(bool b) {
     syncNativeView();
 }
 
+void NativeGlassPlate::setTextAlign(const QString &a) {
+    if (m_textAlign == a)
+        return;
+    m_textAlign = a;
+    emit textAlignChanged();
+    syncNativeView();
+}
+
+void NativeGlassPlate::setTextRightPadding(int p) {
+    if (m_textRightPadding == p)
+        return;
+    m_textRightPadding = p;
+    emit textRightPaddingChanged();
+    syncNativeView();
+}
+
 void NativeGlassPlate::itemChange(ItemChange change, const ItemChangeData &data) {
     QQuickItem::itemChange(change, data);
     if (change == ItemSceneChange) {
@@ -1123,6 +1144,8 @@ void NativeGlassPlate::syncNativeView() {
                     glass.plateContent.textColor = nsColorFromQColor(m_textColor);
                     glass.plateContent.fontSize = m_fontSize;
                     glass.plateContent.bold = m_bold;
+                    glass.plateContent.textAlign = m_textAlign.toNSString();
+                    glass.plateContent.textRightPadding = m_textRightPadding;
                     [glass.plateContent setNeedsDisplay:YES];
                 }
             }

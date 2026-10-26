@@ -4,7 +4,7 @@ import Scancore
 
 // Plays a video from an anime extension with SCANCORE's own player (libmpv,
 // MpvPlayer), with controls along the bottom: play, episodes, seek, time,
-// volume, the settings panel (WatchPage's PlayerPanel, from
+// mute, the settings panel (WatchPage's PlayerPanel, from
 // settingsSections()) and full screen. It shows the same face to WatchPage
 // as the web players (url, seek(), time(), interacted(), key()).
 // Phones: a tap shows or hides the controls; a double tap seeks 10 s on the
@@ -59,12 +59,6 @@ Item {
     // A watch party's host playing or paused.
     function setPlaying(on) { if (mpv.loaded && !mpv.ended && on === mpv.paused) mpv.togglePause() }
     function seekBy(seconds) { mpv.seekBy(seconds); interacted() }
-    function changeVolume(delta) {
-        const v = Math.max(0, Math.min(130, Math.round(mpv.volume + delta)))
-        mpv.volume = v
-        App.setSetting("playerVolume", v)
-        interacted()
-    }
 
     // Quality, Audio, Subtitles, Speed and Fit for the settings panel
     // (PlayerPanel's sections), as they are now.
@@ -159,7 +153,9 @@ Item {
         // Above the controls while they show.
         subtitlePosition: root.controlsShown && bar.visible ? Math.round(100 - (bar.height + 6) / Math.max(1, root.height) * 100) : 100
         Component.onCompleted: {
-            volume = Number(App.settings.playerVolume ?? 100)
+            // Volume is the Mac's own master volume; the player keeps 100%
+            // and only offers mute.
+            volume = 100
             speed = Number(App.settings.playerSpeed || 1)
         }
         onPositionChanged: root.time(position, duration, ended ? "Ended" : paused ? "Paused" : "Playing")
@@ -453,10 +449,12 @@ Item {
         }
 
         // Liquid Glass pills under the control groups.
-        // QML glass, not the native plate: a native glass view is always drawn
-        // above the Qt scene and would cover the volume slider and the time.
+        // Native macOS glass, like the buttons in the player's corners. The
+        // time is drawn by the plate itself (right-aligned): a native view is
+        // above the Qt scene, so a Qt label inside would sit under the glass.
         LiquidGlass {
-            nativeEnabled: false
+            id: leftPill
+            zTier: 1
             glassStyle: "clear"
             interactive: true
             trackPointer: true
@@ -466,10 +464,14 @@ Item {
             height: leftControls.height + 6
             width: leftControls.width + 12
             anchors.verticalCenter: leftControls.verticalCenter
-            tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
+            text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
+            textColor: "#e4e4e7"
+            fontSize: Theme.textSm
+            textAlign: "right"
+            textRightPadding: 10
         }
         LiquidGlass {
-            nativeEnabled: false
+            zTier: 1
             glassStyle: "clear"
             interactive: true
             trackPointer: true
@@ -480,7 +482,6 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 2
             anchors.verticalCenter: rightControls.verticalCenter
-            tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
         }
 
         Row {
@@ -518,63 +519,23 @@ Item {
                 tip: qsTr("Next episode") + root.keyHint("player.next")
                 onClicked: root.nextRequested()
             }
-            Item {
-                id: volumeGroup
+            IconButton {
+                id: muteButton
+                inGlassBar: true
+                zTier: 1
                 visible: !root.phone
-                width: volumeRow.width
-                height: 34
-                readonly property bool open: volumeHover.hovered || muteButton.hovered || volumeBar.pressed
-                Row {
-                    id: volumeRow
-                    height: 34
-                    spacing: 2
-                    IconButton {
-                        id: muteButton
-                        inGlassBar: true
-                        zTier: 1
-                        iconName: mpv.muted || mpv.volume === 0 ? "volume-x" : "volume-2"
-                        iconColor: "white"
-                        tip: (mpv.muted ? qsTr("Unmute") : qsTr("Mute")) + root.keyHint("player.mute")
-                        onClicked: mpv.muted = !mpv.muted
-                    }
-                    Slider {
-                        id: volumeBar
-                        visible: volumeGroup.open
-                        width: visible ? 90 : 0
-                        height: 34
-                        from: 0
-                        to: 100
-                        Binding on value { when: !volumeBar.pressed; value: mpv.muted ? 0 : Math.min(100, mpv.volume) }
-                        onMoved: {
-                            mpv.muted = false
-                            mpv.volume = value
-                        }
-                        onPressedChanged: if (!pressed) App.setSetting("playerVolume", Math.round(value))
-                        background: Rectangle {
-                            x: volumeBar.leftPadding
-                            y: volumeBar.topPadding + volumeBar.availableHeight / 2 - 2
-                            width: volumeBar.availableWidth
-                            height: 4
-                            radius: 2
-                            color: Qt.rgba(1, 1, 1, 0.2)
-                            Rectangle { width: volumeBar.visualPosition * parent.width; height: 4; radius: 2; color: "white" }
-                        }
-                        handle: Rectangle {
-                            x: volumeBar.leftPadding + volumeBar.visualPosition * (volumeBar.availableWidth - width)
-                            y: volumeBar.topPadding + volumeBar.availableHeight / 2 - height / 2
-                            width: 12
-                            height: 12
-                            radius: 6
-                            color: "white"
-                        }
-                    }
-                }
-                HoverHandler { id: volumeHover }
+                iconName: mpv.muted || mpv.volume === 0 ? "volume-x" : "volume-2"
+                iconColor: "white"
+                tip: (mpv.muted ? qsTr("Unmute") : qsTr("Mute")) + root.keyHint("player.mute")
+                onClicked: mpv.muted = !mpv.muted
             }
             Text {
                 height: parent.height
                 leftPadding: 8
                 verticalAlignment: Text.AlignVCenter
+                // The native plate draws the same string on macOS; keep this
+                // one laying out (opacity 0) so the pill keeps its width.
+                opacity: leftPill.nativeActive ? 0 : 1
                 text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
                 color: "#e4e4e7"
                 font.family: Theme.fontSans
@@ -618,7 +579,5 @@ Item {
     Shortcut { sequences: Keymap.sequences("player.pause"); enabled: root.visible && mpv.available; onActivated: root.togglePause() }
     Shortcut { sequences: Keymap.sequences("player.forward"); enabled: root.visible && mpv.available; onActivated: root.seekBy(10) }
     Shortcut { sequences: Keymap.sequences("player.backward"); enabled: root.visible && mpv.available; onActivated: root.seekBy(-10) }
-    Shortcut { sequences: Keymap.sequences("player.volumeUp"); enabled: root.visible && mpv.available; onActivated: root.changeVolume(5) }
-    Shortcut { sequences: Keymap.sequences("player.volumeDown"); enabled: root.visible && mpv.available; onActivated: root.changeVolume(-5) }
     Shortcut { sequences: Keymap.sequences("player.mute"); enabled: root.visible && mpv.available; onActivated: mpv.muted = !mpv.muted }
 }

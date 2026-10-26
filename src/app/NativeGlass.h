@@ -33,6 +33,10 @@ class NativeGlassPlate : public QQuickItem {
     Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor NOTIFY textColorChanged)
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
+    // "center" (default) or "right": where the text sits in the plate. The
+    // player uses right for the time beside its native control icons.
+    Q_PROPERTY(QString textAlign READ textAlign WRITE setTextAlign NOTIFY textAlignChanged)
+    Q_PROPERTY(int textRightPadding READ textRightPadding WRITE setTextRightPadding NOTIFY textRightPaddingChanged)
     Q_PROPERTY(bool isSupported READ isSupported CONSTANT)
 
 public:
@@ -81,6 +85,12 @@ public:
     bool bold() const { return m_bold; }
     void setBold(bool b);
 
+    QString textAlign() const { return m_textAlign; }
+    void setTextAlign(const QString &a);
+
+    int textRightPadding() const { return m_textRightPadding; }
+    void setTextRightPadding(int p);
+
     static bool isSupported();
 
 signals:
@@ -98,6 +108,8 @@ signals:
     void textColorChanged();
     void fontSizeChanged();
     void boldChanged();
+    void textAlignChanged();
+    void textRightPaddingChanged();
 
 protected:
     void itemChange(ItemChange change, const ItemChangeData &data) override;
@@ -125,6 +137,8 @@ private:
     QColor m_textColor = Qt::white;
     int m_fontSize = 12;
     bool m_bold = false;
+    QString m_textAlign = QStringLiteral("center");
+    int m_textRightPadding = 8;
 
     void *m_nativeView = nullptr;
 };
