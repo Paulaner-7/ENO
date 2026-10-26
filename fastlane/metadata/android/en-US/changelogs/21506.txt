@@ -1,0 +1,2 @@
+• Fixed: the picture and the app froze when the next episode started on some phones
+• Settings → Anime → Picture → Video decoding

@@ -2,6 +2,11 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.14.1 — 2026-10-26
+
+- **Android player**: the picture no longer freezes, with the app, when the next episode starts on some phones (#30). Video is decoded by the phone's hardware with its frames copied back; Settings → Anime → Picture → Video decoding keeps the faster direct way to choose.
+- **macOS**: the release can now be signed and notarized by Apple (#31), so the app opens without a trip to Privacy & Security. This starts once the project has an Apple developer account.
+
 ## 2.14.0 — 2026-10-26
 
 A new welcome: real covers, what you read and watch, your Mihon library in one step, and a look you can see before you pick it.

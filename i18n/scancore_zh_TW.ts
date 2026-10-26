@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>讓低解析度集數的線條更乾淨並放大畫面。「最佳」需要效能強的顯示卡。</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>影片解碼</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>把畫面複製回來的硬體解碼在所有手機上都穩定。直接模式稍省資源,但在部分手機上播放下一集後畫面會卡住。從下一部影片起生效。</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>硬體(穩定)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>硬體(直接)</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>軟體</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>Nét vẽ sạch hơn và phóng to cho các tập độ phân giải thấp. Tốt nhất cần card đồ họa mạnh.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Giải mã video</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Giải mã phần cứng có sao chép khung hình về ổn định trên mọi điện thoại. Trực tiếp nhẹ hơn một chút nhưng từng làm đứng hình trên vài điện thoại sau tập tiếp theo. Áp dụng từ video tiếp theo.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Phần cứng (ổn định)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Phần cứng, trực tiếp</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Phần mềm</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>Garis lebih bersih dan peningkatan resolusi untuk episode beresolusi rendah. Terbaik butuh kartu grafis yang kuat.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Dekode video</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Dekode perangkat keras dengan frame yang disalin kembali stabil di semua ponsel. Langsung sedikit lebih ringan, tetapi membekukan gambar di beberapa ponsel setelah episode berikutnya. Berlaku mulai video berikutnya.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Perangkat keras (stabil)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Perangkat keras, langsung</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Perangkat lunak</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

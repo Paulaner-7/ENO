@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>低解像度のエピソードの線をきれいにし、拡大します。「最高」には高性能なグラフィックカードが必要です。</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>動画のデコード</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>フレームを書き戻すハードウェアデコードはどの端末でも安定します。ダイレクトは少し軽いものの、一部の端末で次のエピソードの後に映像が止まりました。次の動画から有効です。</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>ハードウェア(安定)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>ハードウェア(ダイレクト)</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>ソフトウェア</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

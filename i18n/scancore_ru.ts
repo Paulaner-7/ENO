@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>Чище линии и увеличение для серий в низком разрешении. Для «Лучшее» нужна мощная видеокарта.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Декодирование видео</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Аппаратное декодирование с копированием кадров стабильно на любом телефоне. Прямое чуть легче, но на некоторых телефонах замораживало картинку после следующей серии. Действует со следующего видео.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Аппаратное (стабильно)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Аппаратное, прямое</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Программное</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

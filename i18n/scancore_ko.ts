@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>저해상도 에피소드의 선을 깔끔하게 하고 확대합니다. 최고에는 성능 좋은 그래픽 카드가 필요합니다.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>동영상 디코딩</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>프레임을 다시 복사하는 하드웨어 디코딩은 어느 휴대폰에서나 안정적입니다. 직접 방식은 조금 가볍지만 일부 휴대폰에서 다음 에피소드 후 화면이 멈췄습니다. 다음 동영상부터 적용됩니다.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>하드웨어(안정)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>하드웨어, 직접</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>소프트웨어</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

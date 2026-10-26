@@ -52,6 +52,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.14.1" date="2026-10-26">
+      <description>
+        <p>Fixes the Android player's picture freezing when the next episode starts on some phones.</p>
+      </description>
+    </release>
     <release version="2.14.0" date="2026-10-26">
       <description>
         <p>A new welcome: real covers, a choice of comics, novels and anime that the tabs follow, Mihon, Tachiyomi, Komikku, Aniyomi and LNReader libraries brought over in one step, a live preview of the look, and a sample chapter to try the reader on.</p>

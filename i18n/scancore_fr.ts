@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>Des traits plus nets et un agrandissement pour les épisodes en basse résolution. Meilleur demande une carte graphique puissante.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Décodage vidéo</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Le décodage matériel avec les images recopiées est stable sur tous les téléphones. Direct est un peu plus léger mais a figé l’image sur certains téléphones après l’épisode suivant. S’applique à la vidéo suivante.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Matériel (stable)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Matériel, direct</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Logiciel</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>कम रिज़ॉल्यूशन वाले एपिसोड के लिए साफ़ रेखाएँ और बड़ा आकार। सबसे अच्छा के लिए दमदार ग्राफ़िक्स कार्ड चाहिए।</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>वीडियो डिकोडिंग</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>फ़्रेम वापस कॉपी करने वाली हार्डवेयर डिकोडिंग हर फ़ोन पर स्थिर रहती है। डायरेक्ट थोड़ा हल्का है, लेकिन कुछ फ़ोन पर अगले एपिसोड के बाद तस्वीर रुक गई थी। अगले वीडियो से लागू होगा।</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>हार्डवेयर (स्थिर)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>हार्डवेयर, डायरेक्ट</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>सॉफ़्टवेयर</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

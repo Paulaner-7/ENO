@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>เส้นคมชัดขึ้นและขยายภาพสำหรับตอนที่ความละเอียดต่ำ ดีที่สุดต้องใช้การ์ดจอแรง ๆ</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>การถอดรหัสวิดีโอ</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>การถอดรหัสด้วยฮาร์ดแวร์แบบคัดลอกเฟรมกลับมาเสถียรในทุกโทรศัพท์ แบบตรงเบากว่าเล็กน้อย แต่ทำให้ภาพค้างในบางเครื่องหลังตอนถัดไป มีผลกับวิดีโอถัดไป</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>ฮาร์ดแวร์ (เสถียร)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>ฮาร์ดแวร์ แบบตรง</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>ซอฟต์แวร์</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>

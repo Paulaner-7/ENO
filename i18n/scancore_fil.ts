@@ -1477,6 +1477,26 @@
             <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
             <translation>Mas malinis na linya at pagpapalaki para sa mga episode na mababa ang resolution. Kailangan ng Pinakamahusay ang malakas na graphics card.</translation>
         </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Pag-decode ng video</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Matatag sa bawat phone ang hardware decoding na kinokopya pabalik ang mga frame. Medyo mas magaan ang Direct pero nag-freeze ang larawan sa ilang phone pagkatapos ng susunod na episode. Magkakabisa sa susunod na video.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Hardware (matatag)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Hardware, direct</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Software</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
