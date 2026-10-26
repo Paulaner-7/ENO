@@ -370,7 +370,7 @@ Item {
         id: bar
         anchors.bottom: parent.bottom
         width: parent.width
-        height: root.phone ? 92 : 100
+        height: root.phone ? 86 : 92
         visible: opacity > 0.01 && mpv.available
         opacity: root.controlsShown ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: Motion.slow } }
@@ -453,28 +453,30 @@ Item {
         }
 
         // Liquid Glass pills under the control groups.
+        // QML glass, not the native plate: a native glass view is always drawn
+        // above the Qt scene and would cover the volume slider and the time.
         LiquidGlass {
-            zTier: 1
+            nativeEnabled: false
             glassStyle: "clear"
             interactive: true
             trackPointer: true
             backdropItem: mpv
             radius: height / 2
-            x: leftControls.x - 8
-            height: leftControls.height + 12
-            width: leftControls.width + 16
+            x: leftControls.x - 6
+            height: leftControls.height + 6
+            width: leftControls.width + 12
             anchors.verticalCenter: leftControls.verticalCenter
             tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
         }
         LiquidGlass {
-            zTier: 1
+            nativeEnabled: false
             glassStyle: "clear"
             interactive: true
             trackPointer: true
             backdropItem: mpv
             radius: height / 2
-            height: rightControls.height + 12
-            width: rightControls.width + 16
+            height: rightControls.height + 6
+            width: rightControls.width + 12
             anchors.right: parent.right
             anchors.rightMargin: 2
             anchors.verticalCenter: rightControls.verticalCenter
@@ -485,9 +487,9 @@ Item {
             id: leftControls
             x: 8
             z: 2
-            height: 40
+            height: 34
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.phone ? 6 : 8
+            anchors.bottomMargin: root.phone ? 11 : 11
             spacing: 2
             IconButton {
                 id: playButton
@@ -516,46 +518,58 @@ Item {
                 tip: qsTr("Next episode") + root.keyHint("player.next")
                 onClicked: root.nextRequested()
             }
-            IconButton {
-                id: muteButton
-                inGlassBar: true
-                zTier: 1
+            Item {
+                id: volumeGroup
                 visible: !root.phone
-                iconName: mpv.muted || mpv.volume === 0 ? "volume-x" : "volume-2"
-                iconColor: "white"
-                tip: (mpv.muted ? qsTr("Unmute") : qsTr("Mute")) + root.keyHint("player.mute")
-                onClicked: mpv.muted = !mpv.muted
-            }
-            Slider {
-                id: volumeBar
-                visible: !root.phone
-                width: 90
+                width: volumeRow.width
                 height: 34
-                from: 0
-                to: 100
-                Binding on value { when: !volumeBar.pressed; value: mpv.muted ? 0 : Math.min(100, mpv.volume) }
-                onMoved: {
-                    mpv.muted = false
-                    mpv.volume = value
+                readonly property bool open: volumeHover.hovered || muteButton.hovered || volumeBar.pressed
+                Row {
+                    id: volumeRow
+                    height: 34
+                    spacing: 2
+                    IconButton {
+                        id: muteButton
+                        inGlassBar: true
+                        zTier: 1
+                        iconName: mpv.muted || mpv.volume === 0 ? "volume-x" : "volume-2"
+                        iconColor: "white"
+                        tip: (mpv.muted ? qsTr("Unmute") : qsTr("Mute")) + root.keyHint("player.mute")
+                        onClicked: mpv.muted = !mpv.muted
+                    }
+                    Slider {
+                        id: volumeBar
+                        visible: volumeGroup.open
+                        width: visible ? 90 : 0
+                        height: 34
+                        from: 0
+                        to: 100
+                        Binding on value { when: !volumeBar.pressed; value: mpv.muted ? 0 : Math.min(100, mpv.volume) }
+                        onMoved: {
+                            mpv.muted = false
+                            mpv.volume = value
+                        }
+                        onPressedChanged: if (!pressed) App.setSetting("playerVolume", Math.round(value))
+                        background: Rectangle {
+                            x: volumeBar.leftPadding
+                            y: volumeBar.topPadding + volumeBar.availableHeight / 2 - 2
+                            width: volumeBar.availableWidth
+                            height: 4
+                            radius: 2
+                            color: Qt.rgba(1, 1, 1, 0.2)
+                            Rectangle { width: volumeBar.visualPosition * parent.width; height: 4; radius: 2; color: "white" }
+                        }
+                        handle: Rectangle {
+                            x: volumeBar.leftPadding + volumeBar.visualPosition * (volumeBar.availableWidth - width)
+                            y: volumeBar.topPadding + volumeBar.availableHeight / 2 - height / 2
+                            width: 12
+                            height: 12
+                            radius: 6
+                            color: "white"
+                        }
+                    }
                 }
-                onPressedChanged: if (!pressed) App.setSetting("playerVolume", Math.round(value))
-                background: Rectangle {
-                    x: volumeBar.leftPadding
-                    y: volumeBar.topPadding + volumeBar.availableHeight / 2 - 2
-                    width: volumeBar.availableWidth
-                    height: 4
-                    radius: 2
-                    color: Qt.rgba(1, 1, 1, 0.2)
-                    Rectangle { width: volumeBar.visualPosition * parent.width; height: 4; radius: 2; color: "white" }
-                }
-                handle: Rectangle {
-                    x: volumeBar.leftPadding + volumeBar.visualPosition * (volumeBar.availableWidth - width)
-                    y: volumeBar.topPadding + volumeBar.availableHeight / 2 - height / 2
-                    width: 12
-                    height: 12
-                    radius: 6
-                    color: "white"
-                }
+                HoverHandler { id: volumeHover }
             }
             Text {
                 height: parent.height
@@ -572,11 +586,11 @@ Item {
         Row {
             id: rightControls
             z: 2
-            height: 40
+            height: 34
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.phone ? 6 : 8
+            anchors.bottomMargin: 11
             spacing: 2
             // Quality, audio, subtitles, speed, fit and more: one panel.
             IconButton {
