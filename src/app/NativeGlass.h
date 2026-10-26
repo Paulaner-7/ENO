@@ -154,6 +154,8 @@ class NativeGlassButton : public QQuickItem {
     Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor NOTIFY textColorChanged)
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
+    Q_PROPERTY(QString textAlign READ textAlign WRITE setTextAlign NOTIFY textAlignChanged)
+    Q_PROPERTY(int textRightPadding READ textRightPadding WRITE setTextRightPadding NOTIFY textRightPaddingChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
     Q_PROPERTY(int iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)
     Q_PROPERTY(QColor iconColor READ iconColor WRITE setIconColor NOTIFY iconColorChanged)
@@ -209,6 +211,12 @@ public:
 
     bool bold() const { return m_bold; }
     void setBold(bool b);
+
+    QString textAlign() const { return m_textAlign; }
+    void setTextAlign(const QString &a);
+
+    int textRightPadding() const { return m_textRightPadding; }
+    void setTextRightPadding(int p);
 
     QString iconName() const { return m_iconName; }
     void setIconName(const QString &i);
@@ -301,6 +309,8 @@ signals:
     void textColorChanged();
     void fontSizeChanged();
     void boldChanged();
+    void textAlignChanged();
+    void textRightPaddingChanged();
     void iconNameChanged();
     void iconSizeChanged();
     void iconColorChanged();
@@ -348,6 +358,8 @@ private:
     QColor m_textColor = Qt::white;
     int m_fontSize = 13;
     bool m_bold = false;
+    QString m_textAlign = QStringLiteral("center");
+    int m_textRightPadding = 8;
     QString m_iconName;
     int m_iconSize = 16;
     QColor m_iconColor = Qt::white;

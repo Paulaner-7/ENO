@@ -448,40 +448,73 @@ Item {
             HoverHandler { id: hoverPoint }
         }
 
-        // Liquid Glass pills under the control groups.
-        // Native macOS glass, like the buttons in the player's corners. The
-        // time is drawn by the plate itself (right-aligned): a native view is
-        // above the Qt scene, so a Qt label inside would sit under the glass.
-        LiquidGlass {
+        // The same NativeGlassButton as the player's corner icons, used as
+        // the pill behind each control group. The left plate draws the time
+        // itself (right-aligned): native glass sits above the Qt scene, so a
+        // Qt label inside it would be covered.
+        Item {
             id: leftPill
-            zTier: 1
-            glassStyle: "clear"
-            interactive: true
-            trackPointer: true
-            backdropItem: mpv
-            radius: height / 2
             x: leftControls.x - 6
-            height: leftControls.height + 6
             width: leftControls.width + 12
+            height: leftControls.height + 6
             anchors.verticalCenter: leftControls.verticalCenter
-            text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
-            textColor: "#e4e4e7"
-            fontSize: Theme.textSm
-            textAlign: "right"
-            textRightPadding: 10
+            z: 1
+            NativeGlassButton {
+                id: leftGlass
+                anchors.fill: parent
+                visible: isSupported && !Theme.eink
+                glass: true
+                passthrough: true
+                circular: false
+                cornerRadius: height / 2
+                style: "clear"
+                interactive: false
+                zTier: 0
+                text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
+                textColor: "#e4e4e7"
+                fontSize: Theme.textSm
+                textAlign: "right"
+                textRightPadding: 10
+            }
+            LiquidGlass {
+                anchors.fill: parent
+                visible: !leftGlass.visible
+                nativeEnabled: false
+                radius: height / 2
+                interactive: true
+                trackPointer: true
+                backdropItem: mpv
+            }
         }
-        LiquidGlass {
-            zTier: 1
-            glassStyle: "clear"
-            interactive: true
-            trackPointer: true
-            backdropItem: mpv
-            radius: height / 2
-            height: rightControls.height + 6
+        Item {
+            id: rightPill
             width: rightControls.width + 12
+            height: rightControls.height + 6
             anchors.right: parent.right
             anchors.rightMargin: 2
             anchors.verticalCenter: rightControls.verticalCenter
+            z: 1
+            NativeGlassButton {
+                id: rightGlass
+                anchors.fill: parent
+                visible: isSupported && !Theme.eink
+                glass: true
+                passthrough: true
+                circular: false
+                cornerRadius: height / 2
+                style: "clear"
+                interactive: false
+                zTier: 0
+            }
+            LiquidGlass {
+                anchors.fill: parent
+                visible: !rightGlass.visible
+                nativeEnabled: false
+                radius: height / 2
+                interactive: true
+                trackPointer: true
+                backdropItem: mpv
+            }
         }
 
         Row {
@@ -535,7 +568,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 // The native plate draws the same string on macOS; keep this
                 // one laying out (opacity 0) so the pill keeps its width.
-                opacity: leftPill.nativeActive ? 0 : 1
+                opacity: leftGlass.visible ? 0 : 1
                 text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
                 color: "#e4e4e7"
                 font.family: Theme.fontSans

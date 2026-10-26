@@ -789,7 +789,10 @@ bool computeEffectiveVisibility(QQuickItem *item, QRectF *outSceneRect, qreal *o
     CGFloat iconDim = hasIcon ? (self.owner->iconSize() + 2.0) : 0.0;
     CGFloat spacing = (hasIcon && hasText) ? 7.0 : 0.0;
     CGFloat totalW = iconDim + spacing + textSize.width;
-    CGFloat startX = (b.size.width - totalW) / 2.0;
+    const BOOL right = hasText && self.owner->textAlign() == QLatin1String("right");
+    CGFloat startX = right ? b.size.width - totalW - self.owner->textRightPadding()
+                           : (b.size.width - totalW) / 2.0;
+    startX = std::max<CGFloat>(2.0, startX);
 
     NSString *sym = hasIcon ? sfSymbolForEnoName(self.owner->iconName(), self.owner->active()) : @"";
 
@@ -1276,6 +1279,20 @@ void NativeGlassButton::setBold(bool b) {
     if (m_bold == b) return;
     m_bold = b;
     emit boldChanged();
+    syncNativeView();
+}
+
+void NativeGlassButton::setTextAlign(const QString &a) {
+    if (m_textAlign == a) return;
+    m_textAlign = a;
+    emit textAlignChanged();
+    syncNativeView();
+}
+
+void NativeGlassButton::setTextRightPadding(int p) {
+    if (m_textRightPadding == p) return;
+    m_textRightPadding = p;
+    emit textRightPaddingChanged();
     syncNativeView();
 }
 
