@@ -45,6 +45,7 @@
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QScreen>
+#include <QSurfaceFormat>
 #include <QStandardPaths>
 #include <QTimer>
 
@@ -161,6 +162,17 @@ void chooseGraphicsApi() {
         MpvPlayer::setSceneSupported(false);
         return;
     }
+#if defined(Q_OS_MACOS)
+    // macOS hands out a legacy 2.1 context by default, which makes mpv drop
+    // its better scalers ("GLSL version too old"); ask for 4.1 Core, the most
+    // macOS offers.
+    {
+        QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+        format.setVersion(4, 1);
+        format.setProfile(QSurfaceFormat::CoreProfile);
+        QSurfaceFormat::setDefaultFormat(format);
+    }
+#endif
 #if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
     QOpenGLContext probe;
     if (!probe.create()) {
@@ -368,6 +380,7 @@ int main(int argc, char *argv[]) {
     engine.addImageProvider(QStringLiteral("remote"), new RemoteImageProvider);
     engine.addImageProvider(QStringLiteral("icon"), new IconProvider);
     engine.addImageProvider(QStringLiteral("colorwheel"), new ColorWheelProvider);
+    engine.addImageProvider(QStringLiteral("asciiglyphs"), new AsciiGlyphProvider);
     // Settings saved by Settings pages that App does not list among its
     // defaults (text and cover size, animation speed, start page and others)
     // are restored as they were stored.

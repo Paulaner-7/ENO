@@ -34,12 +34,19 @@ QtObject {
     })
     readonly property var palette: eink ? palettes.eink : custom ? generate(customBase) : palettes[black ? "black" : dark ? "dark" : "light"]
 
+    // ASCII fluid background settings
+    readonly property bool asciiBackground: App.settings.asciiBackground !== false && !eink
+    readonly property real asciiBlur: clamp(Number(App.settings.asciiBlur !== undefined ? App.settings.asciiBlur : 0.18), 0, 1, 0.18)
+    readonly property real asciiDim: clamp(Number(App.settings.asciiDim !== undefined ? App.settings.asciiDim : 0.65), 0.1, 1, 0.65)
+    readonly property real asciiSpeed: clamp(Number(App.settings.asciiSpeed !== undefined ? App.settings.asciiSpeed : 1.0), 0.1, 3.0, 1.0)
+    readonly property real asciiFontSize: clamp(Number(App.settings.asciiFontSize !== undefined ? App.settings.asciiFontSize : 16), 10, 32, 16)
+
     // Surfaces over a background picture or a see-through window let it show:
     // panels by the theme's panel opacity, the page itself entirely.
     readonly property real windowOpacity: custom && Customize.translucentWindow ? clamp(Number(customTheme.windowOpacity), 0.3, 1, 1) : 1
-    readonly property real panelOpacity: custom ? clamp(Number(customTheme.panelOpacity), 0.2, 1, 0.85) : 1
+    readonly property real panelOpacity: custom ? clamp(Number(customTheme.panelOpacity), 0.2, 1, 0.85) : (asciiBackground ? 0.88 : 1)
     readonly property string backgroundSource: custom && typeof customTheme.background === "string" ? customTheme.background : ""
-    readonly property bool layered: backgroundSource.length > 0 || windowOpacity < 0.999
+    readonly property bool layered: asciiBackground || backgroundSource.length > 0 || windowOpacity < 0.999
 
     // The window colour, always opaque; `bg` is the page, clear when layered.
     readonly property color base: palette.bg

@@ -727,20 +727,32 @@ void MpvPlayer::setSubtitlePosition(int position) {
 #ifdef SCANCORE_HAVE_MPV
 namespace {
 
-// Anime4K's mode A: restore, then upscale; "fast" for most graphics, "hq"
-// for strong ones. The shaders come from the app's resources into its
-// cache folder once, as mpv reads files.
+// Anime4K and FSRCNNX pipelines.
+// Tuned for 1080p to 4K anime upscaling without oversharpening or AI artifacts:
+// - "hq": Mode B Soft M (balanced medium tier, no aggressive line hallucination).
+// - "light": Mode B Soft S (subtle, delicate enhancement, zero harshness).
+// - "fsrcnnx_hq": Pure mathematical CNN super-resolution, zero edge alteration.
 QStringList sharpenShaders(const QString &mode) {
     static const QHash<QString, QStringList> modes{
-        {QStringLiteral("fast"),
-         {"Clamp_Highlights", "Restore_CNN_M", "Upscale_CNN_x2_M", "AutoDownscalePre_x2", "AutoDownscalePre_x4", "Upscale_CNN_x2_S"}},
         {QStringLiteral("hq"),
-         {"Clamp_Highlights", "Restore_CNN_VL", "Upscale_CNN_x2_VL", "AutoDownscalePre_x2", "AutoDownscalePre_x4", "Upscale_CNN_x2_M"}}};
+         {"Clamp_Highlights", "Restore_CNN_Soft_M", "Upscale_CNN_x2_M", "AutoDownscalePre_x2", "AutoDownscalePre_x4", "Upscale_CNN_x2_S"}},
+        {QStringLiteral("light"),
+         {"Clamp_Highlights", "Restore_CNN_Soft_S", "Upscale_CNN_x2_S", "AutoDownscalePre_x2"}},
+        {QStringLiteral("fast"),
+         {"Clamp_Highlights", "Restore_CNN_Soft_S", "Upscale_CNN_x2_S", "AutoDownscalePre_x2"}}};
+    // FSRCNNX: one shader, plain fragment passes (no compute, so it runs on
+    // macOS's OpenGL 4.1).
+    static const QHash<QString, QString> fsrcnnx{
+        {QStringLiteral("fsrcnnx"), QStringLiteral("FSRCNNX_x2_8-0-4-1")},
+        {QStringLiteral("fsrcnnx_hq"), QStringLiteral("FSRCNNX_x2_16-0-4-1")}};
     QStringList out;
     const auto dir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/anime4k");
     QDir().mkpath(dir);
-    for (const auto &name : modes.value(mode)) {
-        const auto file = QStringLiteral("Anime4K_%1.glsl").arg(name);
+    QStringList names = modes.value(mode);
+    if (fsrcnnx.contains(mode))
+        names = {fsrcnnx.value(mode)};
+    for (const auto &name : names) {
+        const auto file = fsrcnnx.contains(mode) ? name + QStringLiteral(".glsl") : QStringLiteral("Anime4K_%1.glsl").arg(name);
         const auto path = dir + QLatin1Char('/') + file;
         const QString resource = QStringLiteral(":/shaders/anime4k/") + file;
         if (QFileInfo(path).size() != QFileInfo(resource).size()) {

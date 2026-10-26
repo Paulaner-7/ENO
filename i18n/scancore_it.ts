@@ -1230,6 +1230,14 @@
             <translation>Passa subito al conto alla rovescia dell&apos;episodio successivo quando iniziano i titoli di coda.</translation>
         </message>
         <message>
+            <source>Fallback to Italian extensions when needed</source>
+            <translation>Passa alle estensioni italiane se mancano i sottotitoli</translation>
+        </message>
+        <message>
+            <source>Automatically switches to AnimeSaturn or other Italian extensions if the primary server does not have Italian subtitles.</source>
+            <translation>Passa automaticamente ad AnimeSaturn o ad altre estensioni italiane se il server primario non dispone di sottotitoli in italiano.</translation>
+        </message>
+        <message>
             <source>Subtitles</source>
             <translation>Sottotitoli</translation>
         </message>

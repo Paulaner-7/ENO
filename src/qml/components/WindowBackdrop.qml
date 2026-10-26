@@ -30,6 +30,18 @@ Item {
         Behavior on color { ColorAnimation { duration: Motion.normal } }
     }
 
+    // Multidirectional bold ASCII fluid animation background. It runs on its
+    // own, continuously: it never pauses with the window.
+    AsciiFluid {
+        id: asciiFluid
+        anchors.fill: parent
+        visible: Theme.asciiBackground && backdrop.source.length === 0
+        blur: Theme.asciiBlur
+        dim: Theme.asciiDim
+        speed: Theme.asciiSpeed
+        fontSize: Theme.asciiFontSize
+    }
+
     Loader {
         id: picture
         anchors.fill: parent

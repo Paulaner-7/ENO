@@ -26,6 +26,13 @@ public:
     QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
 };
 
+// image://asciiglyphs/atlas — Monospace character atlas for the ASCII fluid background shader.
+class AsciiGlyphProvider : public QQuickImageProvider {
+public:
+    AsciiGlyphProvider();
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
+};
+
 // A chapter page. Decodes off the GUI thread and draws the image as a stack
 // of tiles, so very tall webtoon strips stay sharp without exceeding the
 // GPU's texture size limit. Pages are decoded at the size they are drawn

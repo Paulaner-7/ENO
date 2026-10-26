@@ -6,6 +6,8 @@
 
 #include <QBuffer>
 #include <QCache>
+#include <QFont>
+#include <QFontMetrics>
 #include <QGuiApplication>
 #include <QFile>
 #include <QImageReader>
@@ -340,6 +342,7 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
     const auto query = QUrlQuery(id.section(QLatin1Char('?'), 1));
     const auto color = query.queryItemValue(QStringLiteral("color"), QUrl::FullyDecoded);
     const auto stroke = query.queryItemValue(QStringLiteral("stroke"));
+    const bool filled = !query.queryItemValue(QStringLiteral("fill")).isEmpty();
     QByteArray svg;
     {
         QMutexLocker lock(&mutex);
@@ -351,7 +354,7 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
         }
     }
     const QColor qcolor(color.isEmpty() ? QStringLiteral("#ffffff") : color);
-    QImage sfImage = renderSfSymbol(name, qcolor, target, false);
+    QImage sfImage = renderSfSymbol(name, qcolor, target, filled);
     if (!sfImage.isNull()) {
         QMutexLocker lock(&mutex);
         if (rendered.size() > 512)
@@ -388,6 +391,52 @@ QImage IconProvider::requestImage(const QString &id, QSize *size, const QSize &r
     if (size)
         *size = target;
     return image;
+}
+
+// ---------------------------------------------------------------- AsciiGlyphProvider
+
+AsciiGlyphProvider::AsciiGlyphProvider() : QQuickImageProvider(QQuickImageProvider::Image) {}
+
+QImage AsciiGlyphProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
+    Q_UNUSED(id);
+    // 20 characters: "  ..::--==++**##%%@@"
+    static const QString chars = QStringLiteral("  ..::--==++**##%%@@");
+    const int numChars = chars.length(); // 20
+
+    // High resolution for clean, crisp glyph sampling on any DPI display
+    const int cellW = 32;
+    const int cellH = 48;
+    const int totalW = cellW * numChars;
+    const int totalH = cellH;
+
+    if (size)
+        *size = QSize(totalW, totalH);
+
+    QImage atlas(totalW, totalH, QImage::Format_ARGB32_Premultiplied);
+    atlas.fill(Qt::transparent);
+
+    QPainter painter(&atlas);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::TextAntialiasing, true);
+
+    QFont font;
+    font.setStyleHint(QFont::Monospace);
+    font.setFamilies({"Menlo", "Monaco", "Courier"});
+    font.setPixelSize(38);
+    font.setWeight(QFont::Black); // Bold weight (900) for thick symbol strokes
+    painter.setFont(font);
+    painter.setPen(Qt::white);
+
+    for (int i = 0; i < numChars; ++i) {
+        const QChar ch = chars.at(i);
+        if (ch == ' ')
+            continue;
+        const QRect r(i * cellW, 0, cellW, cellH);
+        painter.drawText(r, Qt::AlignCenter, QString(ch));
+    }
+    painter.end();
+
+    return atlas;
 }
 
 // ---------------------------------------------------------------- PanelImage

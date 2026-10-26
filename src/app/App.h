@@ -53,7 +53,7 @@ public:
     // into null.
     static QVariant plain(const QVariant &value);
     Q_INVOKABLE QString image(const QString &url, const QString &referer = QString()) const;
-    Q_INVOKABLE QString icon(const QString &name, const QString &color) const;
+    Q_INVOKABLE QString icon(const QString &name, const QString &color, bool filled = false) const;
     Q_INVOKABLE void openUrl(const QString &url) const;
     // Before an embedded browser view loads anything (see WebBridge.h).
     Q_INVOKABLE void prepareWeb() const;

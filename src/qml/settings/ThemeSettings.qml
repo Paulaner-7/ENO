@@ -240,6 +240,52 @@ SettingsPane {
         }
     }
 
+    SettingsGroup {
+        title: qsTr("ASCII Fluid background")
+        note: qsTr("Multidirectional bold ASCII fluid animation drifting behind everything with soft ambient blur.")
+
+        SettingRow {
+            iconName: "sparkles"
+            title: qsTr("ASCII background")
+            description: qsTr("Display the animated ASCII fluid backdrop.")
+            Toggle {
+                checked: App.settings.asciiBackground !== false
+                onToggled: App.setSetting("asciiBackground", checked)
+            }
+        }
+        SettingRow {
+            visible: App.settings.asciiBackground !== false
+            iconName: "eye"
+            title: qsTr("Blur")
+            description: qsTr("Softens the character strokes into a luminous glowing fluid.")
+            Level {
+                value: Theme.clamp(Number(App.settings.asciiBlur !== undefined ? App.settings.asciiBlur : 0.18), 0, 1, 0.18)
+                onMoved: (v) => App.setSetting("asciiBlur", Math.round(v * 100) / 100)
+            }
+        }
+        SettingRow {
+            visible: App.settings.asciiBackground !== false
+            iconName: "sun"
+            title: qsTr("Dim")
+            description: qsTr("Darkens the fluid to ensure foreground text and cards never clash.")
+            Level {
+                value: Theme.clamp(Number(App.settings.asciiDim !== undefined ? App.settings.asciiDim : 0.65), 0.1, 1, 0.65)
+                onMoved: (v) => App.setSetting("asciiDim", Math.round(v * 100) / 100)
+            }
+        }
+        SettingRow {
+            visible: App.settings.asciiBackground !== false
+            iconName: "zap"
+            title: qsTr("Speed")
+            description: qsTr("Flow speed of the viscous fluid drift.")
+            Level {
+                value: Theme.clamp(Number(App.settings.asciiSpeed !== undefined ? App.settings.asciiSpeed : 1.0) / 2.0, 0.1, 1, 0.5)
+                suffix: "x"
+                onMoved: (v) => App.setSetting("asciiSpeed", Math.round(v * 200) / 100)
+            }
+        }
+    }
+
     // ------------------------------------------------------------ custom
 
     SettingsGroup {

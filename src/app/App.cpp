@@ -61,6 +61,11 @@ const QVariantMap kDefaults{
     {"theme", "dark"},
     {"accent", "mono"},
     {"reducedMotion", false},
+    {"asciiBackground", true},
+    {"asciiBlur", 0.18},
+    {"asciiDim", 0.65},
+    {"asciiSpeed", 1.0},
+    {"asciiFontSize", 16},
     // E-ink screens: black and white, no motion, a flash on comic page
     // turns (einkFlash), novels paged by taps.
     {"eink", false},
@@ -117,12 +122,12 @@ const QVariantMap kDefaults{
     // The video player's volume (0-130) and speed, kept between episodes.
     {"playerVolume", 100},
     // The player's subtitles (size, outline, colour, a box behind them) and
-    // Anime4K sharpening (off, fast, hq).
+    // Anime 4K upscaler for high-end GPUs (M4 Pro): default hq (Mode B Soft L).
     {"subtitleScale", 1.0},
     {"subtitleOutline", 3},
     {"subtitleColor", "#ffffff"},
     {"subtitleBox", false},
-    {"animeSharpen", "off"},
+    {"animeSharpen", "hq"},
     {"playerSpeed", 1},
     // How the picture fills the player (fit, crop, stretch, original) and
     // the phone gestures in full screen (NativePlayer.qml).
@@ -132,6 +137,7 @@ const QVariantMap kDefaults{
     {"playerHoldSpeed", true},
     {"autoSkip", false},
     {"animeSubLang", "it"},
+    {"autoItalianFallback", true},
     {"animeSubQuality", "high"},
     {"animeVideoQuality", "max"},
     // What plays first: a picture height (0 for the best) and the audio
@@ -372,8 +378,9 @@ QString App::image(const QString &url, const QString &referer) const {
     return RemoteImageProvider::encode(url, referer);
 }
 
-QString App::icon(const QString &name, const QString &color) const {
-    return QStringLiteral("image://icon/%1?color=%2").arg(name, QString::fromUtf8(QUrl::toPercentEncoding(color)));
+QString App::icon(const QString &name, const QString &color, bool filled) const {
+    return QStringLiteral("image://icon/%1?color=%2%3").arg(name, QString::fromUtf8(QUrl::toPercentEncoding(color)),
+                                                             filled ? QStringLiteral("&fill=1") : QString());
 }
 
 void App::openUrl(const QString &url) const {

@@ -232,13 +232,6 @@ Item {
                     tip: qsTr("Watch from")
                     onClicked: watchFrom.start(page.media, false)
                 }
-                IconButton {
-                    visible: !page.fromSource
-                    iconName: "external-link"
-                    filled: true
-                    tip: qsTr("Open on AniList")
-                    onClicked: App.openUrl("https://anilist.co/anime/" + page.anilistId)
-                }
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
             }
             }

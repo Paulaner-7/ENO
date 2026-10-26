@@ -71,6 +71,9 @@ AbstractButton {
             name: control.iconName
             size: control.iconSize
             color: control.iconColor
+            // The current state's symbol: outline when off, filled when on
+            // (the native button does the same through its own active state).
+            filled: control.active
             scale: control.pressed ? 0.85 : control.hovered ? 1.1 : 1
             Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
         }

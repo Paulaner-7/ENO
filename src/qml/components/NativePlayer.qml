@@ -100,6 +100,21 @@ Item {
         const fit = App.settings.playerFit || "fit"
         out.push({ key: "fit", icon: "crop", label: qsTr("Fit"), value: (fits.find(f => f.value === fit) || fits[0]).label,
                    choices: fits.map(f => ({ label: f.label, detail: f.detail, selected: f.value === fit, pick: () => App.setSetting("playerFit", f.value) })) })
+        const sharpens = [
+            { value: "off", label: qsTr("Off"), detail: qsTr("Original 1080p stream without upscaler") },
+            { value: "hq", label: qsTr("Anime4K Soft (M)"), detail: qsTr("Stepped down from L: softer lines, no harsh AI artifacts") },
+            { value: "light", label: qsTr("Anime4K Light (S)"), detail: qsTr("Ultra-gentle enhancement: minimal processing") },
+            { value: "fsrcnnx_hq", label: qsTr("4K FSRCNNX"), detail: qsTr("Natural mathematical CNN: zero edge alteration") }
+        ]
+        const sharpen = App.settings.animeSharpen || "hq"
+        out.push({ key: "sharpen", icon: "sparkles", label: qsTr("Upscale 4K"),
+                   value: (sharpens.find(s => s.value === sharpen) || sharpens[1]).label,
+                   choices: sharpens.map(s => ({
+                       label: s.label,
+                       detail: s.detail,
+                       selected: s.value === sharpen,
+                       pick: () => App.setSetting("animeSharpen", s.value)
+                   })) })
         return out
     }
 

@@ -67,6 +67,7 @@ Item {
     signal serverPicked(string url, string quality)
     signal skipClicked(real toSeconds)
     signal episodeSelected(int index)
+    signal italianMissing()
 
     property int taps: 0
 
@@ -136,7 +137,7 @@ Item {
         + "var episodes=" + episodesJson + ";"
         + "var currentIdx=" + Number(currentIndex) + ";"
         + "if(!w.__sc){"
-        + "  w.__sc={k:[],toggleFs:false,subConfigured:false,qualityConfigured:false,moved:false,act:null,drawerOpen:false,autoResumed:false};"
+        + "  w.__sc={k:[],toggleFs:false,subConfigured:false,qualityConfigured:false,moved:false,act:null,drawerOpen:false,autoResumed:false,italianMissing:false,playTicks:0};"
         + "  try{"
         + "    localStorage.setItem('zen-subtitle-quality','" + subQualityPref + "');"
         + "    localStorage.setItem('zen-quality-pref','1080p');"
@@ -195,7 +196,20 @@ Item {
         + "              localStorage.removeItem('artplayer-subtitle-pref-dub');"
         + "            }catch(_){}"
         + "          }"
+        + "          w.__sc.hasSubIta=true;"
+        + "        }else{"
+        + "          w.__sc.hasSubIta=false;"
+        + "          if('" + subLangPref + "'==='it'){"
+        + "            w.__sc.italianMissing=true;"
+        + "          }"
         + "        }"
+        + "        w.__sc.subConfigured=true;"
+        + "      }"
+        + "    }"
+        + "    if(!w.__sc.subConfigured&&art&&(art.playing||(art.video&&art.video.readyState>=2))){"
+        + "      w.__sc.playTicks=(w.__sc.playTicks||0)+1;"
+        + "      if(w.__sc.playTicks>=6&&'" + subLangPref + "'==='it'){"
+        + "        w.__sc.italianMissing=true;"
         + "        w.__sc.subConfigured=true;"
         + "      }"
         + "    }"
@@ -410,7 +424,8 @@ Item {
         + "var toggleFs=w.__sc.toggleFs;w.__sc.toggleFs=false;"
         + "var moved=w.__sc.moved;w.__sc.moved=false;"
         + "var act=w.__sc.act;w.__sc.act=null;"
-        + "return JSON.stringify({t:v?v.currentTime:0,d:v&&isFinite(v.duration)?v.duration:0,s:v&&v.ended?'Ended':'',k:k,fs:toggleFs,mv:moved,act:act});"
+        + "var noIta=!!w.__sc.italianMissing;w.__sc.italianMissing=false;"
+        + "return JSON.stringify({t:v?v.currentTime:0,d:v&&isFinite(v.duration)?v.duration:0,s:v&&v.ended?'Ended':'',k:k,fs:toggleFs,mv:moved,act:act,noIta:noIta});"
         + "})()"
 
     function host(address) {
@@ -507,6 +522,7 @@ Item {
                     else if (s.act.name === 'skip') root.skipClicked(s.act.to)
                     else if (s.act.name === 'episode') root.episodeSelected(s.act.index)
                 }
+                if (s.noIta && App.settings.autoItalianFallback !== false) root.italianMissing()
                 if (s.d > 0) root.time(s.t, s.d, s.s || "")
             } catch (e) {}
         })

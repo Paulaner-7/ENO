@@ -188,7 +188,7 @@ Item {
                             color: isRating ? Theme.text : Theme.textMuted
                             font.family: Theme.fontSans
                             font.pixelSize: Theme.textXs + 1
-                            font.weight: isRating ? Font.SemiBold : Font.Medium
+                            font.weight: isRating ? Font.DemiBold : Font.Medium
                         }
                     }
                 }
@@ -214,10 +214,13 @@ Item {
                 loading: header.busy
                 onClicked: header.primary()
             }
-            ScButton {
-                text: header.saved ? qsTr("In library") : qsTr("Add to library")
-                iconName: header.saved ? "bookmark-check" : "bookmark"
-                glassBezel: true
+            // In the library: the symbol alone, filled once it is saved.
+            IconButton {
+                filled: true
+                active: header.saved
+                iconName: "bookmark"
+                iconColor: header.saved ? Theme.text : Theme.textMuted
+                tip: header.saved ? qsTr("In library") : qsTr("Add to library")
                 onClicked: header.toggleSaved()
             }
             // Where a saved series sits in the library, and favourites.

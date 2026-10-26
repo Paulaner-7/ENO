@@ -206,10 +206,12 @@ qt_add_resources(scancore assets
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-symbol-light.png
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon.png
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-icon-glass.png
+        ${PROJECT_SOURCE_DIR}/resources/branding/asciiglyphs.png
         ${PROJECT_SOURCE_DIR}/resources/shaders/cover.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/liquidglass.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/panel.vert.qsb
-        ${PROJECT_SOURCE_DIR}/resources/shaders/panel.frag.qsb)
+        ${PROJECT_SOURCE_DIR}/resources/shaders/panel.frag.qsb
+        ${PROJECT_SOURCE_DIR}/resources/shaders/asciifluid.frag.qsb)
 foreach(icon ${SCANCORE_ICONS})
     list(APPEND SCANCORE_ICON_PATHS ${PROJECT_SOURCE_DIR}/${icon})
 endforeach()
@@ -217,7 +219,7 @@ qt_add_resources(scancore icons
     PREFIX /
     BASE ${PROJECT_SOURCE_DIR}/resources
     FILES ${SCANCORE_ICON_PATHS})
-# Anime4K's shaders for the player (Settings → Anime → Sharpen).
+# Anime4K and FSRCNNX shaders for the player (Settings → Anime → Sharpen).
 file(GLOB SCANCORE_SHADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/resources/shaders/anime4k/*.glsl)
 qt_add_resources(scancore anime4k
     PREFIX /

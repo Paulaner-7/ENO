@@ -45,7 +45,8 @@ Rectangle {
     // tracker anime play from the built-in servers (Settings → Anime).
     property bool asked: false
     readonly property string trackerPlayer: Anime.playerEngine === "" ? "extensions" : (App.settings.animeTrackerPlayer || "builtin")
-    readonly property bool finding: watchFrom.quiet && !!watchFrom.task && watchFrom.task.loading
+    readonly property bool finding: (watchFrom.quiet && !!watchFrom.task && watchFrom.task.loading)
+                                     || (!!italianFallbackTask && italianFallbackTask.loading)
     readonly property var series: fromSource ? media : Anime.seriesFor(media)
     property var streamsTask: null
     // Extensions: the episode's videos as its hosters answer, and the one
@@ -67,6 +68,10 @@ Rectangle {
     property int resumeSeekAttempts: 0
     property bool sideOpen: false
     property bool ended: false
+    property var italianFallbackTask: null
+    property var italianFallbackSeasonsTask: null
+    property var pendingItalianMatch: null
+    property bool italianFallbackTriggered: false
 
     readonly property bool phone: App.platform === "android"
     readonly property bool landscape: width > height
@@ -168,6 +173,10 @@ Rectangle {
         pickGrace.stop()
         streamsTask = null
         videosTask = null
+        italianFallbackTriggered = false
+        italianFallbackTask = null
+        italianFallbackSeasonsTask = null
+        pendingItalianMatch = null
         const local = Downloads.localVideo(series.id || "", episodes[i].key || "")
         offline = !!local.url
         if (offline) {
@@ -474,6 +483,67 @@ Rectangle {
         function onFinished(result) { watch.applyVideos(result, true) }
     }
 
+    function handleItalianMissing() {
+        if (italianFallbackTriggered || nativeStream || !hasSources || App.settings.autoItalianFallback === false) return
+        if (italianFallbackTask && italianFallbackTask.loading) return
+        italianFallbackTriggered = true
+
+        const allSources = Anime.sources() || []
+        const itSources = allSources.filter(s => s.enabled && (s.language === "it" || /saturn|world|unity|aniplay/i.test(s.label || s.key)))
+        if (itSources.length === 0) {
+            Router.toast(qsTr("No Italian subtitles on primary server; no Italian extensions installed."), "warning")
+            return
+        }
+
+        Router.toast(qsTr("Italian subtitles not found on primary server; searching on %1…").arg("AnimeSaturn"), "info")
+
+        const saturn = itSources.find(s => /saturn/i.test(s.label || s.key))
+        const sourceKeys = saturn ? [saturn.key].concat(itSources.filter(s => s.key !== saturn.key).map(s => s.key)) : itSources.map(s => s.key)
+
+        italianFallbackTask = Anime.watchFrom(media, sourceKeys)
+    }
+
+    Connections {
+        target: watch.italianFallbackTask
+        function onFinished(result) {
+            const matches = result.matches || []
+            if (matches.length === 0) {
+                Router.toast(qsTr("Anime not found on Italian extensions; keeping primary server."), "warning")
+                return
+            }
+            const saturn = matches.find(m => /saturn/i.test(m.sourceLabel || m.source))
+            const match = saturn || matches[0]
+            if (match.seasons) {
+                watch.pendingItalianMatch = match
+                watch.italianFallbackSeasonsTask = Anime.sourceAnime(match.url, { title: match.title, seasons: true })
+                return
+            }
+            const provider = { source: match.source, url: match.url, title: match.title, sourceLabel: match.sourceLabel }
+            Anime.setProvider(media.anilistId || 0, provider)
+            Router.toast(qsTr("Switched to %1 with Italian subtitles").arg(match.sourceLabel || "AnimeSaturn"), "success")
+            watch.provider = provider
+            watch.load(watch.index)
+        }
+        function onFailed(err) {
+            Router.toast(qsTr("Could not switch to Italian extension: ") + err, "error")
+        }
+    }
+
+    Connections {
+        target: watch.italianFallbackSeasonsTask
+        function onFinished(result) {
+            const m = watch.pendingItalianMatch
+            if (!m) return
+            const seasons = result.seasons || []
+            const season = seasons.length > 0 ? seasons[0] : ({})
+            const provider = Object.assign({}, m, season, { seasons: false, sourceLabel: m.sourceLabel })
+            Anime.setProvider(media.anilistId || 0, provider)
+            Router.toast(qsTr("Switched to %1 with Italian subtitles").arg(m.sourceLabel || "AnimeSaturn"), "success")
+            watch.provider = provider
+            watch.load(watch.index)
+        }
+    }
+
     property real lastSaved: 0
     function saveProgress(force) {
         if (!series.id || !episode.key || duration <= 0) return
@@ -761,6 +831,7 @@ Rectangle {
                 function onPreviousRequested() { if (watch.hasPrev) watch.load(watch.index - 1) }
                 function onNextRequested() { watch.nextEpisode() }
                 function onTapped() { watch.toggleChrome() }
+                function onItalianMissing() { watch.handleItalianMissing() }
             }
         }
         CastOverlay {

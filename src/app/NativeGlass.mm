@@ -75,6 +75,7 @@ NSString *sfSymbolForEnoName(const QString &name, bool active = false) {
         {QStringLiteral("chevrons-left"), QStringLiteral("backward.end.fill")},
         {QStringLiteral("chevrons-right"), QStringLiteral("forward.end.fill")},
         {QStringLiteral("play"), QStringLiteral("play.fill")},
+        {QStringLiteral("circle-play"), QStringLiteral("play.rectangle")},
         {QStringLiteral("pause"), QStringLiteral("pause.fill")},
         {QStringLiteral("skip-back"), QStringLiteral("backward.end.fill")},
         {QStringLiteral("skip-forward"), QStringLiteral("forward.end.fill")},

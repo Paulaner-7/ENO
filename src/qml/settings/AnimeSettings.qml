@@ -49,6 +49,12 @@ SettingsPane {
             }
         }
         SettingRow {
+            iconName: "git-branch"
+            title: qsTr("Fallback to Italian extensions when needed")
+            description: qsTr("Automatically switches to AnimeSaturn or other Italian extensions if the primary server does not have Italian subtitles.")
+            Toggle { checked: App.settings.autoItalianFallback !== false; onToggled: App.setSetting("autoItalianFallback", checked) }
+        }
+        SettingRow {
             iconName: "sparkles"
             title: qsTr("Subtitle quality")
             description: qsTr("Render resolution for ASS/SSA styled subtitles.")
@@ -185,11 +191,16 @@ SettingsPane {
         title: qsTr("Picture")
         SettingRow {
             iconName: "sparkles"
-            title: qsTr("Sharpen (Anime4K)")
-            description: qsTr("Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card; on phones Fast is the most to try.")
+            title: qsTr("Upscale 4K")
+            description: qsTr("Anime4K Soft (M) scales down from L to eliminate AI edge artifacts. Light (S) is ultra-gentle. FSRCNNX is 100% natural.")
             Segmented {
-                options: [{ value: "off", label: qsTr("Off") }, { value: "fast", label: qsTr("Fast") }, { value: "hq", label: qsTr("Best") }]
-                value: App.settings.animeSharpen || "off"
+                options: [
+                    { value: "off", label: qsTr("Off") },
+                    { value: "hq", label: qsTr("Soft (M)") },
+                    { value: "light", label: qsTr("Light (S)") },
+                    { value: "fsrcnnx_hq", label: qsTr("FSRCNNX") }
+                ]
+                value: App.settings.animeSharpen || "hq"
                 onPicked: (v) => App.setSetting("animeSharpen", v)
             }
         }
