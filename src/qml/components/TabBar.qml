@@ -10,6 +10,7 @@ Rectangle {
     signal navigate(string section)
     signal openPalette()
 
+    // The media the reader chose on the welcome (Settings → Interface).
     readonly property var tabs: [
         { key: "home", label: qsTr("Home"), icon: "house" },
         { key: "comics", label: qsTr("Comics"), icon: "book-open" },
@@ -17,7 +18,7 @@ Rectangle {
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "more", label: qsTr("More"), icon: "ellipsis" }
-    ]
+    ].filter(t => Router.sectionShown(t.key))
     readonly property int currentIndex: {
         const i = tabs.findIndex(t => t.key === current)
         return i >= 0 ? i : tabs.length - 1

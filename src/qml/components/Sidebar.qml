@@ -29,7 +29,7 @@ Rectangle {
         { key: "downloads", label: qsTr("Downloads"), icon: "download" },
         // Opens the notification area rather than a page.
         { key: "notifications", label: qsTr("Notifications"), icon: "bell" }
-    ]
+    ].filter(s => Router.sectionShown(s.key))
 
     implicitWidth: collapsed ? 72 : 228
     width: implicitWidth

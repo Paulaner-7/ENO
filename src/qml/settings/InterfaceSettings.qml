@@ -268,6 +268,31 @@ SettingsPane {
     }
 
     SettingsGroup {
+        title: qsTr("Sections")
+        SettingRow {
+            iconName: "layers"
+            title: qsTr("What you read and watch")
+            description: qsTr("The tabs, Home and Retro's hub show these. A link still opens the others.")
+            Row {
+                spacing: 6
+                Repeater {
+                    model: [{ key: "comic", label: qsTr("Comics") }, { key: "novel", label: qsTr("Novels") }, { key: "anime", label: qsTr("Anime") }]
+                    Chip {
+                        required property var modelData
+                        readonly property var shown: { const s = Array.from(App.settings.shownMedia || []); return s.length ? s : ["comic", "novel", "anime"] }
+                        text: modelData.label
+                        selected: shown.indexOf(modelData.key) >= 0
+                        iconName: selected ? "check" : ""
+                        // One always stays.
+                        enabled: !(selected && shown.length === 1)
+                        onClicked: Router.setShownMedia(selected ? shown.filter(m => m !== modelData.key) : shown.concat([modelData.key]))
+                    }
+                }
+            }
+        }
+    }
+
+    SettingsGroup {
         visible: App.platform !== "android" && !Theme.retro
         title: qsTr("Navigation")
         note: qsTr("Narrow windows and phones always use tabs along the bottom.")

@@ -9,6 +9,31 @@ QtObject {
     property string section: "home"
 
     function go(name) { if (shell) shell.goSection(name) }
+    // Comics, Novels and Anime show in the tabs and sidebar unless the
+    // reader left them out (welcome, Settings → Interface); a link or key
+    // still opens them.
+    function sectionShown(section) {
+        const media = { comics: "comic", novels: "novel", anime: "anime" }[section]
+        if (!media) return true
+        const shown = Array.from(App.settings.shownMedia || [])
+        return shown.length === 0 || shown.indexOf(media) >= 0
+    }
+    // Shows only these media (["comic", "novel", "anime"], at least one):
+    // the tabs and sidebar, Home's sections and Retro's hub follow.
+    function setShownMedia(media) {
+        const list = ["comic", "novel", "anime"].filter(m => media.indexOf(m) >= 0)
+        if (list.length === 0) return
+        App.setSetting("shownMedia", list)
+        const sections = { comic: "comics", novel: "novels", anime: "anime" }
+        for (const kind of ["comic", "novel", "anime"])
+            PageLayout.setRemoved("home", sections[kind], list.indexOf(kind) < 0)
+        const kinds = { comics: "comic", novels: "novel", anime: "anime" }
+        const current = Retro.sections().map(s => s.key)
+        const wanted = current.filter(k => !kinds[k] || list.indexOf(kinds[k]) >= 0)
+        for (const k of ["comics", "novels", "anime"])
+            if (list.indexOf(kinds[k]) >= 0 && wanted.indexOf(k) < 0) wanted.push(k)
+        Retro.setSections(wanted)
+    }
     // A page on top of the current section's stack.
     function push(path, props) { if (shell) shell.push(path, props || {}) }
     function back() { if (shell) shell.back() }
