@@ -2,6 +2,19 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.14.0 — 2026-10-26
+
+A new welcome: real covers, what you read and watch, your Mihon library in one step, and a look you can see before you pick it.
+
+- **Opening**: the mark draws in over drifting covers of the most followed comics and trending anime, then settles into the first question.
+- **What do you read and watch?** Comics, novels and anime as three big toggles. The tabs, the sidebar, Home and Retro's hub follow, and Settings → Interface → Sections brings any back.
+- **Coming from another app?** Pick Mihon, Tachiyomi, Komikku, Aniyomi or LNReader: the backup, Mihon's downloads folder and the extensions your series came from, in one card that counts what is coming over.
+- **Pick a look** beside a live preview of Home or Retro's hub that changes with the layout, theme, accent and glass.
+- **Try the reader** on a short sample chapter of our own: scroll it or turn its pages, and see the progress bar you pick on it.
+- **Extras** as three short cards: trackers, the scancore.onl account and notifications. The last step sums up your answers, each a tap away from changing it.
+- Swipe between steps on phones, tap the dots, use the arrow keys or Back; on a TV the remote's D-pad moves between controls. Standard and Retro each have their own layout, on phones, tablets and computers.
+- Fixed: in most languages the light theme was called "thin" (the font weight) in Settings.
+
 ## 2.13.2 — 2026-10-26
 
 Search Comick your way, and Anime4K's Best looks right on Linux.

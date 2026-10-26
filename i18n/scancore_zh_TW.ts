@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>區塊</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>你讀和看的內容</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>分頁列、首頁和 Retro 中心顯示這些。連結仍能開啟其他的。</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6659,7 +6671,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細</translation>
+            <translation>淺色</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Retro 動態磚</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>已新增 1 部作品</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>已加入 %1 部作品</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>已標記 %1 個章節和集數</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>已安裝 %1 個擴充功能</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>已連結 %1 個已下載章節</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 部等待被找到</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader 備份 (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>所有檔案 (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon、Komikku、TachiyomiSY、Tachiyomi 或 Aniyomi 備份 (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>略過</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>略過</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>關閉歡迎頁並開始使用 SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>之後再說</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>稍後再說</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>下一步</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>第 %1 步,共 %2 步</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>返回</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>歡迎</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>你讀什麼、看什麼?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>隨意選擇。分頁和首頁會隨之變化,設定 → 介面可以找回其餘的。</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>韓漫、日漫和條漫</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>網路小說和你的 EPUB 書</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>從你停下的地方繼續的集數</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>要換 App?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>從別的 App 搬過來?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>你的書庫、下載和擴充功能一次搬過來。</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>書庫、下載和擴充功能,一次搞定。</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>我是新使用者</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>歡迎加入</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>來自 %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>在 LNReader 中:更多 → 備份 → 建立備份。然後在這裡選擇檔案。</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>在 %1 中:更多 → 設定 → 備份與還原 → 建立備份。然後在這裡選擇檔案。</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>備份</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>正在搬移你的書庫…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>正在讀取備份…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 部漫畫和 %2 部動畫 · %3 個擴充功能待安裝</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>你的作品、清單、進度和追蹤服務。</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>換一個</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>選擇備份</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>下載資料夾</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>更改</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>選擇</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>你作品所在的擴充功能和儲存庫會隨備份一起提供,讓它們在相同的來源開啟。</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE 內建漫畫、小說和動畫的來源。如果你有擴充功能儲存庫的連結,可以填在這裡;擴充功能頁面也隨時可以加入。</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>玻璃</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>選單和面板能透出後面的內容</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>試試閱讀器</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>捲動範例、點一下進度列,選擇你喜歡的。這些也都在設定 → 閱讀中。</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>進度列</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>幾個附加項目</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>現在點一下,或之後在設定裡。</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>讀完一章或看完一集,你的追蹤服務也會同步前進。</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>scancore.onl 帳號</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>已以 %1 登入。你的書庫和進度會同步。</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>在每台裝置上的進度、好友、共享清單和互動。沒有帳號也全都能用。</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>登入或建立帳號</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>你追蹤作品的新章節,以及 SCANCORE 的消息。</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>新章節和新集數</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>這是你的選擇。點一項即可修改。</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>閱讀與觀看</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>搬移自</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>從零開始</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>樣式</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>閱讀器</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>不顯示進度列</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>頁碼列</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>線條</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>浮動列</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>番外</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>已登入</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>通知已開</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>通知已關</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>打開你的書庫</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>瀏覽漫畫</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>看動畫</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>讀小說</translation>
         </message>
     </context>
     <context>
@@ -9191,7 +9507,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細</translation>
+            <translation>淺色</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10388,7 +10704,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細</translation>
+            <translation>淺色</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>在新視窗中開啟</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>所選外觀的預覽</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>首頁</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>繼續閱讀</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新章節</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>加入書庫</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>下載</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>分享</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>首頁</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>漫畫</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>動畫</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>向下捲動,或點一側翻頁。</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>進度列顯示你讀到章節的哪裡。</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>點擊或拖動進度列跳到某一頁。</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>幫它換個樣式,在這裡看效果。</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>分頁或長條:在上方切換。</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>完。你真正的章節就從這之後開始。</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>範例章節</translation>
         </message>
     </context>
     <context>

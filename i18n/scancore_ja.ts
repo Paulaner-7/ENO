@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>セクション</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>読むもの・観るもの</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>タブ、ホーム、Retro のハブにこれらが表示されます。リンクからは他も開けます。</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6659,7 +6671,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Retro タイル</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 作品を追加しました</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 作品を追加しました</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 件の話数を既読にしました</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>拡張機能を %1 件インストールしました</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>ダウンロード済みの %1 話を関連付けました</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 作品が見つかるのを待っています</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReaderのバックアップ (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>すべてのファイル (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon・Komikku・TachiyomiSY・Tachiyomi・Aniyomi のバックアップ (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>スキップ</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>スキップ</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>ようこそ画面を閉じて SCANCORE を使い始める</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>今はしない</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>あとで</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>ステップ %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>戻る</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>ようこそ</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>何を読んで、何を観ますか?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>好きなものを選んでください。タブとホームが合わせて変わり、設定 → インターフェースで残りを戻せます。</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>マンファ、マンガ、Webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Web 小説と EPUB の本</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>止めたところから再生されるエピソード</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>乗り換えですか?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>別のアプリから移りますか?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>ライブラリ、ダウンロード、拡張機能がまとめて移ります。</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>ライブラリ、ダウンロード、拡張機能をまとめて。</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>初めて使います</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>ようこそ</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 から</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader で:その他 → バックアップ → バックアップを作成。そのファイルをここで選んでください。</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 で:その他 → 設定 → バックアップと復元 → バックアップを作成。そのファイルをここで選んでください。</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>バックアップ</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>ライブラリを取り込み中…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>バックアップを読み込み中…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>コミック %1 件・アニメ %2 件・インストールする拡張機能 %3 件</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>作品、リスト、進行状況、トラッカー。</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>別のファイル</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>バックアップを選ぶ</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>ダウンロードフォルダ</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>変更</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>選択</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>作品の元になった拡張機能とリポジトリもバックアップと一緒に提案されるので、同じソースで開けます。</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE にはコミック、小説、アニメの独自ソースがあります。拡張機能リポジトリのリンクがあればここに入れられます。拡張機能ページでもいつでも追加できます。</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ガラス</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>メニューやシートの背後が透けて見えます</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>リーダーを試す</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>サンプルをスクロールし、バーをタップして、好みのものを選んでください。すべて設定 → 読書にもあります。</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>進行バー</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>いくつかの追加設定</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>どれも今すぐワンタップ、または後で設定から。</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>話を読み終えると、トラッカーでも進みます。</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>scancore.onl アカウント</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 としてログイン中。ライブラリと進行状況が同期されます。</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>すべての端末での進行状況、フレンド、共有リスト、リアクション。アカウントなしでも全部使えます。</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>ログインまたはアカウント作成</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>フォロー中の作品の新しい話と、SCANCORE からのお知らせ。</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>新しい話とエピソード</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>選んだ内容です。タップして変更できます。</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>読むことと観ること</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>移行元</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>ゼロから</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>見た目</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>リーダー</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>進行バーなし</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>ページバー</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>ライン</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>フローティングバー</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>番外編</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>ログイン済み</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>通知オン</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>通知オフ</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>ライブラリを開く</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>コミックを見る</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>アニメを観る</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>小説を読む</translation>
         </message>
     </context>
     <context>
@@ -9191,7 +9507,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10388,7 +10704,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>新しいウィンドウで開く</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>選んだ見た目のプレビュー</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>ホーム</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>続きを読む</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新しいチャプター</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>ライブラリに追加</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>ダウンロード</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>共有</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>ホーム</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>コミック</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>アニメ</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>下へスクロールするか、端をタップしてページをめくります。</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>バーは話のどこまで読んだかを示します。</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>バーをタップまたはドラッグしてページに移動します。</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>ほかの見た目を選んで、ここで確かめてください。</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>ページかひと続きのストリップか:上で切り替え。</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>おわり。本当の話はこのすぐ後から始まります。</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>サンプルの話</translation>
         </message>
     </context>
     <context>

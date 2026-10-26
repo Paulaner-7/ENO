@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>Bagian</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Yang kamu baca dan tonton</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Tab, Beranda, dan hub Retro menampilkan ini. Tautan tetap membuka yang lain.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Ubin Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 seri ditambahkan</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 seri ditambahkan</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 bab dan episode ditandai</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 ekstensi terpasang</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 bab unduhan ditautkan</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 menunggu ditemukan</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>Cadangan LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Semua file (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Cadangan Mihon, Komikku, TachiyomiSY, Tachiyomi atau Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>lewati</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Lewati</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Tutup sambutan dan mulai pakai SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>nanti</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Nanti saja</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>lanjut</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Langkah %1 dari %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>kembali</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Selamat datang</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Apa yang kamu baca dan tonton?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>Pilih yang mana saja. Tab dan Beranda mengikuti, dan Pengaturan → Antarmuka mengembalikan sisanya.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga, dan webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Novel web dan buku EPUB-mu</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Episode yang berlanjut dari tempat kamu berhenti</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Pindahan?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Pindahan dari aplikasi lain?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Pustaka, unduhan, dan ekstensimu pindah sekaligus.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Pustaka, unduhan, dan ekstensi, sekaligus.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Aku baru di sini</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Selamat bergabung</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>Dari %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>Di LNReader: Lainnya → Cadangan → Buat cadangan. Lalu pilih filenya di sini.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>Di %1: Lainnya → Pengaturan → Cadangkan dan pulihkan → Buat cadangan. Lalu pilih filenya di sini.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Cadangan</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Memindahkan pustakamu…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Membaca cadangan…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 komik dan %2 anime · %3 ekstensi untuk dipasang</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Seri, daftar, progres, dan tracker-mu.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Yang lain</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Pilih cadangan</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>Folder unduhan</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Ubah</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Pilih</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Ekstensi dan repositori asal seri-serimu ditawarkan bersama cadangan, jadi seri itu terbuka di sumber yang sama.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE punya sumber sendiri untuk komik, novel, dan anime. Kalau kamu punya tautan repositori ekstensi, bisa ditaruh di sini; halaman Ekstensi juga menerimanya kapan saja.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Kaca</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Menu dan panel memperlihatkan yang ada di belakangnya</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Coba pembacanya</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Gulir contohnya, ketuk bilahnya, dan pilih yang cocok. Semuanya juga ada di Pengaturan → Membaca.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>Bilah progres</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Beberapa tambahan</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Masing-masing cukup satu ketuk sekarang, atau nanti di Pengaturan.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Menyelesaikan bab atau episode memajukannya di tracker-mu.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Akun scancore.onl</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>Masuk sebagai %1. Pustaka dan progresmu tersinkron.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Progresmu di setiap perangkat, teman, daftar bersama, dan reaksi. Semuanya juga jalan tanpa akun.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Masuk atau buat akun</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Bab baru dari yang kamu ikuti, dan kabar dari SCANCORE.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Bab dan episode baru</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Ini pilihanmu. Ketuk salah satu untuk mengubahnya.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Membaca dan menonton</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Pindahan dari</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Mulai dari nol</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Tampilan</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Pembaca</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>Tanpa bilah progres</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Bilah halaman</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Garis</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Bilah mengambang</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ekstra</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Sudah masuk</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Notifikasi nyala</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Notifikasi mati</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Buka pustakamu</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Jelajahi komik</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Nonton anime</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Baca novel</translation>
         </message>
     </context>
     <context>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>Buka di jendela baru</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Pratinjau tampilan pilihanmu</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Beranda</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Lanjutkan membaca</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Bab baru</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Tambah ke pustaka</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Unduh</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Bagikan</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>beranda</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>komik</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Gulir ke bawah, atau ketuk sisi untuk membalik halaman.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Bilah ini menunjukkan sejauh mana kamu di bab ini.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Ketuk atau seret bilahnya untuk lompat ke halaman.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Pilih tampilan lain untuknya dan lihat di sini.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Halaman atau satu strip panjang: ganti di atas.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Tamat. Bab sungguhanmu dimulai setelah ini.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Bab contoh</translation>
         </message>
     </context>
     <context>

@@ -52,6 +52,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.14.0" date="2026-10-26">
+      <description>
+        <p>A new welcome: real covers, a choice of comics, novels and anime that the tabs follow, Mihon, Tachiyomi, Komikku, Aniyomi and LNReader libraries brought over in one step, a live preview of the look, and a sample chapter to try the reader on.</p>
+      </description>
+    </release>
     <release version="2.13.2" date="2026-10-26">
       <description>
         <p>Comick's search filters on the Comics page (genres and tags to include or leave out, status, type, years, rating and more), and Anime4K's Best sharpening drawn correctly on Linux.</p>

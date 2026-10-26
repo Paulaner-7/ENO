@@ -4564,6 +4564,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>Mga seksyon</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Ang binabasa at pinapanood mo</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Ipinapakita ito ng mga tab, Home at hub ng Retro. Nabubuksan pa rin ng link ang iba.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6651,7 +6663,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Manipis</translation>
+            <translation>Maliwanag</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6808,6 +6820,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Mga tile ng Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 serye ang naidagdag</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 serye ang naidagdag</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 kabanata at episode ang namarkahan</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 extension ang na-install</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 na-download na kabanata ang naiugnay</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 ang naghihintay na mahanap</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>Backup ng LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Lahat ng file (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Backup ng Mihon, Komikku, TachiyomiSY, Tachiyomi o Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>laktawan</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Laktawan</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Isara ang welcome at simulang gamitin ang SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>mamaya na</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Hindi muna</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>susunod</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Hakbang %1 ng %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>bumalik</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Maligayang pagdating</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Ano ang binabasa at pinapanood mo?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>Pumili ng kahit ano. Susunod ang mga tab at Home, at ibinabalik ng Settings → Interface ang iba.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga at webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Mga web novel at iyong mga EPUB na libro</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Mga episode na nagpapatuloy kung saan ka huminto</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Lilipat?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Galing sa ibang app?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Sabay-sabay na lilipat ang iyong library, mga download at extension.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Library, mga download at extension, sabay-sabay.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Bago ako rito</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Maligayang pagsakay</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>Mula sa %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>Sa LNReader: More → Backup → Create backup. Pagkatapos piliin ang file dito.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>Sa %1: More → Settings → Backup and restore → Create backup. Pagkatapos piliin ang file dito.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Backup</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Inililipat ang iyong library…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Binabasa ang backup…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 komiks at %2 anime · %3 extension na ii-install</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Ang iyong mga serye, list, progress at tracker.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Iba pa</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Pumili ng backup</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>Folder ng mga download</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Palitan</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Pumili</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Kasama sa backup ang mga extension at repository na pinagmulan ng iyong mga serye, para magbukas sila sa parehong mga source.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>May sariling source ang SCANCORE para sa komiks, nobela at anime. Kung may link ka sa isang extension repository, puwede itong ilagay dito; tinatanggap din ito ng Extensions page kahit kailan.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Salamin</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Ipinapakita ng mga menu at sheet ang nasa likod nila</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Subukan ang reader</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>I-scroll ang halimbawa, i-tap ang bar, at piliin ang bagay sa iyo. Nasa Settings → Reading din ang lahat ng ito.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>Progress bar</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Ilang dagdag</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Isang tap lang ang bawat isa ngayon, o mamaya sa Settings.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Kapag natapos mo ang kabanata o episode, uusad din ito sa iyong mga tracker.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Isang scancore.onl account</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>Naka-sign in bilang %1. Naka-sync ang iyong library at progress.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Ang progress mo sa bawat device, mga kaibigan, mga shared list at reaksyon. Gumagana rin ang lahat kahit wala nito.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Mag-sign in o gumawa ng account</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Mga bagong kabanata ng sinusubaybayan mo, at balita mula sa SCANCORE.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Mga bagong kabanata at episode</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Ito ang mga pinili mo. I-tap ang isa para baguhin.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Pagbabasa at panonood</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Galing sa</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Nagsisimula mula sa simula</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Hitsura</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Reader</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>Walang progress bar</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Bar ng mga pahina</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Linya</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Lumulutang na bar</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Extra</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Naka-sign in</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Naka-on ang mga notification</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Naka-off ang mga notification</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Buksan ang iyong library</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Mag-browse ng komiks</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Manood ng anime</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Magbasa ng nobela</translation>
         </message>
     </context>
     <context>
@@ -9176,7 +9492,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Manipis</translation>
+            <translation>Maliwanag</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10373,7 +10689,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Manipis</translation>
+            <translation>Maliwanag</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11281,6 +11597,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>Buksan sa bagong window</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Preview ng itsurang pinili mo</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Home</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Ituloy ang pagbabasa</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Mga bagong kabanata</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Idagdag sa library</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>I-download</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Ibahagi</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>home</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>komiks</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Mag-scroll pababa, o i-tap ang gilid para lumipat ng pahina.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Ipinapakita ng bar kung gaano ka na kalayo sa kabanata.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>I-tap o i-drag ang bar para lumipat sa isang pahina.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Pumili ng ibang itsura nito at tingnan dito.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Mga pahina o isang mahabang strip: palitan sa itaas.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Wakas. Kasunod na nito ang tunay mong mga kabanata.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Halimbawang kabanata</translation>
         </message>
     </context>
     <context>

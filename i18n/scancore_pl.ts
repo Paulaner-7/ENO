@@ -4564,6 +4564,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>Sekcje</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Co czytasz i oglądasz</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Karty, ekran główny i hub Retro pokazują te. Link nadal otworzy pozostałe.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6651,7 +6663,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Cienka</translation>
+            <translation>Jasny</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6808,6 +6820,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Kafelki Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>Dodano 1 serię</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>Dodano serie: %1</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>Oznaczono rozdziały i odcinki: %1</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>Zainstalowano %1 rozszerzeń</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>Połączono pobrane rozdziały: %1</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>Czeka na znalezienie: %1</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>Kopia zapasowa LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Wszystkie pliki (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Kopia zapasowa Mihon, Komikku, TachiyomiSY, Tachiyomi lub Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>pomiń</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Pomiń</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Zamknij powitanie i zacznij korzystać ze SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>nie teraz</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Nie teraz</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>dalej</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Krok %1 z %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>wstecz</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Witaj</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Co czytasz i oglądasz?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>Wybierz dowolne. Karty i ekran główny się dostosują, a Ustawienia → Interfejs przywrócą resztę.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga i webtoony</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Powieści internetowe i twoje książki EPUB</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Odcinki, które wznawiają się tam, gdzie skończyłeś</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Przesiadka?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Przesiadasz się z innej aplikacji?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Twoja biblioteka, pobrane i rozszerzenia przychodzą za jednym razem.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Biblioteka, pobrane i rozszerzenia za jednym razem.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Jestem tu nowy</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Witaj na pokładzie</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>Z %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>W LNReader: Więcej → Kopia zapasowa → Utwórz kopię. Potem wybierz plik tutaj.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>W %1: Więcej → Ustawienia → Kopia zapasowa i przywracanie → Utwórz kopię. Potem wybierz plik tutaj.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Kopia zapasowa</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Przenoszę twoją bibliotekę…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Czytam kopię…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>Komiksy: %1, anime: %2 · rozszerzenia do instalacji: %3</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Twoje serie, listy, postęp i trackery.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Inna</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Wybierz kopię</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>Folder pobranych</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Zmień</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Wybierz</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Rozszerzenia i repozytoria, z których pochodzą twoje serie, przychodzą z kopią, by otwierały się w tych samych źródłach.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE ma własne źródła komiksów, powieści i anime. Jeśli masz link do repozytorium rozszerzeń, może trafić tutaj; strona Rozszerzenia przyjmie go w każdej chwili.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Szkło</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Menu i panele pokazują to, co jest pod nimi</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Wypróbuj czytnik</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Przewiń przykład, stuknij pasek i wybierz, co ci pasuje. Wszystko jest też w Ustawienia → Czytanie.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>Pasek postępu</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Kilka dodatków</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Każdy to teraz jedno stuknięcie albo później w Ustawieniach.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Ukończenie rozdziału lub odcinka przesuwa go też w twoich trackerach.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Konto scancore.onl</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>Zalogowano jako %1. Biblioteka i postęp się synchronizują.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Twój postęp na każdym urządzeniu, znajomi, wspólne listy i reakcje. Wszystko działa też bez konta.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Zaloguj się lub załóż konto</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Nowe rozdziały tego, co obserwujesz, i wieści od SCANCORE.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Nowe rozdziały i odcinki</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Oto twoje wybory. Stuknij, żeby zmienić.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Czytanie i oglądanie</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Przesiadka z</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Od zera</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Wygląd</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Czytnik</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>Bez paska postępu</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Pasek stron</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Linia</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Pływający pasek</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Dodatki</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Zalogowano</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Powiadomienia włączone</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Powiadomienia wyłączone</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Otwórz bibliotekę</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Przeglądaj komiksy</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Oglądaj anime</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Czytaj powieści</translation>
         </message>
     </context>
     <context>
@@ -9176,7 +9492,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Cienka</translation>
+            <translation>Jasny</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10373,7 +10689,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Cienka</translation>
+            <translation>Jasny</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11281,6 +11597,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>Otwórz w nowym oknie</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Podgląd wybranego wyglądu</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Start</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Czytaj dalej</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Nowe rozdziały</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Dodaj do biblioteki</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Pobierz</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Udostępnij</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>start</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>komiksy</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Przewiń w dół lub stuknij bok, by przewrócić stronę.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Pasek pokazuje, jak daleko jesteś w rozdziale.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Stuknij lub przeciągnij pasek, by przejść do strony.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Wybierz mu inny wygląd i zobacz go tutaj.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Strony lub jeden długi pasek: przełącz powyżej.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Koniec. Twoje prawdziwe rozdziały zaczynają się zaraz potem.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Przykładowy rozdział</translation>
         </message>
     </context>
     <context>

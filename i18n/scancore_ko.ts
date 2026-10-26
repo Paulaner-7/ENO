@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>섹션</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>읽고 보는 것</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>탭, 홈, Retro 허브에 이것들이 표시됩니다. 링크로는 다른 것도 열립니다.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6659,7 +6671,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>가늘게</translation>
+            <translation>라이트</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Retro 타일</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>작품 1개 추가됨</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>작품 %1개를 추가했습니다</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>화와 에피소드 %1개를 표시했습니다</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>확장 %1개 설치됨</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>다운로드한 화 %1개를 연결했습니다</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1개가 찾아지기를 기다립니다</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader 백업 (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>모든 파일 (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon, Komikku, TachiyomiSY, Tachiyomi 또는 Aniyomi 백업 (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>건너뛰기</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>건너뛰기</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>환영 화면을 닫고 SCANCORE 사용 시작</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>나중에</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>나중에</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>다음</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>%1/%2단계</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>뒤로</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>환영합니다</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>무엇을 읽고 보시나요?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>원하는 것을 고르세요. 탭과 홈이 따라 바뀌고, 설정 → 인터페이스에서 나머지를 되돌릴 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>만화, 망가, 웹툰</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>웹소설과 EPUB 책</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>멈춘 곳에서 이어지는 에피소드</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>앱을 옮기시나요?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>다른 앱에서 오셨나요?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>라이브러리, 다운로드, 확장 프로그램이 한 번에 옮겨집니다.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>라이브러리, 다운로드, 확장 프로그램을 한 번에.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>처음이에요</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>환영합니다</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1에서</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader에서: 더보기 → 백업 → 백업 만들기. 그다음 여기서 파일을 선택하세요.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1에서: 더보기 → 설정 → 백업 및 복원 → 백업 만들기. 그다음 여기서 파일을 선택하세요.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>백업</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>라이브러리를 옮기는 중…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>백업을 읽는 중…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>만화 %1개, 애니 %2개 · 설치할 확장 프로그램 %3개</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>작품, 목록, 진행 상황, 트래커.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>다른 파일</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>백업 선택</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>다운로드 폴더</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>변경</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>선택</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>작품이 온 확장 프로그램과 저장소가 백업과 함께 제안되어 같은 소스에서 열립니다.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE에는 만화, 소설, 애니용 자체 소스가 있습니다. 확장 프로그램 저장소 링크가 있으면 여기에 넣을 수 있고, 확장 프로그램 페이지에서도 언제든 추가할 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>글래스</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>메뉴와 시트가 뒤쪽을 비춰 보여 줍니다</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>리더 써 보기</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>샘플을 스크롤하고 막대를 눌러 보고 마음에 드는 것을 고르세요. 모두 설정 → 읽기에도 있습니다.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>진행 막대</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>몇 가지 추가 설정</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>지금 한 번 탭하거나 나중에 설정에서 할 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>화나 에피소드를 다 보면 트래커에서도 진행됩니다.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>scancore.onl 계정</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1(으)로 로그인했습니다. 라이브러리와 진행 상황이 동기화됩니다.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>모든 기기의 진행 상황, 친구, 공유 목록, 반응. 계정 없이도 모두 쓸 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>로그인 또는 계정 만들기</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>팔로우하는 작품의 새 화와 SCANCORE 소식.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>새 화와 에피소드</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>선택한 내용입니다. 눌러서 바꿀 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>읽고 보기</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>옮겨 온 곳</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>새로 시작</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>모양</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>리더</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>진행 막대 없음</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>페이지 막대</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>선</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>떠 있는 막대</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>외전</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>로그인됨</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>알림 켜짐</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>알림 꺼짐</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>라이브러리 열기</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>만화 둘러보기</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>애니 보기</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>소설 읽기</translation>
         </message>
     </context>
     <context>
@@ -9191,7 +9507,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>가늘게</translation>
+            <translation>라이트</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10388,7 +10704,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>가늘게</translation>
+            <translation>라이트</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>새 창에서 열기</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>선택한 모양 미리보기</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>홈</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>이어 읽기</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>새 챕터</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>라이브러리에 추가</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>다운로드</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>공유</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>홈</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>만화</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>애니</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>아래로 스크롤하거나 한쪽을 눌러 페이지를 넘기세요.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>막대는 이 화를 얼마나 읽었는지 보여 줍니다.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>막대를 누르거나 끌어서 페이지로 이동하세요.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>다른 모양을 골라 여기서 확인해 보세요.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>페이지 또는 긴 스트립: 위에서 바꾸세요.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>끝. 진짜 화는 이 바로 다음부터 시작합니다.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>샘플 화</translation>
         </message>
     </context>
     <context>

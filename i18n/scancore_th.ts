@@ -4564,6 +4564,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>ส่วน</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>สิ่งที่คุณอ่านและดู</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>แท็บ หน้าแรก และฮับ Retro แสดงรายการเหล่านี้ ลิงก์ยังเปิดอันอื่นได้</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6651,7 +6663,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>บาง</translation>
+            <translation>สว่าง</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6808,6 +6820,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>ไทล์ Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>เพิ่ม 1 เรื่องแล้ว</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>เพิ่มแล้ว %1 เรื่อง</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>ทำเครื่องหมายตอนแล้ว %1 ตอน</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>ติดตั้ง %1 ส่วนขยายแล้ว</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>เชื่อมตอนที่ดาวน์โหลดแล้ว %1 ตอน</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>รอการค้นหา %1 เรื่อง</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>ข้อมูลสำรองของ LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>ไฟล์ทั้งหมด (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>ไฟล์สำรองของ Mihon, Komikku, TachiyomiSY, Tachiyomi หรือ Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>ข้าม</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>ข้าม</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>ปิดหน้าต้อนรับและเริ่มใช้ SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>ไว้ทีหลัง</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>ไว้ทีหลัง</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>ถัดไป</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>ขั้นที่ %1 จาก %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>ย้อนกลับ</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>ยินดีต้อนรับ</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>คุณอ่านและดูอะไร?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>เลือกได้ตามใจ แท็บและหน้าแรกจะเปลี่ยนตาม และการตั้งค่า → อินเทอร์เฟซเรียกส่วนที่เหลือกลับได้</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>มังฮวา มังงะ และเว็บตูน</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>นิยายเว็บและหนังสือ EPUB ของคุณ</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>ตอนที่เล่นต่อจากที่คุณหยุดไว้</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>ย้ายแอปอยู่หรือ?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>ย้ายมาจากแอปอื่นไหม?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>คลัง ดาวน์โหลด และส่วนขยายของคุณย้ายมาในครั้งเดียว</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>คลัง ดาวน์โหลด และส่วนขยาย ในครั้งเดียว</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>ฉันเพิ่งมาใหม่</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>ยินดีต้อนรับ</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>จาก %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>ใน LNReader: เพิ่มเติม → สำรองข้อมูล → สร้างข้อมูลสำรอง แล้วเลือกไฟล์ที่นี่</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>ใน %1: เพิ่มเติม → การตั้งค่า → สำรองและกู้คืน → สร้างข้อมูลสำรอง แล้วเลือกไฟล์ที่นี่</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>ข้อมูลสำรอง</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>กำลังย้ายคลังของคุณ…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>กำลังอ่านไฟล์สำรอง…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>การ์ตูน %1 เรื่อง อนิเมะ %2 เรื่อง · ส่วนขยายที่จะติดตั้ง %3 รายการ</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>เรื่อง รายการ ความคืบหน้า และตัวติดตามของคุณ</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>อันอื่น</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>เลือกไฟล์สำรอง</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>โฟลเดอร์ดาวน์โหลด</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>เปลี่ยน</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>เลือก</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>ส่วนขยายและคลังที่เรื่องของคุณมาจากจะมาพร้อมไฟล์สำรอง เพื่อให้เปิดจากแหล่งเดิม</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE มีแหล่งของตัวเองสำหรับการ์ตูน นิยาย และอนิเมะ ถ้ามีลิงก์คลังส่วนขยาย ใส่ที่นี่ได้ หน้าส่วนขยายก็รับได้ทุกเมื่อ</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>กระจก</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>เมนูและแผงจะเห็นสิ่งที่อยู่ด้านหลัง</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>ลองใช้ตัวอ่าน</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>เลื่อนดูตัวอย่าง แตะแถบ แล้วเลือกที่ชอบ ทั้งหมดอยู่ในการตั้งค่า → การอ่านด้วย</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>แถบความคืบหน้า</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>ตัวเลือกเพิ่มเติม</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>แต่ละอย่างแตะครั้งเดียวตอนนี้ หรือทีหลังในการตั้งค่า</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>อ่านหรือดูตอนจบแล้ว ตัวติดตามของคุณก็จะขยับตาม</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>บัญชี scancore.onl</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>เข้าสู่ระบบในชื่อ %1 คลังและความคืบหน้าของคุณซิงก์แล้ว</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>ความคืบหน้าบนทุกอุปกรณ์ เพื่อน รายการที่แชร์ และรีแอ็กชัน ทุกอย่างใช้ได้แม้ไม่มีบัญชี</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>เข้าสู่ระบบหรือสร้างบัญชี</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>ตอนใหม่ของเรื่องที่คุณติดตาม และข่าวจาก SCANCORE</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>ตอนใหม่</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>นี่คือสิ่งที่คุณเลือก แตะเพื่อเปลี่ยน</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>การอ่านและการดู</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>ย้ายมาจาก</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>เริ่มใหม่</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>รูปลักษณ์</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>ตัวอ่าน</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>ไม่มีแถบความคืบหน้า</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>แถบหน้า</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>เส้น</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>แถบลอย</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>ตอนพิเศษ</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>ลงชื่อเข้าใช้แล้ว</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>เปิดการแจ้งเตือน</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>ปิดการแจ้งเตือน</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>เปิดคลังของคุณ</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>ดูการ์ตูน</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>ดูอนิเมะ</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>อ่านนิยาย</translation>
         </message>
     </context>
     <context>
@@ -9176,7 +9492,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>บาง</translation>
+            <translation>สว่าง</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10373,7 +10689,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>บาง</translation>
+            <translation>สว่าง</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11281,6 +11597,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>เปิดในหน้าต่างใหม่</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>ตัวอย่างรูปแบบที่คุณเลือก</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>หน้าแรก</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>อ่านต่อ</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>ตอนใหม่</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>เพิ่มในคลัง</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>ดาวน์โหลด</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>แชร์</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>หน้าแรก</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>การ์ตูน</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>อนิเมะ</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>เลื่อนลง หรือแตะขอบเพื่อพลิกหน้า</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>แถบนี้บอกว่าคุณอ่านตอนนี้ไปถึงไหนแล้ว</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>แตะหรือลากแถบเพื่อไปยังหน้า</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>เลือกรูปแบบอื่นให้มันแล้วดูที่นี่</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>แบบหน้าหรือแถบยาว: สลับด้านบน</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>จบ ตอนจริงของคุณเริ่มหลังจากนี้</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>ตอนตัวอย่าง</translation>
         </message>
     </context>
     <context>

@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>Bölümler</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Ne okuyup izlediğin</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Sekmeler, Ana sayfa ve Retro merkezi bunları gösterir. Bir bağlantı yine de diğerlerini açar.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6659,7 +6671,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Retro kutucukları</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 seri eklendi</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 seri eklendi</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 bölüm işaretlendi</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 uzantı yüklendi</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 indirilmiş bölüm bağlandı</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 seri bulunmayı bekliyor</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader yedeği (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Tüm dosyalar (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon, Komikku, TachiyomiSY, Tachiyomi veya Aniyomi yedeği (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>atla</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Atla</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Karşılamayı kapat ve SCANCORE'u kullanmaya başla</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>şimdi değil</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Şimdi değil</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>ileri</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Adım %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>geri</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Hoş geldin</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Ne okuyup izliyorsun?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>İstediklerini seç. Sekmeler ve Ana sayfa buna uyar, Ayarlar → Arayüz gerisini geri getirir.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga ve webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Web romanları ve EPUB kitapların</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Kaldığın yerden devam eden bölümler</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Geçiş mi yapıyorsun?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Başka bir uygulamadan mı geliyorsun?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Kütüphanen, indirilenlerin ve eklentilerin tek seferde gelir.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Kütüphane, indirilenler ve eklentiler tek seferde.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Burada yeniyim</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Aramıza hoş geldin</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 uygulamasından</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader içinde: Daha fazla → Yedekleme → Yedek oluştur. Sonra dosyayı burada seç.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 içinde: Daha fazla → Ayarlar → Yedekleme ve geri yükleme → Yedek oluştur. Sonra dosyayı burada seç.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Yedek</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Kütüphanen taşınıyor…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Yedek okunuyor…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 çizgi roman ve %2 anime · %3 eklenti kurulacak</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Serilerin, listelerin, ilerlemen ve takipçilerin.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Başka</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Yedek seç</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>İndirilenler klasörü</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Değiştir</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Seç</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Serilerinin geldiği eklentiler ve depolar yedekle birlikte sunulur, böylece aynı kaynaklarda açılırlar.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE çizgi roman, roman ve anime için kendi kaynaklarıyla gelir. Bir eklenti deposu bağlantın varsa buraya ekleyebilirsin; Eklentiler sayfası onu her zaman alır.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Cam</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Menüler ve paneller arkalarındakini gösterir</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Okuyucuyu dene</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Örneği kaydır, çubuğa dokun ve sana uyanı seç. Hepsi Ayarlar → Okuma'da da var.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>İlerleme çubuğu</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Birkaç ekstra</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Her biri şimdi tek dokunuş, ya da sonra Ayarlar'da.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Bir bölümü bitirmek onu takipçilerinde de ilerletir.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Bir scancore.onl hesabı</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 olarak giriş yapıldı. Kütüphanen ve ilerlemen eşitlenir.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Her cihazda ilerlemen, arkadaşlar, paylaşılan listeler ve tepkiler. Her şey hesapsız da çalışır.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Giriş yap ya da hesap oluştur</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Takip ettiklerinin yeni bölümleri ve SCANCORE'dan haberler.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Yeni bölümler ve epizotlar</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Seçtiklerin bunlar. Değiştirmek için birine dokun.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Okuma ve izleme</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Geldiğin yer</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Sıfırdan başlıyor</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Görünüm</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Okuyucu</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>İlerleme çubuğu yok</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Sayfa çubuğu</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Çizgi</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Yüzen çubuk</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ekstralar</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Oturum açıldı</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Bildirimler açık</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Bildirimler kapalı</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Kütüphaneni aç</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Çizgi romanlara göz at</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Anime izle</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Roman oku</translation>
         </message>
     </context>
     <context>
@@ -9191,7 +9507,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10388,7 +10704,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>Yeni pencerede aç</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Seçtiğin görünümün önizlemesi</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Ana sayfa</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Okumaya devam et</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Yeni bölümler</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Kitaplığa ekle</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>İndir</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Paylaş</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>ana sayfa</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>çizgi roman</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Aşağı kaydır ya da sayfayı çevirmek için bir kenara dokun.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Çubuk bölümün neresinde olduğunu gösterir.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Bir sayfaya atlamak için çubuğa dokun ya da sürükle.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Ona başka bir görünüm seç ve burada gör.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Sayfalar ya da tek uzun şerit: yukarıdan değiştir.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Son. Gerçek bölümlerin hemen ardından başlıyor.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Örnek bölüm</translation>
         </message>
     </context>
     <context>

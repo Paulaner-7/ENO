@@ -4564,6 +4564,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>सेक्शन</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>आप क्या पढ़ते और देखते हैं</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>टैब, होम और रेट्रो हब इन्हें दिखाते हैं। लिंक फिर भी बाकी को खोलता है।</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6651,7 +6663,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6808,6 +6820,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Retro टाइलें</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 सीरीज़ जोड़ी गई</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 सीरीज़ जोड़ी गईं</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 अध्याय और एपिसोड चिह्नित</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 एक्सटेंशन इंस्टॉल हुए</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 डाउनलोड किए अध्याय जोड़े गए</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 मिलने का इंतज़ार कर रही हैं</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader बैकअप (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>सभी फ़ाइलें (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon, Komikku, TachiyomiSY, Tachiyomi या Aniyomi बैकअप (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>छोड़ें</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>छोड़ें</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>स्वागत बंद करें और SCANCORE इस्तेमाल करना शुरू करें</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>अभी नहीं</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>अभी नहीं</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>आगे</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>चरण %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>पीछे</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>स्वागत है</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>आप क्या पढ़ते और देखते हैं?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>जो चाहें चुनें। टैब और होम उसी के हिसाब से होंगे, और सेटिंग्स → इंटरफ़ेस बाकी वापस लाता है।</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>मनह्वा, मंगा और वेबटून</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>वेब उपन्यास और आपकी EPUB किताबें</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>एपिसोड जो वहीं से चलते हैं जहाँ आपने छोड़ा था</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>ऐप बदल रहे हैं?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>किसी दूसरे ऐप से आ रहे हैं?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>आपकी लाइब्रेरी, डाउनलोड और एक्सटेंशन एक साथ आ जाते हैं।</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>लाइब्रेरी, डाउनलोड और एक्सटेंशन, एक साथ।</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>मैं यहाँ नया हूँ</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>आपका स्वागत है</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 से</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader में: More → Backup → Create backup. फिर फ़ाइल यहाँ चुनें।</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 में: More → Settings → Backup and restore → Create backup. फिर फ़ाइल यहाँ चुनें।</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>बैकअप</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>आपकी लाइब्रेरी ला रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>बैकअप पढ़ रहे हैं…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 कॉमिक्स और %2 एनिमे · %3 एक्सटेंशन इंस्टॉल करने हैं</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>आपकी सीरीज़, सूचियाँ, प्रगति और ट्रैकर।</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>दूसरा</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>बैकअप चुनें</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>डाउनलोड फ़ोल्डर</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>बदलें</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>चुनें</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>आपकी सीरीज़ जिन एक्सटेंशन और रिपॉज़िटरी से आईं, वे बैकअप के साथ मिलते हैं, ताकि वे उन्हीं स्रोतों पर खुलें।</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE में कॉमिक्स, उपन्यास और एनिमे के अपने स्रोत हैं। अगर आपके पास किसी एक्सटेंशन रिपॉज़िटरी का लिंक है, तो उसे यहाँ डाल सकते हैं; एक्सटेंशन पेज उसे कभी भी ले लेता है।</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ग्लास</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>मेन्यू और शीट अपने पीछे का हिस्सा दिखाते हैं</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>रीडर आज़माएँ</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>नमूना स्क्रॉल करें, पट्टी पर टैप करें, और जो पसंद हो वह चुनें। यह सब सेटिंग्स → पढ़ना में भी है।</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>प्रगति पट्टी</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>कुछ अतिरिक्त</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>हर एक अभी एक टैप है, या बाद में सेटिंग्स में।</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>कोई अध्याय या एपिसोड पूरा करने पर आपके ट्रैकर पर भी आगे बढ़ता है।</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>एक scancore.onl खाता</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 के रूप में साइन इन। आपकी लाइब्रेरी और प्रगति सिंक होती है।</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>हर डिवाइस पर आपकी प्रगति, दोस्त, साझा सूचियाँ और प्रतिक्रियाएँ। इसके बिना भी सब काम करता है।</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>साइन इन करें या खाता बनाएँ</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>जो आप फ़ॉलो करते हैं उनके नए अध्याय, और SCANCORE की ख़बरें।</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>नए अध्याय और एपिसोड</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>आपने यह चुना है। बदलने के लिए किसी पर टैप करें।</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>पढ़ना और देखना</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>कहाँ से आए</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>नई शुरुआत</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>रूप</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>रीडर</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>कोई प्रगति पट्टी नहीं</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>पेज पट्टी</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>रेखा</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>तैरती पट्टी</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>अतिरिक्त</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>साइन इन है</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>सूचनाएँ चालू</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>सूचनाएँ बंद</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>अपनी लाइब्रेरी खोलें</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>कॉमिक्स देखें</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>एनिमे देखें</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>उपन्यास पढ़ें</translation>
         </message>
     </context>
     <context>
@@ -9176,7 +9492,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10373,7 +10689,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11281,6 +11597,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>नई विंडो में खोलें</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>चुने हुए रूप की झलक</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>होम</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>पढ़ना जारी रखें</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>नए अध्याय</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>लाइब्रेरी में जोड़ें</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>डाउनलोड करें</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>शेयर करें</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>होम</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>कॉमिक्स</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>एनिमे</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>नीचे स्क्रॉल करें, या पेज पलटने के लिए किसी किनारे पर टैप करें।</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>पट्टी दिखाती है कि आप अध्याय में कितना आगे हैं।</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>किसी पेज पर जाने के लिए पट्टी पर टैप करें या खींचें।</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>इसके लिए कोई और रूप चुनें और यहाँ देखें।</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>पेज या एक लंबी पट्टी: ऊपर बदलें।</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>समाप्त। आपके असली अध्याय इसके ठीक बाद शुरू होते हैं।</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>नमूना अध्याय</translation>
         </message>
     </context>
     <context>

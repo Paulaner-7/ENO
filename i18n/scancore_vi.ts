@@ -4572,6 +4572,18 @@
             <source>Retro</source>
             <translation>Retro</translation>
         </message>
+        <message>
+            <source>Sections</source>
+            <translation>Mục</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Những gì bạn đọc và xem</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Các tab, Trang chủ và hub Retro hiển thị những mục này. Liên kết vẫn mở được các mục khác.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -6659,7 +6671,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Mảnh</translation>
+            <translation>Sáng</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -6816,6 +6828,310 @@
         <message>
             <source>Retro tiles</source>
             <translation>Ô Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>Đã thêm 1 bộ</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>Đã thêm %1 bộ</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>Đã đánh dấu %1 chương và tập</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>Đã cài %1 tiện ích</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>Đã liên kết %1 chương đã tải</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 bộ đang chờ được tìm thấy</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>Bản sao lưu LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Mọi tệp (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Bản sao lưu Mihon, Komikku, TachiyomiSY, Tachiyomi hoặc Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>bỏ qua</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Bỏ qua</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Đóng màn hình chào và bắt đầu dùng SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>để sau</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Để sau</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>tiếp</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Bước %1/%2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>quay lại</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Chào mừng</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Bạn đọc và xem gì?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>Chọn bất kỳ. Các tab và Trang chủ sẽ theo, còn Cài đặt → Giao diện đưa phần còn lại trở lại.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga và webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Tiểu thuyết mạng và sách EPUB của bạn</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Các tập phát tiếp từ chỗ bạn dừng</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Chuyển ứng dụng?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Bạn chuyển từ ứng dụng khác?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Thư viện, bản tải và tiện ích của bạn chuyển sang một lần.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Thư viện, bản tải và tiện ích, một lần.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Tôi mới dùng</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Chào mừng bạn</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>Từ %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>Trong LNReader: Thêm → Sao lưu → Tạo bản sao lưu. Rồi chọn tệp ở đây.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>Trong %1: Thêm → Cài đặt → Sao lưu và khôi phục → Tạo bản sao lưu. Rồi chọn tệp ở đây.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Sao lưu</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Đang chuyển thư viện của bạn…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Đang đọc bản sao lưu…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 truyện tranh và %2 anime · %3 tiện ích cần cài</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Bộ truyện, danh sách, tiến độ và trình theo dõi của bạn.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Tệp khác</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Chọn bản sao lưu</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>Thư mục tải xuống</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Đổi</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Chọn</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Các tiện ích và kho mà bộ truyện của bạn đến từ đó được đề xuất cùng bản sao lưu, để chúng mở trên cùng nguồn.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE có sẵn nguồn riêng cho truyện tranh, tiểu thuyết và anime. Nếu bạn có liên kết kho tiện ích, có thể dán ở đây; trang Tiện ích cũng nhận bất cứ lúc nào.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Kính</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Menu và bảng cho thấy những gì phía sau</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Thử trình đọc</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Cuộn chương mẫu, chạm thanh và chọn cái hợp với bạn. Mọi thứ cũng có trong Cài đặt → Đọc.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>Thanh tiến độ</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Vài tùy chọn thêm</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Mỗi mục chỉ cần một chạm bây giờ, hoặc để sau trong Cài đặt.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Đọc xong một chương hay tập sẽ cập nhật cả trên trình theo dõi của bạn.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Tài khoản scancore.onl</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>Đã đăng nhập là %1. Thư viện và tiến độ của bạn được đồng bộ.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Tiến độ trên mọi thiết bị, bạn bè, danh sách chia sẻ và cảm xúc. Không có tài khoản vẫn dùng được hết.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Đăng nhập hoặc tạo tài khoản</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Chương mới của những bộ bạn theo dõi, và tin tức từ SCANCORE.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Chương và tập mới</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Đây là những gì bạn đã chọn. Chạm vào một mục để đổi.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Đọc và xem</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Chuyển từ</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Bắt đầu mới</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Kiểu</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Trình đọc</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>Không có thanh tiến độ</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Thanh trang</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Đường</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Thanh nổi</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ngoại truyện</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Đã đăng nhập</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Bật thông báo</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Tắt thông báo</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Mở thư viện của bạn</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Xem truyện tranh</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Xem anime</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Đọc tiểu thuyết</translation>
         </message>
     </context>
     <context>
@@ -9191,7 +9507,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Mảnh</translation>
+            <translation>Sáng</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -10388,7 +10704,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>Mảnh</translation>
+            <translation>Sáng</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -11296,6 +11612,80 @@
         <message>
             <source>Open in a new window</source>
             <translation>Mở trong cửa sổ mới</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Xem trước giao diện bạn chọn</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Trang chủ</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Đọc tiếp</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Chương mới</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Thêm vào thư viện</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Tải xuống</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Chia sẻ</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>trang chủ</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>truyện tranh</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Cuộn xuống, hoặc chạm một bên để lật trang.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Thanh cho biết bạn đã đọc tới đâu trong chương.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Chạm hoặc kéo thanh để nhảy tới một trang.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Chọn kiểu khác cho nó và xem ở đây.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Trang hay một dải dài: đổi ở trên.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Hết. Các chương thật của bạn bắt đầu ngay sau đây.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Chương mẫu</translation>
         </message>
     </context>
     <context>
