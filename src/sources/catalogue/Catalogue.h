@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QUrlQuery>
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -55,7 +56,10 @@ public:
     // "comic" or "novel".
     virtual bool supports(const QString &media) const = 0;
     virtual QList<Shelf> shelves(const QString &media, bool mature) = 0;
-    virtual QList<Entry> search(const QString &media, const QString &query, bool mature) = 0;
+    // `filters`: the catalogue's own search filters (Comick's, see
+    // comickQuery); the others take none. An empty query browses by them.
+    virtual QList<Entry> search(const QString &media, const QString &query, bool mature,
+                                const QVariantMap &filters) = 0;
     // Every name of a title; shelf entries can carry only one.
     virtual QStringList names(const Entry &entry) { return entry.titles; }
 };
@@ -77,6 +81,13 @@ std::shared_ptr<Catalogue> forMedia(const QString &chosen, const QString &media)
 // MyAnimeList's public reads need SCANCORE's client id (set by main()).
 void setMalClientId(const QString &id);
 bool malAvailable();
+
+// Comick's search query for a title and the filter sheet's choices
+// (CatalogueFilters.qml): {sort, status, completed, showall, time, from, to,
+// minimum, maximum, rating, country: [], demographic: [], genres: {slug: 1
+// include | 2 exclude}, tags: {slug: {state, title}}, content: {rating:
+// 1 | 2}, violence: {rating: 1 | 2}}.
+QUrlQuery comickQuery(const QString &query, const QVariantMap &filters);
 
 // Parsers, public for the offline tests.
 Entry comickEntry(const QJsonObject &comic);

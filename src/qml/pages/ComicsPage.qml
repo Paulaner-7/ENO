@@ -57,9 +57,15 @@ Item {
         && (App.settings.catalogComic !== "mal" || Trackers.malAvailable)
     // The catalogue could not be reached, so the sources were searched instead.
     property bool catalogFailed: false
-    readonly property bool catalogResults: !!searchTask && searchTask.ok && !catalogFailed && useCatalog && query.length > 0
+    // Comick's own search filters (CatalogueFilters), kept between visits;
+    // with some set, an empty search box browses by them.
+    readonly property bool comick: useCatalog && (App.settings.catalogComic || "comick") === "comick"
+    readonly property var catalogFilters: comick ? filterSheet.normal(App.settings.comickFilters) : ({})
+    readonly property int filterCount: comick ? filterSheet.count(catalogFilters) : 0
+    readonly property bool filtering: filterCount > 0
+    readonly property bool catalogResults: !!searchTask && searchTask.ok && !catalogFailed && useCatalog && (query.length > 0 || filtering)
     readonly property bool browsingLocal: source === "local" && query.length === 0
-    readonly property bool searching: !editing && (query.length > 0 || source === "local" || browsingSource)
+    readonly property bool searching: !editing && (query.length > 0 || filtering || source === "local" || browsingSource)
     // Edit page: arrange the sections (PageLayout).
     property bool editing: false
     PageArranger { id: topLayout; page: "comics-top"; column: column; editing: page.editing; defaults: ["search", "sources"] }
@@ -70,7 +76,7 @@ Item {
         editing: page.editing
         defaults: ["recent", "continue", "trending", "popular", "newest", "completed", "top", "manhwa", "manhua", "latest"]
     }
-    Component.onCompleted: if (source === "local" || browsingSource) run("")
+    Component.onCompleted: if (source === "local" || browsingSource || filtering) run("")
 
     function moreSource() {
         if (!browsingSource || (browseTask && browseTask.loading) || !browseHasNext) return
@@ -113,7 +119,7 @@ Item {
         browseHasNext = true
         if (query.length > 0) recent.remember(query)
         catalogFailed = false
-        searchTask = query.length > 0 && useCatalog ? Comics.catalog(query)
+        searchTask = (query.length > 0 || filtering) && useCatalog ? Comics.catalog(query, catalogFilters)
             : query.length > 0 || source === "local" ? Comics.search(query, source) : null
         extensionTask = query.length > 0 && useCatalog && hasExtensions ? Comics.search(query, "extensions") : null
         if (browsingSource) moreSource()
@@ -132,6 +138,13 @@ Item {
     }
 
     ReadFromDialog { id: readFrom }
+    CatalogueFilters {
+        id: filterSheet
+        onChosen: (filters) => {
+            App.setSetting("comickFilters", filters)
+            page.run(field.text)
+        }
+    }
 
     // Each source's entry in the running search, by key, for the chips.
     readonly property var providerMap: {
@@ -182,14 +195,70 @@ Item {
                 arranger: topLayout
                 key: "search"
                 label: qsTr("Search bar")
-                SearchField {
-                    id: field
+                Column {
                     x: Theme.gutter
                     width: Math.min(parent.width - 2 * Theme.gutter, 760)
-                    large: true
-                    placeholderText: page.useCatalog ? qsTr("Search every manhwa, manga and comic") : qsTr("Search titles across every source")
-                    onSubmitted: (text) => page.run(text)
-                    onTextChanged: if (text.length === 0 && page.query.length > 0) page.run("")
+                    spacing: 8
+                    Row {
+                        width: parent.width
+                        spacing: 8
+                        SearchField {
+                            id: field
+                            width: parent.width - (filterButton.visible ? filterButton.width + parent.spacing : 0)
+                            large: true
+                            placeholderText: page.useCatalog ? qsTr("Search every manhwa, manga and comic") : qsTr("Search titles across every source")
+                            onSubmitted: (text) => page.run(text)
+                            onTextChanged: if (text.length === 0 && page.query.length > 0) page.run("")
+                        }
+                        // Comick's filters: genres, tags and much more.
+                        IconButton {
+                            id: filterButton
+                            visible: page.comick
+                            anchors.verticalCenter: field.verticalCenter
+                            diameter: Math.max(40, field.height)
+                            iconName: "funnel"
+                            tip: qsTr("Search filters")
+                            active: page.filtering
+                            onClicked: filterSheet.start(page.catalogFilters)
+                            Rectangle {
+                                visible: page.filtering
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.margins: 2
+                                width: Math.max(18, countText.implicitWidth + 8)
+                                height: 18
+                                radius: 9
+                                color: Theme.accent
+                                Text {
+                                    id: countText
+                                    anchors.centerIn: parent
+                                    text: page.filterCount
+                                    color: Theme.accentInk
+                                    font.family: Theme.fontSans
+                                    font.pixelSize: 11
+                                    font.weight: Font.Bold
+                                }
+                            }
+                        }
+                    }
+                    // What the filters do now, and a way out.
+                    Row {
+                        visible: page.filtering
+                        spacing: 6
+                        Chip {
+                            text: page.filterCount === 1 ? qsTr("1 filter on") : qsTr("%1 filters on").arg(page.filterCount)
+                            iconName: "funnel"
+                            onClicked: filterSheet.start(page.catalogFilters)
+                        }
+                        Chip {
+                            text: qsTr("Clear")
+                            iconName: "funnel-x"
+                            onClicked: {
+                                App.setSetting("comickFilters", ({}))
+                                page.run(field.text)
+                            }
+                        }
+                    }
                 }
             }
 
@@ -225,6 +294,7 @@ Item {
                         text: !page.found ? ""
                             : page.browsingLocal ? page.found.comics.length + qsTr(" on this device")
                             : page.browsingSource ? page.found.comics.length + " · " + ((page.sources.find(s => s.key === page.source) || {}).label || "")
+                            : page.catalogResults && page.query.length === 0 ? qsTr("%1 titles from %2's catalogue, filtered").arg(page.found.comics.length).arg(page.catalogLabel)
                             : page.catalogResults ? qsTr("%1 titles for “%2” from %3's catalogue").arg(page.found.comics.length).arg(page.query).arg(page.catalogLabel)
                             : page.found.comics.length + qsTr(" results for “") + page.query + "”"
                                 + (page.catalogFailed ? qsTr(" · %1 is unavailable, so your sources were searched").arg(page.catalogLabel) : "")
@@ -280,7 +350,7 @@ Item {
                 StateView {
                     width: parent.width
                     task: page.browsingSource ? page.browseTask : page.searchTask
-                    empty: (page.browsingSource ? page.browseTask && page.browseTask.ok : page.searchTask && page.searchTask.ok) && page.found.comics.length === 0
+                    empty: (page.browsingSource ? page.browseTask && page.browseTask.ok : page.searchTask && page.searchTask.ok) && !!page.found && page.found.comics.length === 0
                            && !(page.extensionFound && (page.extensionFound.comics.length > 0 || page.extensionTask.loading))
                     emptyTitle: page.browsingLocal ? qsTr("No comics on this device yet") : qsTr("No comics found")
                     emptyText: page.browsingLocal

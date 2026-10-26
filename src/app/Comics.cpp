@@ -319,18 +319,21 @@ QVariantMap Comics::catalogShelves(const QString &media, bool mature) {
     return result;
 }
 
-QVariantMap Comics::catalogSearch(const QString &media, const QString &query, bool mature) {
+QVariantMap Comics::catalogSearch(const QString &media, const QString &query, bool mature, const QVariantMap &filters) {
     auto catalogue = catalogue::forMedia(catalogue::chosen(media), media);
     if (!catalogue)
         throw Error(QStringLiteral("No catalogue is chosen. Pick one in Settings → Connections."));
-    const auto cacheKey = QStringLiteral("catalogue|%1|%2|%3|%4").arg(catalogue->key(), media, query.toLower()).arg(mature);
+    const auto cacheKey = QStringLiteral("catalogue|%1|%2|%3|%4|%5")
+                              .arg(catalogue->key(), media, query.toLower())
+                              .arg(mature)
+                              .arg(QString::fromUtf8(QJsonDocument::fromVariant(filters).toJson(QJsonDocument::Compact)));
     {
         QMutexLocker lock(&g_searchMutex);
         if (auto *hit = g_searches.object(cacheKey);
             hit && QDateTime::currentSecsSinceEpoch() - g_searchTimes.value(cacheKey) < 180)
             return *hit;
     }
-    const auto entries = catalogue->search(media, query, mature);
+    const auto entries = catalogue->search(media, query, mature, filters);
     // Comics and novels pages read the list under their own name.
     QVariantMap result{{media == QLatin1String("novel") ? "books" : "comics", entryMaps(entries)},
                        {"providers", QVariantList()},
@@ -407,10 +410,61 @@ QStringList Comics::catalogNames(const QVariantMap &item) {
     return names;
 }
 
-Task *Comics::catalog(const QString &query) {
+Task *Comics::catalog(const QString &query, const QVariantMap &filters) {
     const auto q = query.simplified();
     const bool mature = App::instance()->settings().value(QStringLiteral("showNsfwSources")).toBool();
-    return Task::run([q, mature]() -> QVariant { return catalogSearch(QStringLiteral("comic"), q, mature); });
+    const auto f = App::plain(filters).toMap();
+    return Task::run([q, mature, f]() -> QVariant { return catalogSearch(QStringLiteral("comic"), q, mature, f); });
+}
+
+namespace {
+
+// One of Comick's lists, through the cache (a day).
+QJsonArray comickList(const QString &path) {
+    const auto key = QStringLiteral("comick-list|") + path;
+    if (const auto hit = Database::cacheGet(key))
+        return QJsonDocument::fromJson(*hit).array();
+    const auto response = Http::get(QUrl(QStringLiteral("https://api.comick.dev") + path),
+                                    {{"Accept", "application/json"}, {"Referer", "https://comick.dev/"}});
+    if (!response.ok()) {
+        if (const auto stale = Database::cacheGet(key, true))
+            return QJsonDocument::fromJson(*stale).array();
+        throw Error(QStringLiteral("Comick's lists are unavailable right now (%1).").arg(response.status), response.status);
+    }
+    const auto list = response.json().array();
+    if (!list.isEmpty())
+        Database::cachePut(key, QJsonDocument(list).toJson(QJsonDocument::Compact), 86400);
+    return list;
+}
+
+} // namespace
+
+Task *Comics::comickGenres() {
+    return Task::run([]() -> QVariant {
+        QVariantList out;
+        for (const auto &value : comickList(QStringLiteral("/genre/"))) {
+            const auto g = value.toObject();
+            out.append(QVariantMap{{"slug", g.value("slug").toString()},
+                                   {"name", g.value("name").toString()},
+                                   {"group", g.value("group").toString()},
+                                   {"count", g.value("comic_count").toInt()}});
+        }
+        return out;
+    });
+}
+
+Task *Comics::comickTags(bool all) {
+    return Task::run([all]() -> QVariant {
+        QVariantList out;
+        for (const auto &value : comickList(all ? QStringLiteral("/category/") : QStringLiteral("/category/popular"))) {
+            const auto t = value.toObject();
+            const auto slug = t.value("slug").toString();
+            if (slug.isEmpty())
+                continue;
+            out.append(QVariantMap{{"slug", slug}, {"title", t.value("title").toString()}, {"count", t.value("comic_count").toInt()}});
+        }
+        return out;
+    });
 }
 
 Task *Comics::catalogFeeds(bool mature) {

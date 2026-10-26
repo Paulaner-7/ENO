@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
                     return parts.join(QStringLiteral(", "));
                 }) && ok;
                 ok = step(m + QStringLiteral(" search"), [&] {
-                    const auto entries = catalogue->search(m, query, false);
+                    const auto entries = catalogue->search(m, query, false, {});
                     if (entries.isEmpty())
                         throw Error(QStringLiteral("no results"));
                     const auto names = catalogue->names(entries.first());

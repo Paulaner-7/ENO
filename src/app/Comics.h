@@ -29,7 +29,14 @@ public:
     // MyAnimeList), which knows far more series and their other
     // names than any one source: {comics: [{catalog, catalogId, hid, title,
     // titles, cover, type, status, year, ids, ...}], catalog, label}.
-    Q_INVOKABLE sc::Task *catalog(const QString &query);
+    // `filters`: Comick's search filters (Catalogue.h, comickQuery); with
+    // them an empty query browses.
+    Q_INVOKABLE sc::Task *catalog(const QString &query, const QVariantMap &filters = {});
+    // Comick's genres ([{slug, name, group, count}]) and tags ([{slug,
+    // title, count}]: the 300 most used, or with `all` every one, about
+    // 9,500), cached for a day.
+    Q_INVOKABLE sc::Task *comickGenres();
+    Q_INVOKABLE sc::Task *comickTags(bool all = false);
     // That catalogue's shelves: {catalog, label, shelves: [{key, items}]}.
     Q_INVOKABLE sc::Task *catalogFeeds(bool mature = false);
     // Where a catalogue title can be read: the series on SCANCORE's sources
@@ -84,7 +91,8 @@ public:
 
     // Catalogue helpers shared with Novels (blocking).
     static QVariantMap catalogShelves(const QString &media, bool mature);
-    static QVariantMap catalogSearch(const QString &media, const QString &query, bool mature);
+    static QVariantMap catalogSearch(const QString &media, const QString &query, bool mature,
+                                     const QVariantMap &filters = {});
     static QStringList catalogNames(const QVariantMap &item);
 
     // Chapter list as library units ({key, number, title, url, released}).
