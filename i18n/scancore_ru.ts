@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>Закрепить на хабе</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Песни</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>У этого аниме пока нет песен</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Опенинги и эндинги берутся из AnimeThemes.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Вкладки, главная и хаб Retro показывают эти. Ссылка всё равно откроет остальные.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Музыка (предпросмотр)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Опенинги и эндинги аниме и ваша музыка с текстами, и плеер, который играет, пока вы читаете. Ещё в разработке.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Инструментал: слов для подпевания нет.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Не удалось загрузить текст. Проверьте подключение.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Для этой песни пока нет текста.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Тексты берутся из LRCLIB, их пишет его сообщество.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>Установить расширения (%1), которые были у вас в %2</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Сейчас играет: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Воспроизвести</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Пауза</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Дальше</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Стоп</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Песни с текстами · предпросмотр</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Песни из аниме</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Ваши файлы</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Поиск по вашим песням</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Найдите песню, исполнителя или аниме</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Больше не показывать эту папку</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Добавить ещё папку</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Добавить папку с музыкой</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Искать снова</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Сейчас играет</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Текст</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Песни по запросу «%1»</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Ваши песни</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Этот сезон</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Слушать все</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Добавьте папку с вашей музыкой</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Песни не найдены</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>В этих папках нет музыки</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Файлы MP3, FLAC, Ogg, Opus и M4A с обложками и текстами из лежащих рядом файлов .lrc. Ничего не копируется.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Песни из аниме пока отключены</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Попробуйте название аниме на ромадзи или имя исполнителя.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Все файлы (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Закрыть</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Сейчас играет</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Вернуться к песне</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Смотреть видео</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Позиция</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Перемешивание включено</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Перемешивание выключено</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Назад</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Воспроизвести</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Пауза</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Дальше</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Повторять эту песню</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Повторять очередь</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Повтор выключен</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Песня</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Текст</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Очередь</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 песня в очереди</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 песен в очереди</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>Закреплено на хабе</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>В тренде</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>вся музыка</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>сейчас играет</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Этот сезон</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>Свернуть</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> в своём браузере.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Играть следующим</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Добавить в очередь</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Смотреть видео</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Серии %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Ещё</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>Настройки</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
         </message>
     </context>
     <context>

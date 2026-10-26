@@ -45,7 +45,7 @@ AbstractButton {
             height: 44
             radius: Theme.retro ? 0 : Theme.radiusSm
             source: mini.song ? mini.song.cover || "" : ""
-            title: mini.song ? mini.song.anime || "" : ""
+            title: mini.song ? mini.song.anime || mini.song.album || mini.song.title || "" : ""
         }
         Column {
             anchors.left: art.right
@@ -64,7 +64,7 @@ AbstractButton {
             }
             Text {
                 width: parent.width
-                text: mini.song ? MusicQueue.artistsOf(mini.song) || mini.song.anime || "" : ""
+                text: mini.song ? MusicQueue.artistsOf(mini.song) || mini.song.anime || mini.song.album || "" : ""
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm

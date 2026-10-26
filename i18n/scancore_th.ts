@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>ปักหมุดไว้บนฮับ</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>เพลง</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>อนิเมะเรื่องนี้ยังไม่มีเพลง</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>เพลงเปิดและเพลงปิดมาจาก AnimeThemes</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4596,6 +4608,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>แท็บ หน้าแรก และฮับ Retro แสดงรายการเหล่านี้ ลิงก์ยังเปิดอันอื่นได้</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>เพลง (ตัวอย่าง)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>เพลงเปิดและเพลงปิดอนิเมะ รวมถึงเพลงของคุณเอง พร้อมเนื้อเพลง และเครื่องเล่นที่เล่นต่อไปขณะคุณอ่าน ยังอยู่ระหว่างพัฒนา</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5567,6 +5587,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>เพลงบรรเลง: ไม่มีเนื้อร้องให้ร้องตาม</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>โหลดเนื้อเพลงไม่ได้ ตรวจสอบการเชื่อมต่อ</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>เพลงนี้ยังไม่มีเนื้อเพลง</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>เนื้อเพลงมาจาก LRCLIB เขียนโดยชุมชนของที่นั่น</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5900,6 +5939,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>ติดตั้งส่วนขยาย %1 รายการที่คุณมีใน %2</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>กำลังเล่น: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>เล่น</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>หยุดชั่วคราว</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>ถัดไป</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>หยุด</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>เพลงพร้อมเนื้อร้อง · ตัวอย่าง</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>เพลงอนิเมะ</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>ไฟล์ของคุณ</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>ค้นหาเพลงของคุณ</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>ค้นหาเพลง นักร้อง หรืออนิเมะ</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>เลิกแสดงโฟลเดอร์นี้</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>เพิ่มโฟลเดอร์อื่น</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>เพิ่มโฟลเดอร์เพลง</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>ค้นหาอีกครั้ง</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>กำลังเล่น</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>เนื้อเพลง</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>เพลงสำหรับ “%1”</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>เพลงของคุณ</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>ซีซันนี้</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>เล่นทั้งหมด</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>เพิ่มโฟลเดอร์เพลงของคุณ</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>ไม่พบเพลง</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>ไม่มีเพลงในโฟลเดอร์เหล่านี้</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>ไฟล์ MP3, FLAC, Ogg, Opus และ M4A พร้อมปก และเนื้อเพลงจากไฟล์ .lrc ที่อยู่ข้างกัน ไม่มีการคัดลอกไฟล์ใดๆ</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>ปิดเพลงอนิเมะไว้ชั่วคราว</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>ลองใช้ชื่ออนิเมะแบบโรมาจิ หรือชื่อนักร้อง</translation>
         </message>
     </context>
     <context>
@@ -6549,6 +6702,85 @@
         <message>
             <source>All files (*)</source>
             <translation>ไฟล์ทั้งหมด (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>ปิด</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>กำลังเล่น</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>กลับไปที่เพลง</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>ดูวิดีโอ</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>ตำแหน่ง</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>เปิดการสุ่ม</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>ปิดการสุ่ม</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>ก่อนหน้า</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>เล่น</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>หยุดชั่วคราว</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>ถัดไป</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>เล่นเพลงนี้ซ้ำ</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>เล่นคิวซ้ำ</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>ปิดการเล่นซ้ำ</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>เพลง</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>เนื้อเพลง</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>คิว</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 เพลงในคิว</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 เพลงในคิว</translation>
         </message>
     </context>
     <context>
@@ -8502,6 +8734,10 @@
             <source>Pinned to the hub</source>
             <translation>ปักหมุดไว้บนฮับแล้ว</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8743,6 +8979,18 @@
         <message>
             <source>Trending</source>
             <translation>กำลังมาแรง</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>เพลงทั้งหมด</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>กำลังเล่น</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>ซีซันนี้</translation>
         </message>
     </context>
     <context>
@@ -9796,6 +10044,10 @@
             <source>Collapse</source>
             <translation>ยุบ</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9826,6 +10078,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> ในเบราว์เซอร์ของคุณแทน</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>เล่นถัดไป</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>เพิ่มลงในคิว</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>ดูวิดีโอ</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>ตอนที่ %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>เพิ่มเติม</translation>
         </message>
     </context>
     <context>
@@ -10624,6 +10899,10 @@
         <message>
             <source>Settings</source>
             <translation>การตั้งค่า</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
         </message>
     </context>
     <context>

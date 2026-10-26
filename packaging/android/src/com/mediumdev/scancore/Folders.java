@@ -3,6 +3,7 @@ package com.mediumdev.scancore;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 
 // A folder chosen through the system's picker (a content:// address), read
@@ -11,8 +12,8 @@ import android.provider.DocumentsContract;
 public final class Folders {
     private Folders() {}
 
-    // One line per entry, "name<TAB>1 for a folder, else 0<TAB>address", or
-    // null when the folder cannot be read.
+    // One line per entry, "name<TAB>1 for a folder, else 0<TAB>address<TAB>
+    // bytes<TAB>last modified (ms)", or null when the folder cannot be read.
     public static String list(Context context, String address) {
         try {
             final Uri uri = Uri.parse(address);
@@ -20,7 +21,8 @@ public final class Folders {
                                                                                 : DocumentsContract.getTreeDocumentId(uri);
             final Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(uri, parent);
             final String[] columns = {DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-                                      DocumentsContract.Document.COLUMN_MIME_TYPE};
+                                      DocumentsContract.Document.COLUMN_MIME_TYPE, DocumentsContract.Document.COLUMN_SIZE,
+                                      DocumentsContract.Document.COLUMN_LAST_MODIFIED};
             final StringBuilder out = new StringBuilder();
             try (Cursor cursor = context.getContentResolver().query(children, columns, null, null, null)) {
                 if (cursor == null)
@@ -34,12 +36,27 @@ public final class Folders {
                         .append(DocumentsContract.Document.MIME_TYPE_DIR.equals(cursor.getString(2)) ? '1' : '0')
                         .append('\t')
                         .append(DocumentsContract.buildDocumentUriUsingTree(uri, cursor.getString(0)).toString())
+                        .append('\t')
+                        .append(cursor.isNull(3) ? -1 : cursor.getLong(3))
+                        .append('\t')
+                        .append(cursor.isNull(4) ? 0 : cursor.getLong(4))
                         .append('\n');
                 }
             }
             return out.toString();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    // A file descriptor for a content:// file that the caller owns (mpv
+    // plays it as fdclose://N), or -1.
+    public static int openFd(Context context, String address) {
+        try {
+            final ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(Uri.parse(address), "r");
+            return pfd == null ? -1 : pfd.detachFd();
+        } catch (Exception e) {
+            return -1;
         }
     }
 }

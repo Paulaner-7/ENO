@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>ハブに固定</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>曲</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>このアニメの曲はまだありません</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>OP・EDはAnimeThemesから再生します。</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>タブ、ホーム、Retro のハブにこれらが表示されます。リンクからは他も開けます。</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>音楽（プレビュー）</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>アニメのOP・EDと手持ちの音楽を歌詞付きで。読んでいる間も再生が続きます。開発中です。</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>インストゥルメンタルです。歌詞はありません。</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>歌詞を読み込めませんでした。接続を確認してください。</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>この曲の歌詞はまだありません。</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>歌詞はLRCLIBのコミュニティが書いたものです。</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>%2 にあった %1 個の拡張機能をインストール</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>再生中：%1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>再生</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>停止</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>歌詞付きの曲 · プレビュー</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>アニメソング</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>手持ちのファイル</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>手持ちの曲を検索</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>曲・歌手・アニメを検索</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>このフォルダーを一覧から外す</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>別のフォルダーを追加</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>音楽フォルダーを追加</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>もう一度探す</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌詞</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>「%1」の曲</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>手持ちの曲</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>今期</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>すべて再生</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>音楽のフォルダーを追加しましょう</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>曲が見つかりません</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>これらのフォルダーに音楽はありません</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3・FLAC・Ogg・Opus・M4Aファイルをジャケット付きで。隣の.lrcファイルから歌詞も読みます。何もコピーしません。</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>アニメソングは現在オフになっています</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>アニメ名をローマ字で、または歌手名で試してください。</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>すべてのファイル (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>曲に戻る</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>映像を見る</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>再生位置</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>シャッフルオン</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>シャッフルオフ</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>前へ</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>再生</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>この曲をリピート</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>キューをリピート</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>リピートオフ</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>曲</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌詞</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>キュー</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>キューに1曲</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>キューに%1曲</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>ハブに固定しました</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>トレンド</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>すべての音楽</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>今期</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>折りたたむ</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> をブラウザで開いてください。</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>次に再生</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>キューに追加</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>映像を見る</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>第%1話</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>もっと見る</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>設定</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
         </message>
     </context>
     <context>

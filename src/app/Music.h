@@ -15,7 +15,8 @@ namespace sc {
 // nothing blocks the interface.
 //
 // A song is {id, type ("OP", "ED", "IN"), sequence, title, artists: [names],
-// episodes, audio (Ogg), video (WebM), anime, cover, anilistId, malId}.
+// episodes, audio (Ogg), video (WebM), anime, cover, anilistId, malId}; a
+// file of yours has {local: true, file, lrc, album, track, disc, duration}.
 class Music : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -37,9 +38,16 @@ public:
     // This season's anime and their songs: [{anime, cover, anilistId,
     // songs: [song]}].
     Q_INVOKABLE sc::Task *seasonSongs();
+    // Songs in the folders chosen on the Music page (the musicFolders
+    // setting), album by album. Tags are read once per version of a file;
+    // a .lrc beside a file is its `lrc`.
+    Q_INVOKABLE sc::Task *localSongs();
+    static QStringList musicFolders();
     // A song's lyrics: {synced: [{time, text}], plain, instrumental, found}.
-    // `duration` in seconds helps LRCLIB pick the right version.
-    Q_INVOKABLE sc::Task *lyrics(const QString &title, const QString &artist, const QString &album, double duration);
+    // `duration` in seconds helps LRCLIB pick the right version. A file of
+    // yours (`file`, `lrc`) is asked first.
+    Q_INVOKABLE sc::Task *lyrics(const QString &title, const QString &artist, const QString &album, double duration,
+                                 const QString &file = {}, const QString &lrc = {});
 
     // Parsers, public for the tests.
     // "[mm:ss.xx] text" lines into [{time, text}] by time; tags and empty

@@ -3,8 +3,16 @@
 #include "core/Database.h"
 #include "core/Http.h"
 #include "sources/Manifest.h"
+#include "sources/local/AudioTags.h"
+#include "sources/local/Local.h"
 
+#include <QCollator>
+#include <QCryptographicHash>
 #include <QDate>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QStandardPaths>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QRegularExpression>
@@ -52,6 +60,78 @@ QString coverOf(const QJsonObject &anime) {
         small = image.value("link").toString();
     }
     return small;
+}
+
+// Your files ---------------------------------------------------------------
+
+const QString kLocalIndex = QStringLiteral("music|local-index");
+
+QString addressOf(const QString &path) {
+    return path.startsWith(QLatin1String("content:")) ? path : QUrl::fromLocalFile(path).toString();
+}
+
+QString stampOf(const local::Entry &e) {
+    return QStringLiteral("%1|%2").arg(e.size).arg(e.modified);
+}
+
+// The embedded picture, written once per version of the file.
+QString saveArt(const QString &path, const QString &stamp, const QByteArray &art) {
+    if (art.size() < 64)
+        return {};
+    const auto dir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/music-art");
+    QDir().mkpath(dir);
+    const auto name = QString::fromLatin1(QCryptographicHash::hash((path + stamp).toUtf8(), QCryptographicHash::Sha1).toHex().left(20));
+    const auto file = dir + QLatin1Char('/') + name + (art.startsWith("\x89PNG") ? QStringLiteral(".png") : QStringLiteral(".jpg"));
+    if (!QFileInfo::exists(file)) {
+        QFile out(file);
+        if (!out.open(QIODevice::WriteOnly))
+            return {};
+        out.write(art);
+    }
+    return QUrl::fromLocalFile(file).toString();
+}
+
+// A folder's own picture (cover.jpg, folder.png, ...), for files without one.
+bool isFolderArt(const QString &name) {
+    static const QRegularExpression re(QStringLiteral("^(cover|folder|front|album|albumart[^.]*)\\.(jpe?g|png|webp)$"),
+                                       QRegularExpression::CaseInsensitiveOption);
+    return re.match(name).hasMatch();
+}
+
+QString baseName(const QString &name) {
+    const auto dot = name.lastIndexOf(QLatin1Char('.'));
+    return dot > 0 ? name.left(dot) : name;
+}
+
+QVariantMap songOfFile(const local::Entry &e, const QString &folder, const local::AudioTags &tags, const QString &art) {
+    auto title = tags.title;
+    auto artists = tags.artists;
+    // Untagged files are often named "Artist - Title".
+    if (title.isEmpty()) {
+        title = baseName(e.name).replace(QLatin1Char('_'), QLatin1Char(' ')).trimmed();
+        static const QRegularExpression track(QStringLiteral("^\\d{1,3}[ .\\-]+"));
+        title.remove(track);
+        const auto dash = title.indexOf(QStringLiteral(" - "));
+        if (dash > 0 && artists.isEmpty()) {
+            artists = {title.left(dash).trimmed()};
+            title = title.mid(dash + 3).trimmed();
+        }
+    }
+    return {{"id", QStringLiteral("local:") + e.path},
+            {"type", QString()},
+            {"label", QString()},
+            {"title", title},
+            {"artists", artists},
+            {"album", tags.album.isEmpty() ? folder : tags.album},
+            {"albumArtist", tags.albumArtist},
+            {"track", tags.track},
+            {"disc", tags.disc},
+            {"duration", tags.duration},
+            {"audio", addressOf(e.path)},
+            {"file", e.path},
+            {"cover", art},
+            {"anime", QString()},
+            {"local", true}};
 }
 
 void ensureAvailable() {
@@ -194,6 +274,80 @@ Task *Music::searchSongs(const QString &query) {
     });
 }
 
+QStringList Music::musicFolders() {
+    QStringList out;
+    for (const auto &value : Database::pref(QStringLiteral("setting.musicFolders")).toList())
+        if (!value.toString().isEmpty())
+            out.append(value.toString());
+    return out;
+}
+
+Task *Music::localSongs() {
+    return Task::run([]() -> QVariant {
+        QJsonObject before;
+        if (const auto hit = Database::cacheGet(kLocalIndex, true))
+            before = QJsonDocument::fromJson(*hit).object();
+        QJsonObject index;
+        QVariantList songs;
+        // Folder by folder: the files' own pictures and lyrics sit beside them.
+        QStringList pending = musicFolders();
+        QSet<QString> seen;
+        while (!pending.isEmpty() && songs.size() < 50000) {
+            const auto dir = pending.takeFirst();
+            if (seen.contains(dir))
+                continue;
+            seen.insert(dir);
+            const auto list = local::entries(dir);
+            QString folderArt;
+            QHash<QString, QString> lrcs;
+            for (const auto &e : list) {
+                if (e.dir)
+                    pending.append(e.path);
+                else if (e.name.endsWith(QLatin1String(".lrc"), Qt::CaseInsensitive))
+                    lrcs.insert(baseName(e.name).toLower(), e.path);
+                else if (folderArt.isEmpty() && isFolderArt(e.name))
+                    folderArt = addressOf(e.path);
+            }
+            // "content://…/tree/primary%3AMusic%2FAlbum" is "Album".
+            const auto folder = QUrl::fromPercentEncoding(dir.toUtf8()).section(QRegularExpression(QStringLiteral("[/\\\\:]")), -1);
+            for (const auto &e : list) {
+                if (e.dir || !local::isAudio(e.name))
+                    continue;
+                const auto stamp = stampOf(e);
+                QVariantMap song;
+                const auto known = before.value(e.path).toObject();
+                if (e.size >= 0 && known.value("stamp").toString() == stamp) {
+                    song = known.value("song").toObject().toVariantMap();
+                } else {
+                    const auto tags = local::readAudioTags(e.path, e.name, true);
+                    song = songOfFile(e, folder, tags, saveArt(e.path, stamp, tags.art));
+                }
+                if (song.value("cover").toString().isEmpty())
+                    song.insert("cover", folderArt);
+                song.insert("lrc", lrcs.value(baseName(e.name).toLower()));
+                index.insert(e.path, QJsonObject{{"stamp", stamp}, {"song", QJsonObject::fromVariantMap(song)}});
+                songs.append(song);
+            }
+        }
+        Database::cachePut(kLocalIndex, QJsonDocument(index).toJson(QJsonDocument::Compact), 365 * 86400);
+        // Album by album, in disc and track order; loose files by name.
+        QCollator collator;
+        collator.setNumericMode(true);
+        collator.setCaseSensitivity(Qt::CaseInsensitive);
+        std::stable_sort(songs.begin(), songs.end(), [&](const QVariant &a, const QVariant &b) {
+            const auto x = a.toMap(), y = b.toMap();
+            if (const int c = collator.compare(x.value("album").toString(), y.value("album").toString()))
+                return c < 0;
+            if (x.value("disc").toInt() != y.value("disc").toInt())
+                return x.value("disc").toInt() < y.value("disc").toInt();
+            if (x.value("track").toInt() != y.value("track").toInt())
+                return x.value("track").toInt() < y.value("track").toInt();
+            return collator.compare(x.value("file").toString(), y.value("file").toString()) < 0;
+        });
+        return songs;
+    });
+}
+
 Task *Music::seasonSongs() {
     return Task::run([]() -> QVariant {
         ensureAvailable();
@@ -253,9 +407,27 @@ QVariantList Music::parseLrc(const QString &lrc) {
     return out;
 }
 
-Task *Music::lyrics(const QString &title, const QString &artist, const QString &album, double duration) {
-    return Task::run([title, artist, album, duration]() -> QVariant {
-        if (title.trimmed().isEmpty())
+Task *Music::lyrics(const QString &title, const QString &artist, const QString &album, double duration, const QString &file,
+                    const QString &lrc) {
+    return Task::run([title, artist, album, duration, file, lrc]() -> QVariant {
+        // Your own first: the .lrc beside the file, then lyrics kept in it.
+        const auto ownText = [&]() -> QString {
+            if (!lrc.isEmpty()) {
+                QFile f(lrc);
+                if (f.open(QIODevice::ReadOnly))
+                    return QString::fromUtf8(f.readAll());
+            }
+            if (!file.isEmpty())
+                return local::readAudioTags(file, file.section(QLatin1Char('/'), -1), false).lyrics;
+            return {};
+        }();
+        if (!ownText.trimmed().isEmpty()) {
+            const auto synced = parseLrc(ownText);
+            return QVariantMap{{"found", true}, {"synced", synced}, {"plain", synced.isEmpty() ? ownText.trimmed() : QString()},
+                               {"instrumental", false}, {"own", true}};
+        }
+        // A file without a singer would match any song of that name.
+        if (title.trimmed().isEmpty() || (!file.isEmpty() && artist.trimmed().isEmpty()))
             return QVariantMap{{"found", false}};
         const auto key = QStringLiteral("lyrics|%1|%2|%3").arg(title.toLower(), artist.toLower()).arg(qRound(duration));
         if (const auto hit = Database::cacheGet(key))

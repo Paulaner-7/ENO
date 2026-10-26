@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>허브에 고정</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>노래</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>이 애니의 노래가 아직 없습니다</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>오프닝과 엔딩은 AnimeThemes에서 가져옵니다.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>탭, 홈, Retro 허브에 이것들이 표시됩니다. 링크로는 다른 것도 열립니다.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>음악 (미리 보기)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>애니 오프닝·엔딩과 내 음악을 가사와 함께, 읽는 동안에도 계속 재생됩니다. 아직 만드는 중입니다.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>연주곡이라 따라 부를 가사가 없습니다.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>가사를 불러오지 못했습니다. 연결을 확인하세요.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>이 노래의 가사가 아직 없습니다.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>가사는 LRCLIB 커뮤니티가 작성한 것입니다.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>%2에 있던 확장 프로그램 %1개 설치</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>재생 중: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>재생</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>일시 정지</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>다음</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>중지</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>가사와 함께 듣는 노래 · 미리 보기</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>애니 노래</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>내 파일</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>내 노래 검색</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>노래, 가수 또는 애니 검색</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>이 폴더 목록에서 빼기</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>폴더 하나 더 추가</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>음악 폴더 추가</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>다시 찾기</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>재생 중</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>가사</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1” 노래</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>내 노래</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>이번 시즌</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>모두 재생</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>음악이 있는 폴더를 추가하세요</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>노래를 찾지 못했습니다</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>이 폴더에 음악이 없습니다</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3, FLAC, Ogg, Opus, M4A 파일을 커버와 함께, 옆에 있는 .lrc 파일의 가사도 보여 줍니다. 아무것도 복사하지 않습니다.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>애니 노래는 지금 꺼져 있습니다</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>애니 이름을 로마자로 쓰거나 가수 이름으로 찾아 보세요.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>모든 파일 (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>닫기</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>재생 중</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>노래로 돌아가기</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>영상 보기</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>재생 위치</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>셔플 켜기</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>셔플 끄기</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>이전</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>재생</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>일시 정지</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>다음</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>이 노래 반복</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>대기열 반복</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>반복 끄기</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>노래</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>가사</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>대기열</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>대기열에 1곡</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>대기열에 %1곡</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>허브에 고정됨</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>트렌딩</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>모든 음악</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>재생 중</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>이번 시즌</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>접기</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> 을(를) 여세요.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>다음에 재생</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>대기열에 추가</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>영상 보기</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>%1화</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>더보기</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>설정</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
         </message>
     </context>
     <context>

@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>I-pin sa hub</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Mga kanta</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Wala pang kanta ang anime na ito</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Galing sa AnimeThemes ang mga opening at ending.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4596,6 +4608,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Ipinapakita ito ng mga tab, Home at hub ng Retro. Nabubuksan pa rin ng link ang iba.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Musika (preview)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Mga opening at ending ng anime at sarili mong musika, may liriko, at player na tuloy-tuloy habang nagbabasa ka. Ginagawa pa.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5567,6 +5587,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Instrumental ito: walang liriko na masasabayan.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Hindi ma-load ang liriko. Tingnan ang koneksyon.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Wala pang liriko ang kantang ito.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Galing sa LRCLIB ang mga liriko, isinulat ng komunidad nito.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5900,6 +5939,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>I-install ang %1 extension na nasa %2 mo</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Tumutugtog ngayon: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>I-play</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>I-pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Susunod</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Itigil</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Mga kanta na may liriko · preview</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Mga kanta ng anime</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Mga file mo</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Hanapin sa mga kanta mo</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Maghanap ng kanta, mang-aawit o anime</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Huwag nang ilista ang folder na ito</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Magdagdag ng isa pang folder</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Magdagdag ng music folder</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Maghanap ulit</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Tumutugtog ngayon</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Liriko</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Mga kanta para sa “%1”</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Mga kanta mo</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Ngayong season</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>I-play lahat</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Magdagdag ng folder ng iyong musika</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Walang nahanap na kanta</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Walang musika sa mga folder na ito</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Mga MP3, FLAC, Ogg, Opus at M4A file, kasama ang cover nila, at liriko mula sa mga .lrc file sa tabi nila. Walang kinokopya.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Naka-off muna ang mga kanta ng anime</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Subukan ang pangalan ng anime sa romaji, o ang mang-aawit.</translation>
         </message>
     </context>
     <context>
@@ -6549,6 +6702,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Lahat ng file (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Isara</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Tumutugtog ngayon</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Bumalik sa kanta</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Panoorin ang video</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Posisyon</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Naka-on ang shuffle</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Naka-off ang shuffle</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Nakaraan</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>I-play</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>I-pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Susunod</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Ulitin ang kantang ito</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Ulitin ang pila</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Naka-off ang ulit</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Kanta</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Liriko</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Pila</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 kanta sa pila</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 kanta sa pila</translation>
         </message>
     </context>
     <context>
@@ -8502,6 +8734,10 @@
             <source>Pinned to the hub</source>
             <translation>Naka-pin sa hub</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8743,6 +8979,18 @@
         <message>
             <source>Trending</source>
             <translation>Trending</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>lahat ng musika</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>tumutugtog ngayon</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Ngayong season</translation>
         </message>
     </context>
     <context>
@@ -9796,6 +10044,10 @@
             <source>Collapse</source>
             <translation>Itiklop</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9826,6 +10078,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> sa browser mo sa halip.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>I-play kasunod</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Idagdag sa pila</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Panoorin ang video</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Episode %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Higit pa</translation>
         </message>
     </context>
     <context>
@@ -10624,6 +10899,10 @@
         <message>
             <source>Settings</source>
             <translation>Settings</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
         </message>
     </context>
     <context>

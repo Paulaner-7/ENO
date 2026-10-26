@@ -1,5 +1,10 @@
 #include "AudioPlayer.h"
 
+#ifdef Q_OS_ANDROID
+#include <QCoreApplication>
+#include <QJniObject>
+#endif
+
 #include "MediaControls.h"
 #include "MpvPlayer.h"
 
@@ -135,6 +140,22 @@ bool AudioPlayer::available() const {
 #endif
 }
 
+// Android: a file in a folder chosen there is a content:// address, which
+// mpv reads through a descriptor the system opens for it.
+QString AudioPlayer::playable(const QString &url) {
+#ifdef Q_OS_ANDROID
+    if (url.startsWith(QLatin1String("content:"))) {
+        const jint fd = QJniObject::callStaticMethod<jint>("com/mediumdev/scancore/Folders", "openFd",
+                                                           "(Landroid/content/Context;Ljava/lang/String;)I",
+                                                           QNativeInterface::QAndroidApplication::context().object(),
+                                                           QJniObject::fromString(url).object<jstring>());
+        if (fd >= 0)
+            return QStringLiteral("fdclose://%1").arg(fd);
+    }
+#endif
+    return url;
+}
+
 void AudioPlayer::load(const QString &url, double start) {
 #ifdef SCANCORE_HAVE_MPV
     if (!m_core->mpv)
@@ -150,7 +171,7 @@ void AudioPlayer::load(const QString &url, double start) {
     emit durationChanged();
     emit loadingChanged();
     setFlag(m_core->mpv, "pause", false);
-    QStringList args{QStringLiteral("loadfile"), url, QStringLiteral("replace")};
+    QStringList args{QStringLiteral("loadfile"), playable(url), QStringLiteral("replace")};
     if (start > 0) {
         args << QStringLiteral("-1") << QStringLiteral("start=%1").arg(start);
     }

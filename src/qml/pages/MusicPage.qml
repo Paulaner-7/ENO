@@ -1,15 +1,40 @@
 import QtQuick
 import QtQuick.Controls.Basic
+import QtQuick.Dialogs
 import Scancore
 
 // Music (a preview): anime openings, endings and inserts from AnimeThemes,
-// searched by song, singer or anime, and this season's, grouped by anime.
-// Lyrics come with each song in Now Playing.
+// searched by song, singer or anime, and this season's, grouped by anime;
+// or your own files, album by album, from the folders chosen here. Lyrics
+// come with each song in Now Playing.
 Item {
     id: page
     property string query: ""
     property var searchTask: null
-    property var seasonTask: Music.animeSongsAvailable ? Music.seasonSongs() : null
+    property var seasonTask: null
+    // Where the songs come from: "anime" (AnimeThemes) or "files".
+    readonly property string from: App.settings.musicFrom || (Music.animeSongsAvailable ? "anime" : "files")
+    readonly property bool files: from === "files"
+    readonly property var folders: Array.from(App.settings.musicFolders || [])
+    property var localTask: null
+    readonly property var mine: localTask && localTask.ok ? localTask.result : []
+    // Your files are filtered here, as you type.
+    readonly property var mineFound: {
+        if (!query.length) return mine
+        const q = query.toLowerCase()
+        return mine.filter(s => (s.title + " " + (s.artists || []).join(" ") + " " + s.album).toLowerCase().includes(q))
+    }
+    function load() {
+        if (files) localTask = folders.length ? Music.localSongs() : null
+        else if (!seasonTask && Music.animeSongsAvailable) seasonTask = Music.seasonSongs()
+    }
+    Component.onCompleted: load()
+    onFromChanged: load()
+    onFoldersChanged: if (files) load()
+    // "content://…/tree/primary%3AMusic" is "Music".
+    function folderName(path) {
+        return decodeURIComponent(path).replace(/[\/\\:]+$/, "").replace(/^.*[\/\\:]/, "") || path
+    }
     readonly property var found: searchTask && searchTask.ok ? searchTask.result : []
     // This season's, one list with the anime as sections.
     readonly property var season: {
@@ -18,12 +43,21 @@ Item {
         for (const a of seasonTask.result) for (const s of a.songs) out.push(s)
         return out
     }
-    readonly property var shown: query.length ? found : season
+    readonly property var shown: files ? mineFound : query.length ? found : season
 
     function run(text) {
         query = text.trim()
-        searchTask = query.length ? Music.searchSongs(query) : null
+        searchTask = query.length && !files ? Music.searchSongs(query) : null
     }
+
+    FolderDialog {
+        id: folderDialog
+        onAccepted: {
+            const path = App.localPath(selectedFolder)
+            if (page.folders.indexOf(path) < 0) App.setSetting("musicFolders", page.folders.concat([path]))
+        }
+    }
+    ActionMenu { id: folderMenu }
 
     ListView {
         id: list
@@ -34,7 +68,13 @@ Item {
         flickDeceleration: Motion.flickDeceleration
         bottomMargin: 96
         WheelScroll {}
-        section.property: page.query.length ? "" : "anime"
+        // The songs arrive after the header is laid out, and a new model
+        // left the view below the title: until the reader scrolls, stay at
+        // the very top (as History does).
+        property bool touched: false
+        onMovementStarted: touched = true
+        onModelChanged: if (!touched) Qt.callLater(() => { if (!list.touched) list.positionViewAtBeginning() })
+        section.property: page.files ? "album" : page.query.length ? "" : "anime"
         section.criteria: ViewSection.FullString
         section.delegate: Text {
             required property string section
@@ -51,19 +91,70 @@ Item {
         }
         header: Column {
             width: list.width
+            onHeightChanged: if (!list.touched) Qt.callLater(() => { if (!list.touched) list.positionViewAtBeginning() })
             spacing: Math.round(Theme.sectionGap * 0.6)
             bottomPadding: 8
             PageHeader {
                 title: qsTr("Music")
-                subtitle: qsTr("Anime openings and endings, with their lyrics · preview")
+                subtitle: qsTr("Songs with their lyrics · preview")
+            }
+            Segmented {
+                visible: !Theme.retro
+                x: Theme.gutter
+                options: [{ value: "anime", label: qsTr("Anime songs"), icon: "tv" }, { value: "files", label: qsTr("Your files"), icon: "folder-open" }]
+                value: page.from
+                onPicked: (v) => App.setSetting("musicFrom", v)
+            }
+            PivotHeaders {
+                visible: Theme.retro
+                x: Theme.gutter
+                width: parent.width - 2 * Theme.gutter
+                height: visible ? implicitHeight : 0
+                options: [{ value: "anime", label: qsTr("Anime songs") }, { value: "files", label: qsTr("Your files") }]
+                value: page.from
+                onPicked: (v) => App.setSetting("musicFrom", v)
             }
             SearchField {
+                id: search
                 x: Theme.gutter
                 width: Math.min(parent.width - 2 * Theme.gutter, 760)
                 large: true
-                placeholderText: qsTr("Search a song, a singer or an anime")
+                visible: !page.files || page.folders.length > 0
+                placeholderText: page.files ? qsTr("Search your songs") : qsTr("Search a song, a singer or an anime")
                 onSubmitted: (text) => page.run(text)
-                onTextChanged: if (text.length === 0 && page.query.length > 0) page.run("")
+                onTextChanged: if (page.files || (text.length === 0 && page.query.length > 0)) page.run(text)
+            }
+            // The folders listed, and adding another.
+            Flow {
+                visible: page.files
+                x: Theme.gutter
+                width: Math.min(parent.width - 2 * Theme.gutter, 760)
+                spacing: 8
+                Repeater {
+                    model: page.files ? page.folders : []
+                    Chip {
+                        id: folderChip
+                        required property string modelData
+                        iconName: "folder-open"
+                        text: page.folderName(modelData)
+                        onClicked: folderMenu.openAt(folderChip, folderChip.width / 2, folderChip.height, [
+                            { text: qsTr("Stop listing this folder"), icon: "x",
+                              run: () => App.setSetting("musicFolders", page.folders.filter(f => f !== modelData)) }
+                        ])
+                    }
+                }
+                Chip {
+                    iconName: "plus"
+                    text: page.folders.length ? qsTr("Add another folder") : qsTr("Add a music folder")
+                    onClicked: folderDialog.open()
+                }
+                Chip {
+                    visible: page.folders.length > 0
+                    iconName: "refresh-cw"
+                    text: qsTr("Look again")
+                    enabled: !(page.localTask && page.localTask.loading)
+                    onClicked: page.load()
+                }
             }
             // What is playing, a tap from Now Playing.
             Rectangle {
@@ -106,7 +197,8 @@ Item {
                 spacing: 10
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: page.query.length ? qsTr("Songs for “%1”").arg(page.query) : qsTr("This season")
+                    text: page.files ? (page.query.length ? qsTr("Songs for “%1”").arg(page.query) : qsTr("Your songs"))
+                        : page.query.length ? qsTr("Songs for “%1”").arg(page.query) : qsTr("This season")
                     color: Theme.text
                     font.family: Theme.fontDisplay
                     font.pixelSize: Theme.textXl
@@ -124,8 +216,20 @@ Item {
             }
             StateView {
                 width: parent.width
-                visible: !Music.animeSongsAvailable || (page.query.length ? !!page.searchTask && !page.searchTask.ok : !!page.seasonTask && !page.seasonTask.ok)
-                    || (page.query.length && page.searchTask && page.searchTask.ok && page.found.length === 0)
+                visible: page.files && (!page.folders.length || !!page.localTask && !page.localTask.ok
+                                        || (!!page.localTask && page.localTask.ok && page.mineFound.length === 0))
+                task: page.files ? page.localTask : null
+                empty: !page.folders.length || (!!page.localTask && page.localTask.ok && page.mineFound.length === 0)
+                emptyTitle: !page.folders.length ? qsTr("Add a folder with your music")
+                          : page.query.length ? qsTr("No songs found") : qsTr("No music in these folders")
+                emptyText: qsTr("MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.")
+                emptyIcon: "folder-open"
+                onRetry: page.load()
+            }
+            StateView {
+                width: parent.width
+                visible: !page.files && (!Music.animeSongsAvailable || (page.query.length ? !!page.searchTask && !page.searchTask.ok : !!page.seasonTask && !page.seasonTask.ok)
+                    || (page.query.length && page.searchTask && page.searchTask.ok && page.found.length === 0))
                 task: page.query.length ? page.searchTask : page.seasonTask
                 empty: !Music.animeSongsAvailable || (page.query.length > 0 && !!page.searchTask && page.searchTask.ok && page.found.length === 0)
                 emptyTitle: Music.animeSongsAvailable ? qsTr("No songs found") : qsTr("Anime songs are turned off for now")
@@ -140,6 +244,8 @@ Item {
             x: Theme.gutter - 8
             width: Math.min(list.width - 2 * Theme.gutter + 16, 776)
             song: modelData
+            // The album is the section above.
+            showAnime: !page.files
             onPlayed: MusicQueue.playList(page.shown, index)
         }
         // Retro and phones scroll with the finger; this keeps the wheel too.

@@ -17,7 +17,8 @@ AbstractButton {
     signal played()
 
     implicitHeight: 64
-    hoverEnabled: true
+    // A finger leaves "hovered" set after it lifts.
+    hoverEnabled: !Theme.touch
     focusPolicy: Qt.TabFocus
     Accessible.name: (song.title || "") + ", " + (song.artists || []).join(", ")
     onClicked: played()
@@ -99,8 +100,9 @@ AbstractButton {
             Text {
                 width: parent.width
                 text: [(row.song.artists || []).join(", "),
-                       row.showAnime ? row.song.anime : "",
-                       row.song.label + (row.song.episodes ? " · " + qsTr("Episodes %1").arg(row.song.episodes) : "")].filter(s => s).join(" · ")
+                       row.showAnime ? row.song.anime || row.song.album : "",
+                       (row.song.label || "") + (row.song.episodes ? " · " + qsTr("Episodes %1").arg(row.song.episodes) : ""),
+                       row.song.local && row.song.duration > 0 ? Math.floor(row.song.duration / 60) + ":" + String(Math.floor(row.song.duration % 60)).padStart(2, "0") : ""].filter(s => s).join(" · ")
                 color: Theme.alpha(row.ink, 0.65)
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm

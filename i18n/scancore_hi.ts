@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>हब पर पिन करें</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>गाने</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>इस एनीमे के गाने अभी नहीं हैं</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>ओपनिंग और एंडिंग AnimeThemes से आते हैं।</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4596,6 +4608,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>टैब, होम और रेट्रो हब इन्हें दिखाते हैं। लिंक फिर भी बाकी को खोलता है।</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>संगीत (प्रीव्यू)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>एनीमे ओपनिंग और एंडिंग और आपका अपना संगीत, बोल के साथ, और एक प्लेयर जो पढ़ते समय चलता रहता है। अभी बन रहा है।</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5567,6 +5587,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>यह वाद्य संगीत है: साथ गाने के लिए बोल नहीं हैं।</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>बोल लोड नहीं हो सके। कनेक्शन जाँचें।</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>इस गाने के बोल अभी नहीं हैं।</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>बोल LRCLIB से आते हैं, जिन्हें उसका समुदाय लिखता है।</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5900,6 +5939,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>%2 में आपके पास रहे %1 एक्सटेंशन इंस्टॉल करें</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>अभी चल रहा है: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>चलाएं</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>अगला</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>रोकें</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>बोल के साथ गाने · प्रीव्यू</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>एनीमे गाने</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>आपकी फ़ाइलें</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>अपने गाने खोजें</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>कोई गाना, गायक या एनीमे खोजें</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>यह फ़ोल्डर दिखाना बंद करें</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>एक और फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>संगीत फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>फिर से खोजें</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>बोल</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1” के गाने</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>आपके गाने</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>यह सीज़न</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>सब चलाएँ</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>अपने संगीत वाला फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>कोई गाना नहीं मिला</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>इन फ़ोल्डरों में कोई संगीत नहीं</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3, FLAC, Ogg, Opus और M4A फ़ाइलें, उनके कवर के साथ, और साथ रखी .lrc फ़ाइलों से बोल। कुछ भी कॉपी नहीं होता।</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>एनीमे गाने अभी बंद हैं</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>एनीमे का नाम रोमाजी में या गायक का नाम आज़माएँ।</translation>
         </message>
     </context>
     <context>
@@ -6549,6 +6702,85 @@
         <message>
             <source>All files (*)</source>
             <translation>सभी फ़ाइलें (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>गाने पर वापस</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>वीडियो देखें</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>स्थिति</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>शफ़ल चालू</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>शफ़ल बंद</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>पिछला</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>चलाएं</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>अगला</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>यह गाना दोहराएँ</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>कतार दोहराएँ</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>दोहराना बंद</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>गाना</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>बोल</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>कतार</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>कतार में 1 गाना</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>कतार में %1 गाने</translation>
         </message>
     </context>
     <context>
@@ -8502,6 +8734,10 @@
             <source>Pinned to the hub</source>
             <translation>हब पर पिन किया गया</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8743,6 +8979,18 @@
         <message>
             <source>Trending</source>
             <translation>ट्रेंडिंग</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>सारा संगीत</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>यह सीज़न</translation>
         </message>
     </context>
     <context>
@@ -9796,6 +10044,10 @@
             <source>Collapse</source>
             <translation>छोटा करें</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9826,6 +10078,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> अपने ब्राउज़र में।</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>इसके बाद चलाएँ</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>कतार में जोड़ें</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>वीडियो देखें</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>एपिसोड %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>और</translation>
         </message>
     </context>
     <context>
@@ -10624,6 +10899,10 @@
         <message>
             <source>Settings</source>
             <translation>सेटिंग</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
         </message>
     </context>
     <context>

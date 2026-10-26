@@ -10,6 +10,9 @@
 // folder you give it: each one's popular list, its first book and that
 // book's first chapter.
 //
+// scancore_probe tags <folder> prints what each music file's tags say (as
+// the Music page reads them), with how long reading took.
+//
 // scancore_probe repo <link>... previews each extension or plugin repository
 // link as "Add a repository" would: its kind, name and how many extensions.
 
@@ -19,6 +22,7 @@
 #include "plugins/Runtime.h"
 #include "sources/Manifest.h"
 #include "sources/catalogue/Catalogue.h"
+#include "sources/local/AudioTags.h"
 #include "sources/comics/Registry.h"
 #include "sources/novels/Registry.h"
 
@@ -66,6 +70,24 @@ int main(int argc, char **argv) {
     const auto only = args.value(3);
     const bool newest = args.value(4) == QLatin1String("latest");
     int failures = 0;
+
+    if (kind == QLatin1String("tags")) {
+        QDirIterator it(args.value(2), QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            const auto path = it.next();
+            if (!local::isAudio(path))
+                continue;
+            QElapsedTimer timer;
+            timer.start();
+            const auto t = local::readAudioTags(path, path, true);
+            out << path.section(QLatin1Char('/'), -2) << "\n  title=" << t.title << " artists=" << t.artists.join(QLatin1Char('|'))
+                << " album=" << t.album << " track=" << t.track << " disc=" << t.disc << " duration=" << t.duration
+                << " art=" << t.art.size() << (t.art.startsWith("\xff\xd8") ? " (jpeg)" : t.art.startsWith("\x89PNG") ? " (png)" : "")
+                << " lyrics=" << t.lyrics.size() << " in " << timer.nsecsElapsed() / 1000 << " us\n";
+        }
+        out.flush();
+        return 0;
+    }
 
     if (kind == QLatin1String("repo")) {
         QTemporaryDir dir;

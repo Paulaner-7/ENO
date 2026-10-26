@@ -34,6 +34,13 @@ Rectangle {
         }
     }
     property real videoStart: 0
+    // Whichever is playing: the song, or its video.
+    readonly property var videoPlayer: video && videoLoader.item ? videoLoader.item.player : null
+    readonly property real position: videoPlayer ? videoPlayer.position : AudioPlayer.position
+    readonly property real duration: videoPlayer ? videoPlayer.duration : AudioPlayer.duration
+    readonly property bool paused: videoPlayer ? videoPlayer.paused : AudioPlayer.paused
+    function seek(t) { videoPlayer ? videoPlayer.seek(t) : AudioPlayer.seek(t) }
+    function toggle() { if (videoPlayer) videoPlayer.paused = !videoPlayer.paused; else AudioPlayer.toggle() }
     function handleBack() {
         if (video) { showVideo(false); return true }
         return false
@@ -96,7 +103,7 @@ Rectangle {
             Text {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
-                text: page.song ? page.song.anime || "" : ""
+                text: page.song ? page.song.anime || page.song.album || "" : ""
                 color: "#ffffff"
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
@@ -141,8 +148,8 @@ Rectangle {
                 visible: !page.video || picture.small
                 radius: Theme.retro ? 0 : (picture.small ? Theme.radiusSm : Theme.radiusXl)
                 source: page.song ? page.song.cover || "" : ""
-                title: page.song ? page.song.anime || "" : ""
-                scale: AudioPlayer.playing || picture.small ? 1 : 0.94
+                title: page.song ? page.song.anime || page.song.album || "" : ""
+                scale: !page.paused || picture.small ? 1 : 0.94
                 Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutBack } }
             }
             Loader {
@@ -167,7 +174,9 @@ Rectangle {
             song: page.song
             large: true
             ink: "#ffffff"
-            onSeekRequested: (t) => AudioPlayer.seek(t)
+            position: page.position
+            duration: page.duration
+            onSeekRequested: (t) => page.seek(t)
         }
 
         Column {
@@ -203,23 +212,21 @@ Rectangle {
             Column {
                 width: parent.width
                 spacing: 2
-                enabled: !page.video
-                opacity: enabled ? 1 : 0.4
                 ScSlider {
                     id: scrub
                     width: parent.width
                     from: 0
-                    to: Math.max(1, AudioPlayer.duration)
-                    value: pressed ? value : AudioPlayer.position
-                    onMoved: if (!pressed) AudioPlayer.seek(value)
-                    onPressedChanged: if (!pressed) AudioPlayer.seek(value)
+                    to: Math.max(1, page.duration)
+                    value: pressed ? value : page.position
+                    onMoved: if (!pressed) page.seek(value)
+                    onPressedChanged: if (!pressed) page.seek(value)
                     Accessible.name: qsTr("Position")
                 }
                 Item {
                     width: parent.width
                     height: 16
-                    Text { text: page.formatTime(scrub.pressed ? scrub.value : AudioPlayer.position); color: Qt.rgba(1, 1, 1, 0.6); font.family: Theme.fontSans; font.pixelSize: Theme.textXs }
-                    Text { anchors.right: parent.right; text: page.formatTime(AudioPlayer.duration); color: Qt.rgba(1, 1, 1, 0.6); font.family: Theme.fontSans; font.pixelSize: Theme.textXs }
+                    Text { text: page.formatTime(scrub.pressed ? scrub.value : page.position); color: Qt.rgba(1, 1, 1, 0.6); font.family: Theme.fontSans; font.pixelSize: Theme.textXs }
+                    Text { anchors.right: parent.right; text: page.formatTime(page.duration); color: Qt.rgba(1, 1, 1, 0.6); font.family: Theme.fontSans; font.pixelSize: Theme.textXs }
                 }
             }
             // The buttons.
@@ -248,8 +255,8 @@ Rectangle {
                     width: 68
                     height: 68
                     focusPolicy: Qt.TabFocus
-                    Accessible.name: AudioPlayer.paused ? qsTr("Play") : qsTr("Pause")
-                    onClicked: page.video ? page.showVideo(false) : AudioPlayer.toggle()
+                    Accessible.name: page.paused ? qsTr("Play") : qsTr("Pause")
+                    onClicked: page.toggle()
                     background: Rectangle {
                         radius: Theme.retro ? 0 : width / 2
                         color: "#ffffff"
@@ -257,12 +264,12 @@ Rectangle {
                         Behavior on scale { NumberAnimation { duration: Motion.fast } }
                     }
                     contentItem: Item {
-                        Spinner { anchors.centerIn: parent; visible: AudioPlayer.loading }
+                        Spinner { anchors.centerIn: parent; visible: !page.videoPlayer && AudioPlayer.loading }
                         Icon {
                             anchors.centerIn: parent
-                            anchors.horizontalCenterOffset: AudioPlayer.paused ? 2 : 0
-                            visible: !AudioPlayer.loading
-                            name: AudioPlayer.paused || page.video ? "play" : "pause"
+                            anchors.horizontalCenterOffset: page.paused ? 2 : 0
+                            visible: page.videoPlayer || !AudioPlayer.loading
+                            name: page.paused ? "play" : "pause"
                             size: 28
                             color: "#0b0b0d"
                         }
@@ -352,7 +359,9 @@ Rectangle {
             song: page.song
             large: true
             ink: "#ffffff"
-            onSeekRequested: (t) => AudioPlayer.seek(t)
+            position: page.position
+            duration: page.duration
+            onSeekRequested: (t) => page.seek(t)
         }
         ListView {
             id: queueList

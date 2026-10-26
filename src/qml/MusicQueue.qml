@@ -90,7 +90,7 @@ QtObject {
         const song = current
         if (!song) return
         AudioPlayer.load(song.audio, 0)
-        AudioPlayer.showControls(song.title, artistsOf(song) || song.anime || "", song.cover || "")
+        AudioPlayer.showControls(song.title, artistsOf(song) || song.anime || song.album || "", song.cover || "")
     }
 
     property Connections player: Connections {

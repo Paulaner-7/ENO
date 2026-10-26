@@ -24,7 +24,7 @@ QtObject {
     property string hubSection: "explore"
     property bool onHub: true
 
-    readonly property var sectionKeys: ["explore", "recent", "library", "comics", "novels", "anime"]
+    readonly property var sectionKeys: ["explore", "recent", "library", "comics", "novels", "anime", "music"]
     readonly property var defaultSections: ["explore", "recent", "library", "comics", "novels", "anime"]
 
     function sectionLabel(key) {
@@ -35,6 +35,7 @@ QtObject {
         case "comics": return qsTr("Comics")
         case "novels": return qsTr("Novels")
         case "anime": return qsTr("Anime")
+        case "music": return qsTr("Music")
         }
         return key
     }
@@ -54,9 +55,12 @@ QtObject {
     readonly property string sectionsText: typeof App.settings.retroSections === "string" ? App.settings.retroSections : ""
     readonly property string pinsText: typeof App.settings.retroTiles === "string" ? App.settings.retroTiles : ""
 
+    // Music is a preview: its section shows only while it is turned on (a
+    // bool, so other settings do not rebuild the list).
+    readonly property bool musicOn: App.settings.musicSection === true
     // The hub's sections in the user's order (at least one).
     readonly property var sectionList: {
-        const keys = parse(sectionsText, defaultSections).filter(k => sectionKeys.indexOf(k) >= 0)
+        const keys = parse(sectionsText, defaultSections).filter(k => sectionKeys.indexOf(k) >= 0 && (k !== "music" || musicOn))
         return (keys.length ? keys : defaultSections).map(k => ({ key: k, label: sectionLabel(k) }))
     }
     function sections() { return sectionList }

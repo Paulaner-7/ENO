@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>An den Hub anheften</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Songs</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Noch keine Songs zu diesem Anime</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Openings und Endings kommen von AnimeThemes.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Tabs, Startseite und der Retro-Hub zeigen diese. Ein Link öffnet trotzdem die anderen.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Musik (Vorschau)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Anime-Openings und -Endings und deine eigene Musik, mit Songtexten, und ein Player, der beim Lesen weiterspielt. Noch im Aufbau.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Ein Instrumental: kein Text zum Mitsingen.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Der Songtext konnte nicht geladen werden. Prüfe die Verbindung.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Für diesen Song gibt es noch keinen Text.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Songtexte kommen von LRCLIB, geschrieben von seiner Community.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>Die %1 Erweiterungen aus %2 installieren</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Läuft gerade: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Abspielen</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Weiter</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Stopp</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Songs mit Songtexten · Vorschau</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Anime-Songs</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Deine Dateien</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Deine Songs durchsuchen</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Suche einen Song, eine Stimme oder einen Anime</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Diesen Ordner nicht mehr listen</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Weiteren Ordner hinzufügen</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Musikordner hinzufügen</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Erneut suchen</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Läuft gerade</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Songtext</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Songs für „%1“</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Deine Songs</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Diese Season</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Alle abspielen</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Füge einen Ordner mit deiner Musik hinzu</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Keine Songs gefunden</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Keine Musik in diesen Ordnern</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3-, FLAC-, Ogg-, Opus- und M4A-Dateien mit ihren Covern und Songtexten aus .lrc-Dateien daneben. Nichts wird kopiert.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Anime-Songs sind vorerst ausgeschaltet</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Versuche den Anime-Namen in Romaji oder die Stimme dahinter.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Alle Dateien (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Schließen</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Läuft gerade</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Zurück zum Song</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Video ansehen</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Position</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Zufallswiedergabe an</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Zufallswiedergabe aus</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Zurück</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Abspielen</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Weiter</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Diesen Song wiederholen</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Warteschlange wiederholen</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Wiederholen aus</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Song</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Songtext</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Warteschlange</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 Titel in der Warteschlange</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 Titel in der Warteschlange</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>An den Hub angeheftet</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>Im Trend</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>alle Musik</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>läuft gerade</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Diese Season</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>Einklappen</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> stattdessen in deinem Browser.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Als Nächstes abspielen</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Zur Warteschlange hinzufügen</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Video ansehen</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Folgen %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Mehr</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>Einstellungen</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
         </message>
     </context>
     <context>

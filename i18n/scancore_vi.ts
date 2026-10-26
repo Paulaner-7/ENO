@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>Ghim vào hub</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Bài hát</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Anime này chưa có bài hát</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Nhạc mở đầu và kết thúc lấy từ AnimeThemes.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Các tab, Trang chủ và hub Retro hiển thị những mục này. Liên kết vẫn mở được các mục khác.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Âm nhạc (xem trước)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Nhạc mở đầu, kết thúc anime và nhạc của riêng bạn, kèm lời bài hát, cùng trình phát vẫn chạy khi bạn đọc. Vẫn đang được xây dựng.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Bản nhạc không lời: không có lời để hát theo.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Không tải được lời bài hát. Hãy kiểm tra kết nối.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Bài này chưa có lời.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Lời bài hát lấy từ LRCLIB, do cộng đồng ở đó viết.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>Cài %1 tiện ích mở rộng bạn có trong %2</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Đang phát: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Phát</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Tạm dừng</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Tiếp</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Dừng</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Bài hát kèm lời · xem trước</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Nhạc anime</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Tệp của bạn</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Tìm trong bài hát của bạn</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Tìm bài hát, ca sĩ hoặc anime</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Ngừng liệt kê thư mục này</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Thêm thư mục khác</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Thêm thư mục nhạc</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Tìm lại</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Đang phát</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Lời bài hát</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Bài hát cho “%1”</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Bài hát của bạn</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Mùa này</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Phát tất cả</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Thêm thư mục chứa nhạc của bạn</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Không tìm thấy bài hát</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Không có nhạc trong các thư mục này</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Tệp MP3, FLAC, Ogg, Opus và M4A, kèm ảnh bìa, và lời bài hát từ tệp .lrc bên cạnh. Không sao chép gì cả.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Nhạc anime tạm thời bị tắt</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Thử tên anime bằng romaji, hoặc tên ca sĩ.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Mọi tệp (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Đóng</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Đang phát</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Quay lại bài hát</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Xem video</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Vị trí</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Bật phát ngẫu nhiên</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Tắt phát ngẫu nhiên</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Trước</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Phát</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Tạm dừng</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Tiếp</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Lặp lại bài này</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Lặp lại hàng chờ</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Tắt lặp lại</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Bài hát</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Lời bài hát</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Hàng chờ</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 bài trong hàng chờ</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 bài trong hàng chờ</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>Đã ghim vào hub</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>Thịnh hành</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>tất cả nhạc</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>đang phát</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Mùa này</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>Thu gọn</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> trong trình duyệt của bạn.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Phát tiếp theo</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Thêm vào hàng chờ</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Xem video</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Tập %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Thêm</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>Cài đặt</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
         </message>
     </context>
     <context>

@@ -206,7 +206,7 @@ Item {
             ? ((hub.backgroundEntry.extra && hub.backgroundEntry.extra.banner) || hub.backgroundEntry.cover || "") : ""
         backgroundReferer: hub.referer(hub.backgroundEntry)
         pages: ({ explore: explorePage, recent: recentPage, library: libraryPage,
-                  comics: comicsPage, novels: novelsPage, anime: animePage })
+                  comics: comicsPage, novels: novelsPage, anime: animePage, music: musicPage })
         onCurrentKeyChanged: {
             Retro.hubSection = currentKey
             rememberSection.restart()
@@ -515,6 +515,75 @@ Item {
             loading: task ? task.loading : false
             error: task && !task.loading ? task.error : ""
             onRetry: task = Anime.home()
+        }
+    }
+    // Music: what is playing, and this season's anime songs to start one.
+    Component {
+        id: musicPage
+        Item {
+            id: music
+            property string sectionKey
+            property bool current
+            property var task: Music.animeSongsAvailable ? Music.seasonSongs() : null
+            readonly property var songs: {
+                if (!task || !task.ok) return []
+                const out = []
+                for (const a of task.result) for (const s of a.songs) out.push(s)
+                return out
+            }
+            SmoothFlickable {
+                anchors.fill: parent
+                contentHeight: musicColumn.height + hub.bottomRoom
+                Column {
+                    id: musicColumn
+                    width: parent.width
+                    spacing: 4
+                    Repeater {
+                        model: [{ label: qsTr("all music"), run: () => Router.go("music") }].concat(
+                            MusicQueue.active ? [{ label: qsTr("now playing"), run: () => Router.openNowPlaying() }] : [])
+                        AbstractButton {
+                            id: musicLink
+                            required property var modelData
+                            width: musicColumn.width
+                            height: musicLinkText.implicitHeight + 10
+                            background: null
+                            onClicked: hub.launch(modelData.run)
+                            contentItem: Text {
+                                id: musicLinkText
+                                text: musicLink.modelData.label
+                                color: musicLink.pressed ? Theme.tile : Theme.text
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.compact ? 26 : 28
+                                font.weight: Font.Light
+                                elide: Text.ElideRight
+                            }
+                        }
+                    }
+                    Item { width: 1; height: 14 }
+                    Text {
+                        visible: music.songs.length > 0
+                        text: qsTr("This season")
+                        color: Theme.textMuted
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textMd
+                        font.weight: Font.DemiBold
+                        font.capitalization: Retro.upperCase ? Font.AllUppercase : Font.AllLowercase
+                    }
+                    Spinner { visible: !!music.task && music.task.loading }
+                    Repeater {
+                        // A few: the Music page has the rest.
+                        model: music.songs.slice(0, 10)
+                        SongRow {
+                            required property var modelData
+                            required property int index
+                            x: -8
+                            width: musicColumn.width + 8
+                            song: modelData
+                            onPlayed: MusicQueue.playList(music.songs, index)
+                        }
+                    }
+                }
+            }
         }
     }
 }

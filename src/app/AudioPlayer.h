@@ -73,6 +73,7 @@ signals:
     void previousRequested();
 
 private:
+    static QString playable(const QString &url);
     explicit AudioPlayer(QObject *parent = nullptr);
     void drainEvents();
     void setError(const QString &error);

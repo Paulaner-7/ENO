@@ -41,6 +41,7 @@ add_library(scancore_core STATIC
     sources/catalogue/Catalogue.cpp
     sources/comics/ComicSource.cpp
     sources/comics/Registry.cpp
+    sources/local/AudioTags.cpp
     sources/local/Local.cpp
     sources/local/LocalComics.cpp
     sources/local/LocalNovels.cpp

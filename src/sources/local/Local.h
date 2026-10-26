@@ -23,6 +23,9 @@ struct Entry {
     QString path;
     QString name;
     bool dir = false;
+    // Bytes and when it last changed (seconds), when the listing says.
+    qint64 size = -1;
+    qint64 modified = 0;
 };
 QList<Entry> entries(const QString &dir);
 

@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>Sematkan ke hub</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Lagu</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Belum ada lagu untuk anime ini</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Opening dan ending berasal dari AnimeThemes.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Tab, Beranda, dan hub Retro menampilkan ini. Tautan tetap membuka yang lain.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Musik (pratinjau)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Opening dan ending anime serta musikmu sendiri, dengan lirik, dan pemutar yang terus berjalan saat kamu membaca. Masih dibuat.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Instrumental: tidak ada lirik untuk dinyanyikan.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Lirik tidak dapat dimuat. Periksa koneksi.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Belum ada lirik untuk lagu ini.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Lirik berasal dari LRCLIB, ditulis oleh komunitasnya.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>Pasang %1 ekstensi yang Anda punya di %2</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Sedang diputar: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Putar</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Jeda</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Berikutnya</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Berhenti</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Lagu beserta liriknya · pratinjau</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Lagu anime</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>File kamu</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Cari lagumu</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Cari lagu, penyanyi, atau anime</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Berhenti menampilkan folder ini</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Tambah folder lain</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Tambah folder musik</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Cari lagi</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Sedang diputar</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Lirik</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Lagu untuk “%1”</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Lagumu</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Musim ini</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Putar semua</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Tambahkan folder berisi musikmu</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Tidak ada lagu ditemukan</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Tidak ada musik di folder ini</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>File MP3, FLAC, Ogg, Opus, dan M4A, dengan sampulnya, serta lirik dari file .lrc di sebelahnya. Tidak ada yang disalin.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Lagu anime dimatikan untuk sementara</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Coba nama anime dalam romaji, atau nama penyanyinya.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Semua file (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Tutup</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Sedang diputar</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Kembali ke lagu</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Tonton videonya</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Posisi</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Acak aktif</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Acak mati</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Sebelumnya</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Putar</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Jeda</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Berikutnya</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Ulangi lagu ini</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Ulangi antrean</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Ulangi mati</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Lagu</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Lirik</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Antrean</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 lagu dalam antrean</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 lagu dalam antrean</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>Disematkan ke hub</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>Tren</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>semua musik</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>sedang diputar</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Musim ini</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>Ciutkan</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> di peramban Anda.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Putar berikutnya</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Tambahkan ke antrean</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Tonton videonya</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Episode %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Lainnya</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>Pengaturan</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
         </message>
     </context>
     <context>

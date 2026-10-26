@@ -217,7 +217,7 @@ SettingsPane {
             description: qsTr("Which sections the hub shows, in this order. Four or five are easiest to find your way in.")
         }
         Repeater {
-            model: (Retro.sectionList, Retro.sectionKeys.slice().sort((a, b) => {
+            model: (Retro.sectionList, Retro.sectionKeys.filter(k => k !== "music" || Retro.musicOn).sort((a, b) => {
                 const order = Retro.sectionList.map(s => s.key)
                 const ia = order.indexOf(a), ib = order.indexOf(b)
                 return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
@@ -293,10 +293,15 @@ SettingsPane {
         SettingRow {
             iconName: "volume-2"
             title: qsTr("Music (preview)")
-            description: qsTr("Anime openings and endings with their lyrics, and a player that keeps going while you read. Still being built.")
+            description: qsTr("Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.")
             Toggle {
                 checked: App.settings.musicSection === true
-                onToggled: App.setSetting("musicSection", checked)
+                onToggled: {
+                    App.setSetting("musicSection", checked)
+                    // Retro's hub gets a Music section too.
+                    const hub = Retro.sections().map(s => s.key)
+                    if (checked && hub.indexOf("music") < 0) Retro.setSections(hub.concat(["music"]))
+                }
             }
         }
     }

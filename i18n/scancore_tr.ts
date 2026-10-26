@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>Merkeze sabitle</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>Şarkılar</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Bu animenin henüz şarkısı yok</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Açılış ve kapanışlar AnimeThemes'ten gelir.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>Sekmeler, Ana sayfa ve Retro merkezi bunları gösterir. Bir bağlantı yine de diğerlerini açar.</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Müzik (önizleme)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Anime açılış ve kapanışları ve kendi müziğin, sözleriyle; okurken çalmaya devam eden bir oynatıcı. Hâlâ yapım aşamasında.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Enstrümantal: eşlik edilecek söz yok.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Sözler yüklenemedi. Bağlantıyı kontrol et.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Bu şarkının henüz sözleri yok.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Sözler LRCLIB'den gelir, topluluğu tarafından yazılır.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>%2 içindeki %1 uzantıyı yükle</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Şimdi çalıyor: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Oynat</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Sonraki</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Durdur</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Sözleriyle şarkılar · önizleme</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Anime şarkıları</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Dosyaların</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Şarkılarında ara</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Şarkı, şarkıcı ya da anime ara</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Bu klasörü artık listeleme</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Başka bir klasör ekle</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Müzik klasörü ekle</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Yeniden ara</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Sözler</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1” için şarkılar</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Şarkıların</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Bu sezon</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Tümünü çal</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Müziğinin olduğu bir klasör ekle</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Şarkı bulunamadı</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Bu klasörlerde müzik yok</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Kapaklarıyla MP3, FLAC, Ogg, Opus ve M4A dosyaları ve yanlarındaki .lrc dosyalarından sözler. Hiçbir şey kopyalanmaz.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Anime şarkıları şimdilik kapalı</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Animenin romaji adını ya da şarkıcıyı dene.</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Tüm dosyalar (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Şarkıya dön</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Videoyu izle</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Konum</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Karıştırma açık</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Karıştırma kapalı</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Önceki</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Oynat</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Sonraki</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Bu şarkıyı tekrarla</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Sırayı tekrarla</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Tekrar kapalı</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Şarkı</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Sözler</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Sıra</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>Sırada 1 şarkı</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>Sırada %1 şarkı</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>Merkeze sabitlendi</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>Trend</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>tüm müzikler</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Bu sezon</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>Daralt</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> adresini tarayıcında aç.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Sonra çal</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Sıraya ekle</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Videoyu izle</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Bölümler %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Daha fazla</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>Ayarlar</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
         </message>
     </context>
     <context>

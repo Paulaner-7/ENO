@@ -1044,6 +1044,18 @@
             <source>Pin to the hub</source>
             <translation>固定到中心页</translation>
         </message>
+        <message>
+            <source>Songs</source>
+            <translation>歌曲</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>这部动画还没有歌曲</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>片头曲和片尾曲来自 AnimeThemes。</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -4604,6 +4616,14 @@
             <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
             <translation>标签栏、首页和 Retro 中心显示这些。链接仍能打开其他的。</translation>
         </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>音乐（预览）</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>动画片头曲、片尾曲和你自己的音乐，附带歌词，阅读时播放器也不会停。仍在开发中。</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -5575,6 +5595,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>纯音乐：没有可以跟唱的歌词。</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>无法加载歌词。请检查网络连接。</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>这首歌还没有歌词。</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>歌词来自 LRCLIB，由其社区编写。</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -5908,6 +5947,120 @@
         <message>
             <source>Install the %1 extensions you had in %2</source>
             <translation>安装你在 %2 中的 %1 个扩展</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>正在播放：%1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>播放</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>暂停</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>下一页</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>停止</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>音乐</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>附带歌词的歌曲 · 预览</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>动画歌曲</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>你的文件</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>搜索你的歌曲</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>搜索歌曲、歌手或动画</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>不再列出此文件夹</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>再添加一个文件夹</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>添加音乐文件夹</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>重新查找</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>正在播放</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌词</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1”的歌曲</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>你的歌曲</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>本季</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>全部播放</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>添加存放音乐的文件夹</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>没有找到歌曲</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>这些文件夹中没有音乐</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3、FLAC、Ogg、Opus 和 M4A 文件，附带封面，以及旁边 .lrc 文件中的歌词。不会复制任何文件。</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>动画歌曲暂时关闭</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>试试动画的罗马字名称，或歌手名。</translation>
         </message>
     </context>
     <context>
@@ -6557,6 +6710,85 @@
         <message>
             <source>All files (*)</source>
             <translation>所有文件 (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>关闭</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>正在播放</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>返回歌曲</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>观看视频</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>播放位置</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>开启随机播放</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>关闭随机播放</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>上一页</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>播放</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>暂停</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>下一页</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>单曲循环</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>循环播放队列</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>关闭重复</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>歌曲</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌词</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>队列</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>队列中有 1 首歌</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>队列中有 %1 首歌</translation>
         </message>
     </context>
     <context>
@@ -8510,6 +8742,10 @@
             <source>Pinned to the hub</source>
             <translation>已固定到中心页</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音乐</translation>
+        </message>
     </context>
     <context>
         <name>RetroBar</name>
@@ -8751,6 +8987,18 @@
         <message>
             <source>Trending</source>
             <translation>热门</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>全部音乐</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>正在播放</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>本季</translation>
         </message>
     </context>
     <context>
@@ -9811,6 +10059,10 @@
             <source>Collapse</source>
             <translation>收起</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音乐</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -9841,6 +10093,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation>。</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>下一首播放</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>加入队列</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>观看视频</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>第 %1 集</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>更多</translation>
         </message>
     </context>
     <context>
@@ -10639,6 +10914,10 @@
         <message>
             <source>Settings</source>
             <translation>设置</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音乐</translation>
         </message>
     </context>
     <context>

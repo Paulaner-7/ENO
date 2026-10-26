@@ -8,7 +8,11 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "sources/local/AudioTags.h"
 #include "sources/local/LocalSources.h"
+
+#include <QBuffer>
+#include <QtEndian>
 
 #include <QTemporaryDir>
 #include <QUrl>
@@ -29,6 +33,76 @@ class TextTests : public QObject {
     }
 
 private slots:
+    // Music files' own tags, from hand-made headers of each kind.
+    void readsAudioTags() {
+        const auto be = [](quint32 v) { QByteArray b(4, 0); qToBigEndian(v, b.data()); return b; };
+        const auto le = [](quint32 v) { QByteArray b(4, 0); qToLittleEndian(v, b.data()); return b; };
+        const auto read = [](const QByteArray &data, const char *name) {
+            QBuffer buffer;
+            buffer.setData(data);
+            buffer.open(QIODevice::ReadOnly);
+            return local::readAudioTags(buffer, QString::fromLatin1(name), true);
+        };
+        // ID3v2.3: text in Latin-1 and UTF-16, a front cover, then an MPEG-1
+        // Layer III frame whose Xing header says 1000 frames (26.1 s).
+        const auto frame = [&](const char *id, const QByteArray &body) { return QByteArray(id) + be(body.size()) + QByteArray(2, 0) + body; };
+        QByteArray utf16("\x01\xff\xfe", 3);
+        for (const QChar c : QStringLiteral("Gurenge"))
+            utf16 += QByteArray(1, char(c.unicode() & 0xff)) + QByteArray(1, char(c.unicode() >> 8));
+        auto frames = frame("TIT2", utf16) + frame("TPE1", QByteArray("\0LiSA", 5)) + frame("TRCK", QByteArray("\0" "3/12", 5)) +
+                      frame("APIC", QByteArray("\0image/jpeg\0\x03\0", 14) + QByteArray("\xff\xd8JPEGDATA", 10));
+        QByteArray size(4, 0);
+        for (int i = 0; i < 4; ++i)
+            size[i] = char((frames.size() >> (7 * (3 - i))) & 0x7f);
+        QByteArray mpeg("\xff\xfb\x90\x00", 4);
+        mpeg += QByteArray(32, 0) + "Xing" + be(1) + be(1000) + QByteArray(400, 0);
+        const auto mp3 = read(QByteArray("ID3\x03\x00\x00", 6) + size + frames + mpeg, "a.mp3");
+        QCOMPARE(mp3.title, QStringLiteral("Gurenge"));
+        QCOMPARE(mp3.artists, QStringList{QStringLiteral("LiSA")});
+        QCOMPARE(mp3.track, 3);
+        QCOMPARE(mp3.art, QByteArray("\xff\xd8JPEGDATA"));
+        QCOMPARE(qRound(mp3.duration * 10), 261);
+
+        // FLAC: STREAMINFO (44.1 kHz, 441000 samples) and Vorbis comments.
+        QByteArray info(18, 0);
+        info[10] = char(0x0a); info[11] = char(0xc4); info[12] = char(0x42); // 44100 << 4 | channels
+        qToBigEndian<quint32>(441000, info.data() + 14);
+        QByteArray comments = le(6) + "vendor" + le(3);
+        for (const QByteArray c : {QByteArray("TITLE=Zankyou Sanka"), QByteArray("ARTIST=Aimer"), QByteArray("LYRICS=[00:01.00]hi")})
+            comments += le(c.size()) + c;
+        const auto block = [&](int type, bool last, const QByteArray &body) {
+            return QByteArray(1, char(type | (last ? 0x80 : 0))) + be(body.size()).mid(1) + body;
+        };
+        const auto flac = read("fLaC" + block(0, false, info) + block(4, true, comments), "b.flac");
+        QCOMPARE(flac.title, QStringLiteral("Zankyou Sanka"));
+        QCOMPARE(flac.artists, QStringList{QStringLiteral("Aimer")});
+        QCOMPARE(flac.lyrics, QStringLiteral("[00:01.00]hi"));
+        QCOMPARE(flac.duration, 10.0);
+
+        // M4A: moov after the audio, mvhd (1000 per second, 95 s), ilst.
+        const auto atom = [&](const QByteArray &type, const QByteArray &body) { return be(body.size() + 8) + type + body; };
+        const auto item = [&](const QByteArray &type, int kind, const QByteArray &value) {
+            return atom(type, atom("data", be(kind) + be(0) + value));
+        };
+        QByteArray mvhd(100, 0);
+        qToBigEndian<quint32>(1000, mvhd.data() + 12);
+        qToBigEndian<quint32>(95000, mvhd.data() + 16);
+        const auto ilst = atom("ilst", item("\xa9nam", 1, "Unravel") + item("\xa9" "ART", 1, "TK") +
+                                           item("trkn", 0, QByteArray("\0\0\0\x07\0\x0c\0\0", 8)));
+        const auto moov = atom("moov", atom("mvhd", mvhd) + atom("udta", atom("meta", QByteArray(4, 0) + atom("hdlr", QByteArray(25, 0)) + ilst)));
+        const auto m4a = read(atom("ftyp", "M4A ") + atom("mdat", QByteArray(64, 0)) + moov, "c.m4a");
+        QCOMPARE(m4a.title, QStringLiteral("Unravel"));
+        QCOMPARE(m4a.artists, QStringList{QStringLiteral("TK")});
+        QCOMPARE(m4a.track, 7);
+        QCOMPARE(m4a.duration, 95.0);
+
+        // Not music, or cut short: nothing, and no crash.
+        QVERIFY(read(QByteArray("ID3\x04\x00\x00\x7f\x7f\x7f\x7f", 10), "d.mp3").title.isEmpty());
+        QVERIFY(read("fLaC", "e.flac").title.isEmpty());
+        QVERIFY(read(atom("moov", QByteArray(3, 0)), "f.m4a").title.isEmpty());
+        QVERIFY(local::isAudio(QStringLiteral("x.OPUS")));
+        QVERIFY(!local::isAudio(QStringLiteral("x.lrc")));
+    }
     // Reading aloud speaks a sentence at a time.
     void sentences() {
         QCOMPARE(split(QStringLiteral("He ran. She stayed! Why?  ")),
