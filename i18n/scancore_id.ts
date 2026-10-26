@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Lewati</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>ekstensi musik</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>ekstensi musik</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Diagnostik</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Coba nama anime dalam romaji, atau nama penyanyinya.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Ekstensi</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Cari di ekstensi musikmu</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Populer</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Belum ada ekstensi musik</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Cari lagu</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Tambahkan repositori ekstensi musik di Ekstensi, lalu pasang salah satunya. SCANCORE tidak menyertakan satu pun.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Ekstensi ini tidak punya daftar sendiri; cari di atas.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Buka Ekstensi</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Baca novel</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Apa yang kamu baca, tonton, dan dengarkan?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Lagu anime dan lagumu sendiri, beserta liriknya</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Putar musik</translation>
         </message>
     </context>
     <context>

@@ -36,6 +36,14 @@ QtObject {
             if (list.indexOf(kinds[k]) >= 0 && wanted.indexOf(k) < 0) wanted.push(k)
         Retro.setSections(wanted)
     }
+    // Music on or off (welcome, Settings → Interface); Retro's hub gets its
+    // section too.
+    function setMusicShown(on) {
+        if ((App.settings.musicSection === true) === on) return
+        App.setSetting("musicSection", on)
+        const hub = Retro.sections().map(s => s.key)
+        if (on && hub.indexOf("music") < 0) Retro.setSections(hub.concat(["music"]))
+    }
     // A page on top of the current section's stack.
     function push(path, props) { if (shell) shell.push(path, props || {}) }
     function back() { if (shell) shell.back() }

@@ -296,12 +296,7 @@ SettingsPane {
             description: qsTr("Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.")
             Toggle {
                 checked: App.settings.musicSection === true
-                onToggled: {
-                    App.setSetting("musicSection", checked)
-                    // Retro's hub gets a Music section too.
-                    const hub = Retro.sections().map(s => s.key)
-                    if (checked && hub.indexOf("music") < 0) Retro.setSections(hub.concat(["music"]))
-                }
+                onToggled: Router.setMusicShown(checked)
             }
         }
     }

@@ -65,6 +65,10 @@ Rectangle {
                     }
                     Text {
                         id: label
+                        // Sharing the width, a long label (a translation) ends in "…".
+                        width: root.fill ? Math.min(implicitWidth, root.width / Math.max(1, root.options.length) - 20 - (glyph.visible ? 21 : 0))
+                                         : implicitWidth
+                        elide: Text.ElideRight
                         visible: text.length > 0
                         text: modelData.label || ""
                         color: index === root.currentIndex ? Theme.text : Theme.textMuted

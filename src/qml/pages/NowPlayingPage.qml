@@ -264,11 +264,11 @@ Rectangle {
                         Behavior on scale { NumberAnimation { duration: Motion.fast } }
                     }
                     contentItem: Item {
-                        Spinner { anchors.centerIn: parent; visible: !page.videoPlayer && AudioPlayer.loading }
+                        Spinner { anchors.centerIn: parent; visible: !page.videoPlayer && MusicQueue.busy }
                         Icon {
                             anchors.centerIn: parent
                             anchors.horizontalCenterOffset: page.paused ? 2 : 0
-                            visible: page.videoPlayer || !AudioPlayer.loading
+                            visible: page.videoPlayer || !MusicQueue.busy
                             name: page.paused ? "play" : "pause"
                             size: 28
                             color: "#0b0b0d"

@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Salta</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>estensione musicale</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>estensioni musicali</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Diagnostica</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musica</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Prova il nome dell'anime in romaji, o il cantante.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Estensioni</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Cerca nelle tue estensioni musicali</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Popolari</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Ancora nessuna estensione musicale</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Cerca una canzone</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Aggiungi un repository di estensioni musicali in Estensioni, poi installane una. SCANCORE non ne include nessuna.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Queste estensioni non hanno un elenco proprio: cercale qui sopra.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Apri Estensioni</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Leggi romanzi</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Cosa leggi, guardi e ascolti?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musica</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Canzoni anime e le tue, con i testi</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Ascolta musica</translation>
         </message>
     </context>
     <context>

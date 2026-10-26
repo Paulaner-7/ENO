@@ -18,12 +18,17 @@ QtObject {
     readonly property bool active: current !== null
     readonly property bool hasNext: songs.length > 0 && (repeat !== "off" || position(index) < songs.length - 1)
     readonly property bool hasPrevious: songs.length > 0 && position(index) > 0
+    // A music extension's song: where it plays is asked for first.
+    property var streamTask: null
+    readonly property bool resolving: !!streamTask && streamTask.loading
+    // Something is on its way: the address, or the first sound.
+    readonly property bool busy: resolving || AudioPlayer.loading
 
     function artistsOf(song) { return song ? (song.artists || []).join(", ") : "" }
 
     // Plays `list` from `start`.
     function playList(list, start) {
-        songs = Array.from(list || []).filter(s => s && s.audio)
+        songs = Array.from(list || []).filter(s => s && (s.audio || s.source))
         if (songs.length === 0) return
         shuffleOrder()
         go(Math.max(0, Math.min(songs.length - 1, start || 0)))
@@ -65,6 +70,7 @@ QtObject {
         go(order[position(index) - 1])
     }
     function clear() {
+        streamTask = null
         AudioPlayer.stop()
         AudioPlayer.showControls("", "", "")
         songs = []
@@ -89,7 +95,16 @@ QtObject {
         index = i
         const song = current
         if (!song) return
-        AudioPlayer.load(song.audio, 0)
+        streamTask = null
+        if (song.audio) {
+            AudioPlayer.load(song.audio, 0)
+        } else {
+            AudioPlayer.stop()
+            const task = Music.streamOf(song)
+            streamTask = task
+            task.finished.connect(r => { if (queue.streamTask === task && queue.current === song) AudioPlayer.load(r.url, 0, r.headers) })
+            task.failed.connect(e => { if (queue.streamTask === task) Router.toast(e, "error") })
+        }
         AudioPlayer.showControls(song.title, artistsOf(song) || song.anime || song.album || "", song.cover || "")
     }
 

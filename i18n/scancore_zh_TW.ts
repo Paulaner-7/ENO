@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>略過</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>音樂擴充功能</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>音樂擴充功能</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>診斷</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音樂</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>試試動畫的羅馬字名稱，或歌手名。</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>擴充功能</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>在你的音樂擴充功能中搜尋</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>熱門</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>還沒有音樂擴充功能</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>搜尋歌曲</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>在「擴充功能」中新增音樂擴充功能的儲存庫，再安裝一個。SCANCORE 不附帶任何擴充功能。</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>這些擴充功能沒有自己的清單，請在上方搜尋。</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>開啟擴充功能</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>讀小說</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>你讀什麼、看什麼、聽什麼？</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音樂</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>動畫歌曲和你自己的音樂，附帶歌詞</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>播放音樂</translation>
         </message>
     </context>
     <context>

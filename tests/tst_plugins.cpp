@@ -27,6 +27,14 @@ private slots:
     void initTestCase() {
         Database::open(m_dir.filePath(QStringLiteral("test.db")));
         Http::setTestHandler([this](const Request &request) -> std::optional<Response> {
+            if (request.url.host() == QLatin1String("music.test")) {
+                Response r;
+                r.status = 200;
+                r.finalUrl = request.url;
+                r.contentType = "application/json";
+                r.body = R"([{"n":7,"name":"Gurenge","by":"LiSA","s":239.5}])";
+                return r;
+            }
             if (request.url.host() != QLatin1String("novels.test"))
                 return std::nullopt;
             Response r;
@@ -54,6 +62,30 @@ private slots:
             }
             return r;
         });
+    }
+
+    // Music plugins (docs/music-plugins.md) run in the same runtime.
+    void musicPlugin() {
+        const PluginRef music{QStringLiteral("music:musicfix"), QStringLiteral("musicfix"),
+                              QStringLiteral(SCANCORE_SOURCE_DIR "/tests/fixtures/plugins/music-fixture.js")};
+        QCOMPARE(Runtime::info(music).value("name").toString(), QStringLiteral("Fixture Music"));
+        const auto songs = Runtime::call(music, QStringLiteral("searchSongs"), {QStringLiteral("gurenge"), 1}).toArray();
+        QCOMPARE(songs.size(), 1);
+        const auto song = songs.first().toObject();
+        QCOMPARE(song.value("title").toString(), QStringLiteral("Gurenge"));
+        QCOMPARE(song.value("artist").toString(), QStringLiteral("LiSA"));
+        // What it put on the song comes back to it.
+        const auto stream = Runtime::call(music, QStringLiteral("streamOf"), {song}).toObject();
+        QCOMPARE(stream.value("url").toString(), QStringLiteral("https://music.test/stream/s7.ogg"));
+        QCOMPARE(stream.value("headers").toObject().value("Referer").toString(), QStringLiteral("https://music.test/"));
+        QVERIFY(Runtime::call(music, QStringLiteral("lyricsOf"), {song}).toObject().value("synced").toString().startsWith("[00:01.00]"));
+        // Optional methods it lacks say so.
+        QVERIFY_THROWS_EXCEPTION(Error, Runtime::call(music, QStringLiteral("popularSongs"), {1}));
+        // A novel plugin is not a music plugin, nor the other way round.
+        const PluginRef wrong{QStringLiteral("music:fixture"), QStringLiteral("fixture"), m_plugin.path};
+        QVERIFY_THROWS_EXCEPTION(Error, Runtime::call(wrong, QStringLiteral("searchSongs"), {QStringLiteral("x"), 1}));
+        const PluginRef wrong2{QStringLiteral("lnreader:musicfix"), QStringLiteral("musicfix"), music.path};
+        QVERIFY_THROWS_EXCEPTION(Error, Runtime::info(wrong2));
     }
 
     void declaresItself() {

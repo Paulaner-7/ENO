@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Пропустить</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>музыкальное расширение</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>музыкальные расширения</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Диагностика</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Попробуйте название аниме на ромадзи или имя исполнителя.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Расширения</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Поиск в ваших музыкальных расширениях</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Популярное</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Музыкальных расширений пока нет</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Найдите песню</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Добавьте репозиторий музыкальных расширений в разделе «Расширения» и установите одно. В SCANCORE их нет.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>У этих расширений нет своего списка — ищите в них выше.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Открыть «Расширения»</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Читать новеллы</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Что вы читаете, смотрите и слушаете?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Музыка</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Песни из аниме и ваши собственные, с текстами</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Слушать музыку</translation>
         </message>
     </context>
     <context>

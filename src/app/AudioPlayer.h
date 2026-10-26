@@ -46,7 +46,9 @@ public:
     QString error() const { return m_error; }
 
     // Plays `url` from `start` seconds.
-    Q_INVOKABLE void load(const QString &url, double start = 0);
+    // `headers` are the ones a music plugin asks for (User-Agent, Referer,
+    // others), for this song only.
+    Q_INVOKABLE void load(const QString &url, double start = 0, const QVariantMap &headers = {});
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void toggle();
@@ -74,6 +76,7 @@ signals:
 
 private:
     static QString playable(const QString &url);
+    QVariantMap m_headers;
     explicit AudioPlayer(QObject *parent = nullptr);
     void drainEvents();
     void setError(const QString &error);

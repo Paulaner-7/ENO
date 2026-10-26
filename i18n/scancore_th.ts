@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>ข้าม</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>ส่วนขยายเพลง</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>ส่วนขยายเพลง</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3766,6 +3774,10 @@
             <source>Diagnostics</source>
             <translation>การวินิจฉัย</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6054,6 +6066,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>ลองใช้ชื่ออนิเมะแบบโรมาจิ หรือชื่อนักร้อง</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>ส่วนขยาย</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>ค้นหาในส่วนขยายเพลงของคุณ</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>ยอดนิยม</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>ยังไม่มีส่วนขยายเพลง</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>ค้นหาเพลง</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>เพิ่มคลังส่วนขยายเพลงในหน้าส่วนขยาย แล้วติดตั้งสักตัว SCANCORE ไม่มีมาให้</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>ส่วนขยายเหล่านี้ไม่มีรายการของตัวเอง ค้นหาได้ด้านบน</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>เปิดส่วนขยาย</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7376,6 +7420,22 @@
         <message>
             <source>Read novels</source>
             <translation>อ่านนิยาย</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>คุณอ่าน ดู และฟังอะไรบ้าง?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>เพลง</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>เพลงอนิเมะและเพลงของคุณ พร้อมเนื้อเพลง</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>เล่นเพลง</translation>
         </message>
     </context>
     <context>

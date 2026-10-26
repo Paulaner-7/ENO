@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Laktawan</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>music extension</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>mga music extension</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3766,6 +3774,10 @@
             <source>Diagnostics</source>
             <translation>Diagnostics</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6054,6 +6066,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Subukan ang pangalan ng anime sa romaji, o ang mang-aawit.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Mga extension</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Hanapin sa mga music extension mo</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Sikat</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Wala pang music extension</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Maghanap ng kanta</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Magdagdag ng repository ng music extension sa Extensions, saka mag-install ng isa. Walang kasamang extension ang SCANCORE.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Walang sariling listahan ang mga extension na ito; hanapin sa itaas.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Buksan ang Extensions</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7376,6 +7420,22 @@
         <message>
             <source>Read novels</source>
             <translation>Magbasa ng nobela</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Ano ang binabasa, pinapanood at pinakikinggan mo?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musika</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Mga kanta ng anime at sarili mo, may liriko</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Magpatugtog ng musika</translation>
         </message>
     </context>
     <context>

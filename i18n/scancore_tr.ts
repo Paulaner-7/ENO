@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Atla</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>müzik uzantısı</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>müzik uzantıları</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Tanılama</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Animenin romaji adını ya da şarkıcıyı dene.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Eklentiler</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Müzik uzantılarında ara</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Popüler</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Henüz müzik uzantısı yok</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Bir şarkı ara</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Uzantılar bölümünde bir müzik uzantısı deposu ekle, sonra birini yükle. SCANCORE hiçbiriyle birlikte gelmez.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Bu uzantıların kendi listesi yok; yukarıdan ara.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Uzantıları aç</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Roman oku</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Ne okuyor, izliyor ve dinliyorsun?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Anime şarkıları ve kendi şarkıların, sözleriyle</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Müzik çal</translation>
         </message>
     </context>
     <context>

@@ -27,7 +27,7 @@ Item {
     // the right version).
     function load() {
         if (!song) { task = null; return }
-        task = Music.lyrics(song.title || "", (song.artists || [])[0] || "", song.album || "", duration > 0 ? duration : 0, song.file || "", song.lrc || "")
+        task = Music.lyrics(song, duration > 0 ? duration : 0)
     }
     onSongChanged: load()
     property bool askedWithLength: false

@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>건너뛰기</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>음악 확장</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>음악 확장</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>진단</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>애니 이름을 로마자로 쓰거나 가수 이름으로 찾아 보세요.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>확장 프로그램</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>내 음악 확장에서 검색</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>인기</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>아직 음악 확장이 없습니다</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>노래를 검색하세요</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>확장 프로그램에서 음악 확장 저장소를 추가한 뒤 하나를 설치하세요. SCANCORE에는 기본으로 들어 있지 않습니다.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>이 확장들에는 자체 목록이 없습니다. 위에서 검색하세요.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>확장 프로그램 열기</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>소설 읽기</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>무엇을 읽고, 보고, 듣나요?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>음악</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>애니 노래와 내 노래를 가사와 함께</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>음악 듣기</translation>
         </message>
     </context>
     <context>

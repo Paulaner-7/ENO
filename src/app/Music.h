@@ -44,10 +44,23 @@ public:
     Q_INVOKABLE sc::Task *localSongs();
     static QStringList musicFolders();
     // A song's lyrics: {synced: [{time, text}], plain, instrumental, found}.
-    // `duration` in seconds helps LRCLIB pick the right version. A file of
-    // yours (`file`, `lrc`) is asked first.
-    Q_INVOKABLE sc::Task *lyrics(const QString &title, const QString &artist, const QString &album, double duration,
-                                 const QString &file = {}, const QString &lrc = {});
+    // A file of yours (its .lrc, then lyrics kept in it) is asked first,
+    // then the music plugin a song came from, then LRCLIB; `duration` in
+    // seconds helps LRCLIB pick the right version.
+    Q_INVOKABLE sc::Task *lyrics(const QVariantMap &song, double duration);
+
+    // Music plugins (extensions of kind "music", see docs/music-plugins.md)
+    // that are installed, on and trusted: [{key, name, site}].
+    Q_INVOKABLE QVariantList sources() const;
+    // One plugin's songs for a search, or its popular ones (empty when it
+    // has none). Its songs carry {source, sourceName, raw} and no audio:
+    // streamOf says where they play.
+    Q_INVOKABLE sc::Task *searchSource(const QString &key, const QString &query);
+    Q_INVOKABLE sc::Task *popularSource(const QString &key);
+    // {url, headers} for a plugin's song.
+    Q_INVOKABLE sc::Task *streamOf(const QVariantMap &song);
+    // A plugin's answer as a song (public for the tests).
+    static QVariantMap songOfPlugin(const QString &key, const QString &name, const QJsonObject &o);
 
     // Parsers, public for the tests.
     // "[mm:ss.xx] text" lines into [{time, text}] by time; tags and empty

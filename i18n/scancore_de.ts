@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Überspringen</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>Musik-Erweiterung</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>Musik-Erweiterungen</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Diagnose</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Versuche den Anime-Namen in Romaji oder die Stimme dahinter.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Erweiterungen</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Deine Musik-Erweiterungen durchsuchen</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Beliebt</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Noch keine Musik-Erweiterungen</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Suche nach einem Song</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Füge unter Erweiterungen ein Repository mit Musik-Erweiterungen hinzu und installiere eine. SCANCORE bringt keine mit.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Diese Erweiterungen haben keine eigene Liste; durchsuche sie oben.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Erweiterungen öffnen</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Romane lesen</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Was liest, schaust und hörst du?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musik</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Anime-Songs und deine eigenen, mit Songtexten</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Musik abspielen</translation>
         </message>
     </context>
     <context>

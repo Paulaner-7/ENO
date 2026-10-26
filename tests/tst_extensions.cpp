@@ -517,6 +517,31 @@ private slots:
         m_server->reset();
     }
 
+    // SCANCORE's music plugins: {"name", "music": [...]} (docs/music-plugins.md).
+    void musicPlugins() {
+        m_server->serve(QStringLiteral("music/list.json"),
+                        "{\"name\": \"Tunes\", \"music\": [{\"id\": \"musicfix\", \"name\": \"Fixture Music\", "
+                        "\"site\": \"https://music.test/\", \"lang\": \"en\", \"version\": \"1.0.0\", \"url\": \"musicfix.js\"}]}");
+        m_server->serve(QStringLiteral("music/musicfix.js"), "exports.default = {};");
+        const auto preview = Manager::preview(QStringLiteral("https://repo.test/music/list.json"));
+        QCOMPARE(preview.repo.kind, Kind::Music);
+        QCOMPARE(preview.repo.name, QStringLiteral("Tunes"));
+        QCOMPARE(preview.packages.size(), 1);
+        QCOMPARE(preview.packages[0].kind, Kind::Music);
+        QCOMPARE(preview.packages[0].fileUrl, QStringLiteral("https://repo.test/music/musicfix.js"));
+        Manager::add(preview);
+        const auto plugin = Manager::install(Kind::Music, QStringLiteral("musicfix"));
+        QVERIFY(plugin.trusted);
+        QVERIFY(plugin.path.endsWith(QLatin1String(".js")));
+        QCOMPARE(Manager::sources(Kind::Music).first().key, QStringLiteral("music:musicfix"));
+        // Novels do not see it.
+        for (const auto &e : Manager::sources(Kind::LNReader))
+            QVERIFY(e.key != QLatin1String("music:musicfix"));
+        Manager::uninstall(Kind::Music, QStringLiteral("musicfix"));
+        Manager::removeRepository(preview.repo.url);
+        m_server->reset();
+    }
+
     void novelPlugins() {
         const auto preview = Manager::preview(QStringLiteral("https://repo.test/novels/plugins.min.json"));
         QCOMPARE(preview.repo.kind, Kind::LNReader);

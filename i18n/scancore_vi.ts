@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>Bỏ qua</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>tiện ích âm nhạc</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>tiện ích âm nhạc</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>Chẩn đoán</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>Thử tên anime bằng romaji, hoặc tên ca sĩ.</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Tiện ích</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Tìm trong tiện ích âm nhạc của bạn</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Phổ biến</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Chưa có tiện ích âm nhạc</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Tìm một bài hát</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Thêm kho tiện ích âm nhạc trong Tiện ích, rồi cài một tiện ích. SCANCORE không đi kèm tiện ích nào.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Các tiện ích này không có danh sách riêng; hãy tìm ở trên.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Mở Tiện ích</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>Đọc tiểu thuyết</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Bạn đọc, xem và nghe gì?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Âm nhạc</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Nhạc anime và nhạc của bạn, kèm lời</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Phát nhạc</translation>
         </message>
     </context>
     <context>

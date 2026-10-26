@@ -6,6 +6,7 @@
 #endif
 
 #include "MediaControls.h"
+#include "core/Http.h"
 #include "MpvPlayer.h"
 
 #include <QCoreApplication>
@@ -156,11 +157,12 @@ QString AudioPlayer::playable(const QString &url) {
     return url;
 }
 
-void AudioPlayer::load(const QString &url, double start) {
+void AudioPlayer::load(const QString &url, double start, const QVariantMap &headers) {
 #ifdef SCANCORE_HAVE_MPV
     if (!m_core->mpv)
         return setError(QStringLiteral("Songs cannot play here."));
     m_source = url;
+    m_headers = headers;
     m_ended = false;
     m_position = 0;
     m_duration = 0;
@@ -171,6 +173,22 @@ void AudioPlayer::load(const QString &url, double start) {
     emit durationChanged();
     emit loadingChanged();
     setFlag(m_core->mpv, "pause", false);
+    // Each song with its own headers; the last one's go back to defaults.
+    QString agent = QString::fromUtf8(Http::userAgent());
+    QString referer;
+    QStringList fields;
+    for (auto it = headers.begin(); it != headers.end(); ++it) {
+        const auto name = it.key().toLower();
+        if (name == QLatin1String("user-agent"))
+            agent = it.value().toString();
+        else if (name == QLatin1String("referer"))
+            referer = it.value().toString();
+        else
+            fields.append(it.key() + QStringLiteral(": ") + it.value().toString());
+    }
+    mpv_set_property_string(m_core->mpv, "user-agent", agent.toUtf8().constData());
+    mpv_set_property_string(m_core->mpv, "referrer", referer.toUtf8().constData());
+    mpv_set_property_string(m_core->mpv, "http-header-fields", fields.join(QLatin1Char(',')).toUtf8().constData());
     QStringList args{QStringLiteral("loadfile"), playable(url), QStringLiteral("replace")};
     if (start > 0) {
         args << QStringLiteral("-1") << QStringLiteral("start=%1").arg(start);
@@ -188,7 +206,7 @@ void AudioPlayer::play() {
         return;
     // At the end: from the start again.
     if (m_ended)
-        return load(m_source);
+        return load(m_source, 0, m_headers);
     setFlag(m_core->mpv, "pause", false);
 #endif
 }

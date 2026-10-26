@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>छोड़ें</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>संगीत एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>संगीत एक्सटेंशन</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3766,6 +3774,10 @@
             <source>Diagnostics</source>
             <translation>जाँच</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6054,6 +6066,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>एनीमे का नाम रोमाजी में या गायक का नाम आज़माएँ।</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>अपने संगीत एक्सटेंशन में खोजें</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>लोकप्रिय</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>अभी कोई संगीत एक्सटेंशन नहीं</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>कोई गाना खोजें</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>एक्सटेंशन में संगीत एक्सटेंशन की रिपॉज़िटरी जोड़ें, फिर कोई एक इंस्टॉल करें। SCANCORE के साथ कोई नहीं आता।</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>इन एक्सटेंशन की अपनी सूची नहीं है; ऊपर खोजें।</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>एक्सटेंशन खोलें</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7376,6 +7420,22 @@
         <message>
             <source>Read novels</source>
             <translation>उपन्यास पढ़ें</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>आप क्या पढ़ते, देखते और सुनते हैं?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>एनीमे गाने और आपके अपने, बोल के साथ</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>संगीत चलाएँ</translation>
         </message>
     </context>
     <context>

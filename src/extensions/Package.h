@@ -10,12 +10,17 @@
 namespace sc::ext {
 
 // The extension ecosystems SCANCORE runs: Mihon/Tachiyomi extensions
-// (comics), Aniyomi extensions (anime) and LNReader plugins (novels).
-enum class Kind { Mihon, Aniyomi, LNReader };
+// (comics), Aniyomi extensions (anime), LNReader plugins (novels) and
+// SCANCORE's own music plugins (JavaScript like LNReader's; see
+// docs/music-plugins.md).
+enum class Kind { Mihon, Aniyomi, LNReader, Music };
 
-QString kindName(Kind kind);           // "mihon", "aniyomi", "lnreader"
+// JavaScript plugins (no APK, no signing key): LNReader and music.
+inline bool isPluginKind(Kind kind) { return kind == Kind::LNReader || kind == Kind::Music; }
+
+QString kindName(Kind kind);           // "mihon", "aniyomi", "lnreader", "music"
 std::optional<Kind> kindFrom(const QString &name);
-QString kindMedia(Kind kind);          // "comic", "anime", "novel"
+QString kindMedia(Kind kind);          // "comic", "anime", "novel", "music"
 
 enum class ContentWarning { Safe = 0, Mixed = 1, Nsfw = 2 };
 

@@ -59,14 +59,20 @@ Rectangle {
         const shown = Array.from(App.settings.shownMedia || [])
         return shown.length ? shown : ["comic", "novel", "anime"]
     }
-    function hasMedia(kind) { return media.indexOf(kind) >= 0 }
+    // Music is apart from the three (a section of its own, off until chosen).
+    property bool music: App.settings.musicSection === true
+    function hasMedia(kind) { return kind === "music" ? music : media.indexOf(kind) >= 0 }
     function toggleMedia(kind) {
+        if (kind === "music") { music = !music; return }
         const next = media.filter(m => m !== kind)
         if (next.length === media.length) next.push(kind)
         if (next.length === 0) return  // one stays
         media = ["comic", "novel", "anime"].filter(m => next.indexOf(m) >= 0)
     }
-    function applyMedia() { Router.setShownMedia(media) }
+    function applyMedia() {
+        Router.setShownMedia(media)
+        Router.setMusicShown(music)
+    }
 
     // ------------------------------------------------------------ coming from
     property string from: ""
@@ -584,7 +590,7 @@ Rectangle {
                 y: start.side ? 8 : root.wide ? Math.max(24, start.height * 0.14) : 12
                 width: start.side ? root.width * 0.42 - root.gutter : Math.min(root.columnWidth, 760)
                 kicker: qsTr("Welcome")
-                title: qsTr("What do you read and watch?")
+                title: qsTr("What do you read, watch and listen to?")
                 body: qsTr("Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.")
             }
             Item {
@@ -593,19 +599,25 @@ Rectangle {
                 y: start.side ? 8 : startHeading.y + startHeading.height + (root.wide ? 32 : 20)
                 width: start.side ? root.width * 0.58 - 16 - root.gutter : root.columnWidth
                 height: start.height - y - 12
-                // Wide Standard: three tall cards in a row. Phones and the
-                // side layout: three rows. Retro: one big tile and two.
+                // Wide Standard: four tall cards in a row. Phones and the
+                // side layout: four rows. Retro: one big tile, two squares
+                // and a strip (phones), or the big tile beside three.
                 readonly property bool row: root.wide && !Theme.retro && !start.side
                 readonly property bool tiles: Theme.retro && !start.side
-                readonly property real rowHeight: start.side ? (height - 16) / 3 : Math.max(84, Math.min(132, (height - 24) / 3))
+                readonly property real rowHeight: start.side ? (height - 24) / 4 : Math.max(72, Math.min(124, (height - 32) / 4))
                 readonly property real cardHeight: Math.min(380, height)
                 readonly property real half: (width - 12) / 2
-                // Retro on phones: the big tile, then two squares.
-                readonly property real bigHeight: Math.min(height * 0.5, width * 0.62)
+                // Retro on phones: the big tile, two squares, the strip.
+                readonly property real bigHeight: Math.min(height * 0.42, width * 0.55)
+                readonly property real squareHeight: Math.min(half, (height - bigHeight - 24) * 0.6)
+                readonly property real stripHeight: Math.max(56, Math.min(110, height - bigHeight - squareHeight - 24))
+                // Retro wide: three stacked beside the big tile.
+                readonly property real third: (cardHeight - 24) / 3
                 Repeater {
                     model: [{ kind: "comic", icon: "book-open", label: qsTr("Comics"), detail: qsTr("Manhwa, manga and webtoons") },
                             { kind: "novel", icon: "book-text", label: qsTr("Novels"), detail: qsTr("Web novels and your EPUB books") },
-                            { kind: "anime", icon: "tv", label: qsTr("Anime"), detail: qsTr("Episodes that resume where you stopped") }]
+                            { kind: "anime", icon: "tv", label: qsTr("Anime"), detail: qsTr("Episodes that resume where you stopped") },
+                            { kind: "music", icon: "volume-2", label: qsTr("Music"), detail: qsTr("Anime songs and your own, with their lyrics") }]
                     WelcomeMedia {
                         required property var modelData
                         required property int index
@@ -616,19 +628,19 @@ Rectangle {
                         covers: coverSource
                         on: root.hasMedia(modelData.kind)
                         onClicked: root.toggleMedia(modelData.kind)
-                        x: toggles.row ? index * (toggles.width + 16) / 3
-                           : toggles.tiles && root.wide ? [0, toggles.half + 12, toggles.half + 12][index]
-                           : toggles.tiles ? [0, 0, toggles.half + 12][index] : 0
+                        x: toggles.row ? index * (toggles.width + 16) / 4
+                           : toggles.tiles && root.wide ? [0, toggles.half + 12, toggles.half + 12, toggles.half + 12][index]
+                           : toggles.tiles ? [0, 0, toggles.half + 12, 0][index] : 0
                         y: toggles.row ? 0
-                           : toggles.tiles && root.wide ? [0, 0, (toggles.cardHeight + 12) / 2][index]
-                           : toggles.tiles ? [0, toggles.bigHeight + 12, toggles.bigHeight + 12][index]
+                           : toggles.tiles && root.wide ? [0, 0, toggles.third + 12, 2 * (toggles.third + 12)][index]
+                           : toggles.tiles ? [0, toggles.bigHeight + 12, toggles.bigHeight + 12, toggles.bigHeight + toggles.squareHeight + 24][index]
                            : index * (toggles.rowHeight + 8)
-                        width: toggles.row ? (toggles.width - 32) / 3
-                               : toggles.tiles ? (index === 0 && !root.wide ? toggles.width : toggles.half)
+                        width: toggles.row ? (toggles.width - 48) / 4
+                               : toggles.tiles ? ((index === 0 || index === 3) && !root.wide ? toggles.width : toggles.half)
                                : toggles.width
                         height: toggles.row ? toggles.cardHeight
-                                : toggles.tiles && root.wide ? (index === 0 ? toggles.cardHeight : (toggles.cardHeight - 12) / 2)
-                                : toggles.tiles ? (index === 0 ? toggles.bigHeight : Math.min(toggles.half, toggles.height - toggles.bigHeight - 12))
+                                : toggles.tiles && root.wide ? (index === 0 ? toggles.cardHeight : toggles.third)
+                                : toggles.tiles ? [toggles.bigHeight, toggles.squareHeight, toggles.squareHeight, toggles.stripHeight][index]
                                 : toggles.rowHeight
                     }
                 }
@@ -1244,7 +1256,7 @@ Rectangle {
         Page {
             id: done
             columnWidth: Math.min(root.columnWidth, 640)
-            readonly property var mediaNames: ({ comic: qsTr("Comics"), novel: qsTr("Novels"), anime: qsTr("Anime") })
+            readonly property var mediaNames: ({ comic: qsTr("Comics"), novel: qsTr("Novels"), anime: qsTr("Anime"), music: qsTr("Music") })
             readonly property var connected: Trackers.services.filter(t => t.connected).map(t => t.label)
             Rectangle {
                 width: 64; height: 64; radius: Theme.retro ? 0 : 32
@@ -1264,7 +1276,7 @@ Rectangle {
                 width: parent.width
                 Repeater {
                     model: [
-                        { step: 0, icon: "layers", label: qsTr("Reading and watching"), value: root.media.map(m => done.mediaNames[m]).join(", ") },
+                        { step: 0, icon: "layers", label: qsTr("Reading and watching"), value: root.media.concat(root.music ? ["music"] : []).map(m => done.mediaNames[m]).join(", ") },
                         { step: 1, icon: "download", label: qsTr("Coming from"),
                           value: root.importResult ? root.importSummary(root.importResult)
                                : root.from === "new" || !root.from ? qsTr("Starting fresh") : ({ mihon: "Mihon", tachiyomi: "Tachiyomi", komikku: "Komikku", aniyomi: "Aniyomi", lnreader: "LNReader" })[root.from] },
@@ -1328,7 +1340,8 @@ Rectangle {
                 Repeater {
                     model: [{ kind: "comic", section: "comics", icon: "book-open", label: qsTr("Browse comics") },
                             { kind: "anime", section: "anime", icon: "tv", label: qsTr("Watch anime") },
-                            { kind: "novel", section: "novels", icon: "book-text", label: qsTr("Read novels") }].filter(a => root.hasMedia(a.kind))
+                            { kind: "novel", section: "novels", icon: "book-text", label: qsTr("Read novels") },
+                            { kind: "music", section: "music", icon: "volume-2", label: qsTr("Play music") }].filter(a => root.hasMedia(a.kind))
                     ScButton {
                         required property var modelData
                         variant: "ghost"

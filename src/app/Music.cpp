@@ -2,6 +2,8 @@
 
 #include "core/Database.h"
 #include "core/Http.h"
+#include "extensions/Manager.h"
+#include "plugins/Runtime.h"
 #include "sources/Manifest.h"
 #include "sources/local/AudioTags.h"
 #include "sources/local/Local.h"
@@ -132,6 +134,28 @@ QVariantMap songOfFile(const local::Entry &e, const QString &folder, const local
             {"cover", art},
             {"anime", QString()},
             {"local", true}};
+}
+
+// Music plugins ------------------------------------------------------------
+
+std::optional<plugins::PluginRef> pluginRef(const QString &key) {
+    for (const auto &e : ext::Manager::sources(ext::Kind::Music))
+        if (e.key == key && e.enabled && e.blocked.isEmpty())
+            return plugins::PluginRef{e.key, e.id, e.path};
+    return std::nullopt;
+}
+
+plugins::PluginRef requirePlugin(const QString &key) {
+    if (const auto plugin = pluginRef(key))
+        return *plugin;
+    throw Error(QStringLiteral("That music extension is not installed or is turned off."), 404);
+}
+
+QString sourceName(const QString &key) {
+    for (const auto &e : ext::Manager::sources(ext::Kind::Music))
+        if (e.key == key)
+            return e.name;
+    return key;
 }
 
 void ensureAvailable() {
@@ -407,9 +431,15 @@ QVariantList Music::parseLrc(const QString &lrc) {
     return out;
 }
 
-Task *Music::lyrics(const QString &title, const QString &artist, const QString &album, double duration, const QString &file,
-                    const QString &lrc) {
-    return Task::run([title, artist, album, duration, file, lrc]() -> QVariant {
+Task *Music::lyrics(const QVariantMap &song, double duration) {
+    const auto title = song.value("title").toString();
+    const auto artist = song.value("artists").toStringList().value(0);
+    const auto album = song.value("album").toString();
+    const auto file = song.value("file").toString();
+    const auto lrc = song.value("lrc").toString();
+    const auto source = song.value("source").toString();
+    const auto raw = song.value("raw").toMap();
+    return Task::run([title, artist, album, duration, file, lrc, source, raw]() -> QVariant {
         // Your own first: the .lrc beside the file, then lyrics kept in it.
         const auto ownText = [&]() -> QString {
             if (!lrc.isEmpty()) {
@@ -425,6 +455,21 @@ Task *Music::lyrics(const QString &title, const QString &artist, const QString &
             const auto synced = parseLrc(ownText);
             return QVariantMap{{"found", true}, {"synced", synced}, {"plain", synced.isEmpty() ? ownText.trimmed() : QString()},
                                {"instrumental", false}, {"own", true}};
+        }
+        // The plugin the song came from, when it has lyrics.
+        if (!source.isEmpty()) {
+            if (const auto plugin = pluginRef(source)) {
+                try {
+                    const auto o = plugins::Runtime::call(*plugin, QStringLiteral("lyricsOf"), {QJsonObject::fromVariantMap(raw)}, 20000).toObject();
+                    const auto synced = parseLrc(o.value("synced").toString());
+                    const auto plain = o.value("plain").toString().trimmed();
+                    if (!synced.isEmpty() || !plain.isEmpty())
+                        return QVariantMap{{"found", true}, {"synced", synced}, {"plain", synced.isEmpty() ? plain : QString()},
+                                           {"instrumental", o.value("instrumental").toBool()}};
+                } catch (const Error &) {
+                    // No lyricsOf, or it failed: LRCLIB next.
+                }
+            }
         }
         // A file without a singer would match any song of that name.
         if (title.trimmed().isEmpty() || (!file.isEmpty() && artist.trimmed().isEmpty()))
@@ -483,6 +528,89 @@ Task *Music::lyrics(const QString &title, const QString &artist, const QString &
         Database::cachePut(key, QJsonDocument(QJsonObject::fromVariantMap(result)).toJson(QJsonDocument::Compact),
                            result.value("found").toBool() ? 30 * 86400 : 86400);
         return result;
+    });
+}
+
+QVariantList Music::sources() const {
+    QVariantList out;
+    for (const auto &e : ext::Manager::sources(ext::Kind::Music))
+        if (e.enabled && e.blocked.isEmpty())
+            out.append(QVariantMap{{"key", e.key}, {"name", e.name}, {"site", e.baseUrl}});
+    return out;
+}
+
+QVariantMap Music::songOfPlugin(const QString &key, const QString &name, const QJsonObject &o) {
+    QStringList artists;
+    const auto a = o.value("artists");
+    if (a.isArray())
+        for (const auto &v : a.toArray())
+            artists.append(v.toString());
+    else if (!a.toString().isEmpty())
+        artists = a.toString().split(QStringLiteral(", "), Qt::SkipEmptyParts);
+    else if (!o.value("artist").toString().isEmpty())
+        artists = {o.value("artist").toString()};
+    return {{"id", key + QLatin1Char('|') + o.value("id").toVariant().toString()},
+            {"type", QString()},
+            {"label", QString()},
+            {"title", o.value("title").toString()},
+            {"artists", artists},
+            {"album", o.value("album").toString()},
+            {"cover", o.value("cover").toString()},
+            {"duration", o.value("duration").toDouble()},
+            {"anime", QString()},
+            // Asked for when it plays (streamOf).
+            {"audio", QString()},
+            {"source", key},
+            {"sourceName", name},
+            {"raw", o.toVariantMap()}};
+}
+
+namespace {
+QVariantList pluginSongs(const QString &key, const QString &method, const QJsonArray &args) {
+    const auto plugin = requirePlugin(key);
+    const auto name = sourceName(key);
+    QJsonValue result;
+    try {
+        result = plugins::Runtime::call(plugin, method, args, 30000);
+    } catch (const Error &e) {
+        // A plugin without popular songs simply has none.
+        if (method == QLatin1String("popularSongs") && e.message().contains(QLatin1String("cannot do that")))
+            return {};
+        ext::Manager::recordSourceResult(key, e.message());
+        throw;
+    }
+    ext::Manager::recordSourceResult(key, {});
+    QVariantList out;
+    for (const auto &value : result.toArray()) {
+        const auto o = value.toObject();
+        if (!o.value("id").toVariant().toString().isEmpty() && !o.value("title").toString().isEmpty())
+            out.append(Music::songOfPlugin(key, name, o));
+        if (out.size() >= 200)
+            break;
+    }
+    return out;
+}
+} // namespace
+
+Task *Music::searchSource(const QString &key, const QString &query) {
+    const auto q = query.simplified().left(200);
+    return Task::run([key, q]() -> QVariant { return q.isEmpty() ? QVariantList() : pluginSongs(key, QStringLiteral("searchSongs"), {q, 1}); });
+}
+
+Task *Music::popularSource(const QString &key) {
+    return Task::run([key]() -> QVariant { return pluginSongs(key, QStringLiteral("popularSongs"), {1}); });
+}
+
+Task *Music::streamOf(const QVariantMap &song) {
+    const auto key = song.value("source").toString();
+    const auto raw = song.value("raw").toMap();
+    return Task::run([key, raw]() -> QVariant {
+        const auto result = plugins::Runtime::call(requirePlugin(key), QStringLiteral("streamOf"), {QJsonObject::fromVariantMap(raw)}, 30000);
+        const auto o = result.isString() ? QJsonObject{{"url", result.toString()}} : result.toObject();
+        const QUrl url(o.value("url").toString());
+        if (!url.isValid() || (url.scheme() != QLatin1String("https") && url.scheme() != QLatin1String("http")))
+            throw Error(QStringLiteral("The extension gave no address to play this song from."));
+        return QVariantMap{{"url", url.toString()}, {"headers", o.value("headers").toObject().toVariantMap()}};
     });
 }
 

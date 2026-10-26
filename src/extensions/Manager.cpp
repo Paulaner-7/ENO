@@ -181,9 +181,9 @@ void changed() {
 
 // Signed with a repository's key, or trusted by hand at this version and key.
 bool isTrusted(const State &state, const Installed &i) {
-    if (i.package.kind == Kind::LNReader)
+    if (isPluginKind(i.package.kind))
         return std::any_of(state.repos.begin(), state.repos.end(),
-                           [&](const RepoState &r) { return r.repo.kind == Kind::LNReader && r.repo.url == i.repoUrl; });
+                           [&](const RepoState &r) { return r.repo.kind == i.package.kind && r.repo.url == i.repoUrl; });
     if (i.signers.isEmpty())
         return false;
     for (const auto &r : state.repos)
@@ -395,11 +395,11 @@ RepoState read(const QUrl &start, std::optional<Kind> hint) {
     }
     if (!repo || !packages)
         throw Error(QStringLiteral("The repository's files could not be read."));
-    if (repo->kind != Kind::LNReader && repo->signingKey.isEmpty())
+    if (!isPluginKind(repo->kind) && repo->signingKey.isEmpty())
         throw Error(QStringLiteral("The repository has no signing key, so its extensions cannot be checked."));
     // One kind per repository: the hint, else what most extensions are.
     Kind kind = hint.value_or(repo->kind);
-    if (!hint && repo->kind != Kind::LNReader) {
+    if (!hint && !isPluginKind(repo->kind)) {
         int anime = 0;
         for (const auto &p : *packages)
             anime += p.kind == Kind::Aniyomi;
@@ -508,7 +508,7 @@ RepositoryPreview Manager::preview(const QString &text, std::optional<Kind> hint
     if (!found)
         throw Error(lastError.isEmpty() ? QStringLiteral("That link is not an extension or plugin repository.") : lastError);
     // A plugin list names no repository: its GitHub owner and name do.
-    if (state.repo.kind == Kind::LNReader && (state.repo.name.isEmpty() || state.repo.name.contains(QLatin1Char('.')))) {
+    if (isPluginKind(state.repo.kind) && (state.repo.name.isEmpty() || state.repo.name.contains(QLatin1Char('.')))) {
         const QUrl list(state.repo.url);
         const auto path = list.path().split(QLatin1Char('/'), Qt::SkipEmptyParts);
         const auto host = list.host().toLower();
@@ -619,7 +619,7 @@ bool Manager::refresh(const QString &url) {
         if (!doc.hasPackages)
             throw Error(QStringLiteral("The repository's list could not be read."));
         // A store whose key changed is not taken at its word.
-        if (doc.repo && current->repo.kind != Kind::LNReader && !doc.repo->signingKey.isEmpty() &&
+        if (doc.repo && !isPluginKind(current->repo.kind) && !doc.repo->signingKey.isEmpty() &&
             doc.repo->signingKey != current->repo.signingKey)
             throw Error(QStringLiteral("The repository's signing key changed. Remove it and add it again if you trust the new key."));
         next.packages = doc.packages;
@@ -752,7 +752,7 @@ Installed Manager::install(Kind kind, const QString &pkg) {
         throw Error(QStringLiteral("%1 could not be downloaded (HTTP %2).").arg(package.name).arg(response.status), response.status);
 
     QStringList signers;
-    if (kind != Kind::LNReader) {
+    if (!isPluginKind(kind)) {
         signers = apkSigners(response.body);
         if (signers.isEmpty())
             throw Error(QStringLiteral("%1 is not signed, so SCANCORE will not install it.").arg(package.name));
@@ -767,7 +767,7 @@ Installed Manager::install(Kind kind, const QString &pkg) {
 
     const auto folder = QStringLiteral("%1/%2/%3").arg(g_storage, kindName(kind), pkg);
     QDir().mkpath(folder);
-    const auto path = QStringLiteral("%1/%2.%3").arg(folder).arg(package.versionCode).arg(kind == Kind::LNReader ? "js" : "apk");
+    const auto path = QStringLiteral("%1/%2.%3").arg(folder).arg(package.versionCode).arg(isPluginKind(kind) ? "js" : "apk");
     {
         QFile::setPermissions(path, QFile::ReadOwner | QFile::WriteOwner);
         QSaveFile file(path);

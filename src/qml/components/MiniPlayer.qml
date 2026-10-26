@@ -77,7 +77,7 @@ AbstractButton {
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             IconButton {
-                iconName: AudioPlayer.loading ? "loader-circle" : AudioPlayer.paused ? "play" : "pause"
+                iconName: MusicQueue.busy ? "loader-circle" : AudioPlayer.paused ? "play" : "pause"
                 iconSize: 20
                 diameter: 42
                 tip: AudioPlayer.paused ? qsTr("Play") : qsTr("Pause")

@@ -320,6 +320,13 @@ Item {
                     selected: page.media === "anime"
                     onClicked: page.media = "anime"
                 }
+                Chip {
+                    visible: page.repoMedia.length > 1 && page.repoMedia.indexOf("music") >= 0
+                    text: qsTr("Music")
+                    iconName: "volume-2"
+                    selected: page.media === "music"
+                    onClicked: page.media = "music"
+                }
                 Select {
                     visible: page.repositories.length > 1
                     model: page.repoChoices
@@ -766,7 +773,7 @@ Item {
                 height: 40
                 radius: 10
                 color: Theme.alpha(row.repo.error ? Theme.danger : Theme.accent, 0.12)
-                Icon { anchors.centerIn: parent; name: row.repo.media === "anime" ? "tv" : row.repo.media === "novel" ? "book-text" : "book-open"; size: 18; color: row.repo.error ? Theme.danger : Theme.accent }
+                Icon { anchors.centerIn: parent; name: row.repo.media === "anime" ? "tv" : row.repo.media === "novel" ? "book-text" : row.repo.media === "music" ? "volume-2" : "book-open"; size: 18; color: row.repo.error ? Theme.danger : Theme.accent }
             }
             Column {
                 anchors.left: badge.right

@@ -676,6 +676,14 @@
             <source>Skip</source>
             <translation>スキップ</translation>
         </message>
+        <message>
+            <source>music extension</source>
+            <translation>音楽拡張機能</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>音楽拡張機能</translation>
+        </message>
     </context>
     <context>
         <name>AddSectionSheet</name>
@@ -3774,6 +3782,10 @@
             <source>Diagnostics</source>
             <translation>診断</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -6062,6 +6074,38 @@
             <source>Try the anime's name in romaji, or the singer.</source>
             <translation>アニメ名をローマ字で、または歌手名で試してください。</translation>
         </message>
+        <message>
+            <source>Extensions</source>
+            <translation>拡張機能</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>音楽拡張機能で検索</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>人気</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>音楽拡張機能はまだありません</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>曲を検索しましょう</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>「拡張機能」で音楽拡張機能のリポジトリを追加し、インストールしてください。SCANCOREには付属していません。</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>これらの拡張機能には一覧がありません。上で検索してください。</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>拡張機能を開く</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -7384,6 +7428,22 @@
         <message>
             <source>Read novels</source>
             <translation>小説を読む</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>何を読んで、観て、聴きますか？</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>アニメソングと手持ちの曲を歌詞付きで</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>音楽を再生</translation>
         </message>
     </context>
     <context>

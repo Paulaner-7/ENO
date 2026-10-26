@@ -7,7 +7,7 @@ import Scancore
 // Retro draws a Windows Phone tile.
 AbstractButton {
     id: media
-    property string kind: "comic"           // "comic" | "novel" | "anime"
+    property string kind: "comic"           // "comic" | "novel" | "anime" | "music"
     property string iconName
     property string detail
     property bool on: true
@@ -114,6 +114,60 @@ AbstractButton {
                 Rectangle { x: 8; anchors.bottom: parent.bottom; anchors.bottomMargin: 8; width: parent.width - 16; height: 3; radius: 2; color: Qt.rgba(1, 1, 1, 0.3) }
                 Rectangle { x: 8; anchors.bottom: parent.bottom; anchors.bottomMargin: 8; width: (parent.width - 16) * 0.38; height: 3; radius: 2; color: Theme.retro ? Theme.tile : Theme.accent }
             }
+            // A song playing: its cover with moving bars, and lyrics beside
+            // it (the line being sung lit).
+            Row {
+                visible: media.kind === "music"
+                anchors.centerIn: parent
+                spacing: 12
+                readonly property bool lines: picture.width > 170
+                WelcomeArt {
+                    id: songArt
+                    width: Math.min(picture.height * 0.78, picture.width * (parent.lines ? 0.52 : 0.9))
+                    height: width
+                    anchors.verticalCenter: parent.verticalCenter
+                    seed: 13
+                    source: media.covers ? media.covers.pick(5, "anime") : ""
+                    Row {
+                        x: 8
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 8
+                        spacing: 3
+                        Repeater {
+                            model: 3
+                            Rectangle {
+                                required property int index
+                                width: Math.max(3, songArt.width * 0.05)
+                                height: songArt.height * [0.16, 0.26, 0.2][index]
+                                anchors.bottom: parent.bottom
+                                radius: width / 2
+                                color: "#ffffff"
+                                SequentialAnimation on height {
+                                    running: media.on && media.visible && !Motion.reduced
+                                    loops: Animation.Infinite
+                                    NumberAnimation { to: songArt.height * [0.28, 0.14, 0.3][index]; duration: 300 + index * 80 }
+                                    NumberAnimation { to: songArt.height * [0.12, 0.24, 0.16][index]; duration: 300 + index * 80 }
+                                }
+                            }
+                        }
+                    }
+                }
+                Column {
+                    visible: parent.lines
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Math.max(6, picture.height * 0.06)
+                    Repeater {
+                        model: 4
+                        Rectangle {
+                            required property int index
+                            width: picture.width * 0.38 * [0.8, 1, 0.7, 0.9][index]
+                            height: Math.max(4, picture.height * (index === 1 ? 0.07 : 0.045))
+                            radius: height / 2
+                            color: index === 1 ? (Theme.retro ? Theme.tile : Theme.accent) : Theme.alpha(media.ink, 0.25)
+                        }
+                    }
+                }
+            }
         }
         Icon {
             visible: media.tile
@@ -149,6 +203,8 @@ AbstractButton {
                     elide: Text.ElideRight
                 }
                 Text {
+                    // A short tile has room for its icon and name only.
+                    visible: !(media.tile && media.height < 190)
                     width: parent.width
                     text: media.detail
                     color: Theme.retro && media.on ? Theme.alpha(Theme.tileInk, 0.85) : Theme.textMuted
