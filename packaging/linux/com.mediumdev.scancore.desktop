@@ -8,5 +8,5 @@ Icon=com.mediumdev.scancore
 Terminal=false
 Categories=Graphics;Viewer;
 Keywords=manga;manhwa;webtoon;novel;anime;reader;
-StartupWMClass=ScanCore
+StartupWMClass=SCANCORE
 MimeType=application/x-scancore-theme;application/vnd.comicbook+zip;application/vnd.comicbook-rar;application/epub+zip;x-scheme-handler/scancore;x-scheme-handler/tachiyomi;x-scheme-handler/mihon;x-scheme-handler/aniyomi;x-scheme-handler/lnreader;

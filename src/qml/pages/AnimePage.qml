@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Anime home: rotating spotlight, continue watching, today's schedule and
 // the anime catalogue's lists: AniList's trending, seasonal, popular and
@@ -63,6 +63,14 @@ Item {
             ScButton { text: qsTr("Calendario"); iconName: "calendar"; compact: true; glassBezel: true; onClicked: Router.openAnimeSchedule() }
             ScButton { visible: Theme.compact; text: qsTr("Search"); iconName: "search"; compact: true; glassBezel: true; onClicked: Router.openAnimeBrowse({}) }
             ScButton { text: qsTr("Extensions"); iconName: "puzzle"; compact: true; glassBezel: true; onClicked: Router.openExtensions() }
+            ScButton {
+                visible: Account.signedIn
+                text: Party.active ? qsTr("Party %1").arg(Party.code) : qsTr("Watch party")
+                iconName: "users"
+                compact: true
+                glassBezel: true
+                onClicked: partyPanel.open()
+            }
             IconButton {
                 iconName: "layout-dashboard"
                 filled: true
@@ -498,4 +506,6 @@ Item {
         arrangers: [layout]
         onDone: page.editing = false
     }
+
+    PartyPanel { id: partyPanel }
 }

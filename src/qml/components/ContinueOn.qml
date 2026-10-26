@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // "Continue on another device": sends where you are to another open app on
 // the same account (Live), which offers to open it there. Shown only while

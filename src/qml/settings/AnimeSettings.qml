@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 SettingsPane {
     title: qsTr("Anime")
@@ -213,6 +213,19 @@ SettingsPane {
                         { value: "stretch", label: qsTr("Stretch") }, { value: "original", label: qsTr("Original size") }]
                 value: App.settings.playerFit || "fit"
                 onPicked: (v) => App.setSetting("playerFit", v)
+            }
+        }
+        // Android: how MediaCodec's frames reach the picture (#30).
+        SettingRow {
+            visible: App.platform === "android"
+            iconName: "gauge"
+            title: qsTr("Video decoding")
+            description: qsTr("Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.")
+            Select {
+                model: [{ value: "copy", label: qsTr("Hardware (steady)") }, { value: "direct", label: qsTr("Hardware, direct") },
+                        { value: "off", label: qsTr("Software") }]
+                value: App.settings.playerHwdec || "copy"
+                onPicked: (v) => App.setSetting("playerHwdec", v)
             }
         }
     }

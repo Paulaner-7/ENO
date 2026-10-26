@@ -1,34 +1,98 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import QtQuick.Shapes
-import ScanCore
+import QtQuick.Dialogs
+import Scancore
 
-// First-run welcome: the interface language, what SCANCORE does, the tracker
-// to keep, extensions (a repository link, if the reader has one), a quick
-// look-and-feel choice, the comic progress bar, notifications, an optional
-// scancore.onl account, and a few tips. Shown until finished or skipped;
-// Settings can show it again.
+// First-run welcome, five steps:
+//   start   the opening (covers drifting behind the mark), then anime;
+//   coming  coming from Aniyomi: the backup and its extensions at once;
+//   look    layout, theme, accent and glass beside a live preview;
+//   extras  trackers, the scancore.onl account and notifications;
+//   done    what was chosen, with ways back, and where to go first.
+// Swipe, the dots, the arrow keys and Back move between steps; a TV's
+// D-pad moves between controls. Settings can show it again.
 Rectangle {
     id: root
-    property int step: App.startAction.onboardingStep || 0
-    property int direction: 1
-    readonly property int steps: 9
-    // The account step, which has its own Continue.
-    readonly property int accountIndex: 7
+    property int step: Math.max(0, Math.min(steps - 1, App.startAction.onboardingStep || 0))
+    readonly property var stepKeys: ["start", "coming", "look", "extras", "done"]
+    readonly property int steps: stepKeys.length
     signal finished()
 
     color: Theme.base
     focus: true
 
+    // Layout: phones in portrait are compact; phones on their side low.
+    readonly property bool wide: width >= 720
+    readonly property bool low: height < 520
+    readonly property int gutter: wide ? 40 : 20
+    readonly property real columnWidth: Math.min(width - 2 * gutter, 1100)
+    readonly property real columnX: Math.max(gutter, (width - columnWidth) / 2)
+    readonly property real topInset: parent ? parent.SafeArea.margins.top : 0
+    readonly property real bottomInset: parent ? parent.SafeArea.margins.bottom : 0
+
+    // ------------------------------------------------------------ steps
     function go(next) {
-        if (next < 0 || next >= steps) return
-        direction = next > step ? 1 : -1
+        if (next < 0 || next >= steps || next === step) return
+        if (step === 0) applyMedia()
         step = next
     }
+    // Back (Android's Back, Alt+Left): the previous step; false on the first.
+    function back() {
+        if (leave.running) return true
+        if (step === 0) return false
+        go(step - 1)
+        return true
+    }
     function finish() {
+        applyMedia()
         App.setSetting("onboarded", true)
         leave.start()
     }
+
+    // ------------------------------------------------------------ media
+    // What the reader reads and watches: the tabs, Home and Retro's hub
+    // follow; Settings → Interface brings any back.
+    property var media: ["anime"]
+    function hasMedia(kind) { return kind === "anime" }
+    function applyMedia() {
+        Router.setShownMedia(media)
+    }
+
+    // ------------------------------------------------------------ coming from
+    property string from: ""
+    property var importTask: null
+    readonly property var importResult: importTask && importTask.ok ? importTask.result : null
+    readonly property var preview: mihonImport.preview
+    function importSummary(r) {
+        if (!r) return ""
+        const parts = [r.imported === 1 ? qsTr("1 series added") : qsTr("%1 series added").arg(r.imported)]
+        if (r.progress > 0) parts.push(qsTr("%1 chapters and episodes marked").arg(r.progress))
+        if (r.extensionsInstalled > 0) parts.push(qsTr("%1 extensions installed").arg(r.extensionsInstalled))
+        if (r.downloadsLinked > 0) parts.push(qsTr("%1 downloaded chapters linked").arg(r.downloadsLinked))
+        if (r.unmatched > 0) parts.push(qsTr("%1 waiting to be found").arg(r.unmatched))
+        return parts.join(" · ")
+    }
+
+    MihonImportDialog {
+        id: mihonImport
+        onImportStarted: (task) => root.importTask = task
+    }
+    FileDialog {
+        id: backupDialog
+        fileMode: FileDialog.OpenFile
+        nameFilters: [qsTr("Aniyomi backup (*.tachibk *.proto.gz)"), qsTr("All files (*)")]
+        onAccepted: {
+            root.importTask = null
+            mihonImport.start(selectedFile)
+        }
+    }
+    Connections {
+        target: root.importTask
+        function onFailed(error) { Router.toast(error, "error") }
+    }
+
+    // ------------------------------------------------------------ covers
+    WelcomeCoverSource { id: coverSource; active: root.visible }
 
     // Nothing behind the welcome (the tabs, the page) takes taps or wheels.
     MouseArea {
@@ -37,403 +101,952 @@ Rectangle {
         onWheel: (wheel) => wheel.accepted = true
     }
 
-    Keys.onRightPressed: if (step < steps - 1 && step !== accountIndex) go(step + 1)
-    Keys.onLeftPressed: go(step - 1)
-    Keys.onEscapePressed: finish()
+    // ------------------------------------------------------------ opening
+    // The covers fill the screen while the mark draws in, then make room:
+    // they stay as a band at the top of the first step.
+    property bool settled: Motion.reduced || step !== 0
+    property real band: settled ? (wide ? 0.42 : 0.3) : 1
+    Behavior on band { NumberAnimation { duration: Motion.reduced ? 0 : 700; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
 
-    // Slow drifting light behind everything, so the screen never feels static.
-    Item {
+    WelcomeWall {
+        id: wall
         anchors.fill: parent
-        clip: true
-        Repeater {
-            model: 3
-            Shape {
-                id: glow
-                required property int index
-                width: root.width * 1.1
-                height: width
-                preferredRendererType: Shape.CurveRenderer
-                x: root.width * [0.45, -0.45, 0.1][index]
-                y: root.height * [-0.55, 0.25, 0.7][index]
-                SequentialAnimation on x {
-                    running: !Motion.reduced && root.visible
-                    loops: Animation.Infinite
-                    NumberAnimation { to: root.width * [0.25, -0.25, 0.3][glow.index]; duration: 16000 + glow.index * 3000; easing.type: Easing.InOutSine }
-                    NumberAnimation { to: root.width * [0.45, -0.45, 0.1][glow.index]; duration: 16000 + glow.index * 3000; easing.type: Easing.InOutSine }
-                }
-                ShapePath {
-                    strokeWidth: -1
-                    fillGradient: RadialGradient {
-                        centerX: glow.width / 2; centerY: glow.height / 2
-                        centerRadius: glow.width / 2
-                        focalX: centerX; focalY: centerY
-                        GradientStop { position: 0; color: Theme.alpha(Theme.text, Theme.dark ? 0.075 : 0.06) }
-                        GradientStop { position: 1; color: Theme.alpha(Theme.text, 0) }
-                    }
-                    PathRectangle { width: glow.width; height: glow.height }
-                }
+        covers: coverSource
+        moving: root.step === 0
+        visible: opacity > 0.01
+        opacity: root.step !== 0 ? 0 : root.settled ? 0.28 : 0.5
+        Behavior on opacity { NumberAnimation { duration: Motion.slow } }
+    }
+    // The covers fade into the page below the band.
+    Rectangle {
+        anchors.fill: parent
+        visible: wall.visible
+        gradient: Gradient {
+            GradientStop { position: 0; color: Theme.alpha(Theme.base, root.settled ? 0.25 : 0.55) }
+            GradientStop { position: Math.max(0.01, root.band * 0.55); color: Theme.alpha(Theme.base, root.settled ? 0.55 : 0.8) }
+            GradientStop { position: root.band; color: Theme.alpha(Theme.base, root.settled ? 1 : 0.55) }
+            GradientStop { position: 1; color: Theme.alpha(Theme.base, root.settled ? 1 : 0.55) }
+        }
+    }
+
+    // The mark draws in with a scan line (opening only).
+    Item {
+        id: introMark
+        anchors.centerIn: parent
+        width: root.wide ? 300 : 220
+        height: width / 2.02
+        visible: opacity > 0.01
+        opacity: root.settled ? 0 : 1
+        Behavior on opacity { NumberAnimation { duration: Motion.normal } }
+        property real drawn: 0
+        Icon {
+            width: parent.width; height: parent.height
+            source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
+            fillMode: Image.PreserveAspectFit
+            opacity: 0.12
+        }
+        Item {
+            width: parent.width
+            height: parent.height * introMark.drawn
+            clip: true
+            Icon {
+                width: introMark.width; height: introMark.height
+                source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
+        Rectangle {
+            x: -parent.width * 0.1
+            y: parent.height * introMark.drawn - 1
+            width: parent.width * 1.2
+            height: 3
+            radius: 2
+            opacity: introMark.drawn > 0 && introMark.drawn < 1 ? 1 : 0
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0; color: "transparent" }
+                GradientStop { position: 0.5; color: Theme.retro ? Theme.tile : Theme.text }
+                GradientStop { position: 1; color: "transparent" }
+            }
+        }
+    }
+    SequentialAnimation {
+        id: intro
+        running: !root.settled
+        PauseAnimation { duration: 150 }
+        NumberAnimation { target: introMark; property: "drawn"; from: 0; to: 1; duration: 900; easing.type: Easing.InOutCubic }
+        PauseAnimation { duration: 150 }
+        ScriptAction { script: root.settled = true }
+    }
+
+    // ------------------------------------------------------------ top bar
+    Item {
+        id: topBar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: root.topInset
+        height: 56
+        opacity: root.settled ? 1 : 0
+        visible: opacity > 0.01
+        Behavior on opacity { NumberAnimation { duration: Motion.slow } }
+        Row {
+            x: root.gutter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 10
+            Image {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 42; height: 21
+                source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
+                fillMode: Image.PreserveAspectFit
+            }
+            Text {
+                visible: root.width >= 400
+                anchors.verticalCenter: parent.verticalCenter
+                text: "ENO"
+                color: Theme.text
+                font.family: Theme.fontDisplay
+                font.pixelSize: 14
+                font.weight: Theme.retro ? Font.Normal : Font.DemiBold
+                font.letterSpacing: Theme.retro ? 0 : 2
+            }
+        }
+        Row {
+            anchors.right: parent.right
+            anchors.rightMargin: root.gutter - 8
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
+            // The interface language first, so the rest is in it.
+            Select {
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.min(170, root.width * 0.42)
+                implicitHeight: 34
+                Accessible.name: qsTr("Language")
+                model: [{ value: "system", label: qsTr("System") }].concat(Customize.languages)
+                value: Customize.language
+                onPicked: (v) => Customize.setLanguage(v)
+            }
+            ScButton {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.step < root.steps - 1
+                variant: "plain"
+                compact: true
+                text: Theme.retro ? qsTr("skip") : qsTr("Skip")
+                Accessible.description: qsTr("Close the welcome and start using ENO")
+                onClicked: root.finish()
             }
         }
     }
 
-    // ------------------------------------------------------------------ steps
+    // ------------------------------------------------------------ stage
     Item {
         id: stage
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: parent.top
+        anchors.top: topBar.bottom
         anchors.bottom: footer.top
-        anchors.topMargin: parent.SafeArea.margins.top
+        opacity: root.settled ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: Motion.slow } }
+        // The finger's pull while swiping between steps.
+        property real pull: 0
+        readonly property bool pulling: swipe.active
 
         Repeater {
-            id: pages
-            model: [welcomeStep, mediaStep, trackerStep, extensionsStep, styleStep, barStep, notifyStep, accountStep, doneStep]
+            model: root.stepKeys
             delegate: Loader {
-                id: pageLoader
-                required property var modelData
+                id: page
+                required property string modelData
                 required property int index
                 readonly property bool current: root.step === index
-                anchors.fill: parent
-                sourceComponent: modelData
+                width: stage.width
+                height: stage.height
                 active: Math.abs(root.step - index) <= 1
-                visible: opacity > 0.01
-                opacity: current ? 1 : 0
-                z: current ? 1 : 0
+                visible: active && (Motion.reduced ? opacity > 0.01 : Math.abs(x) < stage.width)
                 enabled: current
-                transform: Translate {
-                    x: pageLoader.current ? 0 : (pageLoader.index < root.step ? -60 : 60)
-                    Behavior on x { NumberAnimation { duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
+                sourceComponent: ({ start: startStep, coming: comingStep, look: lookStep,
+                                    extras: extrasStep, done: doneStep })[modelData]
+                // Slides with the finger and settles; reduce motion fades.
+                x: Motion.reduced ? 0 : (index - root.step) * stage.width + stage.pull
+                opacity: Motion.reduced ? (current ? 1 : 0) : 1
+                Behavior on x {
+                    enabled: !stage.pulling && !Motion.reduced
+                    NumberAnimation { duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized }
                 }
-                Behavior on opacity { NumberAnimation { duration: pageLoader.current ? Motion.page : Motion.normal; easing.type: Easing.OutCubic } }
+                Behavior on opacity { NumberAnimation { duration: Motion.normal } }
+            }
+        }
+
+        // Swipe between steps on touch screens (mice use the buttons).
+        DragHandler {
+            id: swipe
+            target: null
+            enabled: !Motion.reduced
+            xAxis.enabled: true
+            yAxis.enabled: false
+            acceptedDevices: PointerDevice.TouchScreen | PointerDevice.Stylus
+            property real last: 0
+            onTranslationChanged: {
+                last = translation.x
+                const atEnd = (translation.x > 0 && root.step === 0) || (translation.x < 0 && root.step === root.steps - 1)
+                // A rubber band at either end.
+                stage.pull = atEnd ? translation.x * 0.3 : translation.x
+            }
+            onActiveChanged: {
+                if (active) return
+                const moved = last
+                const speed = centroid.velocity.x
+                stage.pull = 0
+                if ((moved < -stage.width * 0.22 || speed < -700) && root.step < root.steps - 1) root.go(root.step + 1)
+                else if ((moved > stage.width * 0.22 || speed > 700) && root.step > 0) root.go(root.step - 1)
+                last = 0
             }
         }
     }
 
-    // ------------------------------------------------------------------ footer
+    // ------------------------------------------------------------ footer
     Item {
         id: footer
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.SafeArea.margins.bottom
-        height: Theme.compact ? 112 : 88
+        anchors.bottomMargin: root.bottomInset
+        height: Theme.retro ? (root.low ? 60 : 72) : 68
+        opacity: root.settled ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: Motion.slow } }
+        readonly property string nextLabel: root.step === 1 && !root.from ? (Theme.retro ? qsTr("not now") : qsTr("Not now"))
+            : Theme.retro ? qsTr("next") : qsTr("Continue")
 
-        // Phones give the dots a row of their own, well above the buttons;
-        // beside them the buttons would cover the last dots.
+        Rectangle {
+            visible: Theme.retro
+            anchors.fill: parent
+            anchors.bottomMargin: -root.bottomInset
+            color: Theme.surface2
+        }
+        // The dots: where you are, and a tap away from any step.
         Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: Theme.compact ? 14 : (parent.height - height) / 2
-            spacing: 8
+            id: dots
+            x: root.gutter - 6
+            anchors.verticalCenter: parent.verticalCenter
             Repeater {
                 model: root.steps
-                Rectangle {
+                AbstractButton {
+                    id: dot
                     required property int index
-                    width: index === root.step ? 28 : 8
-                    height: 8
-                    radius: 4
-                    color: index === root.step ? Theme.text : Theme.alpha(Theme.text, index < root.step ? 0.45 : 0.18)
+                    width: (index === root.step ? 30 : 14) + 8
+                    height: 36
+                    focusPolicy: Qt.TabFocus
+                    Accessible.name: qsTr("Step %1 of %2").arg(index + 1).arg(root.steps)
+                    onClicked: root.go(index)
                     Behavior on width { NumberAnimation { duration: Motion.slow; easing.type: Easing.OutCubic } }
-                    Behavior on color { ColorAnimation { duration: Motion.normal } }
+                    background: null
+                    contentItem: Item {
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: dot.width - 14
+                            height: 8
+                            radius: Theme.retro ? 0 : 4
+                            color: dot.index === root.step ? (Theme.retro ? Theme.tile : Theme.text)
+                                 : Theme.alpha(Theme.text, dot.hovered ? 0.6 : dot.index < root.step ? 0.45 : 0.2)
+                            Behavior on color { ColorAnimation { duration: Motion.normal } }
+                        }
+                    }
                 }
             }
         }
-        ScButton {
-            anchors.left: parent.left
-            anchors.leftMargin: Theme.gutter - (Theme.compact ? 12 : 0)
-            // Centred on the same line as the 36 px button opposite.
-            y: Theme.compact ? parent.height - 18 - 36 + (36 - height) / 2 : (parent.height - height) / 2
-            visible: root.step < root.steps - 1
-            variant: Theme.compact ? "plain" : "ghost"
-            compact: Theme.compact
-            text: root.step === 0 ? qsTr("Skip intro") : qsTr("Back")
-            onClicked: root.step === 0 ? root.finish() : root.go(root.step - 1)
-        }
-        ScButton {
+        // Retro: Windows Phone's app bar, round buttons with a word under.
+        Row {
+            visible: Theme.retro
             anchors.right: parent.right
-            anchors.rightMargin: Theme.gutter
-            y: Theme.compact ? parent.height - height - 18 : (parent.height - height) / 2
-            visible: root.step < root.steps - 1
-            variant: root.step === root.accountIndex ? "ghost" : "primary"
-            compact: Theme.compact
-            implicitHeight: Theme.compact ? 36 : 40
-            iconName: root.step === root.accountIndex ? "" : "chevron-right"
-            iconAfter: true
-            text: root.step === 0 ? qsTr("Get started") : root.step === root.accountIndex ? qsTr("Skip for now") : qsTr("Continue")
-            onClicked: root.go(root.step + 1)
+            anchors.rightMargin: root.gutter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 24
+            Repeater {
+                model: (root.step > 0 ? [{ icon: "chevron-left", label: qsTr("back"), next: false }] : [])
+                    .concat(root.step < root.steps - 1 ? [{ icon: "chevron-right", label: footer.nextLabel, next: true }] : [])
+                AbstractButton {
+                    id: appButton
+                    required property var modelData
+                    width: 56
+                    height: footer.height
+                    focusPolicy: Qt.TabFocus
+                    Accessible.name: modelData.label
+                    onClicked: root.go(root.step + (modelData.next ? 1 : -1))
+                    background: null
+                    contentItem: Column {
+                        spacing: 2
+                        topPadding: (appButton.height - 40 - 16) / 2
+                        Rectangle {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: 40; height: 40; radius: 20
+                            color: appButton.pressed ? Theme.text : "transparent"
+                            border.width: 2
+                            border.color: Theme.text
+                            Icon { anchors.centerIn: parent; name: appButton.modelData.icon; size: 20; color: appButton.pressed ? Theme.base : Theme.text }
+                        }
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: appButton.modelData.label
+                            color: Theme.text
+                            font.family: Theme.fontSans
+                            font.pixelSize: 11
+                        }
+                    }
+                }
+            }
+        }
+        Row {
+            visible: !Theme.retro
+            anchors.right: parent.right
+            anchors.rightMargin: root.gutter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
+            ScButton {
+                visible: root.step > 0 && root.width >= 520
+                variant: "ghost"
+                text: qsTr("Back")
+                onClicked: root.go(root.step - 1)
+            }
+            ScButton {
+                visible: root.step < root.steps - 1
+                variant: "primary"
+                text: footer.nextLabel
+                iconName: "chevron-right"
+                iconAfter: true
+                onClicked: root.go(root.step + 1)
+            }
         }
     }
 
-    // ------------------------------------------------------------------ content
+    // ------------------------------------------------------------ keys
+    // Arrows between steps (not while typing); a TV's D-pad between
+    // controls, Select presses.
+    Keys.onPressed: (event) => {
+        if (App.tv) {
+            const dirs = { [Qt.Key_Left]: "left", [Qt.Key_Right]: "right", [Qt.Key_Up]: "up", [Qt.Key_Down]: "down" }
+            if (dirs[event.key] !== undefined) event.accepted = spatial.move(dirs[event.key])
+            else if (event.key === Qt.Key_Select || event.key === Qt.Key_Enter || event.key === Qt.Key_Return) event.accepted = spatial.activate()
+            return
+        }
+        const focused = Window.activeFocusItem
+        if (focused && focused instanceof TextInput) return
+        if (event.key === Qt.Key_Right) { root.go(root.step + 1); event.accepted = true }
+        else if (event.key === Qt.Key_Left) { root.go(root.step - 1); event.accepted = true }
+        else if (event.key === Qt.Key_Escape && root.step > 0) { root.go(root.step - 1); event.accepted = true }
+    }
+    SpatialFocus {
+        id: spatial
+        scope: root
+    }
+    Timer {
+        // A TV starts with the focus on the first control.
+        running: App.tv && root.settled
+        interval: 400
+        onTriggered: if (!spatial.current || !spatial.isStop(spatial.current)) spatial.move("down")
+    }
+
+    // ------------------------------------------------------------ pieces
+    component Kicker: Text {
+        color: Theme.retro ? Theme.tile : Theme.textMuted
+        font.family: Theme.fontSans
+        font.pixelSize: Theme.textXs
+        font.weight: Theme.retro ? Font.DemiBold : Font.Bold
+        font.capitalization: Font.AllUppercase
+        font.letterSpacing: Theme.retro ? 0.5 : 2
+    }
+    component Title: Text {
+        color: Theme.text
+        font.family: Theme.fontDisplay
+        font.pixelSize: root.low ? (Theme.retro ? 32 : 26) : Theme.retro ? (root.wide ? 54 : 38) : (root.wide ? 42 : 29)
+        font.weight: Theme.retro ? Font.Light : Font.Bold
+        font.letterSpacing: -1
+        font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
+        wrapMode: Text.Wrap
+        lineHeight: Theme.retro ? 0.95 : 1.04
+        Accessible.role: Accessible.Heading
+    }
+    component Body: Text {
+        color: Theme.textMuted
+        font.family: Theme.fontSans
+        font.pixelSize: root.wide ? Theme.textLg : Theme.textMd
+        wrapMode: Text.Wrap
+        lineHeight: 1.35
+    }
     component Heading: Column {
         property string kicker
         property string title
         property string body
-        spacing: 12
-        width: Math.min(parent ? parent.width - 2 * Theme.gutter : 600, 640)
-        Text {
-            visible: text.length > 0
-            text: parent.kicker
-            color: Theme.textMuted
-            font.family: Theme.fontSans
-            font.pixelSize: Theme.textXs
-            font.weight: Font.Bold
-            font.capitalization: Font.AllUppercase
-            font.letterSpacing: 2
-        }
-        Text {
-            width: parent.width
-            text: parent.title
-            color: Theme.text
-            font.family: Theme.fontDisplay
-            font.pixelSize: Theme.compact ? 30 : 42
-            font.weight: Font.Bold
-            font.letterSpacing: -1
-            wrapMode: Text.Wrap
-            lineHeight: 1.05
-        }
-        Text {
-            visible: text.length > 0
-            width: parent.width
-            text: parent.body
-            color: Theme.textMuted
-            font.family: Theme.fontSans
-            font.pixelSize: Theme.textLg
-            lineHeight: 1.35
-            wrapMode: Text.Wrap
+        spacing: 10
+        Kicker { visible: text.length > 0; text: parent.kicker }
+        Title { width: parent.width; text: parent.title }
+        Body { visible: text.length > 0; width: parent.width; text: parent.body }
+    }
+    // A label above a control.
+    component Label: Text {
+        color: Theme.textMuted
+        font.family: Theme.fontSans
+        font.pixelSize: Theme.textSm
+        font.weight: Font.DemiBold
+        font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
+    }
+    // A scrolling step with its column centred on wide screens.
+    component Page: Flickable {
+        id: pageFlick
+        default property alias content: column.data
+        property real columnWidth: root.columnWidth
+        contentHeight: Math.max(height, column.height + (root.wide ? 48 : 24))
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
+        WheelScroll {}
+        Column {
+            id: column
+            x: Math.max(0, (pageFlick.width - width) / 2)
+            y: root.wide ? Math.max(24, (pageFlick.height - height) / 2 - 8) : 16
+            width: pageFlick.columnWidth
+            spacing: root.wide ? 24 : 18
         }
     }
-
-    // 1. Welcome: the mark draws in with a scan line sweeping across it.
-    Component {
-        id: welcomeStep
-        Item {
-            Column {
-                anchors.centerIn: parent
-                spacing: 28
-                Item {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: Theme.compact ? 220 : 300
-                    height: width / 2.02
-                    Image {
-                        id: mark
-                        anchors.fill: parent
-                        source: Theme.dark ? "qrc:/branding/eno-logo-dark.png" : "qrc:/branding/eno-logo-light.png"
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        mipmap: true
-                        opacity: 0
-                        scale: 0.92
-                        Component.onCompleted: intro.start()
-                    }
-                    Rectangle {
-                        id: scan
-                        width: parent.width * 1.3
-                        x: -parent.width * 0.15
-                        height: 3
-                        radius: 2
-                        color: Theme.text
-                        opacity: 0
-                        y: 0
-                    }
-                    SequentialAnimation {
-                        id: intro
-                        PauseAnimation { duration: 200 }
-                        ParallelAnimation {
-                            NumberAnimation { target: scan; property: "opacity"; to: 0.9; duration: 200 }
-                            NumberAnimation { target: scan; property: "y"; from: 0; to: mark.height; duration: Motion.reduced ? 0 : 900; easing.type: Easing.InOutCubic }
-                            NumberAnimation { target: mark; property: "opacity"; to: 1; duration: Motion.reduced ? 0 : 900; easing.type: Easing.InOutCubic }
-                            NumberAnimation { target: mark; property: "scale"; to: 1; duration: Motion.reduced ? 0 : 1100; easing.type: Easing.OutCubic }
-                        }
-                        NumberAnimation { target: scan; property: "opacity"; to: 0; duration: 300 }
-                    }
+    // An optional card on the extras step.
+    component Card: Rectangle {
+        id: card
+        property string iconName
+        property string title
+        property string body
+        default property alias content: cardColumn.data
+        radius: Theme.retro ? 0 : Theme.radiusXl
+        color: Theme.retro ? Theme.surface2 : Theme.surface
+        border.width: Theme.retro ? 0 : 1
+        border.color: Theme.border
+        implicitHeight: cardColumn.implicitHeight + 40
+        Column {
+            id: cardColumn
+            x: 20
+            y: 20
+            width: card.width - 40
+            spacing: 12
+            Row {
+                width: parent.width
+                spacing: 12
+                Rectangle {
+                    width: 40; height: 40; radius: Theme.retro ? 0 : 11
+                    color: Theme.retro ? Theme.tile : Theme.surface2
+                    Icon { anchors.centerIn: parent; name: card.iconName; size: 19; color: Theme.retro ? Theme.tileInk : Theme.text }
                 }
                 Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "S C A N C O R E"
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - 52
+                    text: card.title
                     color: Theme.text
                     font.family: Theme.fontDisplay
-                    font.pixelSize: Theme.compact ? 18 : 22
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: Math.min(root.width - 2 * Theme.gutter, 520)
-                    horizontalAlignment: Text.AlignHCenter
+                    font.pixelSize: Theme.retro ? 22 : Theme.textLg
+                    font.weight: Theme.retro ? Font.Light : Font.DemiBold
+                    font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
                     wrapMode: Text.Wrap
-                    text: Router.animeOnly ? qsTr("Anime in one fast app. Everything runs and stays on your device.")
-                                           : qsTr("Comics, novels and anime in one fast app. Everything runs and stays on your device.")
-                    color: Theme.textMuted
-                    font.family: Theme.fontSans
-                    font.pixelSize: Theme.textLg
-                    lineHeight: 1.35
                 }
-                // The interface language comes first, so the rest of the
-                // intro is in it. It switches right away.
+            }
+            Text {
+                width: parent.width
+                text: card.body
+                color: Theme.textMuted
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.textSm
+                wrapMode: Text.Wrap
+                lineHeight: 1.3
+            }
+        }
+    }
+
+    // ------------------------------------------------------------ 1. start
+    Component {
+        id: startStep
+        Item {
+            id: start
+            readonly property bool side: root.low && root.wide
+            Heading {
+                id: startHeading
+                x: root.columnX
+                y: start.side ? 8 : root.wide ? Math.max(24, start.height * 0.14) : 12
+                width: start.side ? root.width * 0.42 - root.gutter : Math.min(root.columnWidth, 760)
+                kicker: qsTr("Welcome")
+                title: qsTr("Your anime, in one place")
+                body: qsTr("ENO watches from the sources you choose. Everything runs and stays on your device.")
+            }
+            Item {
+                id: toggles
+                x: start.side ? root.width * 0.42 + 16 : root.columnX
+                y: start.side ? 8 : startHeading.y + startHeading.height + (root.wide ? 32 : 20)
+                width: start.side ? root.width * 0.58 - 16 - root.gutter : root.columnWidth
+                height: start.height - y - 12
+                // Wide Standard: four tall cards in a row. Phones and the
+                // side layout: four rows. Retro: one big tile, two squares
+                // and a strip (phones), or the big tile beside three.
+                readonly property bool row: root.wide && !Theme.retro && !start.side
+                readonly property bool tiles: Theme.retro && !start.side
+                readonly property real rowHeight: start.side ? (height - 24) / 4 : Math.max(72, Math.min(124, (height - 32) / 4))
+                readonly property real cardHeight: Math.min(380, height)
+                readonly property real half: (width - 12) / 2
+                // Retro on phones: the big tile, two squares, the strip.
+                readonly property real bigHeight: Math.min(height * 0.42, width * 0.55)
+                readonly property real squareHeight: Math.min(half, (height - bigHeight - 24) * 0.6)
+                readonly property real stripHeight: Math.max(56, Math.min(110, height - bigHeight - squareHeight - 24))
+                // Retro wide: three stacked beside the big tile.
+                readonly property real third: (cardHeight - 24) / 3
+                Repeater {
+                    model: [{ kind: "anime", icon: "tv", label: qsTr("Anime"), detail: qsTr("Episodes that resume where you stopped") }]
+                    WelcomeMedia {
+                        required property var modelData
+                        required property int index
+                        kind: modelData.kind
+                        iconName: modelData.icon
+                        text: modelData.label
+                        detail: modelData.detail
+                        covers: coverSource
+                        on: root.hasMedia(modelData.kind)
+                        onClicked: root.toggleMedia(modelData.kind)
+                        x: 0
+                        y: 0
+                        width: toggles.width
+                        height: toggles.row ? toggles.cardHeight : toggles.height
+                    }
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------------------ 2. coming from
+    Component {
+        id: comingStep
+        Page {
+            id: coming
+            readonly property bool fromAniyomi: root.from === "aniyomi"
+            readonly property string appName: root.from === "aniyomi" ? "Aniyomi" : ""
+            readonly property bool previewing: mihonImport.task !== null && mihonImport.task.loading
+            readonly property bool importing: root.importTask !== null && root.importTask.loading
+            Heading {
+                width: parent.width
+                kicker: qsTr("Switching?")
+                title: qsTr("Coming from another app?")
+                body: root.wide ? qsTr("Your anime library and your extensions come over in one go.")
+                                : qsTr("Anime library and extensions, in one go.")
+            }
+            Flow {
+                width: parent.width
+                spacing: 8
+                Repeater {
+                    model: [{ key: "aniyomi", label: "Aniyomi" }, { key: "new", label: qsTr("I'm new here") }]
+                    Chip {
+                        required property var modelData
+                        text: modelData.label
+                        selected: root.from === modelData.key
+                        iconName: selected ? "check" : ""
+                        implicitHeight: root.wide ? 40 : 36
+                        onClicked: root.from = root.from === modelData.key ? "" : modelData.key
+                    }
+                }
+            }
+            // What comes over, counted as it is read.
+            Rectangle {
+                visible: root.from.length > 0
+                width: parent.width
+                height: details.implicitHeight + 40
+                radius: Theme.retro ? 0 : Theme.radiusXl
+                color: Theme.retro ? Theme.surface2 : Theme.surface
+                border.width: Theme.retro ? 0 : 1
+                border.color: Theme.border
                 Column {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 8
+                    id: details
+                    x: 20
+                    y: 20
+                    width: parent.width - 40
+                    spacing: 14
+                    Text {
+                        width: parent.width
+                        text: root.from === "new" ? qsTr("Welcome aboard") : qsTr("From %1").arg(coming.appName)
+                        color: Theme.text
+                        font.family: Theme.fontDisplay
+                        font.pixelSize: Theme.retro ? 28 : Theme.textXl
+                        font.weight: Theme.retro ? Font.Light : Font.DemiBold
+                        font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
+                    }
+                    Text {
+                        visible: coming.fromAniyomi
+                        width: parent.width
+                        text: qsTr("In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.").arg(coming.appName)
+                        color: Theme.textFaint
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textSm
+                        wrapMode: Text.Wrap
+                    }
+                    // The backup.
                     Row {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        spacing: 6
-                        Icon { anchors.verticalCenter: parent.verticalCenter; name: "languages"; size: 14; color: Theme.textFaint }
-                        Text {
-                            text: qsTr("Language")
-                            color: Theme.textFaint
-                            font.family: Theme.fontSans
-                            font.pixelSize: Theme.textXs
-                            font.weight: Font.DemiBold
-                            font.capitalization: Font.AllUppercase
-                            font.letterSpacing: 1.5
+                        visible: root.from !== "new"
+                        width: parent.width
+                        spacing: 12
+                        Column {
+                            width: parent.width - backupButton.width - 12
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 2
+                            Label { text: qsTr("Backup") }
+                            Text {
+                                width: parent.width
+                                text: coming.importing ? qsTr("Bringing your library over…")
+                                    : root.importResult ? root.importSummary(root.importResult)
+                                    : coming.previewing ? qsTr("Reading the backup…")
+                                    : root.preview && coming.fromAniyomi ? qsTr("%1 anime · %2 extensions to install")
+                                        .arg(root.preview.anime).arg(root.preview.extensions.length)
+                                    : qsTr("Your series, lists, progress and trackers.")
+                                color: root.importResult ? Theme.success : Theme.text
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textSm
+                                wrapMode: Text.Wrap
+                            }
+                        }
+                        ScButton {
+                            id: backupButton
+                            anchors.verticalCenter: parent.verticalCenter
+                            variant: root.importResult ? "ghost" : "primary"
+                            iconName: "folder-open"
+                            loading: coming.previewing || coming.importing
+                            text: root.importResult ? qsTr("Another") : qsTr("Choose backup")
+                            onClicked: backupDialog.open()
                         }
                     }
-                    Select {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: Math.min(root.width - 2 * Theme.gutter, 260)
-                        implicitHeight: 42
-                        Accessible.name: qsTr("Language")
-                        model: [{ value: "system", label: qsTr("System") }].concat(Customize.languages)
-                        value: Customize.language
-                        onPicked: (v) => Customize.setLanguage(v)
+                    // Extensions come with the backup.
+                    Text {
+                        visible: coming.fromAniyomi
+                        width: parent.width
+                        text: qsTr("The extensions and repositories your anime came from are offered with the backup, so they open on the same sources.")
+                        color: Theme.textMuted
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textSm
+                        wrapMode: Text.Wrap
+                    }
+                    // New here: the built-in sources work; a link is optional.
+                    Text {
+                        visible: root.from === "new"
+                        width: parent.width
+                        text: qsTr("ENO comes with its own anime sources. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.")
+                        color: Theme.textMuted
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textSm
+                        wrapMode: Text.Wrap
+                    }
+                    Row {
+                        visible: root.from === "new"
+                        width: parent.width
+                        spacing: 10
+                        SearchField {
+                            id: linkField
+                            width: parent.width - addLink.width - 10
+                            placeholderText: qsTr("Repository link")
+                            onSubmitted: (text) => { if (text.trim()) Router.addRepository(text.trim()) }
+                        }
+                        ScButton {
+                            id: addLink
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: qsTr("Add")
+                            iconName: "plus"
+                            enabled: linkField.text.trim().length > 0
+                            onClicked: Router.addRepository(linkField.text.trim())
+                        }
                     }
                 }
             }
         }
     }
 
-    // 2. What it does.
+    // ------------------------------------------------------------ 3. look
     Component {
-        id: mediaStep
-        Flickable {
-            WheelScroll {}
-            contentHeight: mediaColumn.height + 60
-            clip: true
-            Column {
-                id: mediaColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: parent.width - 2 * Theme.gutter
-                spacing: 28
+        id: lookStep
+        Item {
+            id: look
+            readonly property bool besides: root.wide
+            WelcomePreview {
+                id: preview
+                covers: coverSource
+                phone: !look.besides
+                x: look.besides ? choices.x + choices.width + 40 : root.gutter
+                // Short screens (phones on their side) keep more for the choices.
+                width: look.besides ? Math.min(look.width - x - root.gutter, root.low ? look.width * 0.38 : 900) : look.width - 2 * root.gutter
+                height: look.besides ? Math.min(look.height - 40, width * 0.68) : Math.min(look.height * 0.4, 290)
+                y: look.besides ? (look.height - height) / 2 : 8
+            }
+            Page {
+                id: choices
+                x: look.besides ? Math.max(root.gutter, (look.width - width - 40 - Math.min(look.width * (root.low ? 0.38 : 0.53), 900)) / 2) : 0
+                y: look.besides ? 0 : preview.y + preview.height + 8
+                width: look.besides ? Math.min(look.width * (root.low ? 0.62 : 0.47) - root.gutter - 40, 520) : look.width
+                height: look.height - y
+                columnWidth: look.besides ? width : width - 2 * root.gutter
                 Heading {
-                    kicker: qsTr("Everything in one place")
-                    title: Router.animeOnly ? qsTr("Watch from the sources you choose") : qsTr("Read and watch from the sources you choose")
-                    body: Router.animeOnly ? qsTr("Search every source together, keep your place in every series, and download episodes to watch offline.")
-                                           : qsTr("Search every source together, keep your place in every series, and download chapters for offline reading.")
-                }
-                Flow {
+                    visible: look.besides
                     width: parent.width
-                    spacing: 16
+                    kicker: qsTr("Make it yours")
+                    title: qsTr("Pick a look")
+                }
+                // The layout, as two pictures.
+                Row {
+                    width: parent.width
+                    spacing: 12
                     Repeater {
-                        model: [
-                            { icon: "book-open", title: qsTr("Comics"), text: qsTr("Manhwa, manga and webtoons from Webtoon, MangaDex, your files and the sources you add. Vertical strip or page by page.") },
-                            { icon: "book-text", title: qsTr("Novels"), text: qsTr("Royal Road, your EPUB books and the sources you add, with a reader you can tune: fonts, spacing, paper and sepia themes.") },
-                            { icon: "tv", title: qsTr("Anime"), text: qsTr("Trending, seasonal and top lists from AniList, a weekly calendar, and episodes that resume where you stopped.") }
-                        ].filter(c => !Router.animeOnly || c.icon === "tv")
-                        Rectangle {
-                            id: card
+                        model: [{ value: "standard", label: qsTr("Standard") }, { value: "retro", label: qsTr("Retro tiles") }]
+                        AbstractButton {
+                            id: layoutChoice
                             required property var modelData
-                            required property int index
-                            width: Theme.compact || Router.animeOnly ? parent.width : (parent.width - 32) / 3
-                            height: cardColumn.implicitHeight + 40
-                            radius: Theme.radiusLg
-                            color: Theme.surface
-                            border.width: 1
-                            border.color: Theme.border
-                            opacity: 0
-                            transform: Translate { id: lift; y: 24 }
-                            Component.onCompleted: show.start()
-                            SequentialAnimation {
-                                id: show
-                                PauseAnimation { duration: 120 + card.index * 110 }
-                                ParallelAnimation {
-                                    NumberAnimation { target: card; property: "opacity"; to: 1; duration: Motion.slow }
-                                    NumberAnimation { target: lift; property: "y"; to: 0; duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate }
-                                }
-                            }
-                            Column {
-                                id: cardColumn
-                                x: 20
-                                y: 20
-                                width: parent.width - 40
-                                spacing: 12
+                            readonly property bool on: (modelData.value === "retro") === Theme.retro
+                            width: (parent.width - 12) / 2
+                            height: picture.height + 28
+                            focusPolicy: Qt.TabFocus
+                            Accessible.name: modelData.label
+                            Accessible.role: Accessible.RadioButton
+                            Accessible.checked: on
+                            onClicked: App.setSetting("uiMode", modelData.value)
+                            background: null
+                            contentItem: Column {
+                                spacing: 6
                                 Rectangle {
-                                    width: 44; height: 44; radius: 12
-                                    color: Theme.surface2
-                                    Icon { anchors.centerIn: parent; name: card.modelData.icon; size: 22; color: Theme.text }
+                                    id: picture
+                                    width: layoutChoice.width
+                                    height: root.wide ? 88 : 62
+                                    radius: Theme.retro ? 0 : 12
+                                    color: Theme.surface
+                                    border.width: layoutChoice.on ? 2 : 1
+                                    border.color: layoutChoice.on ? (Theme.retro ? Theme.tile : Theme.accent) : Theme.border
+                                    clip: true
+                                    Row {
+                                        visible: layoutChoice.modelData.value === "standard"
+                                        x: 10; y: 10
+                                        spacing: 6
+                                        Rectangle { width: 16; height: picture.height - 20; radius: 4; color: Theme.surface3 }
+                                        Repeater {
+                                            model: 3
+                                            WelcomeArt {
+                                                required property int index
+                                                width: (picture.width - 56) / 3.4
+                                                height: width * 1.4
+                                                seed: index + 2
+                                                source: coverSource.pick(index + 2)
+                                            }
+                                        }
+                                    }
+                                    Text {
+                                        visible: layoutChoice.modelData.value === "retro"
+                                        x: 8; y: -4
+                                        text: "scancore"
+                                        color: Theme.text
+                                        font.family: "Selawik"
+                                        font.weight: Font.Light
+                                        font.pixelSize: root.wide ? 28 : 21
+                                    }
+                                    Grid {
+                                        visible: layoutChoice.modelData.value === "retro"
+                                        x: 10
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 8
+                                        columns: 6
+                                        spacing: 4
+                                        Repeater {
+                                            model: 12
+                                            Rectangle {
+                                                required property int index
+                                                width: root.wide ? 17 : 12; height: width
+                                                color: index % 5 === 1 ? Theme.alpha(Theme.tile, 0.6) : Theme.tile
+                                            }
+                                        }
+                                    }
                                 }
-                                Text { text: card.modelData.title; color: Theme.text; font.family: Theme.fontDisplay; font.pixelSize: Theme.textXl; font.weight: Font.DemiBold }
-                                Text { width: parent.width; text: card.modelData.text; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; wrapMode: Text.Wrap; lineHeight: 1.3 }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // 3. Trackers: the catalogue each page browses, and the trackers to keep
-    // in step. Every connected tracker gets progress for every media.
-    Component {
-        id: trackerStep
-        Flickable {
-            WheelScroll {}
-            contentHeight: trackerColumn.height + 60
-            clip: true
-            Column {
-                id: trackerColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: Math.min(parent.width - 2 * Theme.gutter, 640)
-                spacing: 24
-                Heading {
-                    kicker: qsTr("Trackers")
-                    title: qsTr("Browse and track your way")
-                    body: qsTr("Pick the catalogue each page browses and searches. Connected trackers follow what you finish, whichever you browse with.")
-                }
-                Column {
-                    visible: !Router.animeOnly
-                    spacing: 10
-                    Text { text: qsTr("Comics"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    CataloguePicker { media: "comic" }
-                }
-                Column {
-                    visible: !Router.animeOnly
-                    spacing: 10
-                    Text { text: qsTr("Novels"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    CataloguePicker { media: "novel" }
-                }
-                Column {
-                    spacing: 10
-                    visible: Trackers.malAvailable
-                    Text { text: qsTr("Anime"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    CataloguePicker { media: "anime" }
-                }
-                Column {
-                    width: parent.width
-                    spacing: 4
-                    visible: Trackers.services.length > 0
-                    Text { text: qsTr("Keep your lists in step"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    Repeater {
-                        // The three most used; the others are in Settings → Connections.
-                        model: Trackers.services.filter(t => ["anilist", "mal", "comick"].indexOf(t.key) >= 0 && (!Router.animeOnly || t.key !== "comick")).map(t => ({ service: t.key }))
-                        Item {
-                            required property var modelData
-                            width: trackerColumn.width
-                            height: Math.max(48, connector.height + 12)
-                            Column {
-                                anchors.left: parent.left
-                                anchors.right: connector.left
-                                anchors.rightMargin: 12
-                                anchors.verticalCenter: parent.verticalCenter
-                                Text { text: connector.label; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; font.weight: Font.DemiBold }
                                 Text {
-                                    width: parent.width
-                                    visible: text.length > 0
-                                    text: connector.status
-                                    color: Theme.textMuted
+                                    text: layoutChoice.modelData.label
+                                    color: layoutChoice.on ? Theme.text : Theme.textMuted
                                     font.family: Theme.fontSans
                                     font.pixelSize: Theme.textSm
-                                    wrapMode: Text.Wrap
+                                    font.weight: layoutChoice.on ? Font.DemiBold : Font.Normal
+                                    font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
                                 }
+                            }
+                        }
+                    }
+                }
+                // Theme, as four swatches.
+                Row {
+                    spacing: 10
+                    Repeater {
+                        model: [{ v: "system", l: qsTr("System"), c: ["#f7f7f8", "#0c0c0d"] }, { v: "light", l: qsTr("Light"), c: ["#f7f7f8", "#f7f7f8"] },
+                                { v: "dark", l: qsTr("Dark"), c: ["#1c1c1f", "#1c1c1f"] }, { v: "black", l: qsTr("Black"), c: ["#000000", "#000000"] }]
+                        AbstractButton {
+                            id: swatch
+                            required property var modelData
+                            readonly property bool on: modelData.v === (App.settings.theme || "system")
+                            width: Math.max(52, swatchLabel.implicitWidth)
+                            height: (root.wide ? 50 : 44) + 22
+                            focusPolicy: Qt.TabFocus
+                            Accessible.name: modelData.l
+                            Accessible.role: Accessible.RadioButton
+                            Accessible.checked: on
+                            onClicked: App.setSetting("theme", modelData.v)
+                            background: null
+                            contentItem: Column {
+                                spacing: 5
+                                Rectangle {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    width: root.wide ? 50 : 44; height: width
+                                    radius: Theme.retro ? 0 : width / 2
+                                    border.width: swatch.on ? 2 : 1
+                                    border.color: swatch.on ? (Theme.retro ? Theme.tile : Theme.accent) : Theme.borderStrong
+                                    gradient: Gradient {
+                                        orientation: Gradient.Horizontal
+                                        GradientStop { position: 0.499; color: swatch.modelData.c[0] }
+                                        GradientStop { position: 0.5; color: swatch.modelData.c[1] }
+                                    }
+                                }
+                                Text {
+                                    id: swatchLabel
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: swatch.modelData.l
+                                    color: swatch.on ? Theme.text : Theme.textMuted
+                                    font.family: Theme.fontSans
+                                    font.pixelSize: Theme.textXs
+                                    font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
+                                }
+                            }
+                        }
+                    }
+                }
+                // Accent: Retro's own colours in Retro.
+                Flow {
+                    width: parent.width
+                    spacing: root.wide ? 10 : 8
+                    Repeater {
+                        model: Theme.retro ? ["retro-lime", "retro-cyan", "retro-cobalt", "retro-violet", "retro-magenta", "retro-red", "retro-orange", "retro-amber"]
+                                           : ["mono", "violet", "indigo", "sky", "emerald", "amber", "ember", "rose"]
+                        AbstractButton {
+                            id: accentDot
+                            required property string modelData
+                            readonly property bool on: App.settings.accent === modelData || (!App.settings.accent && modelData === "mono")
+                            width: root.wide ? 34 : 30
+                            height: width
+                            focusPolicy: Qt.TabFocus
+                            Accessible.name: modelData.replace("retro-", "")
+                            Accessible.role: Accessible.RadioButton
+                            Accessible.checked: on
+                            onClicked: App.setSetting("accent", modelData)
+                            background: Rectangle {
+                                radius: Theme.retro ? 0 : width / 2
+                                color: Theme.retro ? Theme.retroAccents[accentDot.modelData]
+                                     : (Theme.dark ? Theme.accents[accentDot.modelData].dark : Theme.accents[accentDot.modelData].light)
+                                Rectangle {
+                                    anchors.fill: parent
+                                    anchors.margins: -4
+                                    radius: Theme.retro ? 0 : width / 2
+                                    color: "transparent"
+                                    border.width: 2
+                                    border.color: Theme.text
+                                    visible: accentDot.on
+                                }
+                            }
+                        }
+                    }
+                }
+                Row {
+                    width: parent.width
+                    spacing: 12
+                    Column {
+                        width: parent.width - glassToggle.width - 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        Text { text: qsTr("Glass"); color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; font.weight: Font.DemiBold; font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase }
+                        Text { width: parent.width; text: qsTr("Menus and sheets show what is behind them"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm; wrapMode: Text.Wrap }
+                    }
+                    Toggle {
+                        id: glassToggle
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked: App.settings.glass === true
+                        Accessible.name: qsTr("Glass")
+                        onToggled: App.setSetting("glass", checked)
+                    }
+                }
+                Row {
+                    width: parent.width
+                    spacing: 12
+                    Text {
+                        width: parent.width - motionToggle.width - 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Reduce motion")
+                        color: Theme.text
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textMd
+                        font.weight: Font.DemiBold
+                        font.capitalization: Theme.retro ? Font.AllLowercase : Font.MixedCase
+                    }
+                    Toggle {
+                        id: motionToggle
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked: App.settings.reducedMotion === true
+                        Accessible.name: qsTr("Reduce motion")
+                        onToggled: App.setSetting("reducedMotion", checked)
+                    }
+                }
+                Column {
+                    visible: false
+                    width: parent.width
+                    spacing: 8
+                    Label { text: qsTr("Comic sources in") }
+                    Select {
+                        width: Math.min(parent.width, 320)
+                        Accessible.name: qsTr("Comic sources in")
+                        model: [{ value: "", label: qsTr("All languages") }].concat(Comics.languages())
+                        value: App.settings.sourceLanguages || ""
+                        onPicked: (v) => App.setSetting("sourceLanguages", v)
+                    }
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------------------ 4. extras
+    Component {
+        id: extrasStep
+        Page {
+            id: extras
+            readonly property var trackers: Trackers.services.filter(t => ["anilist", "mal"].indexOf(t.key) >= 0)
+            readonly property bool allowed: { App.dependOn(Qt.application.state); return Notifications.systemAllowed() }
+            property bool signingIn: false
+            Heading {
+                width: parent.width
+                kicker: qsTr("Optional")
+                title: qsTr("A few extras")
+                body: qsTr("Each takes a tap now, or later in Settings.")
+            }
+            Grid {
+                id: cards
+                width: parent.width
+                columns: root.wide ? 3 : 1
+                columnSpacing: 16
+                rowSpacing: 16
+                readonly property real cell: (width - (columns - 1) * columnSpacing) / columns
+                Card {
+                    visible: extras.trackers.length > 0
+                    width: cards.cell
+                    iconName: "list-checks"
+                    title: qsTr("Keep your lists in step")
+                    body: qsTr("Finishing a chapter or episode moves it forward on your trackers.")
+                    Repeater {
+                        model: extras.trackers.map(t => ({ service: t.key }))
+                        Item {
+                            required property var modelData
+                            width: parent.width
+                            height: Math.max(40, connector.height)
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: connector.left
+                                anchors.rightMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: connector.label
+                                color: Theme.text
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textMd
+                                font.weight: Font.DemiBold
+                                elide: Text.ElideRight
                             }
                             TrackerConnect {
                                 id: connector
@@ -444,255 +1057,59 @@ Rectangle {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    // 4. Extensions: other people's sources, from a repository the reader
-    // already has a link to. Nothing is suggested.
-    Component {
-        id: extensionsStep
-        Flickable {
-            id: extensionsPage
-            WheelScroll {}
-            contentHeight: extensionsColumn.height + 60
-            clip: true
-            readonly property var repositories: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.repositories()) }
-            Column {
-                id: extensionsColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: Math.min(parent.width - 2 * Theme.gutter, 640)
-                spacing: 22
-                Heading {
-                    kicker: qsTr("Extensions")
-                    title: qsTr("Have a repository link?")
-                    body: qsTr("SCANCORE runs extensions made for Mihon and Tachiyomi. Paste a repository link and SCANCORE shows what it holds before adding anything. Extensions are other people's code, so you choose whether to trust each one.")
-                }
-                // Optional: the built-in sources work without any of this.
-                Rectangle {
-                    width: parent.width
-                    height: optionalText.implicitHeight + 24
-                    radius: Theme.radiusMd
-                    color: Theme.alpha(Theme.accent, 0.08)
-                    border.width: 1
-                    border.color: Theme.alpha(Theme.accent, 0.25)
-                    Icon {
-                        id: optionalIcon
-                        x: 14
-                        y: 13
-                        name: "info"
-                        size: 16
-                        color: Theme.accent
-                    }
-                    Text {
-                        id: optionalText
-                        anchors.left: optionalIcon.right
-                        anchors.leftMargin: 10
-                        anchors.right: parent.right
-                        anchors.rightMargin: 14
-                        y: 12
-                        text: Router.animeOnly ? qsTr("This is optional. ENO comes with AniList built in for anime, so you can skip this step and add an anime repository later if you want more.")
-                                               : qsTr("This is optional. SCANCORE comes with its own built-in sources for comics, novels and anime, so you can skip this step and add a repository later if you want more.")
-                        color: Theme.text
-                        font.family: Theme.fontSans
-                        font.pixelSize: Theme.textSm
-                        wrapMode: Text.Wrap
-                    }
-                }
-                Row {
-                    width: parent.width
-                    spacing: 10
-                    SearchField {
-                        id: linkField
-                        width: parent.width - addLink.width - 10
-                        placeholderText: qsTr("Repository link")
-                        onSubmitted: (text) => { if (text.trim()) Router.addRepository(text.trim()) }
-                    }
+                Card {
+                    width: cards.cell
+                    iconName: "cloud"
+                    title: Account.signedIn ? qsTr("You're signed in") : qsTr("A scancore.onl account")
+                    body: Account.signedIn ? qsTr("Signed in as %1. Your library and progress sync.").arg(Account.user.username || Account.user.email)
+                        : qsTr("Your progress on every device, friends, shared lists and reactions. Everything works without one too.")
                     ScButton {
-                        id: addLink
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Add")
-                        iconName: "plus"
-                        enabled: linkField.text.trim().length > 0
-                        onClicked: Router.addRepository(linkField.text.trim())
+                        visible: !Account.signedIn && !extras.signingIn
+                        variant: "primary"
+                        iconName: "user"
+                        text: qsTr("Sign in or create one")
+                        onClicked: extras.signingIn = true
+                    }
+                    Loader {
+                        width: parent.width
+                        active: extras.signingIn && !Account.signedIn
+                        visible: active
+                        sourceComponent: AuthForm {
+                            onDone: extras.signingIn = false
+                        }
                     }
                 }
-                Text {
-                    width: parent.width
-                    text: extensionsPage.repositories.length
-                        ? qsTr("Added: %1").arg(extensionsPage.repositories.map(r => r.name).join(", "))
-                        : Router.animeOnly ? qsTr("No link? Continue; the Extensions page on the Anime tab takes one any time.")
-                                           : qsTr("No link? Continue; the Extensions page on the Comics tab takes one any time.")
-                    color: extensionsPage.repositories.length ? Theme.success : Theme.textMuted
-                    font.family: Theme.fontSans
-                    font.pixelSize: Theme.textSm
-                    wrapMode: Text.Wrap
-                }
-            }
-        }
-    }
-
-    // 5. Look and feel, applied live.
-    Component {
-        id: styleStep
-        Flickable {
-            contentHeight: styleColumn.height + 60
-            clip: true
-            Column {
-                id: styleColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: Math.min(parent.width - 2 * Theme.gutter, 640)
-                spacing: 26
-                Heading {
-                    kicker: qsTr("Make it yours")
-                    title: qsTr("Pick a look")
-                    body: qsTr("Changes apply right away. You can adjust these and much more in Settings.")
-                }
-                Column {
-                    spacing: 10
-                    Text { text: qsTr("Theme"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    Segmented {
-                        options: [{ value: "system", label: qsTr("System"), icon: "monitor" }, { value: "light", label: qsTr("Light"), icon: "sun" },
-                                  { value: "dark", label: qsTr("Dark"), icon: "moon" }, { value: "black", label: qsTr("Black") }]
-                        value: App.settings.theme
-                        onPicked: (v) => App.setSetting("theme", v)
-                    }
-                }
-                Column {
-                    spacing: 10
-                    Text { text: qsTr("Accent"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    Row {
-                        spacing: 14
-                        Repeater {
-                            model: ["mono", "violet", "ember", "sky", "rose"]
-                            Rectangle {
-                                required property string modelData
-                                width: 36; height: 36; radius: 18
-                                color: Theme.dark ? Theme.accents[modelData].dark : Theme.accents[modelData].light
-                                scale: App.settings.accent === modelData ? 1.12 : 1
-                                Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.OutBack } }
-                                Rectangle {
-                                    anchors.fill: parent; anchors.margins: -4; radius: width / 2
-                                    color: "transparent"; border.width: 2; border.color: Theme.text
-                                    visible: App.settings.accent === modelData
-                                }
-                                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: App.setSetting("accent", modelData) }
+                Card {
+                    width: cards.cell
+                    iconName: "bell"
+                    title: qsTr("Get notified")
+                    body: qsTr("New chapters of what you follow, and news from ENO.")
+                    Repeater {
+                        model: [{ key: "notifyUpdates", title: qsTr("New episodes") }, { key: "announcements", title: qsTr("News from ENO") }]
+                        Row {
+                            required property var modelData
+                            width: parent.width
+                            spacing: 12
+                            Text {
+                                width: parent.width - notifyToggle.width - 12
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: modelData.title
+                                color: Theme.text
+                                font.family: Theme.fontSans
+                                font.pixelSize: Theme.textMd
+                                wrapMode: Text.Wrap
+                            }
+                            Toggle {
+                                id: notifyToggle
+                                anchors.verticalCenter: parent.verticalCenter
+                                checked: App.settings[modelData.key] !== false
+                                Accessible.name: modelData.title
+                                onToggled: App.setSetting(modelData.key, checked)
                             }
                         }
                     }
-                }
-                Column {
-                    visible: !Router.animeOnly
-                    spacing: 10
-                    Text { text: qsTr("Comics open as"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    Segmented {
-                        options: [{ value: "strip", label: qsTr("Vertical strip"), icon: "move-vertical" }, { value: "paged", label: qsTr("Pages"), icon: "layers" }]
-                        value: App.settings.readerMode
-                        onPicked: (v) => App.setSetting("readerMode", v)
-                    }
-                }
-                Column {
-                    visible: !Router.animeOnly
-                    spacing: 10
-                    Text { text: qsTr("Comic sources in"); color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm }
-                    Select {
-                        Accessible.name: qsTr("Comic sources in")
-                        model: [{ value: "", label: qsTr("All languages") }].concat(Comics.languages())
-                        value: App.settings.sourceLanguages || ""
-                        onPicked: (v) => App.setSetting("sourceLanguages", v)
-                    }
-                }
-                Row {
-                    spacing: 12
-                    Toggle { checked: App.settings.reducedMotion === true; onToggled: App.setSetting("reducedMotion", checked) }
-                    Text { anchors.verticalCenter: parent.verticalCenter; text: qsTr("Reduce motion"); color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd }
-                }
-            }
-        }
-    }
-
-    // 6. The comic progress bar, picked by looking at it (or none).
-    Component {
-        id: barStep
-        Flickable {
-            contentHeight: barColumn.height + 60
-            clip: true
-            Column {
-                id: barColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: Math.min(parent.width - 2 * Theme.gutter, 640)
-                spacing: 26
-                Heading {
-                    kicker: qsTr("Reading comics")
-                    title: qsTr("Pick a progress bar")
-                    body: qsTr("It shows how far through a chapter you are, and takes you to a page. Colours, edge and strength are in Settings → Reading.")
-                }
-                ProgressBarPicker {
-                    width: parent.width
-                    // Phones: two by two, big enough to tell the bars apart.
-                    tileWidth: Theme.compact ? Math.min(170, Math.floor((width - spacing) / 2)) : Math.min(140, Math.floor((width - 3 * spacing) / 4))
-                }
-            }
-        }
-    }
-
-    // 7. Notifications: what comes in, and the system's permission.
-    Component {
-        id: notifyStep
-        Flickable {
-            id: notifyPage
-            contentHeight: notifyColumn.height + 60
-            clip: true
-            // Read again when SCANCORE comes back from the system's question.
-            readonly property bool allowed: { App.dependOn(Qt.application.state); return Notifications.systemAllowed() }
-            Column {
-                id: notifyColumn
-                x: Theme.gutter
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                width: Math.min(parent.width - 2 * Theme.gutter, 640)
-                spacing: 22
-                Heading {
-                    kicker: qsTr("Stay in the loop")
-                    title: qsTr("Get notified")
-                    body: qsTr("New chapters of what you follow, extension updates and news, in your phone's or computer's notifications.")
-                }
-                Repeater {
-                    model: [
-                        { key: "notifyUpdates", icon: "bell", title: qsTr("New chapters"), detail: qsTr("When the series in your library get new chapters or episodes.") },
-                        { key: "announcements", icon: "megaphone", title: qsTr("News from SCANCORE"), detail: qsTr("Announcements from scancore.onl.") }]
-                    Row {
-                        required property var modelData
-                        width: notifyColumn.width
-                        spacing: 14
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 36; height: 36; radius: 10
-                            color: Theme.surface2
-                            Icon { anchors.centerIn: parent; name: modelData.icon; size: 17; color: Theme.textMuted }
-                        }
-                        Column {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: parent.width - 50 - notifyToggle.width - 14
-                            spacing: 2
-                            Text { width: parent.width; text: modelData.title; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; font.weight: Font.DemiBold; wrapMode: Text.Wrap }
-                            Text { width: parent.width; text: modelData.detail; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textSm; wrapMode: Text.Wrap }
-                        }
-                        Toggle {
-                            id: notifyToggle
-                            anchors.verticalCenter: parent.verticalCenter
-                            checked: App.settings[modelData.key] !== false
-                            onToggled: App.setSetting(modelData.key, checked)
-                        }
-                    }
-                }
-                // Android asks once; the answer shows here.
-                Row {
-                    spacing: 12
                     ScButton {
-                        visible: !notifyPage.allowed
+                        visible: !extras.allowed
                         variant: "primary"
                         iconName: "bell"
                         text: qsTr("Allow notifications")
@@ -702,15 +1119,15 @@ Rectangle {
                         }
                     }
                     Row {
-                        visible: notifyPage.allowed
+                        visible: extras.allowed
                         spacing: 8
-                        Icon { anchors.verticalCenter: parent.verticalCenter; name: "check"; size: 18; color: Theme.success }
+                        Icon { anchors.verticalCenter: parent.verticalCenter; name: "check"; size: 16; color: Theme.success }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: App.platform === "android" ? qsTr("Notifications are allowed") : qsTr("Your system shows them")
                             color: Theme.text
                             font.family: Theme.fontSans
-                            font.pixelSize: Theme.textMd
+                            font.pixelSize: Theme.textSm
                         }
                     }
                 }
@@ -718,109 +1135,98 @@ Rectangle {
         }
     }
 
-    // 8. Account.
-    Component {
-        id: accountStep
-        Flickable {
-            contentHeight: accountRow.height + 60
-            clip: true
-            Item {
-                id: accountRow
-                width: parent.width
-                height: Math.max(accountIntro.height, accountForm.height) + (Theme.compact ? accountIntro.height + 24 : 0)
-                y: Theme.compact ? 24 : Math.max(40, (root.height - footer.height - height) / 2 - 20)
-                Heading {
-                    id: accountIntro
-                    x: Theme.gutter
-                    width: Theme.compact ? parent.width - 2 * Theme.gutter : Math.min(420, parent.width / 2 - Theme.gutter)
-                    kicker: qsTr("Optional")
-                    title: Account.signedIn ? qsTr("You're signed in") : qsTr("Bring your scancore.onl account")
-                    body: Account.signedIn
-                        ? qsTr("Signed in as ") + (Account.user.username || Account.user.email) + qsTr(". Your website library and reading history are syncing into this app.")
-                        : qsTr("Sign in to bring your website library and comic reading history here and keep both in step. Everything works without an account too.")
-                }
-                AuthForm {
-                    id: accountForm
-                    visible: !Account.signedIn
-                    x: Theme.compact ? Theme.gutter : Math.max(accountIntro.x + accountIntro.width + 48, parent.width / 2)
-                    y: Theme.compact ? accountIntro.height + 24 : 0
-                    width: Theme.compact ? parent.width - 2 * Theme.gutter : Math.min(400, parent.width - x - Theme.gutter)
-                    onDone: root.go(root.accountIndex + 1)
-                }
-                ScButton {
-                    visible: Account.signedIn
-                    x: Theme.gutter
-                    y: accountIntro.height + 24
-                    variant: "primary"
-                    text: qsTr("Continue")
-                    onClicked: root.go(root.accountIndex + 1)
-                }
-            }
-        }
-    }
-
-    // 9. Done.
+    // ------------------------------------------------------------ 5. done
     Component {
         id: doneStep
-        Item {
+        Page {
+            id: done
+            columnWidth: Math.min(root.columnWidth, 640)
+            readonly property var mediaNames: ({ anime: qsTr("Anime") })
+            readonly property var connected: Trackers.services.filter(t => t.connected).map(t => t.label)
+            Rectangle {
+                width: 64; height: 64; radius: Theme.retro ? 0 : 32
+                color: Theme.retro ? Theme.tile : Theme.accent
+                scale: 0.4
+                Component.onCompleted: pop.start()
+                NumberAnimation on scale { id: pop; running: false; to: 1; duration: Motion.reduced ? 0 : Motion.page; easing.type: Easing.OutBack }
+                Icon { anchors.centerIn: parent; name: "check"; size: 30; color: Theme.retro ? Theme.tileInk : Theme.accentInk }
+            }
+            Heading {
+                width: parent.width
+                title: qsTr("You're all set")
+                body: qsTr("Here is what you picked. Tap one to change it.")
+            }
+            // The answers, each a way back to its step.
             Column {
-                anchors.centerIn: parent
-                width: Math.min(parent.width - 2 * Theme.gutter, 560)
-                spacing: 24
-                Rectangle {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: 72; height: 72; radius: 36
-                    color: Theme.accent
-                    scale: 0.4
-                    Component.onCompleted: pop.start()
-                    NumberAnimation on scale { id: pop; running: false; to: 1; duration: Motion.page; easing.type: Easing.OutBack }
-                    Icon { anchors.centerIn: parent; name: "check"; size: 34; color: Theme.accentInk }
-                }
-                Text {
-                    width: parent.width
-                    horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("You're all set")
-                    color: Theme.text
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: Theme.compact ? 30 : 40
-                    font.weight: Font.Bold
-                }
-                Column {
-                    width: parent.width
-                    spacing: 12
-                    Repeater {
-                        model: (Theme.touch ? [] : [{ icon: "command", text: qsTr("Press Ctrl+K to search everything or jump anywhere.") }]).concat([
-                            { icon: "bookmark", text: qsTr("Add series to your library and SCANCORE checks them for new chapters.") },
-                            { icon: "download", text: qsTr("Download chapters to read without a connection.") },
-                            { icon: "settings", text: qsTr("Reader layout, novel typography and themes live in Settings.") }
-                        ])
-                        Row {
-                            required property var modelData
+                width: parent.width
+                Repeater {
+                    model: [
+                        { step: 0, icon: "layers", label: qsTr("Reading and watching"), value: root.media.map(m => done.mediaNames[m]).join(", ") },
+                        { step: 1, icon: "download", label: qsTr("Coming from"),
+                          value: root.importResult ? root.importSummary(root.importResult)
+                               : root.from === "new" || !root.from ? qsTr("Starting fresh") : ({ aniyomi: "Aniyomi" })[root.from] },
+                        { step: 2, icon: "palette", label: qsTr("Look"),
+                          value: [Theme.retro ? qsTr("Retro tiles") : qsTr("Standard"),
+                                  ({ system: qsTr("System"), light: qsTr("Light"), dark: qsTr("Dark"), black: qsTr("Black") })[App.settings.theme || "system"] || "",
+                                  App.settings.glass === true ? qsTr("Glass") : ""].filter(s => s).join(" · ") },
+                        { step: 3, icon: "sparkles", label: qsTr("Extras"),
+                          value: [Account.signedIn ? qsTr("Signed in") : "", done.connected.length ? done.connected.join(", ") : "",
+                                  App.settings.notifyUpdates !== false ? qsTr("Notifications on") : qsTr("Notifications off")].filter(s => s).join(" · ") }]
+                    AbstractButton {
+                        id: answer
+                        required property var modelData
+                        width: parent.width
+                        height: Math.max(56, answerText.implicitHeight + 20)
+                        focusPolicy: Qt.TabFocus
+                        hoverEnabled: true
+                        Accessible.name: modelData.label + ": " + modelData.value
+                        onClicked: root.go(modelData.step)
+                        background: Rectangle {
+                            radius: Theme.retro ? 0 : Theme.radiusMd
+                            color: answer.hovered || answer.activeFocus ? Theme.surface2 : "transparent"
+                        }
+                        contentItem: Row {
                             spacing: 14
-                            width: parent.width
-                            Rectangle {
-                                width: 36; height: 36; radius: 10
-                                color: Theme.surface2
-                                Icon { anchors.centerIn: parent; name: modelData.icon; size: 17; color: Theme.textMuted }
-                            }
-                            Text {
+                            leftPadding: 8
+                            Icon { anchors.verticalCenter: parent.verticalCenter; name: answer.modelData.icon; size: 18; color: Theme.textMuted }
+                            Column {
+                                id: answerText
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: parent.width - 50
-                                text: modelData.text
-                                color: Theme.textMuted
-                                font.family: Theme.fontSans
-                                font.pixelSize: Theme.textMd
-                                wrapMode: Text.Wrap
+                                width: answer.width - 84
+                                Text { text: answer.modelData.label; color: Theme.textMuted; font.family: Theme.fontSans; font.pixelSize: Theme.textXs; font.weight: Font.DemiBold }
+                                Text { width: parent.width; text: answer.modelData.value; color: Theme.text; font.family: Theme.fontSans; font.pixelSize: Theme.textMd; wrapMode: Text.Wrap }
                             }
+                            Icon { anchors.verticalCenter: parent.verticalCenter; name: "pencil"; size: 14; color: Theme.textFaint }
                         }
                     }
                 }
+            }
+            // Where to go first, from the answers.
+            Flow {
+                width: parent.width
+                spacing: 10
                 ScButton {
-                    anchors.horizontalCenter: parent.horizontalCenter
                     variant: "primary"
-                    text: qsTr("Start exploring")
                     iconName: "chevron-right"
+                    iconAfter: true
+                    text: qsTr("Start exploring")
                     onClicked: root.finish()
+                }
+                ScButton {
+                    visible: !!root.importResult && root.importResult.imported > 0
+                    iconName: "library"
+                    text: qsTr("Open your library")
+                    onClicked: { root.finish(); Router.go("library") }
+                }
+                Repeater {
+                    model: [{ kind: "anime", section: "anime", icon: "tv", label: qsTr("Watch anime") }].filter(a => root.hasMedia(a.kind))
+                    ScButton {
+                        required property var modelData
+                        variant: "ghost"
+                        iconName: modelData.icon
+                        text: modelData.label
+                        onClicked: { root.finish(); Router.go(modelData.section) }
+                    }
                 }
             }
         }

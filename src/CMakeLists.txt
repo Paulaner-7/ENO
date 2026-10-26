@@ -10,6 +10,12 @@ add_library(scancore_core STATIC
     core/Parallel.cpp
     core/QuietSites.cpp
     core/Text.cpp
+    core/Epub.cpp
+    core/Aes.cpp
+    core/translation/Layout.cpp
+    core/translation/Cloud.cpp
+    core/translation/Onnx.cpp
+    core/translation/LocalMt.cpp
     core/StreamRelay.cpp
     core/VideoSave.cpp
     core/UpdateRules.cpp
@@ -39,6 +45,7 @@ add_library(scancore_core STATIC
     sources/local/LocalComics.cpp
     sources/local/LocalNovels.cpp
     sources/local/MihonLayout.cpp
+    sources/servers/Servers.cpp
     sources/novels/LnCrawl.cpp
     sources/novels/Registry.cpp
     sources/novels/TextBlocks.cpp
@@ -56,6 +63,8 @@ if(SCANCORE_WITH_BUNDLED_SOURCES)
     target_compile_definitions(scancore_core PUBLIC SCANCORE_BUNDLED_SOURCES)
 endif()
 target_include_directories(scancore_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# ONNX Runtime's C API, for the optional on-device translation pack.
+target_include_directories(scancore_core SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/onnxruntime)
 # LNReader plugins: SCANCORE's shims, and the bundled libraries when present.
 set(SCANCORE_PLUGIN_FILES ${PROJECT_SOURCE_DIR}/resources/plugins/prelude.js ${PROJECT_SOURCE_DIR}/resources/plugins/runtime.js)
 if(EXISTS ${PROJECT_SOURCE_DIR}/resources/plugins/vendor.js)
@@ -115,11 +124,11 @@ endif()
 if(NOT SCANCORE_WITH_SYSTEM_WEBVIEW)
     list(REMOVE_ITEM SCANCORE_QML qml/components/WebPlayerSystem.qml)
 endif()
-set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml qml/PlayerPage.qml
+set_source_files_properties(qml/theme/Theme.qml qml/theme/Motion.qml qml/retro/Retro.qml qml/Router.qml qml/Keymap.qml qml/PageLayout.qml qml/VideoPrefs.qml qml/PlayerPage.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(scancore
-    URI ScanCore
+    URI Scancore
     VERSION 1.0
     RESOURCE_PREFIX /qt/qml
     QML_FILES ${SCANCORE_QML}
@@ -141,16 +150,25 @@ qt_add_qml_module(scancore
         app/KeepAwake.cpp app/KeepAwake.h
         app/Profiler.cpp app/Profiler.h
         app/Speech.cpp app/Speech.h
+        app/ReadAloud.cpp app/ReadAloud.h
+        app/MediaControls.cpp app/MediaControls.h
+        app/Translator.cpp app/Translator.h
         app/Trackers.cpp app/Trackers.h app/MoreTrackers.cpp app/TrackerCommon.h
         app/Story.cpp app/Story.h app/Upkeep.cpp app/Upkeep.h
         app/Sync.cpp app/Sync.h
         app/Library.cpp app/Library.h
-        app/Live.cpp app/Live.h
+        app/Live.cpp app/Live.h app/EventStream.h
+        app/Party.cpp app/Party.h
         app/Cast.cpp app/Cast.h
         app/CrashLog.cpp app/CrashLog.h
         app/CastProxy.cpp app/CastProxy.h
         app/Lock.cpp app/Lock.h
         app/MpvPlayer.cpp app/MpvPlayer.h
+        app/Piper.cpp app/Piper.h
+        app/LocalOcr.cpp app/LocalOcr.h
+        app/LocalUpscale.cpp app/LocalUpscale.h
+        app/OnDevice.cpp app/OnDevice.h
+        app/Archive.cpp app/Archive.h
         app/Novels.cpp app/Novels.h
         app/Presence.cpp app/Presence.h
         app/NativeGlass.h
@@ -198,6 +216,11 @@ qt_add_resources(scancore assets
         ${PROJECT_SOURCE_DIR}/resources/fonts/SpaceGrotesk.ttf
         ${PROJECT_SOURCE_DIR}/resources/fonts/Literata.ttf
         ${PROJECT_SOURCE_DIR}/resources/fonts/Literata-Italic.ttf
+        ${PROJECT_SOURCE_DIR}/resources/fonts/Selawik.ttf
+        ${PROJECT_SOURCE_DIR}/resources/fonts/Selawik-Light.ttf
+        ${PROJECT_SOURCE_DIR}/resources/fonts/Selawik-Semilight.ttf
+        ${PROJECT_SOURCE_DIR}/resources/fonts/Selawik-Semibold.ttf
+        ${PROJECT_SOURCE_DIR}/resources/fonts/Selawik-Bold.ttf
         ${PROJECT_SOURCE_DIR}/resources/branding/scancore.svg
         ${PROJECT_SOURCE_DIR}/resources/branding/shadow.png
         ${PROJECT_SOURCE_DIR}/resources/branding/eno-logo-dark.png
@@ -209,6 +232,7 @@ qt_add_resources(scancore assets
         ${PROJECT_SOURCE_DIR}/resources/branding/asciiglyphs.png
         ${PROJECT_SOURCE_DIR}/resources/shaders/cover.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/liquidglass.frag.qsb
+        ${PROJECT_SOURCE_DIR}/resources/shaders/title.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/panel.vert.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/panel.frag.qsb
         ${PROJECT_SOURCE_DIR}/resources/shaders/asciifluid.frag.qsb)
@@ -253,7 +277,7 @@ qt_add_resources(scancore_core manifest
 target_include_directories(scancore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/app ${CMAKE_CURRENT_SOURCE_DIR}/core)
 
 target_link_libraries(scancore PRIVATE
-    scancore_core Qt6::CorePrivate Qt6::Gui Qt6::OpenGL Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
+    scancore_core Qt6::Gui Qt6::OpenGL Qt6::Quick Qt6::QuickControls2 Qt6::Svg Qt6::CorePrivate)
 if(ANDROID)
     # Qt's network stack on Android needs OpenSSL shipped inside the APK.
     include(FetchContent)
@@ -300,6 +324,20 @@ endif()
 if(TARGET Qt6::TextToSpeech)
     target_link_libraries(scancore PRIVATE Qt6::TextToSpeech)
     target_compile_definitions(scancore PRIVATE SCANCORE_HAVE_TTS)
+endif()
+# Neural voices (Piper) come as a .tar.gz on Linux and macOS.
+if(NOT ANDROID AND NOT WIN32)
+    find_package(ZLIB QUIET)
+    if(ZLIB_FOUND)
+        # macOS: the system zlib's headers already come from the SDK on the
+        # default include path. Adding that directory explicitly breaks the
+        # libc++ headers when compiling Objective-C++ (NativeGlass.mm).
+        if(APPLE AND TARGET ZLIB::ZLIB)
+            set_target_properties(ZLIB::ZLIB PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "")
+        endif()
+        target_link_libraries(scancore PRIVATE ZLIB::ZLIB)
+        target_compile_definitions(scancore PRIVATE SCANCORE_HAVE_ZLIB)
+    endif()
 endif()
 if(TARGET Qt6::Pdf)
     target_link_libraries(scancore PRIVATE Qt6::Pdf)

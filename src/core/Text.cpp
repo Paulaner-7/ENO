@@ -6,6 +6,7 @@
 #include <QList>
 #include <QLocale>
 #include <QRegularExpression>
+#include <QTextBoundaryFinder>
 
 namespace sc {
 
@@ -116,6 +117,33 @@ QString chapterPart(const QString &title) {
     const bool cjk = cjkVolume.match(title).hasMatch() && !cjkChapter.match(title).hasMatch();
     const bool latin = latinVolume.match(title).hasMatch() && !numbered;
     return cjk || latin ? QStringLiteral("volume") : QStringLiteral("chapter");
+}
+
+QList<QPair<int, int>> sentenceSpans(const QString &text) {
+    QList<QPair<int, int>> out;
+    const auto add = [&](int from, int to) {
+        while (from < to && text.at(from).isSpace())
+            ++from;
+        while (to > from && text.at(to - 1).isSpace())
+            --to;
+        for (int i = from; i < to; ++i)
+            if (text.at(i).isLetterOrNumber()) {
+                out.append({from, to - from});
+                return;
+            }
+    };
+    QTextBoundaryFinder finder(QTextBoundaryFinder::Sentence, text);
+    int start = 0;
+    while (finder.toNextBoundary() >= 0) {
+        const int end = int(finder.position());
+        if (end <= start)
+            continue;
+        add(start, end);
+        start = end;
+    }
+    if (start < text.size())
+        add(start, int(text.size()));
+    return out;
 }
 
 } // namespace sc

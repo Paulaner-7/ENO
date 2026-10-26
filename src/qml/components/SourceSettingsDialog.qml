@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // An extension source's own settings, as its extension describes them
 // (switches, lists, several choices, text). Each change is saved at once;
@@ -58,9 +58,9 @@ Dialog {
         }
     }
 
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }
@@ -83,6 +83,8 @@ Dialog {
     }
 
     contentItem: Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         implicitHeight: Math.max(80, body.implicitHeight)
         contentHeight: body.implicitHeight
         clip: true

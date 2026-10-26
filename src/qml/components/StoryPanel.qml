@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // One story: a series' other forms (the comic an anime adapts, its novel,
 // every season) with your progress in each, and where each anime season

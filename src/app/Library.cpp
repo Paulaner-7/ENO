@@ -1,4 +1,5 @@
 #include "Library.h"
+#include "sources/servers/Servers.h"
 
 #include "Activity.h"
 #include "App.h"
@@ -185,15 +186,22 @@ void Library::save(const QVariantMap &series, const QString &category) {
     const auto id = series.value(QStringLiteral("id")).toString();
     if (id.isEmpty())
         return;
-    upsertSeries(series);
-    const auto known = Database::scalar(QStringLiteral("SELECT COUNT(*) FROM units WHERE series_id = ?"), {id}).toInt();
-    Database::transaction([&] {
-        Database::query(QStringLiteral("INSERT INTO library(series_id, category, added_at, known_units, changed_at) "
-                                       "VALUES(?, ?, ?, ?, ?) ON CONFLICT(series_id) DO UPDATE SET "
-                                       "category = excluded.category, changed_at = excluded.changed_at"),
-                        {id, category, Database::now(), known, Database::now()});
-        Database::query(QStringLiteral("DELETE FROM library_removed WHERE series_id = ?"), {id});
-    });
+    // Called from QML: a series it cannot store (no source) is refused,
+    // not thrown through the interface (which ends the app).
+    try {
+        upsertSeries(series);
+        const auto known = Database::scalar(QStringLiteral("SELECT COUNT(*) FROM units WHERE series_id = ?"), {id}).toInt();
+        Database::transaction([&] {
+            Database::query(QStringLiteral("INSERT INTO library(series_id, category, added_at, known_units, changed_at) "
+                                           "VALUES(?, ?, ?, ?, ?) ON CONFLICT(series_id) DO UPDATE SET "
+                                           "category = excluded.category, changed_at = excluded.changed_at"),
+                            {id, category, Database::now(), known, Database::now()});
+            Database::query(QStringLiteral("DELETE FROM library_removed WHERE series_id = ?"), {id});
+        });
+    } catch (const Error &e) {
+        qWarning("Library: %s could not be saved: %s", qPrintable(id), e.what());
+        return;
+    }
     notifyChanged();
     emit saved(id);
 }
@@ -437,7 +445,9 @@ const QString kBriefSelect = QStringLiteral(R"(
     SELECT s.id, s.media, s.source, s.source_url AS sourceUrl, s.title, s.cover,
            l.category, l.favourite, l.added_at AS addedAt, l.new_units AS newUnits,
            p.unit_key AS unitKey, p.unit_title AS unitTitle, p.unit_number AS unitNumber,
-           p.percent, p.completed, p.updated_at AS progressAt
+           p.percent, p.completed, p.updated_at AS progressAt,
+           (SELECT COUNT(*) FROM units u WHERE u.series_id = s.id
+                AND NOT EXISTS (SELECT 1 FROM progress q WHERE q.series_id = u.series_id AND q.unit_key = u.unit_key AND q.completed)) AS unread
 )");
 
 Task *Library::entries(const QString &media, bool brief) {
@@ -584,6 +594,11 @@ void Library::saveProgress(const QVariantMap &series, const QVariantMap &unit, c
     if (completed && !wasCompleted) {
         Activity::unitFinished(seriesId.section(QLatin1Char(':'), 0, 0));
         Trackers::unitFinished(seriesId);
+        // The reader's own server is told too.
+        if (series.value(QStringLiteral("source")).toString().startsWith(QLatin1String("server-")))
+            runInBackground([source = series.value(QStringLiteral("source")).toString(), seriesUrl = series.value(QStringLiteral("sourceUrl")).toString(),
+                             chapterUrl = unit.value(QStringLiteral("url")).toString().isEmpty() ? key : unit.value(QStringLiteral("url")).toString(),
+                             number = unit.value(QStringLiteral("number")).toString()] { servers::chapterRead(source, seriesUrl, chapterUrl, number); });
         // "Delete once read": the downloads of chapters finished before this
         // one go (this one may still be open). Mihon's files stay.
         if (App::instance()->settings().value(QStringLiteral("deleteAfterRead")).toBool())

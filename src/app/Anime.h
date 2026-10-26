@@ -110,6 +110,9 @@ public:
     // Opens `video` (as the player has it: url, headers, subtitles, audio,
     // mpvArgs) there, from `startAt` seconds, with what each player takes
     // of its headers and tracks.
+    // Whether openExternally hands the other player SCANCORE's relay (which
+    // stops when SCANCORE closes) rather than the stream itself.
+    Q_INVOKABLE bool relayedExternally(const QVariantMap &video) const;
     Q_INVOKABLE bool openExternally(const QString &player, const QVariantMap &video, const QString &title, double startAt) const;
 
     // For a download (blocking, on a worker): the episode's video as the

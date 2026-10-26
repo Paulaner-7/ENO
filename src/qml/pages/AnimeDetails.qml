@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Anime details: AniList metadata, episodes with thumbnails and progress,
 // related entries and recommendations. An anime opened from an extension's
@@ -11,6 +11,8 @@ Item {
     property int anilistId: 0
     property var summary: ({})
     property bool autoResume: false
+    // Opened for a watch party (Router.openPartyAnime): starts this episode.
+    property real partyEpisode: 0
     property string url: ""
     property string sourceUrl: ""
     readonly property bool fromSource: sourceUrl.length > 0
@@ -54,6 +56,7 @@ Item {
     readonly property var progress: { App.dependOn(page.libraryRevision); return Library.progressMap(seriesId) }
     readonly property bool saved: { App.dependOn(page.libraryRevision); return Library.isSaved(seriesId) }
     property bool descending: false
+    property string tab: "episodes"
     // Long series are shown 100 episodes at a time.
     property int range: 0
     readonly property int rangeSize: 100
@@ -142,7 +145,11 @@ Item {
     Connections {
         target: page.episodesTask
         function onFinished() {
-            if (page.autoResume) {
+            if (page.partyEpisode > 0) {
+                const i = page.episodes.findIndex(e => Number(e.number) === page.partyEpisode)
+                page.partyEpisode = 0
+                page.watch(Math.max(0, i))
+            } else if (page.autoResume) {
                 page.autoResume = false
                 page.watch(page.resumeInfo.index)
             }
@@ -232,14 +239,64 @@ Item {
                     tip: qsTr("Watch from")
                     onClicked: watchFrom.start(page.media, false)
                 }
+                IconButton {
+                    visible: Trackers.anyConnected
+                    iconName: "link"
+                    filled: true
+                    tip: qsTr("Tracking")
+                    onClicked: tracking.open()
+                }
+                // Retro: a tile for it on the hub.
+                IconButton {
+                    readonly property bool pinned: Retro.isPinned(page.seriesId)
+                    visible: Theme.retro && page.seriesId.length > 0
+                    iconName: pinned ? "pin-off" : "pin"
+                    filled: true
+                    tip: pinned ? qsTr("Unpin from the hub") : qsTr("Pin to the hub")
+                    onClicked: pinned ? Retro.unpin(page.seriesId)
+                        : Retro.pin(Object.assign({}, page.series, { id: page.seriesId, media: "anime",
+                                                                     anilistId: page.anilistId || (page.series.extra || {}).anilistId || 0 }), "medium")
+                }
                 Component.onCompleted: Qt.callLater(() => Router.shell.land(header.coverItem))
             }
+            }
+
+            Segmented {
+                x: Theme.gutter
+                // Reviews and discussions are kept by AniList title.
+                visible: !page.fromSource
+                options: [{ value: "episodes", label: qsTr("Episodes") }]
+                    .concat([{ value: "reviews", label: qsTr("Reviews") }, { value: "discussion", label: qsTr("Discussion") }])
+                value: page.tab
+                onPicked: (v) => page.tab = v
+            }
+            Loader {
+                x: Theme.gutter
+                width: parent.width - 2 * Theme.gutter
+                active: page.tab === "reviews"
+                visible: active
+                sourceComponent: Reviews {
+                    media: "anime"
+                    anilistId: page.anilistId
+                    title: page.media.title || ""
+                }
+            }
+            Loader {
+                x: Theme.gutter
+                width: parent.width - 2 * Theme.gutter
+                active: page.tab === "discussion"
+                visible: active
+                sourceComponent: Discussion {
+                    media: "anime"
+                    anilistId: page.anilistId
+                    title: page.media.title || ""
+                }
             }
 
             Item {
                 width: parent.width
                 height: 34
-                visible: page.episodes.length > 0
+                visible: page.tab === "episodes" && page.episodes.length > 0
                 Text {
                     x: Theme.gutter
                     anchors.verticalCenter: parent.verticalCenter
@@ -285,7 +342,7 @@ Item {
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 8
-                visible: page.episodes.length > page.rangeSize
+                visible: page.tab === "episodes" && page.episodes.length > page.rangeSize
                 Repeater {
                     model: Math.ceil(page.episodes.length / page.rangeSize)
                     Chip {
@@ -301,7 +358,7 @@ Item {
 
             Flow {
                 id: episodeFlow
-                visible: true
+                visible: page.tab === "episodes"
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 16

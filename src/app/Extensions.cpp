@@ -412,6 +412,44 @@ QString Extensions::hostLog() const {
     return QFileInfo(path).size() > 0 ? QUrl::fromLocalFile(path).toString() : QString();
 }
 
+Task *Extensions::diagnostics() {
+    const auto logPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/extensions/host.log");
+    const bool installed = runtimeInstalled();
+    const bool available = runtimeAvailable();
+    return Task::run([logPath, installed, available]() -> QVariant {
+        QVariantMap out{{"hostVersion", QString::fromLatin1(ext::Runtime::HostVersion)},
+                        {"runtimeAvailable", available},
+                        {"runtimeInstalled", installed},
+                        {"system", QSysInfo::prettyProductName() + QStringLiteral(" · ") + QSysInfo::currentCpuArchitecture()},
+                        {"qt", QString::fromLatin1(qVersion())}};
+        if (installed) {
+            try {
+                const auto host = ext::requireHost(ext::Kind::Mihon);
+                QElapsedTimer clock;
+                clock.start();
+                out.insert(QStringLiteral("host"), host->call(QStringLiteral("hello"), {}).toObject().toVariantMap());
+                out.insert(QStringLiteral("hostAnswerMs"), clock.elapsed());
+                out.insert(QStringLiteral("networkUse"), host->call(QStringLiteral("networkUse"), {}).toObject().toVariantMap());
+            } catch (const Error &e) {
+                out.insert(QStringLiteral("hostError"), e.message());
+            } catch (const std::exception &e) {
+                out.insert(QStringLiteral("hostError"), QString::fromUtf8(e.what()));
+            }
+        }
+        // The last lines of the host's log (it can be long).
+        QFile log(logPath);
+        if (log.open(QIODevice::ReadOnly)) {
+            if (log.size() > 64 * 1024)
+                log.seek(log.size() - 64 * 1024);
+            auto lines = QString::fromUtf8(log.readAll()).split(QLatin1Char('\n'));
+            if (lines.size() > 120)
+                lines = lines.mid(lines.size() - 120);
+            out.insert(QStringLiteral("log"), lines.join(QLatin1Char('\n')).trimmed());
+        }
+        return out;
+    });
+}
+
 QStringList Extensions::installing() const { return QStringList(m_installing.begin(), m_installing.end()); }
 
 int Extensions::updateCount() const { return int(ext::Manager::updates().size()); }

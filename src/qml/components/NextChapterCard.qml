@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // End-of-chapter card in the comic reader.
 Column {

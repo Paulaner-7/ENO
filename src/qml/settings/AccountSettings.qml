@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // Sync: a scancore.onl account, an account on a SCANCORE sync server you host,
 // a WebDAV folder (Nextcloud, a NAS) or a folder another program keeps in
@@ -38,6 +38,8 @@ SettingsPane {
 
     // Scrolls sideways when the tabs are wider than the pane.
     Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         width: parent.width
         height: methodTabs.height
         contentWidth: methodTabs.width

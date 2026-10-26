@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Time spent in SCANCORE and chapters and episodes finished, on every synced
 // device: today, this week, this month and all time, the streak, a year of
@@ -192,6 +192,12 @@ Item {
                     onPicked: (v) => page.activeTab = v
                 }
 
+                ScButton {
+                    text: qsTr("Friends")
+                    iconName: "users"
+                    variant: "ghost"
+                    onClicked: Router.push("pages/FriendsPage.qml", {})
+                }
                 ScButton {
                     text: qsTr("Your ") + new Date().getFullYear()
                     iconName: "gift"
@@ -392,6 +398,8 @@ Item {
 
                     Flickable {
                         id: heatScroll
+                        maximumFlickVelocity: Motion.flickVelocity
+                        flickDeceleration: Motion.flickDeceleration
                         width: parent.width
                         height: grid.height
                         contentWidth: grid.width

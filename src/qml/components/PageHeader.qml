@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Large page title with an optional subtitle and trailing controls. On
 // phones, or whenever they would leave the title too little room, the
@@ -14,7 +14,7 @@ Item {
     property bool keepBeside: false
     default property alias trailing: trailingRow.data
 
-    readonly property real titleX: showBack ? Theme.gutter + 34 : Theme.gutter
+    readonly property real titleX: showBack && !Theme.retro ? Theme.gutter + 34 : Theme.gutter
     readonly property bool stacked: !keepBeside && trailingRow.width > 0
         && (Theme.compact || width - titleX - Theme.gutter - trailingRow.width - 12 < 240)
     width: parent ? parent.width : 800
@@ -22,7 +22,8 @@ Item {
 
     IconButton {
         id: back
-        visible: header.showBack
+        // Retro has its back button in the app bar.
+        visible: header.showBack && !Theme.retro
         x: Theme.gutter - 8
         y: 26
         iconName: "arrow-left"
@@ -36,14 +37,25 @@ Item {
         y: 24
         width: parent.width - x - Theme.gutter - (header.stacked ? 0 : trailingRow.width + 12)
         spacing: 4
+        // Retro: the app's name small above a big, thin title, as Windows
+        // Phone's pages had.
+        Text {
+            visible: Theme.retro
+            text: "SCANCORE"
+            color: Theme.text
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+            font.weight: Font.DemiBold
+        }
         Text {
             width: parent.width
             text: header.title
             color: Theme.text
             font.family: Theme.fontDisplay
-            font.pixelSize: Theme.text3xl
-            font.weight: Font.Bold
-            font.letterSpacing: -0.6
+            font.pixelSize: Theme.retro ? Math.round(Theme.text3xl * 1.55) : Theme.text3xl
+            font.weight: Theme.retro ? Font.Light : Font.Bold
+            font.letterSpacing: Theme.retro ? -1 : -0.6
+            font.capitalization: Theme.retro ? (Retro.upperCase ? Font.MixedCase : Font.AllLowercase) : Font.MixedCase
             elide: Text.ElideRight
         }
         Text {

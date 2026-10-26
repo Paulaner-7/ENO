@@ -1,18 +1,17 @@
 import QtQuick
 import QtQuick.Window
 import QtWebEngine
-import ScanCore
+import Scancore
 
 // Hosts a provider's player page inside a small wrapper document
 // (PlayerPage). The wrapper polls the player's postMessage API (getTime /
 // seek) so the app can resume, auto-advance and skip intros. Pop-ups and
-// navigation away from the player are blocked; touch screens get the tap
-// shield.
+// navigation away from the player are blocked; taps and clicks go to the
+// player's own controls.
 Item {
     id: root
     property string url
     signal time(real seconds, real total, string status)
-    signal interacted() // phone only; the desktop page watches the mouse itself
     signal key(var press) // WebPlayerSystem only; shortcuts reach the page here
     // This Qt WebEngine cannot decode H.264, which every episode uses. Qt's
     // own packages are built without it; distribution and Flathub ones have it.
@@ -33,7 +32,7 @@ Item {
 
     onUrlChanged: {
         reportedUnsupported = false
-        if (url) web.loadHtml(PlayerPage.wrapper(url, Theme.touch, false), "https://reanime.to/")
+        if (url) web.loadHtml(PlayerPage.wrapper(url, false), "https://reanime.to/")
     }
 
     WebEngineView {

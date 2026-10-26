@@ -1,4 +1,5 @@
 #include "TrackerCommon.h"
+#include "sources/servers/Servers.h"
 
 #include "core/Database.h"
 #include "core/Http.h"
@@ -510,11 +511,29 @@ const QList<Service> &services() {
     return list;
 }
 
-const Service *service(const QString &key) {
-    for (const auto &s : services())
+QList<Service> allServices() {
+    auto out = services();
+    for (const auto &server : servers::load()) {
+        if (server.kind != QLatin1String("komga") && server.kind != QLatin1String("kavita"))
+            continue;
+        Service s;
+        s.key = QStringLiteral("server-") + server.id;
+        s.label = server.label + (server.kind == QLatin1String("komga") ? QStringLiteral(" (Komga)") : QStringLiteral(" (Kavita)"));
+        s.media = {QStringLiteral("comic")};
+        s.available = [] { return true; };
+        s.search = [server](const QString &, const QString &title) { return servers::trackerSearch(server, title); };
+        s.push = [server](const QVariant &id, const QString &, int progress) { servers::trackerPush(server, id, progress); };
+        s.own = true;
+        out.append(s);
+    }
+    return out;
+}
+
+std::optional<Service> service(const QString &key) {
+    for (const auto &s : allServices())
         if (s.key == key)
-            return &s;
-    return nullptr;
+            return s;
+    return std::nullopt;
 }
 
 QVariantMap passwordSignIn(const QString &key, const QString &user, const QString &password) {
@@ -612,7 +631,11 @@ QVariantMap simklWait(const QString &userCode, int seconds, int interval) {
 }
 
 void update(const Service &s, const QString &seriesId, const QString &media, const QString &title, int progress) {
-    if (account(s.key).isEmpty() || !s.media.contains(media) || !s.available())
+    if ((!s.own && account(s.key).isEmpty()) || !s.media.contains(media) || !s.available())
+        return;
+    // Read from that server itself: its chapters are marked read there
+    // directly (servers::chapterRead).
+    if (s.own && seriesId.section(QLatin1Char(':'), 1, 1) == s.key)
         return;
     auto id = allLinks().value(seriesId).toMap().value(s.key).toMap().value("id");
     if (!hasId(id)) {

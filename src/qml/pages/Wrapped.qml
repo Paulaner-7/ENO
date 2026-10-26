@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // SCANCORE Wrapped: the year as a story, one slide at a time across the whole
 // window. Tap the right of the screen (or press →) for the next slide and the

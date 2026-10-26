@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Vertical Flickable with eased mouse-wheel scrolling and touchpad scrolling
 // at the user's speed (WheelScroll).
@@ -14,8 +14,8 @@ Flickable {
     clip: true
     boundsBehavior: Flickable.StopAtBounds
     flickableDirection: Flickable.VerticalFlick
-    maximumFlickVelocity: 4500
-    flickDeceleration: 3500
+    maximumFlickVelocity: Motion.flickVelocity
+    flickDeceleration: Motion.flickDeceleration
     ScrollBar.vertical: ScScrollBar {}
 
     function scrollTo(y, animated) { wheel.scrollTo(y, animated) }

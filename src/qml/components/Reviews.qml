@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Reviews of a series from the account's site (scancore.onl), the same as
 // on the website: the average, everyone's reviews and your own.

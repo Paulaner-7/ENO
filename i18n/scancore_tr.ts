@@ -545,6 +545,10 @@
             <source>Time counts while SCANCORE is in use: in a reader, playing an episode, or browsing. Chapters finished before time was kept come from your reading history.</source>
             <translation>SCANCORE kullanılırken süre sayılır: okuyucuda, bir bölüm oynatırken veya göz atarken. Süre tutulmadan önce bitirilen bölümler okuma geçmişinden gelir.</translation>
         </message>
+        <message>
+            <source>Friends</source>
+            <translation>Arkadaşlar</translation>
+        </message>
     </context>
     <context>
         <name>AddRepositoryDialog</name>
@@ -671,6 +675,14 @@
         <message>
             <source>Skip</source>
             <translation>Atla</translation>
+        </message>
+        <message>
+            <source>music extension</source>
+            <translation>müzik uzantısı</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>müzik uzantıları</translation>
         </message>
     </context>
     <context>
@@ -1032,6 +1044,26 @@
             <source>Waiting: stop</source>
             <translation>Bekliyor: durdur</translation>
         </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>Merkezden kaldır</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Merkeze sabitle</translation>
+        </message>
+        <message>
+            <source>Songs</source>
+            <translation>Şarkılar</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Bu animenin henüz şarkısı yok</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Açılış ve kapanışlar AnimeThemes'ten gelir.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -1138,6 +1170,14 @@
         <message>
             <source>All %1</source>
             <translation>Tümü (%1)</translation>
+        </message>
+        <message>
+            <source>Party %1</source>
+            <translation>Parti %1</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>İzleme partisi</translation>
         </message>
     </context>
     <context>
@@ -1449,6 +1489,34 @@
             <source>All extensions</source>
             <translation>Tüm eklentiler</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Düşük çözünürlüklü bölümler için daha temiz çizgiler ve büyütme.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Düşük çözünürlüklü bölümler için daha temiz çizgiler ve büyütme. En iyi için güçlü bir ekran kartı gerekir.</translation>
+        </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Video çözme</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Kareleri geri kopyalayan donanım çözme her telefonda kararlıdır. Doğrudan biraz daha hafiftir ama bazı telefonlarda sonraki bölümden sonra görüntüyü dondurdu. Sonraki videodan itibaren geçerli.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Donanım (kararlı)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Donanım, doğrudan</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Yazılım</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1596,6 +1664,285 @@
         <message>
             <source>Close</source>
             <translation>Kapat</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Türler</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Temalar</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Biçim</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>İçerik</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Arama filtreleri</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick kataloğu. Filtreler açıkken boş arama kataloğa göz atar.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Filtre yok</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filtre</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filtre</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Temizle</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Uygula</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Sırala</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>En iyi eşleşme</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>En çok takip edilen</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>En çok izlenen</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>En yüksek puanlı</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Ortalama puan</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Yeni bölümler</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Son eklenenler</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Durum</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Herhangi</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Devam ediyor</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Tamamlandı</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>İptal edildi</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Ara verildi</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick'e eklenme</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Herhangi bir zaman</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>Son bir haftada</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Son bir ayda</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Son 3 ayda</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>Son bir yılda</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>En düşük puan</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Yayın</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>Başlangıç yılı</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Bitiş yılı</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Bölümler</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>En az</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>En çok</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Tamamen çevrildi</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Yalnızca serinin bitmesi değil, her bölüm İngilizce çıkmış.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Bölüm sayısı bilinmeyen serileri de göster</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Tür</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Hedef kitle</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Belirtilmemiş</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>İçerik derecesi</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Dahil etmek için bir kez, hariç tutmak için iki kez dokunun</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Genel</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Müstehcen</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Erotik</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornografik</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Ağır şiddet</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Tür veya etiket bul</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>En çok %1 dahil</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Tümünü göster (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Etiketler</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>En çok %1 dahil ve %2 hariç</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Daha fazla etiket</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>“%1” ile eşleşen etiket yok.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Dahil</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Hariç</translation>
         </message>
     </context>
     <context>
@@ -1889,6 +2236,122 @@
             <source>Bottom</source>
             <translation>Alt</translation>
         </message>
+        <message>
+            <source>Finished: </source>
+            <translation>Bitti: </translation>
+        </message>
+        <message>
+            <source>Next: </source>
+            <translation>Sıradaki: </translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Yeni pencerede aç</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>Orijinali göster</translation>
+        </message>
+        <message>
+            <source>Translate the pages</source>
+            <translation>Sayfaları çevir</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse (L)</source>
+            <translation>Fare altında büyüteç (L)</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>Sonraki bölüme geç</translation>
+        </message>
+        <message>
+            <source>Auto-scroll</source>
+            <translation>Otomatik kaydırma</translation>
+        </message>
+        <message>
+            <source>Turn the pages by themselves</source>
+            <translation>Sayfaları kendiliğinden çevir</translation>
+        </message>
+        <message>
+            <source>Auto-scroll speed · %1</source>
+            <translation>Otomatik kaydırma hızı · %1</translation>
+        </message>
+        <message>
+            <source>A page every %1 s</source>
+            <translation>Her %1 sn'de bir sayfa</translation>
+        </message>
+        <message>
+            <source>Sharpen small scans</source>
+            <translation>Küçük taramaları keskinleştir</translation>
+        </message>
+        <message>
+            <source>Light</source>
+            <translation>İnce</translation>
+        </message>
+        <message>
+            <source>Strong</source>
+            <translation>Güçlü</translation>
+        </message>
+        <message>
+            <source>Slower</source>
+            <translation>Daha yavaş</translation>
+        </message>
+        <message>
+            <source>Faster</source>
+            <translation>Daha hızlı</translation>
+        </message>
+        <message>
+            <source>Pause auto-scroll</source>
+            <translation>Otomatik kaydırmayı duraklat</translation>
+        </message>
+        <message>
+            <source>Translate into %1</source>
+            <translation>Şu dile çevir: %1</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>Yanında başka bir şey oku</translation>
+        </message>
+        <message>
+            <source>React to this page</source>
+            <translation>Bu sayfaya tepki ver</translation>
+        </message>
+        <message>
+            <source>Downloading the upscaler (about 15 MB the first time)…</source>
+            <translation>Büyütücü indiriliyor (ilk seferde yaklaşık 15 MB)…</translation>
+        </message>
+        <message>
+            <source>Enlarge downloaded pages (sharper; slower downloads)</source>
+            <translation>İndirilen sayfaları büyüt (daha net; daha yavaş indirme)</translation>
+        </message>
+        <message>
+            <source>Chapters downloaded from now on are enlarged.</source>
+            <translation>Bundan sonra indirilen bölümler büyütülür.</translation>
+        </message>
+        <message>
+            <source>Keys</source>
+            <translation>Tuşlar</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>Bu seri için tuşlar</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Günlük tuşlar</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Daha fazla</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 üzerinde devam et</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Tam ekrandan çık</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -2027,6 +2490,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 hâlâ arıyor</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Arama filtreleri</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filtre açık</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filtre açık</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Temizle</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 kataloğundan %1 eser, filtreli</translation>
         </message>
     </context>
     <context>
@@ -2528,6 +3011,10 @@
             <source>Choose folder</source>
             <translation>Klasör seç</translation>
         </message>
+        <message>
+            <source>Your server: series read from other sources move forward on it too. It is managed in Settings → Sources → Your servers.</source>
+            <translation>Sunucun: başka kaynaklardan okunan seriler onda da ilerler. Ayarlar → Kaynaklar → Sunucuların bölümünden yönetilir.</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2907,6 +3394,121 @@
         </message>
     </context>
     <context>
+        <name>ExtensionsDiagnostics</name>
+        <message>
+            <source>Answered in %1 s with %2 titles.</source>
+            <translation>%1 sn'de %2 başlıkla yanıt verdi.</translation>
+        </message>
+        <message>
+            <source>Failed after %1 s: %2</source>
+            <translation>%1 sn sonra başarısız: %2</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Tanılama</translation>
+        </message>
+        <message>
+            <source>For when an extension misbehaves</source>
+            <translation>Bir uzantı sorun çıkardığında</translation>
+        </message>
+        <message>
+            <source>Copy report</source>
+            <translation>Raporu kopyala</translation>
+        </message>
+        <message>
+            <source>The report is copied. Paste it into an issue or a message.</source>
+            <translation>Rapor kopyalandı. Bir issue'ya ya da mesaja yapıştır.</translation>
+        </message>
+        <message>
+            <source>Refresh</source>
+            <translation>Yenile</translation>
+        </message>
+        <message>
+            <source>Runtime</source>
+            <translation>Ortam</translation>
+        </message>
+        <message>
+            <source>Extensions runtime installed</source>
+            <translation>Eklenti çalışma ortamı yüklendi</translation>
+        </message>
+        <message>
+            <source>Extensions runtime not installed</source>
+            <translation>Uzantı çalışma ortamı yüklü değil</translation>
+        </message>
+        <message>
+            <source>No runtime for this system</source>
+            <translation>Bu sistem için çalışma ortamı yok</translation>
+        </message>
+        <message>
+            <source>Asking the host…</source>
+            <translation>Ev sahibine soruluyor…</translation>
+        </message>
+        <message>
+            <source>Host %1 answered in %2 ms</source>
+            <translation>%1 ortamı %2 ms'de yanıt verdi</translation>
+        </message>
+        <message>
+            <source>Extension libraries it takes</source>
+            <translation>Desteklenen uzantı kitaplıkları</translation>
+        </message>
+        <message>
+            <source>Mihon %1 · Aniyomi %2</source>
+            <translation>Mihon %1 · Aniyomi %2</translation>
+        </message>
+        <message>
+            <source>This device</source>
+            <translation>Bu cihaz</translation>
+        </message>
+        <message>
+            <source>Test a source</source>
+            <translation>Bir kaynağı dene</translation>
+        </message>
+        <message>
+            <source>Loads the source's popular titles once and times it.</source>
+            <translation>Kaynağın popüler başlıklarını bir kez yükler ve süreyi ölçer.</translation>
+        </message>
+        <message>
+            <source>Source</source>
+            <translation>Kaynak</translation>
+        </message>
+        <message>
+            <source>Testing…</source>
+            <translation>Deneniyor…</translation>
+        </message>
+        <message>
+            <source>Test</source>
+            <translation>Dene</translation>
+        </message>
+        <message>
+            <source>Sites the extensions contacted</source>
+            <translation>Uzantıların bağlandığı siteler</translation>
+        </message>
+        <message>
+            <source>This session only, counted in the extensions runtime. Nothing but the sites' names is kept.</source>
+            <translation>Yalnızca bu oturum, uzantı ortamında sayılır. Sitelerin adlarından başka bir şey tutulmaz.</translation>
+        </message>
+        <message>
+            <source>Nothing yet</source>
+            <translation>Henüz bir şey yok</translation>
+        </message>
+        <message>
+            <source>Browse or read with an extension and come back.</source>
+            <translation>Bir uzantıyla göz at veya oku ve geri gel.</translation>
+        </message>
+        <message>
+            <source>%1 · %2 requests, %3</source>
+            <translation>%1 · %2 istek, %3</translation>
+        </message>
+        <message>
+            <source>Host log</source>
+            <translation>Ortam günlüğü</translation>
+        </message>
+        <message>
+            <source>The end of extensions/host.log.</source>
+            <translation>extensions/host.log dosyasının sonu.</translation>
+        </message>
+    </context>
+    <context>
         <name>ExtensionsPage</name>
         <message>
             <source>All languages</source>
@@ -3188,6 +3790,14 @@
             <source>Its extensions</source>
             <translation>Eklentileri</translation>
         </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Tanılama</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -3237,6 +3847,193 @@
         <message>
             <source>Show password</source>
             <translation>Parolayı göster</translation>
+        </message>
+    </context>
+    <context>
+        <name>FriendsPage</name>
+        <message>
+            <source>just now</source>
+            <translation>az önce</translation>
+        </message>
+        <message>
+            <source>%1 min ago</source>
+            <translation>%1 dk önce</translation>
+        </message>
+        <message>
+            <source>%1 h ago</source>
+            <translation>%1 sa önce</translation>
+        </message>
+        <message>
+            <source>%1 days ago</source>
+            <translation>%1 gün önce</translation>
+        </message>
+        <message>
+            <source>%1 shared a list: %2</source>
+            <translation>%1 bir liste paylaştı: %2</translation>
+        </message>
+        <message>
+            <source>%1 watched %2</source>
+            <translation>%1, %2 izledi</translation>
+        </message>
+        <message>
+            <source>%1 read %2</source>
+            <translation>%1, %2 okudu</translation>
+        </message>
+        <message>
+            <source>That list is empty.</source>
+            <translation>Bu liste boş.</translation>
+        </message>
+        <message>
+            <source>Shared. The link is copied: %1</source>
+            <translation>Paylaşıldı. Bağlantı kopyalandı: %1</translation>
+        </message>
+        <message>
+            <source>%1 added to your library; %2 could not be found on your sources.</source>
+            <translation>%1 seri kitaplığına eklendi; %2 seri kaynaklarında bulunamadı.</translation>
+        </message>
+        <message>
+            <source>All of it is in your library already.</source>
+            <translation>Hepsi zaten kitaplığında.</translation>
+        </message>
+        <message>
+            <source>%1 added to your library.</source>
+            <translation>%1 seri kitaplığına eklendi.</translation>
+        </message>
+        <message>
+            <source>Friends</source>
+            <translation>Arkadaşlar</translation>
+        </message>
+        <message>
+            <source>Follow each other on %1 to be friends</source>
+            <translation>Arkadaş olmak için %1 üzerinde birbirinizi takip edin</translation>
+        </message>
+        <message>
+            <source>Sign in (Settings → Sync) to add friends, see what they read and share lists.</source>
+            <translation>Arkadaş eklemek, ne okuduklarını görmek ve liste paylaşmak için giriş yap (Ayarlar → Eşitleme).</translation>
+        </message>
+        <message>
+            <source>You</source>
+            <translation>Sen</translation>
+        </message>
+        <message>
+            <source>Share what I read and watch</source>
+            <translation>Okuduklarımı ve izlediklerimi paylaş</translation>
+        </message>
+        <message>
+            <source>Your friends see the series you read and watch, and the lists you share. Off: they see nothing.</source>
+            <translation>Arkadaşların okuduğun ve izlediğin serileri ve paylaştığın listeleri görür. Kapalı: hiçbir şey görmezler.</translation>
+        </message>
+        <message>
+            <source>Add a friend</source>
+            <translation>Arkadaş ekle</translation>
+        </message>
+        <message>
+            <source>Their username; when they add you too, you are friends. You are @%1.</source>
+            <translation>Kullanıcı adı; o da seni eklediğinde arkadaş olursunuz. Sen @%1'sin.</translation>
+        </message>
+        <message>
+            <source>username</source>
+            <translation>kullanıcı adı</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ekle</translation>
+        </message>
+        <message>
+            <source>You follow @%1.</source>
+            <translation>@%1 kullanıcısını takip ediyorsun.</translation>
+        </message>
+        <message>
+            <source>Asking to be friends</source>
+            <translation>Arkadaşlık isteği gönderildi</translation>
+        </message>
+        <message>
+            <source>Added you</source>
+            <translation>Seni ekledi</translation>
+        </message>
+        <message>
+            <source>Add back</source>
+            <translation>Sen de ekle</translation>
+        </message>
+        <message>
+            <source>No friends yet.</source>
+            <translation>Henüz arkadaş yok.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Kaldır</translation>
+        </message>
+        <message>
+            <source>Waiting for them to add you</source>
+            <translation>Seni eklemesi bekleniyor</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>İptal</translation>
+        </message>
+        <message>
+            <source>What friends read</source>
+            <translation>Arkadaşlar ne okuyor</translation>
+        </message>
+        <message>
+            <source>Nothing yet: friends show here once they share what they read.</source>
+            <translation>Henüz bir şey yok: arkadaşlar okuduklarını paylaştıklarında burada görünür.</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Aç</translation>
+        </message>
+        <message>
+            <source>Shared lists</source>
+            <translation>Paylaşılan listeler</translation>
+        </message>
+        <message>
+            <source>Share a list from your library</source>
+            <translation>Kitaplığından bir liste paylaş</translation>
+        </message>
+        <message>
+            <source>Anyone with the link sees it, and can add it all to their library in SCANCORE.</source>
+            <translation>Bağlantıya sahip olan herkes onu görür ve hepsini SCANCORE'daki kitaplığına ekleyebilir.</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Paylaş</translation>
+        </message>
+        <message>
+            <source>Open a shared list</source>
+            <translation>Paylaşılan bir liste aç</translation>
+        </message>
+        <message>
+            <source>Its link or code.</source>
+            <translation>Bağlantısı veya kodu.</translation>
+        </message>
+        <message>
+            <source>link or code</source>
+            <translation>bağlantı veya kod</translation>
+        </message>
+        <message>
+            <source>%1 series from @%2: %3</source>
+            <translation>@%2 kullanıcısından %1 seri: %3</translation>
+        </message>
+        <message>
+            <source>Add all to my library</source>
+            <translation>Hepsini kitaplığıma ekle</translation>
+        </message>
+        <message>
+            <source>%1 series · shared %2</source>
+            <translation>%1 seri · paylaşıldı %2</translation>
+        </message>
+        <message>
+            <source>Copy link</source>
+            <translation>Bağlantıyı kopyala</translation>
+        </message>
+        <message>
+            <source>Link copied</source>
+            <translation>Bağlantı kopyalandı</translation>
+        </message>
+        <message>
+            <source>Stop sharing</source>
+            <translation>Paylaşmayı durdur</translation>
         </message>
     </context>
     <context>
@@ -3691,6 +4488,166 @@
             <source>A moment of black when a comic page turns clears the last page's ghost.</source>
             <translation>Bir çizgi roman sayfası çevrilirken kısa bir siyah an, önceki sayfanın izini temizler.</translation>
         </message>
+        <message>
+            <source>Highest refresh rate</source>
+            <translation>En yüksek yenileme hızı</translation>
+        </message>
+        <message>
+            <source>Scroll and animate at your screen's fastest rate, such as 120 Hz, instead of the rate the phone picks for apps. Uses a little more battery.</source>
+            <translation>Telefonun uygulamalar için seçtiği hız yerine ekranınızın en yüksek hızında (ör. 120 Hz) kaydırın ve animasyon gösterin. Biraz daha fazla pil kullanır.</translation>
+        </message>
+        <message>
+            <source>Fling glide</source>
+            <translation>Kaydırma süzülmesi</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a swipe.</source>
+            <translation>Listelerin kaydırdıktan sonra ne kadar süre hareket etmeye devam ettiği.</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a touchpad or touch screen swipe.</source>
+            <translation>Listelerin dokunmatik yüzey veya dokunmatik ekranda kaydırdıktan sonra ne kadar süre hareket etmeye devam ettiği.</translation>
+        </message>
+        <message>
+            <source>Short</source>
+            <translation>Kısa</translation>
+        </message>
+        <message>
+            <source>Long</source>
+            <translation>Uzun</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Görünüm</translation>
+        </message>
+        <message>
+            <source>Metro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Metro: Windows Phone tarzında karolar, büyük yazı ve bir uygulama çubuğu içeren panoramik bir merkez.</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>Standart</translation>
+        </message>
+        <message>
+            <source>Pages and navigation</source>
+            <translation>Sayfalar ve gezinme</translation>
+        </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Tiles and panoramas</source>
+            <translation>Karolar ve panoramalar</translation>
+        </message>
+        <message>
+            <source>Hold a tile on the hub to resize, move or unpin it. Series pages have Pin to the hub.</source>
+            <translation>Boyutunu değiştirmek, taşımak veya sabitlemesini kaldırmak için merkezdeki bir karoya basılı tut. Seri sayfalarında Merkeze sabitle var.</translation>
+        </message>
+        <message>
+            <source>Hub title</source>
+            <translation>Merkez başlığı</translation>
+        </message>
+        <message>
+            <source>The big word across the top of the hub.</source>
+            <translation>Merkezin üstündeki büyük kelime.</translation>
+        </message>
+        <message>
+            <source>Title colour</source>
+            <translation>Başlık rengi</translation>
+        </message>
+        <message>
+            <source>Accent blend</source>
+            <translation>Vurgu karışımı</translation>
+        </message>
+        <message>
+            <source>Plain</source>
+            <translation>Sade</translation>
+        </message>
+        <message>
+            <source>Background</source>
+            <translation>Arka plan</translation>
+        </message>
+        <message>
+            <source>Behind the hub, moving slower than the tiles.</source>
+            <translation>Merkezin arkasında, karolardan daha yavaş hareket eder.</translation>
+        </message>
+        <message>
+            <source>Last read</source>
+            <translation>Son okunan</translation>
+        </message>
+        <message>
+            <source>Theme picture</source>
+            <translation>Tema resmi</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>Yok</translation>
+        </message>
+        <message>
+            <source>Headers</source>
+            <translation>Başlıklar</translation>
+        </message>
+        <message>
+            <source>UPPERCASE</source>
+            <translation>BÜYÜK HARF</translation>
+        </message>
+        <message>
+            <source>lowercase</source>
+            <translation>küçük harf</translation>
+        </message>
+        <message>
+            <source>Live tiles</source>
+            <translation>Canlı karolar</translation>
+        </message>
+        <message>
+            <source>Tiles turn over now and then to show new chapters and where you are.</source>
+            <translation>Karolar ara sıra dönerek yeni bölümleri ve nerede kaldığını gösterir.</translation>
+        </message>
+        <message>
+            <source>Hub sections</source>
+            <translation>Merkez bölümleri</translation>
+        </message>
+        <message>
+            <source>Which sections the hub shows, in this order. Four or five are easiest to find your way in.</source>
+            <translation>Merkezin hangi bölümleri bu sırayla gösterdiği. Dört ya da beş bölümle yolunu bulmak en kolayı.</translation>
+        </message>
+        <message>
+            <source>Earlier</source>
+            <translation>Daha önce</translation>
+        </message>
+        <message>
+            <source>Later</source>
+            <translation>Sonra</translation>
+        </message>
+        <message>
+            <source>Retro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Retro: kutucuklar, büyük yazı ve bir uygulama çubuğu olan, Windows Phone tarzında bir panorama merkezi.</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
+        <message>
+            <source>Sections</source>
+            <translation>Bölümler</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Ne okuyup izlediğin</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Sekmeler, Ana sayfa ve Retro merkezi bunları gösterir. Bir bağlantı yine de diğerlerini açar.</translation>
+        </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Müzik (önizleme)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Anime açılış ve kapanışları ve kendi müziğin, sözleriyle; okurken çalmaya devam eden bir oynatıcı. Hâlâ yapım aşamasında.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -3752,6 +4709,74 @@
         <message>
             <source>Back to the default</source>
             <translation>Varsayılana dön</translation>
+        </message>
+        <message>
+            <source>Click a shortcut, then press the new keys. Backspace leaves an action without one; Esc keeps what it had. </source>
+            <translation>Bir kısayola tıkla, sonra yeni tuşlara bas. Geri tuşu bir eylemi tuşsuz bırakır; Esc eskisini korur. </translation>
+        </message>
+        <message>
+            <source>Everyday: </source>
+            <translation>Günlük: </translation>
+        </message>
+        <message>
+            <source>none</source>
+            <translation>yok</translation>
+        </message>
+        <message>
+            <source>Back to the everyday keys</source>
+            <translation>Günlük tuşlara dön</translation>
+        </message>
+        <message>
+            <source>Key profiles</source>
+            <translation>Tuş profilleri</translation>
+        </message>
+        <message>
+            <source>Other keys for the readers, for the series you choose (in the reader's settings, under Keys): one-handed keys for webtoons, say. Keys a profile leaves alone stay as everyday.</source>
+            <translation>Seçtiğin seriler için okuyuculara başka tuşlar (okuyucu ayarlarında, Tuşlar altında): örneğin webtoonlar için tek el tuşları. Bir profilin dokunmadığı tuşlar günlük hâliyle kalır.</translation>
+        </message>
+        <message>
+            <source>Readers' keys below</source>
+            <translation>Okuyucu tuşları aşağıda</translation>
+        </message>
+        <message>
+            <source>Changing the profile “%1”</source>
+            <translation>“%1” profili değiştiriliyor</translation>
+        </message>
+        <message>
+            <source>Changing the everyday keys</source>
+            <translation>Günlük tuşlar değiştiriliyor</translation>
+        </message>
+        <message>
+            <source>Key profile</source>
+            <translation>Tuş profili</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Günlük tuşlar</translation>
+        </message>
+        <message>
+            <source>Delete</source>
+            <translation>Sil</translation>
+        </message>
+        <message>
+            <source>New profile</source>
+            <translation>Yeni profil</translation>
+        </message>
+        <message>
+            <source>Starts as the everyday keys</source>
+            <translation>Günlük tuşlarla başlar</translation>
+        </message>
+        <message>
+            <source>Name, e.g. Webtoons</source>
+            <translation>Ad, ör. Webtoonlar</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ekle</translation>
+        </message>
+        <message>
+            <source>There is a profile with that name already.</source>
+            <translation>Bu adda bir profil zaten var.</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +4924,14 @@
         <message>
             <source>Anime player</source>
             <translation>Anime oynatıcı</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse</source>
+            <translation>Fare altında büyüteç</translation>
+        </message>
+        <message>
+            <source>Auto-scroll on or off</source>
+            <translation>Otomatik kaydırmayı aç veya kapat</translation>
         </message>
     </context>
     <context>
@@ -4271,6 +5304,18 @@
             <source>Undo</source>
             <translation>Geri al</translation>
         </message>
+        <message>
+            <source>Most unwatched</source>
+            <translation>En çok izlenmemiş</translation>
+        </message>
+        <message>
+            <source>Most unread</source>
+            <translation>En çok okunmamış</translation>
+        </message>
+        <message>
+            <source>Hide until there is something new</source>
+            <translation>Yeni bir şey olana kadar gizle</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4574,6 +5619,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Enstrümantal: eşlik edilecek söz yok.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Sözler yüklenemedi. Bağlantıyı kontrol et.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Bu şarkının henüz sözleri yok.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Sözler LRCLIB'den gelir, topluluğu tarafından yazılır.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -4646,6 +5710,14 @@
         <message>
             <source>Continue</source>
             <translation>Devam</translation>
+        </message>
+        <message>
+            <source>The host moved on to %1</source>
+            <translation>Ev sahibi %1 içeriğine geçti</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Aç</translation>
         </message>
     </context>
     <context>
@@ -4884,6 +5956,168 @@
             <source>Choose</source>
             <translation>Seç</translation>
         </message>
+        <message>
+            <source>Also the other extension you had in %1</source>
+            <translation>%1 içindeki diğer uzantı da</translation>
+        </message>
+        <message>
+            <source>Also the %1 other extensions you had in %2</source>
+            <translation>%2 içindeki diğer %1 uzantı da</translation>
+        </message>
+        <message>
+            <source>Install the extension you had in %1</source>
+            <translation>%1 içindeki uzantıyı yükle</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions you had in %2</source>
+            <translation>%2 içindeki %1 uzantıyı yükle</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>Şimdi çalıyor: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Oynat</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Sonraki</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Durdur</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Sözleriyle şarkılar · önizleme</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Anime şarkıları</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Dosyaların</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Şarkılarında ara</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Şarkı, şarkıcı ya da anime ara</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Bu klasörü artık listeleme</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Başka bir klasör ekle</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Müzik klasörü ekle</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Yeniden ara</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Sözler</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1” için şarkılar</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Şarkıların</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Bu sezon</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Tümünü çal</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Müziğinin olduğu bir klasör ekle</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Şarkı bulunamadı</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Bu klasörlerde müzik yok</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Kapaklarıyla MP3, FLAC, Ogg, Opus ve M4A dosyaları ve yanlarındaki .lrc dosyalarından sözler. Hiçbir şey kopyalanmaz.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Anime şarkıları şimdilik kapalı</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Animenin romaji adını ya da şarkıcıyı dene.</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Eklentiler</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Müzik uzantılarında ara</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Popüler</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Henüz müzik uzantısı yok</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Bir şarkı ara</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Uzantılar bölümünde bir müzik uzantısı deposu ekle, sonra birini yükle. SCANCORE hiçbiriyle birlikte gelmez.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Bu uzantıların kendi listesi yok; yukarıdan ara.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Uzantıları aç</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -4990,6 +6224,77 @@
         <message>
             <source>Settings</source>
             <translation>Ayarlar</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Hızlı</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Çoğu ekran kartı</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>En iyi</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Güçlü bir ekran kartı gerekir</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Keskinleştir (Anime4K)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NeuralVoicesDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>Başlatılıyor…</translation>
+        </message>
+        <message>
+            <source>Voice ready: choose it under Voice.</source>
+            <translation>Ses hazır: Ses altından seç.</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>Nöral sesler</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Natural voices that read on this computer, with no internet once downloaded. The first one also brings the voice program (Piper, about 25 MB).</source>
+            <translation>Bu bilgisayarda okuyan, indirildikten sonra internet gerektirmeyen doğal sesler. İlki ses programını da getirir (Piper, yaklaşık 25 MB).</translation>
+        </message>
+        <message>
+            <source>Find a voice or language</source>
+            <translation>Ses veya dil bul</translation>
+        </message>
+        <message>
+            <source>Best quality</source>
+            <translation>En iyi kalite</translation>
+        </message>
+        <message>
+            <source>Good quality</source>
+            <translation>İyi kalite</translation>
+        </message>
+        <message>
+            <source>Smaller</source>
+            <translation>Daha küçük</translation>
+        </message>
+        <message>
+            <source>Smallest</source>
+            <translation>En küçük</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Kaldır</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>İndir</translation>
         </message>
     </context>
     <context>
@@ -5239,6 +6544,106 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>Okunan paragrafı ekranda tut</translation>
         </message>
+        <message>
+            <source>Sleep timer: reading aloud stopped</source>
+            <translation>Uyku zamanlayıcısı: sesli okuma durdu</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>Önceki cümle</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>Sesli okumaya devam et</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>Sonraki cümle</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at %1</source>
+            <translation>Uyku zamanlayıcısı: %1'de durur</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at the end of the chapter</source>
+            <translation>Uyku zamanlayıcısı: bölüm sonunda durur</translation>
+        </message>
+        <message>
+            <source>Sleep timer</source>
+            <translation>Uyku zamanlayıcısı</translation>
+        </message>
+        <message>
+            <source>Off</source>
+            <translation>Kapalı</translation>
+        </message>
+        <message>
+            <source>In 15 minutes</source>
+            <translation>15 dakika sonra</translation>
+        </message>
+        <message>
+            <source>In 30 minutes</source>
+            <translation>30 dakika sonra</translation>
+        </message>
+        <message>
+            <source>In 45 minutes</source>
+            <translation>45 dakika sonra</translation>
+        </message>
+        <message>
+            <source>In an hour</source>
+            <translation>Bir saat sonra</translation>
+        </message>
+        <message>
+            <source>At the end of the chapter</source>
+            <translation>Bölümün sonunda</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Yeni pencerede aç</translation>
+        </message>
+        <message>
+            <source>Pause reading aloud</source>
+            <translation>Sesli okumayı duraklat</translation>
+        </message>
+        <message>
+            <source>Translating…</source>
+            <translation>Çevriliyor…</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>Orijinali göster</translation>
+        </message>
+        <message>
+            <source>Translate the chapter</source>
+            <translation>Bölümü çevir</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>Okunan cümleyi vurgula</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs · %1 s</source>
+            <translation>Paragraflar arası duraklama · %1 sn</translation>
+        </message>
+        <message>
+            <source>Pause between sentences · %1 s</source>
+            <translation>Cümleler arası duraklama · %1 sn</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>Yanında başka bir şey oku</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>Bu seri için tuşlar</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Günlük tuşlar</translation>
+        </message>
     </context>
     <context>
         <name>NovelsPage</name>
@@ -5361,6 +6766,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Tüm dosyalar (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>Şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Şarkıya dön</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Videoyu izle</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Konum</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Karıştırma açık</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Karıştırma kapalı</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Önceki</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Oynat</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Sonraki</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Bu şarkıyı tekrarla</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Sırayı tekrarla</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Tekrar kapalı</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Şarkı</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Sözler</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>Sıra</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>Sırada 1 şarkı</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>Sırada %1 şarkı</translation>
         </message>
     </context>
     <context>
@@ -5495,7 +6979,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -5637,6 +7121,397 @@
             <source>Your system shows them</source>
             <translation>Sistemin bunları gösteriyor</translation>
         </message>
+        <message>
+            <source>Layout</source>
+            <translation>Düzen</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>Standart</translation>
+        </message>
+        <message>
+            <source>Metro tiles</source>
+            <translation>Metro karoları</translation>
+        </message>
+        <message>
+            <source>Retro tiles</source>
+            <translation>Retro kutucukları</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 seri eklendi</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 seri eklendi</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 bölüm işaretlendi</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 uzantı yüklendi</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 indirilmiş bölüm bağlandı</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 seri bulunmayı bekliyor</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader yedeği (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Tüm dosyalar (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon, Komikku, TachiyomiSY, Tachiyomi veya Aniyomi yedeği (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>atla</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Atla</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Karşılamayı kapat ve SCANCORE'u kullanmaya başla</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>şimdi değil</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Şimdi değil</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>ileri</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Adım %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>geri</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Hoş geldin</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Ne okuyup izliyorsun?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>İstediklerini seç. Sekmeler ve Ana sayfa buna uyar, Ayarlar → Arayüz gerisini geri getirir.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga ve webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Web romanları ve EPUB kitapların</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Kaldığın yerden devam eden bölümler</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Geçiş mi yapıyorsun?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Başka bir uygulamadan mı geliyorsun?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Kütüphanen, indirilenlerin ve eklentilerin tek seferde gelir.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Kütüphane, indirilenler ve eklentiler tek seferde.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Burada yeniyim</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Aramıza hoş geldin</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 uygulamasından</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader içinde: Daha fazla → Yedekleme → Yedek oluştur. Sonra dosyayı burada seç.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 içinde: Daha fazla → Ayarlar → Yedekleme ve geri yükleme → Yedek oluştur. Sonra dosyayı burada seç.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Yedek</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Kütüphanen taşınıyor…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Yedek okunuyor…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 çizgi roman ve %2 anime · %3 eklenti kurulacak</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Serilerin, listelerin, ilerlemen ve takipçilerin.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Başka</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Yedek seç</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>İndirilenler klasörü</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Değiştir</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Seç</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Serilerinin geldiği eklentiler ve depolar yedekle birlikte sunulur, böylece aynı kaynaklarda açılırlar.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE çizgi roman, roman ve anime için kendi kaynaklarıyla gelir. Bir eklenti deposu bağlantın varsa buraya ekleyebilirsin; Eklentiler sayfası onu her zaman alır.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Cam</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Menüler ve paneller arkalarındakini gösterir</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Okuyucuyu dene</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Örneği kaydır, çubuğa dokun ve sana uyanı seç. Hepsi Ayarlar → Okuma'da da var.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>İlerleme çubuğu</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Birkaç ekstra</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Her biri şimdi tek dokunuş, ya da sonra Ayarlar'da.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Bir bölümü bitirmek onu takipçilerinde de ilerletir.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Bir scancore.onl hesabı</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 olarak giriş yapıldı. Kütüphanen ve ilerlemen eşitlenir.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Her cihazda ilerlemen, arkadaşlar, paylaşılan listeler ve tepkiler. Her şey hesapsız da çalışır.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Giriş yap ya da hesap oluştur</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Takip ettiklerinin yeni bölümleri ve SCANCORE'dan haberler.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Yeni bölümler ve epizotlar</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Seçtiklerin bunlar. Değiştirmek için birine dokun.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Okuma ve izleme</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Geldiğin yer</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Sıfırdan başlıyor</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Görünüm</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Okuyucu</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>İlerleme çubuğu yok</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Sayfa çubuğu</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Çizgi</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Yüzen çubuk</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Ekstralar</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Oturum açıldı</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Bildirimler açık</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Bildirimler kapalı</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Kütüphaneni aç</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Çizgi romanlara göz at</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Anime izle</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Roman oku</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Ne okuyor, izliyor ve dinliyorsun?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Anime şarkıları ve kendi şarkıların, sözleriyle</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Müzik çal</translation>
+        </message>
+    </context>
+    <context>
+        <name>OnDeviceDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>Başlatılıyor…</translation>
+        </message>
+        <message>
+            <source>Ready: pages in this language can be translated on this computer.</source>
+            <translation>Hazır: bu dildeki sayfalar bu bilgisayarda çevrilebilir.</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>Bu bilgisayarda çevir</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.</source>
+            <translation>Her dil, sayfalarını okumak ve %1 diline çevirmek için gerekenleri getirir: yaklaşık 140 MB. Hiçbir yere bir şey gönderilmez. İşi ONNX Runtime (Microsoft), PaddleOCR ve Opus-MT yapar.</translation>
+        </message>
+        <message>
+            <source>Find a language</source>
+            <translation>Dil bul</translation>
+        </message>
+        <message>
+            <source>Ready · through English</source>
+            <translation>Hazır · İngilizce üzerinden</translation>
+        </message>
+        <message>
+            <source>Ready</source>
+            <translation>Hazır</translation>
+        </message>
+        <message>
+            <source>About %1 MB</source>
+            <translation>Yaklaşık %1 MB</translation>
+        </message>
+        <message>
+            <source>Nothing more to download</source>
+            <translation>İndirilecek başka bir şey yok</translation>
+        </message>
+        <message>
+            <source> · through English</source>
+            <translation> · İngilizce üzerinden</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Kaldır</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>İndir</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5722,6 +7597,117 @@
         <message>
             <source>Remove</source>
             <translation>Kaldır</translation>
+        </message>
+    </context>
+    <context>
+        <name>PartyPanel</name>
+        <message>
+            <source>Watch together</source>
+            <translation>Birlikte izle</translation>
+        </message>
+        <message>
+            <source>Everyone watches from their own source; the host's player steers the others.</source>
+            <translation>Herkes kendi kaynağından izler; ev sahibinin oynatıcısı diğerlerini yönetir.</translation>
+        </message>
+        <message>
+            <source>You are the host: your player steers everyone's.</source>
+            <translation>Ev sahibi sensin: oynatıcın herkesinkini yönetir.</translation>
+        </message>
+        <message>
+            <source>Playing along with %1</source>
+            <translation>%1 ile birlikte izleniyor</translation>
+        </message>
+        <message>
+            <source>Waiting for the host…</source>
+            <translation>Ev sahibi bekleniyor…</translation>
+        </message>
+        <message>
+            <source>Joining…</source>
+            <translation>Katılınıyor…</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Sign in to scancore.onl (Settings → Account) to watch together.</source>
+            <translation>Birlikte izlemek için scancore.onl'a giriş yap (Ayarlar → Hesap).</translation>
+        </message>
+        <message>
+            <source>Starting…</source>
+            <translation>Başlatılıyor…</translation>
+        </message>
+        <message>
+            <source>Start a watch party</source>
+            <translation>Bir izleme partisi başlat</translation>
+        </message>
+        <message>
+            <source>Or join one</source>
+            <translation>Ya da birine katıl</translation>
+        </message>
+        <message>
+            <source>Join a watch party</source>
+            <translation>Bir izleme partisine katıl</translation>
+        </message>
+        <message>
+            <source>Party code</source>
+            <translation>Parti kodu</translation>
+        </message>
+        <message>
+            <source>Join</source>
+            <translation>Katıl</translation>
+        </message>
+        <message>
+            <source>Copy the code</source>
+            <translation>Kodu kopyala</translation>
+        </message>
+        <message>
+            <source>Code copied</source>
+            <translation>Kod kopyalandı</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Paylaş</translation>
+        </message>
+        <message>
+            <source>Watch %1 with me in SCANCORE: join the party with the code %2</source>
+            <translation>SCANCORE'da %1'i benimle izle: %2 koduyla partiye katıl</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>İzleme partisi</translation>
+        </message>
+        <message>
+            <source>The host is watching %1, episode %2</source>
+            <translation>Ev sahibi %1 izliyor, bölüm %2</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Aç</translation>
+        </message>
+        <message>
+            <source>host</source>
+            <translation>ev sahibi</translation>
+        </message>
+        <message>
+            <source>Say hello: everyone in the party sees it.</source>
+            <translation>Merhaba de: partideki herkes görür.</translation>
+        </message>
+        <message>
+            <source>Message</source>
+            <translation>Mesaj</translation>
+        </message>
+        <message>
+            <source>Send</source>
+            <translation>Gönder</translation>
+        </message>
+        <message>
+            <source>End the party</source>
+            <translation>Partiyi bitir</translation>
+        </message>
+        <message>
+            <source>Leave the party</source>
+            <translation>Partiden ayrıl</translation>
         </message>
     </context>
     <context>
@@ -5906,6 +7892,144 @@
         <message>
             <source>None</source>
             <translation>Yok</translation>
+        </message>
+    </context>
+    <context>
+        <name>QObject</name>
+        <message>
+            <source>Android could not read the page: %1</source>
+            <translation>Android sayfayı okuyamadı: %1</translation>
+        </message>
+        <message>
+            <source>This device has no text recogniser.</source>
+            <translation>Bu cihazda metin tanıma yok.</translation>
+        </message>
+        <message>
+            <source>Android's translator needs to know the language: pick it in the reader.</source>
+            <translation>Android'in çevirmeninin dili bilmesi gerekiyor: okuyucuda seç.</translation>
+        </message>
+        <message>
+            <source>Android could not translate: %1</source>
+            <translation>Android çeviremedi: %1</translation>
+        </message>
+        <message>
+            <source>This device has no translator of its own.</source>
+            <translation>Bu cihazın kendi çevirmeni yok.</translation>
+        </message>
+        <message>
+            <source>Pick a way to translate in Settings → Reading → Translate.</source>
+            <translation>Ayarlar → Okuma → Çeviri'den bir çeviri yolu seç.</translation>
+        </message>
+        <message>
+            <source>The page's picture could not be read.</source>
+            <translation>Sayfanın görseli okunamadı.</translation>
+        </message>
+        <message>
+            <source>%1 refused the key. Check it in Settings → Reading → Translate.</source>
+            <translation>%1 anahtarı reddetti. Ayarlar → Okuma → Çeviri'den kontrol et.</translation>
+        </message>
+        <message>
+            <source>%1 says the key's quota is used up for now.</source>
+            <translation>%1, anahtarın kotasının şimdilik dolduğunu söylüyor.</translation>
+        </message>
+        <message>
+            <source>%1 could not be reached.</source>
+            <translation>%1 adresine ulaşılamadı.</translation>
+        </message>
+        <message>
+            <source>%1 answered with an error (%2).</source>
+            <translation>%1 bir hatayla yanıt verdi (%2).</translation>
+        </message>
+        <message>
+            <source>DeepL needs your key (Settings → Reading → Translate).</source>
+            <translation>DeepL'in anahtarına ihtiyacı var (Ayarlar → Okuma → Çeviri).</translation>
+        </message>
+        <message>
+            <source>DeepL answered with something else than the texts.</source>
+            <translation>DeepL metinlerden farklı bir şeyle yanıt verdi.</translation>
+        </message>
+        <message>
+            <source>Google Translate needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Çeviri'nin API anahtarına ihtiyacı var (Ayarlar → Okuma → Çeviri).</translation>
+        </message>
+        <message>
+            <source>Google Translate answered with something else than the texts.</source>
+            <translation>Google Çeviri metinlerden farklı bir şeyle yanıt verdi.</translation>
+        </message>
+        <message>
+            <source>Set the service's address and model in Settings → Reading → Translate.</source>
+            <translation>Hizmetin adresini ve modelini Ayarlar → Okuma → Çeviri'den ayarla.</translation>
+        </message>
+        <message>
+            <source>The model did not answer with one translation per text. Try another model.</source>
+            <translation>Model her metin için bir çeviriyle yanıt vermedi. Başka bir model dene.</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Cloud Vision'ın API anahtarına ihtiyacı var (Ayarlar → Okuma → Çeviri).</translation>
+        </message>
+        <message>
+            <source>MangaSin changed its series page: no chapter list found.</source>
+            <translation>MangaSin seri sayfasını değiştirdi: bölüm listesi bulunamadı.</translation>
+        </message>
+        <message>
+            <source>MangaSin's chapter list could not be opened (its key changed).</source>
+            <translation>MangaSin'in bölüm listesi açılamadı (anahtarı değişti).</translation>
+        </message>
+        <message>
+            <source>%1 refused the login. Check it in Settings → Sources → Your servers.</source>
+            <translation>%1 girişi reddetti. Ayarlar → Kaynaklar → Sunucuların'dan kontrol et.</translation>
+        </message>
+        <message>
+            <source>This server is no longer in Settings → Sources → Your servers.</source>
+            <translation>Bu sunucu artık Ayarlar → Kaynaklar → Sunucuların içinde değil.</translation>
+        </message>
+        <message>
+            <source>The server did not give the image (%1).</source>
+            <translation>Sunucu görseli vermedi (%1).</translation>
+        </message>
+        <message>
+            <source>The image could not be saved.</source>
+            <translation>Görsel kaydedilemedi.</translation>
+        </message>
+    </context>
+    <context>
+        <name>ReadAloudBar</name>
+        <message>
+            <source>Reading aloud: %1</source>
+            <translation>Sesli okunuyor: %1</translation>
+        </message>
+        <message>
+            <source>Loading the chapter…</source>
+            <translation>Bölüm yükleniyor…</translation>
+        </message>
+        <message>
+            <source>stops at %1</source>
+            <translation>%1'de durur</translation>
+        </message>
+        <message>
+            <source>stops after this chapter</source>
+            <translation>bu bölümden sonra durur</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>Önceki cümle</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Duraklat</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>Sesli okumaya devam et</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>Sonraki cümle</translation>
+        </message>
+        <message>
+            <source>Stop reading aloud</source>
+            <translation>Sesli okumayı durdur</translation>
         </message>
     </context>
     <context>
@@ -6449,6 +8573,174 @@
             <source>Colours</source>
             <translation>Renkler</translation>
         </message>
+        <message>
+            <source>Full screen while reading</source>
+            <translation>Okurken tam ekran</translation>
+        </message>
+        <message>
+            <source>The status and navigation bars hide with the reader's controls, so pages fill the screen, beside a punch hole too. Swipe from the edge to see them.</source>
+            <translation>Durum ve gezinme çubukları okuyucunun kontrolleriyle birlikte gizlenir, böylece sayfalar ekranı doldurur, kamera deliğinin yanında da. Görmek için kenardan kaydır.</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>Sonraki bölüme geç</translation>
+        </message>
+        <message>
+            <source>The next chapter joins the strip as you near the end, so reading never stops for a button.</source>
+            <translation>Sonraki bölüm sona yaklaşırken şeride eklenir, böylece okuma hiçbir zaman bir düğme için durmaz.</translation>
+        </message>
+        <message>
+            <source>Translate</source>
+            <translation>Çevir</translation>
+        </message>
+        <message>
+            <source>Comic readers have Translate the pages in their top bar. Keys stay on this device and are only sent to their own service.</source>
+            <translation>Çizgi roman okuyucularının üst çubuğunda Sayfaları çevir var. Anahtarlar bu cihazda kalır ve yalnızca kendi hizmetlerine gönderilir.</translation>
+        </message>
+        <message>
+            <source>Translate into</source>
+            <translation>Şu dile çevir</translation>
+        </message>
+        <message>
+            <source>Read the page's text with</source>
+            <translation>Sayfanın metnini şununla oku</translation>
+        </message>
+        <message>
+            <source>Finds the text in a comic's pages.</source>
+            <translation>Bir çizgi romanın sayfalarındaki metni bulur.</translation>
+        </message>
+        <message>
+            <source>Translate with</source>
+            <translation>Şununla çevir</translation>
+        </message>
+        <message>
+            <source>DeepL key</source>
+            <translation>DeepL anahtarı</translation>
+        </message>
+        <message>
+            <source>From your DeepL account (free keys end in :fx).</source>
+            <translation>DeepL hesabından (ücretsiz anahtarlar :fx ile biter).</translation>
+        </message>
+        <message>
+            <source>Not set</source>
+            <translation>Ayarlanmadı</translation>
+        </message>
+        <message>
+            <source>Google Cloud key</source>
+            <translation>Google Cloud anahtarı</translation>
+        </message>
+        <message>
+            <source>An API key with Cloud Translation and Cloud Vision turned on.</source>
+            <translation>Cloud Translation ve Cloud Vision açık bir API anahtarı.</translation>
+        </message>
+        <message>
+            <source>Language model</source>
+            <translation>Dil modeli</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service: its address up to /v1 (a local Ollama is http://localhost:11434/v1), a model and a key if it needs one.</source>
+            <translation>OpenAI uyumlu herhangi bir hizmet: /v1'e kadar adresi (yerel bir Ollama http://localhost:11434/v1), bir model ve gerekiyorsa bir anahtar.</translation>
+        </message>
+        <message>
+            <source>Model, e.g. gpt-4o-mini</source>
+            <translation>Model, örn. gpt-4o-mini</translation>
+        </message>
+        <message>
+            <source>Key (if it needs one)</source>
+            <translation>Anahtar (gerekiyorsa)</translation>
+        </message>
+        <message>
+            <source>Forget translations</source>
+            <translation>Çevirileri unut</translation>
+        </message>
+        <message>
+            <source>Pages and chapters are translated again the next time.</source>
+            <translation>Sayfalar ve bölümler bir dahaki sefere yeniden çevrilecek.</translation>
+        </message>
+        <message>
+            <source>Forget</source>
+            <translation>Unut</translation>
+        </message>
+        <message>
+            <source>Translations forgotten</source>
+            <translation>Çeviriler unutuldu</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>Okunan cümleyi vurgula</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs</source>
+            <translation>Paragraflar arası duraklama</translation>
+        </message>
+        <message>
+            <source>Pause between sentences</source>
+            <translation>Cümleler arası duraklama</translation>
+        </message>
+        <message>
+            <source>Voice for a language</source>
+            <translation>Bir dil için ses</translation>
+        </message>
+        <message>
+            <source>Books in this language are read with this voice.</source>
+            <translation>Bu dildeki kitaplar bu sesle okunur.</translation>
+        </message>
+        <message>
+            <source>The voice above</source>
+            <translation>Yukarıdaki ses</translation>
+        </message>
+        <message>
+            <source>Show the model the page</source>
+            <translation>Sayfayı modele göster</translation>
+        </message>
+        <message>
+            <source>Sends the comic page's picture with its text, so the model can see who speaks. Needs a model that reads images; costs more.</source>
+            <translation>Çizgi roman sayfasının resmini metniyle birlikte gönderir, böylece model kimin konuştuğunu görür. Resim okuyabilen bir model gerekir; daha pahalıdır.</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>Bu bilgisayarda çevir</translation>
+        </message>
+        <message>
+            <source>Pages and chapters translated with nothing sent anywhere. Add or remove languages.</source>
+            <translation>Sayfalar ve bölümler hiçbir yere bir şey gönderilmeden çevrilir. Dil ekle veya kaldır.</translation>
+        </message>
+        <message>
+            <source>Download a language once; pages and chapters are then translated with nothing sent anywhere.</source>
+            <translation>Bir dili bir kez indir; sayfalar ve bölümler artık hiçbir yere bir şey gönderilmeden çevrilir.</translation>
+        </message>
+        <message>
+            <source>Languages…</source>
+            <translation>Diller…</translation>
+        </message>
+        <message>
+            <source>Translate novels in other languages</source>
+            <translation>Diğer dillerdeki romanları çevir</translation>
+        </message>
+        <message>
+            <source>Chapters from a source in another language (WTR-LAB's, in English) open translated. The reader's Translate button decides for each series.</source>
+            <translation>Başka dildeki bir kaynaktan gelen bölümler (WTR-LAB'inkiler, İngilizce) çevrilmiş açılır. Okuyucudaki Çevir düğmesi her seri için karar verir.</translation>
+        </message>
+        <message>
+            <source>Download a neural voice below, or add one in the system's text-to-speech settings.</source>
+            <translation>Aşağıdan bir nöral ses indir veya sistemin metin okuma ayarlarından bir tane ekle.</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>Nöral sesler</translation>
+        </message>
+        <message>
+            <source>%1 downloaded; natural voices that need no internet</source>
+            <translation>%1 indirildi; internet gerektirmeyen doğal sesler</translation>
+        </message>
+        <message>
+            <source>Natural voices that read without the internet, downloaded once</source>
+            <translation>İnternetsiz okuyan doğal sesler, bir kez indirilir</translation>
+        </message>
+        <message>
+            <source>Choose…</source>
+            <translation>Seç…</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6490,6 +8782,295 @@
         <message>
             <source>Up next: episode %1</source>
             <translation>Sıradaki: %1. bölüm</translation>
+        </message>
+    </context>
+    <context>
+        <name>Retro</name>
+        <message>
+            <source>Explore</source>
+            <translation>Keşfet</translation>
+        </message>
+        <message>
+            <source>Recent</source>
+            <translation>Son</translation>
+        </message>
+        <message>
+            <source>Library</source>
+            <translation>Kitaplık</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>Çizgi romanlar</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Romanlar</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>Anime</translation>
+        </message>
+        <message>
+            <source>Pinned to the hub</source>
+            <translation>Merkeze sabitlendi</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroBar</name>
+        <message>
+            <source>Continue</source>
+            <translation>Devam</translation>
+        </message>
+        <message>
+            <source>Check for new chapters</source>
+            <translation>Yeni bölümleri denetle</translation>
+        </message>
+        <message>
+            <source>Search comics</source>
+            <translation>Çizgi roman ara</translation>
+        </message>
+        <message>
+            <source>Search novels</source>
+            <translation>Roman ara</translation>
+        </message>
+        <message>
+            <source>Search anime</source>
+            <translation>Anime ara</translation>
+        </message>
+        <message>
+            <source>Search everything</source>
+            <translation>Her şeyde ara</translation>
+        </message>
+        <message>
+            <source>Checking your library for new chapters…</source>
+            <translation>Kitaplıkta yeni bölümler denetleniyor…</translation>
+        </message>
+        <message>
+            <source>Everything is up to date</source>
+            <translation>Her şey güncel</translation>
+        </message>
+        <message>
+            <source>Nothing to continue yet</source>
+            <translation>Henüz devam edilecek bir şey yok</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>ara</translation>
+        </message>
+        <message>
+            <source>refresh</source>
+            <translation>yenile</translation>
+        </message>
+        <message>
+            <source>alerts</source>
+            <translation>uyarılar</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>ayarlar</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>geçmiş</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>indirilenler</translation>
+        </message>
+        <message>
+            <source>activity</source>
+            <translation>etkinlik</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>uzantılar</translation>
+        </message>
+        <message>
+            <source>turn incognito off</source>
+            <translation>gizli modu kapat</translation>
+        </message>
+        <message>
+            <source>go incognito</source>
+            <translation>gizli moda geç</translation>
+        </message>
+        <message>
+            <source>arrange the hub</source>
+            <translation>merkezi düzenle</translation>
+        </message>
+        <message>
+            <source>Back</source>
+            <translation>Geri</translation>
+        </message>
+        <message>
+            <source> (hold for more)</source>
+            <translation> (daha fazlası için basılı tut)</translation>
+        </message>
+        <message>
+            <source>Close the menu</source>
+            <translation>Menüyü kapat</translation>
+        </message>
+        <message>
+            <source>Open the menu</source>
+            <translation>Menüyü aç</translation>
+        </message>
+        <message>
+            <source>Incognito off</source>
+            <translation>Gizli mod kapalı</translation>
+        </message>
+        <message>
+            <source>Incognito</source>
+            <translation>Gizli mod</translation>
+        </message>
+        <message>
+            <source>Account</source>
+            <translation>Hesap</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroHub</name>
+        <message>
+            <source>Episode %1</source>
+            <translation>Bölüm %1</translation>
+        </message>
+        <message>
+            <source>Chapter %1</source>
+            <translation>Bölüm %1</translation>
+        </message>
+        <message>
+            <source>1 new</source>
+            <translation>1 yeni</translation>
+        </message>
+        <message>
+            <source>%1 new</source>
+            <translation>%1 yeni</translation>
+        </message>
+        <message>
+            <source>read a random comic</source>
+            <translation>rastgele bir çizgi roman oku</translation>
+        </message>
+        <message>
+            <source>continue</source>
+            <translation>devam et</translation>
+        </message>
+        <message>
+            <source>explore a random genre</source>
+            <translation>rastgele bir tür keşfet</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>ara</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>indirilenler</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>geçmiş</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>ayarlar</translation>
+        </message>
+        <message>
+            <source>your %1 wrapped</source>
+            <translation>%1 özetin</translation>
+        </message>
+        <message>
+            <source>Nothing to pick from yet</source>
+            <translation>Henüz seçilecek bir şey yok</translation>
+        </message>
+        <message>
+            <source>Small</source>
+            <translation>Küçük</translation>
+        </message>
+        <message>
+            <source>Medium</source>
+            <translation>Orta</translation>
+        </message>
+        <message>
+            <source>Wide</source>
+            <translation>Geniş</translation>
+        </message>
+        <message>
+            <source>Move earlier</source>
+            <translation>Öne taşı</translation>
+        </message>
+        <message>
+            <source>Move later</source>
+            <translation>Arkaya taşı</translation>
+        </message>
+        <message>
+            <source>Unpin</source>
+            <translation>Sabitlemeyi kaldır</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Merkeze sabitle</translation>
+        </message>
+        <message>
+            <source>What you read and watch shows up here.</source>
+            <translation>Okuduğun ve izlediğin şeyler burada görünür.</translation>
+        </message>
+        <message>
+            <source>Series you save show up here.</source>
+            <translation>Kaydettiğin seriler burada görünür.</translation>
+        </message>
+        <message>
+            <source>all comics</source>
+            <translation>tüm çizgi romanlar</translation>
+        </message>
+        <message>
+            <source>coming up</source>
+            <translation>yakında</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>uzantılar</translation>
+        </message>
+        <message>
+            <source>Latest chapters</source>
+            <translation>Son bölümler</translation>
+        </message>
+        <message>
+            <source>all novels</source>
+            <translation>tüm romanlar</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Romanlar</translation>
+        </message>
+        <message>
+            <source>all anime</source>
+            <translation>tüm animeler</translation>
+        </message>
+        <message>
+            <source>schedule</source>
+            <translation>takvim</translation>
+        </message>
+        <message>
+            <source>browse</source>
+            <translation>göz at</translation>
+        </message>
+        <message>
+            <source>Trending</source>
+            <translation>Trend</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>tüm müzikler</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>şimdi çalıyor</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Bu sezon</translation>
         </message>
     </context>
     <context>
@@ -6651,6 +9232,129 @@
         <message>
             <source>Another app</source>
             <translation>Başka uygulama</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Comics</name>
+        <message>
+            <source>That server is not saved.</source>
+            <translation>O sunucu kayıtlı değil.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Downloads</name>
+        <message>
+            <source>No chapters of this novel are downloaded. Download some first.</source>
+            <translation>Bu romanın hiçbir bölümü indirilmedi. Önce birkaç tane indir.</translation>
+        </message>
+        <message>
+            <source>The book could not be saved in %1.</source>
+            <translation>Kitap %1 konumuna kaydedilemedi.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::MediaControls</name>
+        <message>
+            <source>Reading aloud</source>
+            <translation>Sesli okuma</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Party</name>
+        <message>
+            <source>The party could not be reached (%1).</source>
+            <translation>Partiye ulaşılamadı (%1).</translation>
+        </message>
+        <message>
+            <source>Watch parties need scancore.onl (this site has none yet).</source>
+            <translation>İzleme partileri için scancore.onl gerekir (bu sitede henüz yok).</translation>
+        </message>
+        <message>
+            <source>The party could not be opened.</source>
+            <translation>Parti açılamadı.</translation>
+        </message>
+        <message>
+            <source>A party code has six letters and numbers.</source>
+            <translation>Parti kodu altı harf ve rakamdan oluşur.</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>Parti bitti.</translation>
+        </message>
+        <message>
+            <source>No party with that code.</source>
+            <translation>Bu kodla bir parti yok.</translation>
+        </message>
+        <message>
+            <source>The host ended the party.</source>
+            <translation>Ev sahibi partiyi bitirdi.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Translator</name>
+        <message>
+            <source>To translate pages on a computer, add a Google Cloud key in Settings → Reading → Translate (Vision reads the page's text).</source>
+            <translation>Bilgisayarda sayfaları çevirmek için Ayarlar → Okuma → Çeviri'den bir Google Cloud anahtarı ekle (Vision sayfanın metnini okur).</translation>
+        </message>
+        <message>
+            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.</source>
+            <translation>Ayarlar → Okuma → Çeviri'den bir DeepL veya Google anahtarı ya da bir modelin adresini ekle.</translation>
+        </message>
+        <message>
+            <source>Automatic</source>
+            <translation>Otomatik</translation>
+        </message>
+        <message>
+            <source>This phone</source>
+            <translation>Bu telefon</translation>
+        </message>
+        <message>
+            <source>On the phone, with Google Play services</source>
+            <translation>Telefonda, Google Play hizmetleriyle</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision</source>
+            <translation>Google Cloud Vision</translation>
+        </message>
+        <message>
+            <source>Your Google Cloud key</source>
+            <translation>Google Cloud anahtarın</translation>
+        </message>
+        <message>
+            <source>On the phone; a model per language</source>
+            <translation>Telefonda; her dil için bir model</translation>
+        </message>
+        <message>
+            <source>Your DeepL key</source>
+            <translation>DeepL anahtarın</translation>
+        </message>
+        <message>
+            <source>Google Translate</source>
+            <translation>Google Çeviri</translation>
+        </message>
+        <message>
+            <source>A language model</source>
+            <translation>Bir dil modeli</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service, or one on your computer</source>
+            <translation>OpenAI uyumlu herhangi bir hizmet ya da bilgisayarındaki bir hizmet</translation>
+        </message>
+        <message>
+            <source>To translate pages on a computer, download a language in Settings → Reading → Translate on this computer, or add a Google Cloud key there.</source>
+            <translation>Bilgisayarda sayfa çevirmek için Ayarlar → Okuma → Bu bilgisayarda çevir bölümünden bir dil indir veya oraya bir Google Cloud anahtarı ekle.</translation>
+        </message>
+        <message>
+            <source>This computer</source>
+            <translation>Bu bilgisayar</translation>
+        </message>
+        <message>
+            <source>Downloaded once; pages never leave the computer</source>
+            <translation>Bir kez indirilir; sayfalar asla bilgisayardan çıkmaz</translation>
+        </message>
+        <message>
+            <source>Downloaded once; nothing leaves the computer</source>
+            <translation>Bir kez indirilir; hiçbir şey bilgisayardan çıkmaz</translation>
         </message>
     </context>
     <context>
@@ -6923,6 +9627,121 @@
             <source>Show as a grid</source>
             <translation>Izgara olarak göster</translation>
         </message>
+        <message>
+            <source>Saved %1 chapters as %2</source>
+            <translation>%1 bölüm %2 olarak kaydedildi</translation>
+        </message>
+        <message>
+            <source>Show</source>
+            <translation>Göster</translation>
+        </message>
+        <message>
+            <source>Save the %1 downloaded chapters</source>
+            <translation>İndirilen %1 bölümü kaydet</translation>
+        </message>
+        <message>
+            <source>Download all %1 chapters, then save</source>
+            <translation>%1 bölümün hepsini indir, sonra kaydet</translation>
+        </message>
+        <message>
+            <source>Stop waiting for the downloads</source>
+            <translation>İndirmeleri beklemeyi bırak</translation>
+        </message>
+        <message>
+            <source>No chapter downloaded, so there is no EPUB to save.</source>
+            <translation>İndirilmiş bölüm yok, bu yüzden kaydedilecek EPUB yok.</translation>
+        </message>
+        <message>
+            <source>Read in a new window</source>
+            <translation>Yeni pencerede oku</translation>
+        </message>
+        <message>
+            <source>Listen</source>
+            <translation>Dinle</translation>
+        </message>
+        <message>
+            <source>Downloading for the EPUB…</source>
+            <translation>EPUB için indiriliyor…</translation>
+        </message>
+        <message>
+            <source>Save as EPUB</source>
+            <translation>EPUB olarak kaydet</translation>
+        </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>Merkezden kaldır</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Merkeze sabitle</translation>
+        </message>
+    </context>
+    <context>
+        <name>ServerDialog</name>
+        <message>
+            <source>Trying it…</source>
+            <translation>Deneniyor…</translation>
+        </message>
+        <message>
+            <source>Connected: 1 series found.</source>
+            <translation>Bağlandı: 1 seri bulundu.</translation>
+        </message>
+        <message>
+            <source>Connected: %1 series found.</source>
+            <translation>Bağlandı: %1 seri bulundu.</translation>
+        </message>
+        <message>
+            <source>Your server</source>
+            <translation>Kendi sunucun</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>Sunucunu ekle</translation>
+        </message>
+        <message>
+            <source>Read the comics on your own Komga, Kavita or Suwayomi server. The login stays on this device.</source>
+            <translation>Kendi Komga, Kavita veya Suwayomi sunucundaki çizgi romanları oku. Giriş bilgileri bu cihazda kalır.</translation>
+        </message>
+        <message>
+            <source>Name (optional)</source>
+            <translation>Ad (isteğe bağlı)</translation>
+        </message>
+        <message>
+            <source>Email</source>
+            <translation>E-posta</translation>
+        </message>
+        <message>
+            <source>User name</source>
+            <translation>Kullanıcı adı</translation>
+        </message>
+        <message>
+            <source> (if it asks for one)</source>
+            <translation> (sorarsa)</translation>
+        </message>
+        <message>
+            <source>Password (saved; type to change)</source>
+            <translation>Şifre (kayıtlı; değiştirmek için yaz)</translation>
+        </message>
+        <message>
+            <source>Password</source>
+            <translation>Parola</translation>
+        </message>
+        <message>
+            <source>API key (saved; type to change)</source>
+            <translation>API anahtarı (kayıtlı; değiştirmek için yaz)</translation>
+        </message>
+        <message>
+            <source>Or an API key, instead of the login</source>
+            <translation>Ya da girişin yerine bir API anahtarı</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Save and try</source>
+            <translation>Kaydet ve dene</translation>
+        </message>
     </context>
     <context>
         <name>SettingsPage</name>
@@ -7028,7 +9847,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -7222,6 +10041,14 @@
             <source> · Medium Dev</source>
             <translation> · Medium Dev</translation>
         </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
     </context>
     <context>
         <name>ShortcutsSheet</name>
@@ -7304,6 +10131,10 @@
             <source>Collapse</source>
             <translation>Daralt</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -7334,6 +10165,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> adresini tarayıcında aç.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Sonra çal</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Sıraya ekle</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Videoyu izle</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Bölümler %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Daha fazla</translation>
         </message>
     </context>
     <context>
@@ -7698,6 +10552,65 @@
         <message>
             <source>Mihon's downloads · </source>
             <translation>Mihon'un indirmeleri · </translation>
+        </message>
+        <message>
+            <source>Your servers</source>
+            <translation>Sunucuların</translation>
+        </message>
+        <message>
+            <source>Komga, Kavita and Suwayomi servers you run: their comics are a source like the others, searched with them and saved to the library.</source>
+            <translation>Çalıştırdığın Komga, Kavita ve Suwayomi sunucuları: çizgi romanları diğerleri gibi bir kaynaktır, onlarla birlikte aranır ve kitaplığa kaydedilir.</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Değiştir</translation>
+        </message>
+        <message>
+            <source>Open in the browser</source>
+            <translation>Tarayıcıda aç</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>Sunucunu ekle</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Tanılama</translation>
+        </message>
+        <message>
+            <source>Whether the extensions runtime answers, a quick test of a source, and the sites each extension contacted.</source>
+            <translation>Uzantı ortamının yanıt verip vermediği, bir kaynağın hızlı testi ve her uzantının bağlandığı siteler.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SplitPicker</name>
+        <message>
+            <source>No chapters to read</source>
+            <translation>Okunacak bölüm yok</translation>
+        </message>
+        <message>
+            <source>Read beside</source>
+            <translation>Yanında oku</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>Nothing in progress yet: start a comic or a novel, then read it beside another.</source>
+            <translation>Henüz devam eden bir şey yok: bir çizgi roman veya roman başlat, sonra başka birinin yanında oku.</translation>
+        </message>
+        <message>
+            <source>Opening…</source>
+            <translation>Açılıyor…</translation>
+        </message>
+        <message>
+            <source>Novel</source>
+            <translation>Roman</translation>
+        </message>
+        <message>
+            <source>Comic</source>
+            <translation>Çizgi roman</translation>
         </message>
     </context>
     <context>
@@ -8074,6 +10987,10 @@
             <source>Settings</source>
             <translation>Ayarlar</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Müzik</translation>
+        </message>
     </context>
     <context>
         <name>Theme</name>
@@ -8158,7 +11075,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>İnce</translation>
+            <translation>Açık</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -8380,6 +11297,38 @@
             <source>Saved </source>
             <translation>Kaydedildi </translation>
         </message>
+        <message>
+            <source>Metro colours</source>
+            <translation>Metro renkleri</translation>
+        </message>
+        <message>
+            <source>The accent colours of Windows Phone, or any colour from the wheel. Tiles, the hub title and switches take it.</source>
+            <translation>Windows Phone'un vurgu renkleri ya da çarktan herhangi bir renk. Karolar, merkez başlığı ve anahtarlar bunu kullanır.</translation>
+        </message>
+        <message>
+            <source>Custom colour</source>
+            <translation>Özel renk</translation>
+        </message>
+        <message>
+            <source>Tile colour</source>
+            <translation>Karo rengi</translation>
+        </message>
+        <message>
+            <source>Retro colours</source>
+            <translation>Retro renkleri</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Cam</translation>
+        </message>
+        <message>
+            <source>Glass menus and sheets</source>
+            <translation>Cam menüler ve paneller</translation>
+        </message>
+        <message>
+            <source>Menus, sheets and dialogs show what is behind them, blurred.</source>
+            <translation>Menüler, paneller ve iletişim kutuları arkalarındakini bulanık gösterir.</translation>
+        </message>
     </context>
     <context>
         <name>TrackerConnect</name>
@@ -8576,6 +11525,13 @@
         <message>
             <source>Connect a tracker such as AniList, MyAnimeList or Kitsu in Settings → Connections to keep your lists there up to date.</source>
             <translation>Listelerini güncel tutmak için Ayarlar → Bağlantılar'dan AniList, MyAnimeList veya Kitsu gibi bir takipçi bağla.</translation>
+        </message>
+    </context>
+    <context>
+        <name>TranslationLayer</name>
+        <message>
+            <source>Translating…</source>
+            <translation>Çevriliyor…</translation>
         </message>
     </context>
     <context>
@@ -8999,6 +11955,108 @@
         <message>
             <source>Close player</source>
             <translation>Oynatıcıyı kapat</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>Yerleşik</translation>
+        </message>
+        <message>
+            <source>More…</source>
+            <translation>Daha fazla…</translation>
+        </message>
+        <message>
+            <source>Keep SCANCORE open while it plays there: the video comes through it.</source>
+            <translation>Orada oynatılırken SCANCORE'u açık tut: video onun üzerinden gelir.</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>Parti bitti.</translation>
+        </message>
+        <message>
+            <source>Watch party (%1)</source>
+            <translation>İzleme partisi (%1)</translation>
+        </message>
+        <message>
+            <source>Watch together</source>
+            <translation>Birlikte izle</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Yeni pencerede aç</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Seçtiğin görünümün önizlemesi</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Ana sayfa</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Okumaya devam et</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Yeni bölümler</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Kitaplığa ekle</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>İndir</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Paylaş</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>ana sayfa</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>çizgi roman</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Aşağı kaydır ya da sayfayı çevirmek için bir kenara dokun.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>Çubuk bölümün neresinde olduğunu gösterir.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Bir sayfaya atlamak için çubuğa dokun ya da sürükle.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Ona başka bir görünüm seç ve burada gör.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Sayfalar ya da tek uzun şerit: yukarıdan değiştir.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Son. Gerçek bölümlerin hemen ardından başlıyor.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Örnek bölüm</translation>
         </message>
     </context>
     <context>
@@ -9560,6 +12618,10 @@
         <message>
             <source>The voice could not read this.</source>
             <translation>Ses bunu okuyamadı.</translation>
+        </message>
+        <message>
+            <source> (neural)</source>
+            <translation> (nöral)</translation>
         </message>
     </context>
 </TS>

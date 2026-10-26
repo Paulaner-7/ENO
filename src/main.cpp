@@ -41,6 +41,7 @@
 #include <QFontDatabase>
 #include <QIcon>
 #include <QOpenGLContext>
+#include <QSurfaceFormat>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQuickWindow>
@@ -69,7 +70,10 @@ namespace {
 
 void loadFonts() {
     for (const auto *font : {":/fonts/DMSans.ttf", ":/fonts/DMSans-Italic.ttf", ":/fonts/SpaceGrotesk.ttf",
-                             ":/fonts/Literata.ttf", ":/fonts/Literata-Italic.ttf"})
+                             ":/fonts/Literata.ttf", ":/fonts/Literata-Italic.ttf",
+                             // Retro mode (Settings → Interface → Look).
+                             ":/fonts/Selawik.ttf", ":/fonts/Selawik-Light.ttf", ":/fonts/Selawik-Semilight.ttf",
+                             ":/fonts/Selawik-Semibold.ttf", ":/fonts/Selawik-Bold.ttf"})
         QFontDatabase::addApplicationFont(QString::fromLatin1(font));
     QFont font(QStringLiteral("DM Sans"));
     font.setPixelSize(14);
@@ -119,6 +123,31 @@ void registerPdf() {
 #endif
 }
 
+// Before 2.13.0 the app's folders were named in another spelling
+// (kOldName): they move to SCANCORE's once, before anything opens them. On
+// Windows and macOS, whose file names ignore case, the same folder simply
+// carries on. Absolute paths stored under the old data folder are rewritten
+// once the database is open (openStorage).
+constexpr auto kOldName = "ScanCore";
+QString g_movedFrom, g_movedTo;
+void moveOldFolders() {
+    for (const auto location : {QStandardPaths::AppDataLocation, QStandardPaths::CacheLocation}) {
+        const QFileInfo now(QStandardPaths::writableLocation(location));
+        const auto old = now.absolutePath() + QLatin1Char('/') + QLatin1String(kOldName);
+        if (now.fileName() == QLatin1String(kOldName) || now.exists() || !QFileInfo(old).isDir())
+            continue;
+        if (QDir().rename(old, now.absoluteFilePath())) {
+            qInfo("Moved %s to %s", qPrintable(old), qPrintable(now.absoluteFilePath()));
+            if (location == QStandardPaths::AppDataLocation) {
+                g_movedFrom = old;
+                g_movedTo = now.absoluteFilePath();
+            }
+        } else {
+            qWarning("Could not move %s to %s", qPrintable(old), qPrintable(now.absoluteFilePath()));
+        }
+    }
+}
+
 void openStorage() {
     const auto data = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     const auto cache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
@@ -135,6 +164,15 @@ void openStorage() {
         QFile::rename(db + QStringLiteral(".restore"), db);
     }
     Database::open(db);
+    if (!g_movedFrom.isEmpty()) {
+        // Downloads, extensions, covers and settings that named a file in
+        // the old folder.
+        static const QList<QPair<const char *, const char *>> columns{
+            {"downloads", "path"}, {"ext_installed", "path"}, {"series", "cover"}, {"prefs", "value"}, {"series_settings", "value"}};
+        for (const auto &[table, column] : columns)
+            Database::exec(QStringLiteral("UPDATE %1 SET %2 = REPLACE(%2, ?, ?) WHERE %2 LIKE ?").arg(QLatin1String(table), QLatin1String(column)),
+                           {g_movedFrom + QLatin1Char('/'), g_movedTo + QLatin1Char('/'), QStringLiteral("%") + g_movedFrom + QStringLiteral("/%")});
+    }
     CookieJar::shared().load(data + QStringLiteral("/cookies.txt"));
     // The size chosen in Settings → Storage (it was always 1 GB before).
     const qint64 cacheMb = std::max<qint64>(128, Database::pref(QStringLiteral("setting.imageCacheMB"), 1024).toLongLong());
@@ -172,6 +210,15 @@ void chooseGraphicsApi() {
         format.setProfile(QSurfaceFormat::CoreProfile);
         QSurfaceFormat::setDefaultFormat(format);
     }
+#elif defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    // Desktop OpenGL where the driver has it: Wayland may otherwise pick
+    // OpenGL ES, where mpv's renderer garbles Anime4K's Best networks.
+    QSurfaceFormat desktop = QSurfaceFormat::defaultFormat();
+    desktop.setRenderableType(QSurfaceFormat::OpenGL);
+    QOpenGLContext desktopProbe;
+    desktopProbe.setFormat(desktop);
+    if (desktopProbe.create() && !desktopProbe.isOpenGLES())
+        QSurfaceFormat::setDefaultFormat(desktop);
 #endif
 #if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
     QOpenGLContext probe;
@@ -271,6 +318,13 @@ int main(int argc, char *argv[]) {
     // pointer" shortly after startup. Set DISABLE_MANGOHUD=0 to keep it.
     if (!qEnvironmentVariableIsSet("DISABLE_MANGOHUD"))
         qputenv("DISABLE_MANGOHUD", "1");
+    // Qt's Wayland plugin turns the threaded render loop off for NVIDIA's
+    // driver, and on the GUI thread every page load, list refresh or script
+    // stalls the animations (Retro's tiles and panoramas stuttered on
+    // Linux). Threaded rendering runs fine there (tested under Hyprland and
+    // cage, NVIDIA 615); QSG_RENDER_LOOP=basic brings the old one back.
+    if (!qEnvironmentVariableIsSet("QSG_RENDER_LOOP") && !qEnvironmentVariableIsSet("QML_BAD_GUI_RENDER_LOOP"))
+        qputenv("QSG_RENDER_LOOP", "threaded");
 #endif
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QtWebEngineQuick::initialize();
@@ -308,6 +362,7 @@ int main(int argc, char *argv[]) {
     if (qEnvironmentVariableIsSet("SCANCORE_PRETEND_VERSION"))
         Application::setApplicationVersion(qEnvironmentVariable("SCANCORE_PRETEND_VERSION"));
     Application::setDesktopFileName(QStringLiteral("com.mediumdev.scancore"));
+    moveOldFolders();
     // Crash reports (Settings → About), and the recent log they carry.
     sc::crashlog::install();
     // Development hook: SCANCORE_CRASH_TEST=segv|abort|throw crashes on
@@ -389,6 +444,20 @@ int main(int argc, char *argv[]) {
         if (!key.isEmpty() && !appState->settings().contains(key))
             appState->setSetting(key, Database::pref(QStringLiteral("setting.") + key));
     }
+    // 2.12.0 called the Retro look "Metro": its settings, the mode and its
+    // accents move to their new names once.
+    for (const auto &key : appState->settings().keys()) {
+        if (!key.startsWith(QLatin1String("metro")))
+            continue;
+        const auto renamed = QStringLiteral("retro") + key.mid(5);
+        if (!appState->settings().contains(renamed))
+            appState->setSetting(renamed, appState->settings().value(key));
+        Database::query(QStringLiteral("DELETE FROM prefs WHERE key = ?"), {QStringLiteral("setting.") + key});
+    }
+    if (appState->settings().value(QStringLiteral("uiMode")) == QLatin1String("metro"))
+        appState->setSetting(QStringLiteral("uiMode"), QStringLiteral("retro"));
+    if (const auto accent = appState->settings().value(QStringLiteral("accent")).toString(); accent.startsWith(QLatin1String("metro-")))
+        appState->setSetting(QStringLiteral("accent"), QStringLiteral("retro-") + accent.mid(6));
 #ifndef Q_OS_ANDROID
     QSystemTrayIcon tray(QApplication::windowIcon());
     QMenu trayMenu;
@@ -409,7 +478,7 @@ int main(int argc, char *argv[]) {
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);
     startStep("before the interface");
-    engine.loadFromModule("ScanCore", "Main");
+    engine.loadFromModule("Scancore", "Main");
     if (engine.rootObjects().isEmpty())
         return 1;
     startStep("interface created");
@@ -454,5 +523,7 @@ int main(int argc, char *argv[]) {
             Database::exec(QStringLiteral("PRAGMA wal_checkpoint(TRUNCATE)"));
         } catch (...) {}
     });
+    // A hang (the interface not answering) leaves a report like a crash.
+    sc::crashlog::watchHangs();
     return app.exec();
 }

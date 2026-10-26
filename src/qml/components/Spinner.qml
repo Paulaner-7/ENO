@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Shapes
-import ScanCore
+import Scancore
 
 // Indeterminate progress arc.
 Item {

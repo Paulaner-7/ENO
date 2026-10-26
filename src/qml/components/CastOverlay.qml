@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Over the player while an episode plays on a TV: what plays where, its
 // position, and the controls, which go to the TV.

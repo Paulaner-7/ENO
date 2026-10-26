@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // One "Continue the story" card on Home: an anime season you finished and
 // where its comic or novel goes on, or a comic you caught up on whose novel

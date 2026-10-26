@@ -4,6 +4,7 @@
 #include "Activity.h"
 #include "App.h"
 #include "Library.h"
+#include "EventStream.h"
 #include "Sync.h"
 #include "core/Cookies.h"
 #include "core/Database.h"
@@ -217,28 +218,7 @@ void Live::readEvents() {
         m_reply->abort();
         return;
     }
-    m_buffer.replace("\r\n", "\n");
-    qsizetype end;
-    while ((end = m_buffer.indexOf("\n\n")) >= 0) {
-        const auto block = m_buffer.left(end);
-        m_buffer.remove(0, end + 2);
-        QByteArray event = "message", data;
-        for (const auto &line : block.split('\n')) {
-            if (line.isEmpty() || line.startsWith(':'))
-                continue;
-            const auto colon = line.indexOf(':');
-            const auto field = colon < 0 ? line : line.left(colon);
-            auto value = colon < 0 ? QByteArray() : line.mid(colon + 1);
-            if (value.startsWith(' '))
-                value.remove(0, 1);
-            if (field == "event")
-                event = value;
-            else if (field == "data")
-                data += (data.isEmpty() ? QByteArray() : QByteArray("\n")) + value;
-        }
-        if (!data.isEmpty())
-            handle(event, data);
-    }
+    takeEvents(m_buffer, [this](const QByteArray &event, const QByteArray &data) { handle(event, data); });
 }
 
 void Live::handle(const QByteArray &event, const QByteArray &data) {

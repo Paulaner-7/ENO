@@ -128,6 +128,9 @@ const QVariantMap kDefaults{
     {"subtitleColor", "#ffffff"},
     {"subtitleBox", false},
     {"animeSharpen", "hq"},
+    // Android's video decoding: "copy" (MediaCodec, frames copied back),
+    // "direct" (into OpenGL; faster, froze on some phones) or "off".
+    {"playerHwdec", "copy"},
     {"playerSpeed", 1},
     // How the picture fills the player (fit, crop, stretch, original) and
     // the phone gestures in full screen (NativePlayer.qml).
@@ -214,6 +217,10 @@ const QVariantMap kDefaults{
     // Extension updates signed with a trusted key install by themselves.
     {"autoUpdateExtensions", true},
     {"scrollSpeed", 1},
+    // How long a fling glides (Motion.flickDeceleration).
+    {"flingGlide", "default"},
+    // Android: draw at the screen's fastest refresh rate (Platform).
+    {"highRefresh", true},
     {"novelSource", "all"},
     {"downloadsPath", ""},
 };
@@ -222,7 +229,12 @@ const QVariantMap kDefaults{
 
 App::App(QObject *parent) : QObject(parent) {
     // Settings restored before the event loop runs are not changes.
-    QTimer::singleShot(0, this, [this] { m_running = true; });
+    QTimer::singleShot(0, this, [this] {
+        m_running = true;
+        platform::setFastestRefresh(m_settings.value(QStringLiteral("highRefresh"), true).toBool());
+    });
+    // Qt's surface can come a moment after the window: ask again for it.
+    QTimer::singleShot(2500, this, [this] { platform::setFastestRefresh(m_settings.value(QStringLiteral("highRefresh"), true).toBool()); });
     m_settings = kDefaults;
     for (auto it = kDefaults.begin(); it != kDefaults.end(); ++it)
         m_settings.insert(it.key(), Database::pref(QStringLiteral("setting.") + it.key(), it.value()));
@@ -283,6 +295,8 @@ App *App::instance() {
 }
 
 QString App::version() const { return QCoreApplication::applicationVersion(); }
+
+bool App::tv() const { return platform::isTv(); }
 
 QString App::platform() const {
     // Development hook: SCANCORE_LOOK_AS=android lays the interface out as
@@ -359,6 +373,8 @@ void App::setSetting(const QString &key, const QVariant &input) {
     }
     // Mihon's downloads in a folder added (or no longer there after one is
     // taken off the list).
+    if (key == QLatin1String("highRefresh"))
+        platform::setFastestRefresh(value.toBool());
     if (key == QLatin1String("localFolders") && m_running)
         Downloads::instance()->relinkMihon();
     if (key == QLatin1String("imageCacheMB")) {
@@ -367,6 +383,14 @@ void App::setSetting(const QString &key, const QVariant &input) {
         runInBackground([] { ImageCache::trim(); });
     }
     emit settingsChanged();
+}
+
+void App::rememberSetting(const QString &key, const QVariant &input) {
+    const auto value = plain(input);
+    if (m_settings.value(key) == value)
+        return;
+    m_settings.insert(key, value);
+    Database::setPref(QStringLiteral("setting.") + key, value);
 }
 
 QString App::image(const QString &url, const QString &referer) const {
@@ -472,10 +496,12 @@ void App::finishSiteCheck(const QString &url) {
 void App::askBatteryUnrestricted() const { platform::askBatteryUnrestricted(); }
 
 void App::prepareWebPlayer() const { platform::prepareWebPlayer(); }
+bool App::closeWebPlayerMenu() const { return platform::closeWebPlayerMenu(); }
 
 void App::setOrientation(const QString &mode) const { platform::setOrientation(mode); }
 
 void App::setBarIcons(bool darkScreen) const { platform::setBarIcons(darkScreen); }
+void App::setSystemBars(bool shown) const { platform::setSystemBars(shown); }
 void App::keepAwake(const QString &holder, bool on) const { keepAwake::hold(holder, on); }
 
 void App::setVolumeKeys(bool on) const { platform::setVolumeKeys(on); }
@@ -774,8 +800,8 @@ void App::startBackgroundWork() {
     // notifications) from Library::checkUpdates itself; a new SCANCORE
     // from here.
     connect(this, &App::updateAvailable, this, [](const QString &version, const QString &url) {
-        Notifications::post({QStringLiteral("app"), QStringLiteral("app:") + version, tr("SCANCORE %1 is available").arg(version),
-                             tr("See what is new and update."), QVariantMap{{"url", url}}, true});
+        Notifications::post({QStringLiteral("app"), QStringLiteral("app:upstream"), tr("Upstream SCANCORE %1 is out").arg(version),
+                             tr("Ask Antigravity to sync ENO with this update."), QVariantMap{{QStringLiteral("url"), url}}, false});
     });
     // Announcements from scancore.onl, live while online.
     QTimer::singleShot(6000, this, [] { Announcements::instance()->start(); });
@@ -840,9 +866,11 @@ bool App::shareText(const QString &text, const QString &subject) const { return 
 QString App::reportIssueUrl(const QString &text) const {
     // GitHub takes links of about 8 KB: the report's start (what happened
     // and the backtrace); the rest is pasted.
-    const auto title = text.section(QLatin1Char('\n'), 0, 0).contains(QLatin1String("crash")) ? QStringLiteral("Crash: ") +
-            text.section(QStringLiteral("What: "), 1).section(QLatin1Char('\n'), 0, 0)
-                                                                                         : QStringLiteral("Problem report");
+    const auto first = text.section(QLatin1Char('\n'), 0, 0);
+    const auto what = text.section(QStringLiteral("What: "), 1).section(QLatin1Char('\n'), 0, 0);
+    const auto title = first.contains(QLatin1String("crash"))  ? QStringLiteral("Crash: ") + what
+                       : first.contains(QLatin1String("hang")) ? QStringLiteral("Hang: ") + what
+                                                                : QStringLiteral("Problem report");
     auto body = QStringLiteral("What I was doing:\n\n\n```\n%1\n```").arg(text.left(5000));
     QUrl url(QStringLiteral("https://github.com/medium-gh/scancore/issues/new"));
     url.setQuery(QUrlQuery{{QStringLiteral("title"), title}, {QStringLiteral("body"), body}});

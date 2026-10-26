@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Top of a details page: blurred cover backdrop, cover (hero target), title,
 // metadata, description and primary actions.

@@ -40,6 +40,9 @@ bool notificationsAllowed();
 // thread once that is done (or no web view turned up).
 void prepareWebPlayer();
 void setWebPlayerPrepared(std::function<void()> prepared);
+// Back while the player's own menu (in its page) is open: closes that menu
+// and answers true; false when none is open.
+bool closeWebPlayerMenu();
 // Volume keys go to `pressed` (true for volume down) instead of changing the
 // volume, while on (the comic reader's page turning).
 void setVolumeKeys(bool on);
@@ -47,6 +50,8 @@ void setVolumeKeyPressed(std::function<void(bool down)> pressed);
 
 // The system's share sheet for a text (Android); false elsewhere.
 bool shareText(const QString &text, const QString &subject);
+// Android: the share sheet for a file in the app's storage.
+bool shareFile(const QString &path, const QString &mime, const QString &subject);
 
 // Lets multicast packets in on Wi-Fi (Android drops them otherwise), while
 // looking for cast devices.
@@ -74,5 +79,11 @@ double mediaVolume();
 void setMediaVolume(double level);
 // Light status/navigation bar icons for a dark screen, dark ones for a light one.
 void setBarIcons(bool darkScreen);
+// A television (Android TV): a D-pad, no touch screen.
+bool isTv();
+// Android: the status and navigation bars shown or hidden (readers).
+void setSystemBars(bool shown);
+// Android: the screen's fastest refresh rate for this window, or the system's choice.
+void setFastestRefresh(bool on);
 
 } // namespace sc::platform

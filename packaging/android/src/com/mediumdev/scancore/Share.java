@@ -2,8 +2,14 @@ package com.mediumdev.scancore;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 
-// The system's share sheet for a text (a crash report to send).
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+
+// The system's share sheet for a text (a crash report to send) or a file
+// SCANCORE made (an exported EPUB), through the app's FileProvider.
 public final class Share {
     private Share() {}
 
@@ -15,6 +21,23 @@ public final class Share {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             final Intent chooser = Intent.createChooser(intent, subject);
             chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(chooser);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean file(Activity activity, String path, String mime, String subject) {
+        try {
+            final Uri uri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".qtprovider", new File(path));
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType(mime);
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            final Intent chooser = Intent.createChooser(intent, subject);
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             activity.startActivity(chooser);
             return true;
         } catch (Exception e) {

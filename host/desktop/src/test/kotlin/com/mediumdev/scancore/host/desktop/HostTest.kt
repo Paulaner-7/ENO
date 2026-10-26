@@ -68,6 +68,7 @@ class HostTest {
                         path == "/anime/1/episodes" -> 200 to "anime/episodes.json"
                         path == "/anime/2/seasons" -> 200 to "anime/seasons.json"
                         path == "/episode/1/hosters" -> 200 to "anime/hosters.json"
+                        path == "/episode/2/hosters" -> 200 to "anime/hosters-local.json"
                         path == "/hoster/alpha" -> 200 to "anime/videos-alpha.json"
                         path == "/hoster/beta" -> 200 to "anime/videos-beta.json"
                         path == "/resolve" -> 200 to "anime/resolve.json"
@@ -401,6 +402,31 @@ class HostTest {
         val video = hosters.single()["videos"]!!.jsonArray.single().jsonObject
         assertEquals("Classic 720p", video.text("title"))
         assertTrue(video.text("url"), video.text("url").endsWith("/video/classic.mp4"))
+    }
+
+    // Extensions → Diagnostics: the sites an extension's calls reached.
+    @Test
+    fun networkUseIsCounted() {
+        animeCall("Test Anime", "popular", mapOf("page" to 1))
+        val use = runBlocking { host.handle("networkUse", JsonObject(emptyMap())) }.jsonObject
+        val hosts = use["com.mediumdev.scancore.testanime"]!!.jsonArray.map { it.jsonObject }
+        val fixture = hosts.single { it.text("host") == "fixture.test" }
+        assertTrue(fixture.text("requests").toLong() >= 1)
+    }
+
+    // Aniyomi's local video servers: the placeholder address becomes the
+    // source's own server on this device, which answers.
+    @Test
+    fun localVideoServersRun() {
+        val hosters = animeCall("Test Anime", "hosters", mapOf("url" to "/episode/2")).jsonArray.map { it.jsonObject }
+        val video = hosters.single()["videos"]!!.jsonArray.single().jsonObject
+        val url = video.text("url")
+        assertTrue(url, url.startsWith("http://localhost:") && !url.startsWith("http://localhost:1/"))
+        assertEquals("false", video.text("localServer"))
+        assertEquals("served by the extension at /served.mp4", java.net.URI(url.replace("localhost", "127.0.0.1")).toURL().readText())
+        // The same server for the next video.
+        val again = animeCall("Test Anime", "hosters", mapOf("url" to "/episode/2")).jsonArray.single().jsonObject["videos"]!!.jsonArray.single().jsonObject
+        assertEquals(url, again.text("url"))
     }
 
     @Test

@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import ScanCore
+import Scancore
 
 // How the user arranged each page (Home, Comics, Novels, Anime): the order
 // of its sections, which are hidden, and each section's look. Kept as JSON

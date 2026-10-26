@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Opens a site so the reader can pass its browser check once. SCANCORE then
 // uses the cookies the site sets for its own requests to that site.

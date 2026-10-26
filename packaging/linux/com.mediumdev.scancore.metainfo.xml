@@ -52,6 +52,57 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.15.0" date="2026-10-26">
+      <description>
+        <p>Music: anime openings and endings from AnimeThemes, your own music files and music extensions, with synced lyrics you can tap to jump to, a queue, a mini player that keeps going while you read, and the song's video beside its words.</p>
+      </description>
+    </release>
+    <release version="2.14.1" date="2026-10-26">
+      <description>
+        <p>Fixes the Android player's picture freezing when the next episode starts on some phones.</p>
+      </description>
+    </release>
+    <release version="2.14.0" date="2026-10-26">
+      <description>
+        <p>A new welcome: real covers, a choice of comics, novels and anime that the tabs follow, Mihon, Tachiyomi, Komikku, Aniyomi and LNReader libraries brought over in one step, a live preview of the look, and a sample chapter to try the reader on.</p>
+      </description>
+    </release>
+    <release version="2.13.2" date="2026-10-26">
+      <description>
+        <p>Comick's search filters on the Comics page (genres and tags to include or leave out, status, type, years, rating and more), and Anime4K's Best sharpening drawn correctly on Linux.</p>
+      </description>
+    </release>
+    <release version="2.13.1" date="2026-10-25">
+      <description>
+        <p>Back closes the anime player's own menu before the player, and goes to the previous step on the welcome screens. Sources show their catalogue right below the source chips.</p>
+      </description>
+    </release>
+    <release version="2.13.0" date="2026-10-25">
+      <description>
+        <p>Friends and lists shared by link, reactions on a page, two readers side by side, natural voices and page translation that work offline on the computer, sharper downloaded scans, key profiles per series, and glass menus.</p>
+      </description>
+    </release>
+    <release version="2.12.3" date="2026-10-25">
+      <description>
+        <p>Fixes pages that could stay empty in the Retro look, such as Settings.</p>
+      </description>
+    </release>
+    <release version="2.12.2" date="2026-10-25">
+      <description>
+        <p>Fixes pages and readers that could open empty in 2.12.1, and makes Settings and the player work with a TV's remote. Includes everything from 2.12.1.</p>
+      </description>
+    </release>
+    <release version="2.12.1" date="2026-10-24">
+      <description>
+        <p>The Windows Phone look is now called Retro, and its animations stay smooth while pages load. Translation reads a comic as one story and has a language picker in the reader. Fixes a player freeze after the next episode.</p>
+      </description>
+    </release>
+    <release version="2.12.0" date="2026-10-24">
+      <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#2120--2026-10-24</url>
+      <description>
+        <p>A Windows Phone (Metro) look, comic pages translated over the page, watch parties, your own Komga, Kavita and Suwayomi servers as sources, webtoons that run on into the next chapter, auto-scroll, a rebuilt read-aloud, novels as EPUB, and scrolling and flings that keep up with your fingers.</p>
+      </description>
+    </release>
     <release version="2.11.0" date="2026-10-24">
       <url type="details">https://github.com/medium-gh/scancore/blob/main/CHANGELOG.md#2110--2026-10-24</url>
       <description>

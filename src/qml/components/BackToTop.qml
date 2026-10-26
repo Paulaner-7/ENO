@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Floating button that brings a long page back to its top. Pops in once the
 // page has scrolled more than a screen and a half.

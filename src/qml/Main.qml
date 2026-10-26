@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 ApplicationWindow {
     id: window
@@ -49,8 +49,8 @@ ApplicationWindow {
     onWindowGlassTintChanged: Customize.syncWindowGlass(window, Theme.dark, windowGlassTint)
 
     // Settings → Interface: how navigation sits on wide windows. Phones
-    // always use the bottom tabs.
-    readonly property string navStyle: Theme.compact ? "tabs"
+    // always use the bottom tabs; the Retro mode has its app bar everywhere.
+    readonly property string navStyle: Theme.retro ? "retro" : Theme.compact ? "tabs"
         : ["sidebar", "floating", "rail", "dock"].indexOf(App.settings.navStyle) >= 0 ? App.settings.navStyle : "sidebar"
     readonly property string navSide: navStyle === "dock" ? (App.settings.dockSide === "top" ? "top" : "bottom")
         : App.settings.navSide === "right" ? "right" : "left"
@@ -94,6 +94,12 @@ ApplicationWindow {
         if (start.size) {
             window.width = start.size[0]
             window.height = start.size[1]
+            // "fixed": true keeps that size where a compositor would fill
+            // its screen (test runs under cage).
+            if (start.fixed) {
+                window.minimumWidth = window.maximumWidth = start.size[0]
+                window.minimumHeight = window.maximumHeight = start.size[1]
+            }
         }
         if (start.screenshot) screenshotTimer.start()
         // The page chosen in Settings → Interface → Start.
@@ -106,6 +112,10 @@ ApplicationWindow {
         // background).
         if (start.notify) notifyHook.start()
         if (start.palette) Qt.callLater(() => commandPalette.open())
+        // {"retroBar": "open" | "more"}: the Retro app bar opened, or its
+        // button held.
+        if (start.retroBar === "open") retroBar.expanded = true
+        if (start.retroBar === "more") retroBar.moreOpen = true
         if (start.shortcuts) Qt.callLater(() => shortcutsSheet.open())
         if (start.push) Qt.callLater(() => shell.push(start.push.path, start.push.props || {}))
         if (start.installNovelPack) {
@@ -132,6 +142,23 @@ ApplicationWindow {
     // A crash last time: the report, to send.
     CrashReportsDialog { id: crashPrompt }
     Timer { running: true; interval: 2500; onTriggered: crashPrompt.showLatest() }
+
+    // A watch party joined from elsewhere: its anime opens once the host's
+    // state arrives; when the host moves to another anime, a toast offers it.
+    Connections {
+        target: Party
+        property string opened: ""
+        function onStateReceived() {
+            const s = Party.state
+            if (!Party.active || Party.hosting || !s.anime || Party.watching === s.anime.anilistId) return
+            const key = Party.code + ":" + s.anime.anilistId
+            if (key === opened) return
+            const first = !opened.startsWith(Party.code + ":")
+            opened = key
+            if (first) Router.openPartyAnime(s)
+            else shell.toast(qsTr("The host moved on to %1").arg(s.anime.title), "info", { label: qsTr("Open"), run: () => Router.openPartyAnime(Party.state) })
+        }
+    }
 
     // Another of the account's apps sent where it is (Continue on…).
     Connections {
@@ -198,6 +225,12 @@ ApplicationWindow {
         id: shell
         property string section: "home"
         property var visited: ({ home: true })
+        // Pages over the current section's first one (Retro's back button).
+        readonly property int depth: {
+            App.dependOn(section, visited)
+            const stack = stackFor(section)
+            return stack ? stack.depth : 1
+        }
         // After the first page is up, the others are built over several
         // frames instead of in one go, so a first visit (and the press that
         // led there) never freezes the window; slow phones gain most.
@@ -252,6 +285,19 @@ ApplicationWindow {
             if (App.profiling) App.profilePlace(path)
         }
 
+        // A TV's remote, for controls that take the D-pad's keys themselves
+        // (Select): the focus moves on as from anywhere else.
+        function moveFocus(direction) { return spatialFocus.move(direction) }
+
+        // Side by side: `path` with `props` beside the reader that is open.
+        readonly property bool canSplit: window.width >= 1100 && immersive.depth > 0
+        readonly property var splitItem: splitPane.active ? splitLoader.item : null
+        function openSplit(path, props) { splitPane.open(path, props) }
+        function closeSplit() { if (splitPane.page != "") splitPane.close() }
+        // Which of the two readers the keys go to: the one last clicked or
+        // focused (both answering the same shortcut, Qt would run neither).
+        property var keyReader: null
+
         function openImmersive(path, props) {
             immersive.push(Qt.resolvedUrl(path), props)
             if (App.profiling) App.profilePlace(path)
@@ -271,6 +317,11 @@ ApplicationWindow {
                 stack.pop()
                 return true
             }
+            // Retro: every section leads back to the hub.
+            if (Theme.retro && section !== "home") {
+                goSection("home")
+                return true
+            }
             return false
         }
 
@@ -279,6 +330,17 @@ ApplicationWindow {
         // background, as Back does on an app's first screen. Android does not
         // close an app's last window.
         function systemBack() {
+            // The welcome: its previous step. On its first step, Back closes
+            // it when Settings showed it again, or, on the first run, sends
+            // SCANCORE to the background as on any first screen (nothing
+            // behind it moves).
+            if (onboarding.item) {
+                if (!onboarding.item.back()) {
+                    if (App.settings.onboarded === true) onboarding.item.finish()
+                    else if (App.platform === "android") App.moveToBackground()
+                }
+                return
+            }
             // A reader or the player may have its own steps first (the
             // player: its panel, then full screen).
             const page = immersive.currentItem
@@ -325,11 +387,23 @@ ApplicationWindow {
         // The parent's safe area, so these margins do not feed back into it.
         anchors.topMargin: parent.SafeArea.margins.top
         anchors.bottomMargin: parent.SafeArea.margins.bottom
+        // Phones on their side: clear of a punch hole or notch at the side
+        // (the window draws into the cutout, Screen.java).
+        anchors.leftMargin: parent.SafeArea.margins.left
+        anchors.rightMargin: parent.SafeArea.margins.right
         enabled: !window.immersiveOpen
         visible: !window.immersiveOpen || immersive.busy
         // Disabling drops focus; take it back when the reader closes.
         onEnabledChanged: if (enabled) forceActiveFocus()
         Keys.onEscapePressed: (event) => event.accepted = shell.back()
+        // A TV's remote: the D-pad between controls, Select presses.
+        Keys.onPressed: (event) => {
+            if (!App.tv) return
+            const dirs = { [Qt.Key_Left]: "left", [Qt.Key_Right]: "right", [Qt.Key_Up]: "up", [Qt.Key_Down]: "down" }
+            if (dirs[event.key] !== undefined) event.accepted = spatialFocus.move(dirs[event.key])
+            else if (event.key === Qt.Key_Select || event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
+                event.accepted = spatialFocus.activate()
+        }
 
         // Everything the dock floats over. The dock samples this for its glass.
         Item {
@@ -361,11 +435,12 @@ ApplicationWindow {
                 id: content
                 anchors.left: window.sidebarShown && window.navSide === "left" ? sidebar.right : parent.left
                 anchors.right: window.sidebarShown && window.navSide === "right" ? sidebar.left : parent.right
-                anchors.top: parent.top
                 // The bottom dock floats over the page rather than sitting on
                 // a shelf, so its glass has something to frost.
-                anchors.bottom: Theme.compact ? tabBar.top : parent.bottom
+                anchors.top: parent.top
+                anchors.bottom: retroBar.visible ? retroBar.top : tabBar.visible ? tabBar.top : parent.bottom
                 anchors.topMargin: dock.visible && window.navSide === "top" ? dock.height + 18 : 0
+                anchors.bottomMargin: readAloudBar.height
                 clip: true
 
                 Repeater {
@@ -388,18 +463,27 @@ ApplicationWindow {
                         Behavior on opacity { NumberAnimation { duration: sectionLoader.current ? Motion.slow : Motion.fast; easing.type: Easing.OutCubic } }
                         Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.decelerate } }
 
-                        sourceComponent: PageStack {
-                            initial: {
-                                switch (sectionLoader.key) {
-                                case "home": return "pages/HomePage.qml"
-                                case "comics": return "pages/ComicsPage.qml"
-                                case "novels": return "pages/NovelsPage.qml"
-                                case "anime": return "pages/AnimePage.qml"
-                                case "library": return "pages/LibraryPage.qml"
-                                case "history": return "pages/HistoryPage.qml"
-                                case "activity": return "pages/ActivityPage.qml"
-                                case "downloads": return "pages/DownloadsPage.qml"
-                                default: return "pages/SettingsPage.qml"
+                        // Retro: Home is the hub.
+                        sourceComponent: sectionLoader.key === "home" && Theme.retro ? retroHome : sectionStack
+                        Component {
+                            id: retroHome
+                            PageStack { initial: "retro/RetroHub.qml" }
+                        }
+                        Component {
+                            id: sectionStack
+                            PageStack {
+                                initial: {
+                                    switch (sectionLoader.key) {
+                                    case "home": return "pages/HomePage.qml"
+                                    case "comics": return "pages/ComicsPage.qml"
+                                    case "novels": return "pages/NovelsPage.qml"
+                                    case "anime": return "pages/AnimePage.qml"
+                                    case "library": return "pages/LibraryPage.qml"
+                                    case "history": return "pages/HistoryPage.qml"
+                                    case "activity": return "pages/ActivityPage.qml"
+                                    case "downloads": return "pages/DownloadsPage.qml"
+                                    default: return "pages/SettingsPage.qml"
+                                    }
                                 }
                             }
                         }
@@ -433,12 +517,41 @@ ApplicationWindow {
         onOpenPalette: commandPalette.open()
     }
 
+    // Reading aloud with the reader closed: the mini player, above the
+    // navigation along the bottom.
+    ReadAloudBar {
+        id: readAloudBar
+        parent: shellView
+        z: 3
+        // Plain positions, not anchors: the bars it sits on are reparented
+        // into shellView too, and anchors to them could be resolved first.
+        x: window.sidebarShown && window.navSide === "left" ? sidebar.x + sidebar.width : 0
+        width: (parent ? parent.width : 0) - (window.sidebarShown ? sidebar.width + window.navInset : 0)
+        y: (parent ? parent.height : 0) - height - (retroBar.visible ? retroBar.height : tabBar.visible ? tabBar.height
+            : dock.visible && window.navSide === "bottom" ? dock.height + 20 : 0)
+    }
+
+    // Retro: the app bar along the bottom, on every device.
+    RetroBar {
+        id: retroBar
+        parent: shellView
+        visible: Theme.retro
+        z: 3
+        height: visible ? implicitHeight : 0
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        section: shell.section
+        canGoBack: shell.section !== "home" || shell.depth > 1
+        onBack: shell.back()
+    }
+
     // Phone layout: bottom tabs instead of the sidebar.
     TabBar {
         id: tabBar
         parent: shellView
-        visible: Theme.compact
-        height: Theme.compact ? 62 : 0
+        visible: Theme.compact && !Theme.retro
+        height: visible ? 62 : 0
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -462,10 +575,23 @@ ApplicationWindow {
         // The parent's safe area, so these margins do not feed back into it.
         anchors.topMargin: edgeToEdge ? 0 : parent.SafeArea.margins.top
         anchors.bottomMargin: edgeToEdge ? 0 : parent.SafeArea.margins.bottom
+        // A side cutout (a phone on its side) is kept clear by every page;
+        // the player's picture may reach into it (StackView.view.cutoutLeft).
+        anchors.leftMargin: cutoutLeft
+        // Side by side: the second reader has the right half.
+        anchors.rightMargin: cutoutRight + (splitPane.active ? splitPane.width : 0)
+        readonly property real cutoutLeft: parent.SafeArea.margins.left
+        readonly property real cutoutRight: parent.SafeArea.margins.right
         visible: depth > 0 || busy
         z: 10
         // Readers handle their own keys, so they need focus as soon as they open.
         onCurrentItemChanged: if (currentItem) currentItem.forceActiveFocus()
+        // The reader beside goes with the last one here.
+        onDepthChanged: if (depth === 0) shell.closeSplit()
+        // NumberAnimations, not Animators: the first reader pushed onto the
+        // empty stack gets the starting opacity without the animation
+        // running, and an Animator never puts the end value back, so it
+        // opened invisible (2.12.1).
         pushEnter: Transition {
             ParallelAnimation {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Motion.slow; easing.type: Easing.OutCubic }
@@ -482,6 +608,42 @@ ApplicationWindow {
         }
         replaceEnter: pushEnter
         replaceExit: pushExit
+    }
+
+    // Side by side (wide windows): a second reader on the right half, opened
+    // from a reader's Side by side button (Router.toSplit); its own close
+    // closes only it (Router.leave).
+    Item {
+        id: splitPane
+        parent: window.contentItem.parent
+        property url page: ""
+        property var props: ({})
+        readonly property bool active: page != "" && immersive.depth > 0 && window.width >= 1100
+        visible: active
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.rightMargin: immersive.cutoutRight
+        width: Math.round((parent.width - immersive.cutoutLeft - immersive.cutoutRight) / 2)
+        z: 10
+        Rectangle { anchors.fill: parent; color: "#000000" }
+        Loader {
+            id: splitLoader
+            anchors.fill: parent
+            anchors.leftMargin: 1
+            onLoaded: item.forceActiveFocus()
+        }
+        // Between the two: a line to tell them apart.
+        Rectangle { width: 1; height: parent.height; color: "#2a2a30" }
+        function open(path, props) {
+            page = Qt.resolvedUrl(path)
+            splitLoader.setSource(page, props || {})
+        }
+        function close() {
+            page = ""
+            splitLoader.source = ""
+            if (immersive.currentItem) immersive.currentItem.forceActiveFocus()
+        }
     }
 
     HeroLayer {
@@ -510,8 +672,8 @@ ApplicationWindow {
         visible: App.settings.incognito === true
         anchors.horizontalCenter: parent.horizontalCenter
         // Above the phone's tabs or a bottom dock, clear of page headers.
-        y: parent.height - height - 12 - (tabBar.visible ? tabBar.height
-            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0)
+        y: parent.height - 12 - (retroBar.visible ? retroBar.barHeight : tabBar.visible ? tabBar.height
+            : dock.visible && dock.side !== "top" ? parent.height - dock.y : 0) - height
         height: 28
         width: badgeRow.implicitWidth + 22
         hoverEnabled: true
@@ -553,6 +715,17 @@ ApplicationWindow {
         }
     }
 
+    SpatialFocus {
+        id: spatialFocus
+        scope: shellView
+    }
+    // A TV opens with the focus on the first control.
+    Timer {
+        running: App.tv
+        interval: 1500
+        onTriggered: if (!spatialFocus.current || !spatialFocus.isStop(spatialFocus.current)) spatialFocus.move("down")
+    }
+
     CommandPalette {
         id: commandPalette
         z: 30
@@ -563,10 +736,6 @@ ApplicationWindow {
     ShortcutsSheet {
         id: shortcutsSheet
         z: 30
-    }
-
-    UpdateBanner {
-        z: 35
     }
 
     // Drop a .sct theme on the window to use it.
@@ -633,7 +802,7 @@ ApplicationWindow {
         id: toasts
         z: 40
         // Above the phone's tab bar, not over it.
-        bottomInset: (tabBar.visible ? tabBar.height : 0) + (incognitoBadge.visible ? incognitoBadge.height + 12 : 0)
+        bottomInset: (tabBar.visible ? tabBar.height : retroBar.visible ? retroBar.barHeight : 0) + readAloudBar.height + (incognitoBadge.visible ? incognitoBadge.height + 12 : 0)
     }
 
     // Development hook: SCANCORE_START {"screenshot": "/path.png", "delay": ms}
@@ -656,6 +825,8 @@ ApplicationWindow {
     // The back button on mice.
     TapHandler {
         acceptedButtons: Qt.BackButton
+        // Mice only: touch taps ignore acceptedButtons.
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
         onTapped: shell.back()
     }
     Shortcut {

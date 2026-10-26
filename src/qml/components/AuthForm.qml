@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Sign in or create a scancore.onl account. Used by the welcome flow and
 // Settings. Emits done() after a successful sign in or sign up.

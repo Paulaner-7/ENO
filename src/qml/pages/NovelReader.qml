@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 // Full-window novel reader with adjustable typography, reading themes,
 // remembered position and the next chapter loaded ahead. Reads aloud with the

@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Full screen while reading (comics and novels). The readers' full screen
 // button switches it and is remembered (setting readerFullscreen), so the

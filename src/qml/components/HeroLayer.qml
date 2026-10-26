@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Shared-element transition: a cover flies from the card that was clicked
 // to its place on the details page. The page calls Router.shell.land(item)

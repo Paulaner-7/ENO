@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // One chapter or episode in a details list.
 AbstractButton {
@@ -33,6 +33,8 @@ AbstractButton {
 
     TapHandler {
         acceptedButtons: Qt.RightButton
+        // Mice only: touch taps ignore acceptedButtons (a tap would open it).
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
         onTapped: (point) => { if (!row.selecting) row.menuRequested(point.position.x, point.position.y) }
     }
 

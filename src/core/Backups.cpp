@@ -404,6 +404,19 @@ MihonBackup parseMihonBackup(const QByteArray &data) {
             Entry entry;
             if (parseEntry(backup.bytes(), f != 1, entry.source, entry.item, entry.categories))
                 (f == 1 ? manga : anime).append(entry);
+        } else if (f == 105) {
+            Proto prefs(backup.bytes());
+            while (prefs.next()) {
+                if (prefs.field() != 1) {
+                    prefs.skip();
+                    continue;
+                }
+                bool ok = false;
+                const auto key = prefs.text();
+                const auto id = key.startsWith(QLatin1String("source_")) ? key.mid(7).toULongLong(&ok) : 0;
+                if (ok && id && !out.configuredSources.contains(id))
+                    out.configuredSources.append(id);
+            }
         } else if (f == 106) {
             if (auto repo = parseRepository(backup.bytes()); repo.url.startsWith(QLatin1String("https://")))
                 out.repositories.append(repo);

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // Chooses Mihon's storage folder (or the downloads folder in it). It joins
 // the folders of Settings → Sources, and the chapters Mihon downloaded

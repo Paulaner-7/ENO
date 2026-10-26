@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Rounded cover art. Shows a soft placeholder while loading, then fades and
 // settles the image in. The image is drawn by one shader straight from its

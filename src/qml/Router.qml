@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import ScanCore
+import Scancore
 
 // Navigation entry points used by every page. Main.qml installs itself as
 // the shell on startup.
@@ -18,7 +18,7 @@ QtObject {
     // "novels", …) can be reached.
     function mediaAllowed(media) { return !animeOnly || media === "anime" }
     function sectionAllowed(name) {
-        if (animeOnly && (name === "comics" || name === "novels")) return false
+        if (animeOnly && (name === "comics" || name === "novels" || name === "music")) return false
         if (name === "downloads" || name === "history" || name === "notifications") return false
         return true
     }
@@ -30,9 +30,55 @@ QtObject {
     function refuseMedia() { toast(qsTr("ENO is set up for anime only"), "info") }
 
     function go(name) { if (shell) shell.goSection(name) }
+    // Comics, Novels and Anime show in the tabs and sidebar unless the
+    // reader left them out (welcome, Settings → Interface); a link or key
+    // still opens them.
+    function sectionShown(section) {
+        const media = { comics: "comic", novels: "novel", anime: "anime" }[section]
+        if (!media) return true
+        const shown = Array.from(App.settings.shownMedia || [])
+        return shown.length === 0 || shown.indexOf(media) >= 0
+    }
+    // Shows only these media (["comic", "novel", "anime"], at least one):
+    // the tabs and sidebar, Home's sections and Retro's hub follow.
+    function setShownMedia(media) {
+        const list = ["comic", "novel", "anime"].filter(m => media.indexOf(m) >= 0)
+        if (list.length === 0) return
+        App.setSetting("shownMedia", list)
+        const sections = { comic: "comics", novel: "novels", anime: "anime" }
+        for (const kind of ["comic", "novel", "anime"])
+            PageLayout.setRemoved("home", sections[kind], list.indexOf(kind) < 0)
+        const kinds = { comics: "comic", novels: "novel", anime: "anime" }
+        const current = Retro.sections().map(s => s.key)
+        const wanted = current.filter(k => !kinds[k] || list.indexOf(kinds[k]) >= 0)
+        for (const k of ["comics", "novels", "anime"])
+            if (list.indexOf(kinds[k]) >= 0 && wanted.indexOf(k) < 0) wanted.push(k)
+        Retro.setSections(wanted)
+    }
     // A page on top of the current section's stack.
     function push(path, props) { if (shell) shell.push(path, props || {}) }
     function back() { if (shell) shell.back() }
+    // A page done: its own window closes (openWindow), else the shell
+    // goes back.
+    function leave(page) {
+        const w = page && page.Window ? page.Window.window : null
+        if (w && w.isPageWindow === true) w.close()
+        else if (shell && page && page === shell.splitItem) shell.closeSplit()
+        else back()
+    }
+    // The next reader opened goes beside the one that is open (a reader's
+    // Side by side), not over it.
+    property bool toSplit: false
+    // Computers: `path` (a reader, the player, a page) in a window of its own.
+    readonly property bool windows: App.platform !== "android"
+    function openWindow(path, props) {
+        const component = Qt.createComponent(Qt.resolvedUrl("components/PageWindow.qml"))
+        if (component.status !== Component.Ready) {
+            console.warn("PageWindow:", component.errorString())
+            return null
+        }
+        return component.createObject(null, { page: path, props: props || {} })
+    }
     // A comic or book file: an archive, folder or PDF of pages, or an EPUB.
     function openFile(url) {
         const address = String(url)
@@ -94,6 +140,7 @@ QtObject {
     // One source's own popular, latest and filtered lists.
     function openSource(key) { push("pages/SourcePage.qml", { sourceKey: key }) }
     function openExtensions() { push("pages/ExtensionsPage.qml", {}) }
+    function openExtensionsDiagnostics() { push("pages/ExtensionsDiagnostics.qml", {}) }
     function toast(message, kind, action) { if (shell) shell.toast(message, kind || "info", action) }
 
     // item: a search/library map with id, media, sourceUrl, title, cover.
@@ -112,12 +159,22 @@ QtObject {
 
     function openComicReader(series, chapters, index) {
         if (!mediaAllowed("comic")) { refuseMedia(); return }
-        if (shell) shell.openImmersive("pages/ComicReader.qml", { series: series, chapters: chapters, index: index })
+        openReader("pages/ComicReader.qml", series, chapters, index)
     }
-
     function openNovelReader(series, chapters, index) {
         if (!mediaAllowed("novel")) { refuseMedia(); return }
-        if (shell) shell.openImmersive("pages/NovelReader.qml", { series: series, chapters: chapters, index: index })
+        openReader("pages/NovelReader.qml", series, chapters, index)
+    }
+    function openReader(path, series, chapters, index) {
+        if (!shell) return
+        const props = { series: series, chapters: chapters, index: index }
+        if (toSplit && shell.canSplit) {
+            toSplit = false
+            shell.openSplit(path, props)
+        } else {
+            toSplit = false
+            shell.openImmersive(path, props)
+        }
     }
 
     // SCANCORE Wrapped for a year, as a story over the whole window.
@@ -133,6 +190,16 @@ QtObject {
         return -1
     }
 
+    // A watch party's anime (Party.state), for someone who joined from
+    // elsewhere: its page, which starts the host's episode.
+    function openPartyAnime(state) {
+        if (!shell || !state || !state.anime) return
+        shell.push("pages/AnimeDetails.qml", { anilistId: state.anime.anilistId,
+                                               summary: { title: state.anime.title, cover: state.anime.cover || "" },
+                                               partyEpisode: Number(state.episode) || 1 })
+    }
+    // The song playing, full screen; with a song, that song (and, with
+    // `video`, its video).
     function openWatch(media, episodes, index) {
         if (shell) shell.openImmersive("pages/WatchPage.qml", { media: media, episodes: episodes, index: index })
     }
@@ -212,13 +279,14 @@ QtObject {
     // Everything a theme file carries beyond its colours and background
     // (Customize.h): light or dark, accent, layout, arranged pages and the
     // readers' colours.
-    readonly property var lookSettings: ["navStyle", "navSide", "dockSide", "pageSpacing", "roundness", "coverSize",
+    readonly property var lookSettings: ["uiMode", "retroTitle", "retroTitleColor", "retroBackground", "retroCase",
+        "retroLiveTiles", "retroSections", "navStyle", "navSide", "dockSide", "pageSpacing", "roundness", "coverSize",
         "motionSpeed", "textScale", "readerProgressWidth", "readerRailUnread", "readerRailRead", "readerRailCurrent",
         "readerProgressLook", "readerProgressEdge", "readerProgressOpacity",
         "novelTheme", "novelCustomBg", "novelCustomText"]
     readonly property var arrangedPages: ["home", "comics", "comics-top", "novels", "novels-top", "anime"]
     // What the ones with no stored value look like, so a file resets them too.
-    readonly property var lookDefaults: ({ navStyle: "sidebar", navSide: "left", dockSide: "bottom", pageSpacing: "default",
+    readonly property var lookDefaults: ({ uiMode: "standard", navStyle: "sidebar", navSide: "left", dockSide: "bottom", pageSpacing: "default",
         roundness: "default", coverSize: "default", motionSpeed: "default", textScale: 1 })
     function currentLook() {
         const settings = {}
@@ -237,7 +305,16 @@ QtObject {
     // Switches to a theme read from a .sct file (Customize.importTheme).
     function applyTheme(theme) {
         const t = Object.assign({}, theme)
-        const accent = t.accent, look = t.look, preset = t.preset
+        const accent = t.accent, preset = t.preset
+        // Files from 2.12.0 call the Retro look "Metro".
+        const look = t.look ? Object.assign({}, t.look) : t.look
+        if (look) {
+            if (String(look.accentName || "").startsWith("metro-")) look.accentName = "retro-" + look.accentName.slice(6)
+            const settings = {}
+            for (const k in (look.settings || {}))
+                settings[k.startsWith("metro") ? "retro" + k.slice(5) : k] = k === "uiMode" && look.settings[k] === "metro" ? "retro" : look.settings[k]
+            look.settings = settings
+        }
         delete t.accent
         delete t.look
         delete t.preset
@@ -250,7 +327,7 @@ QtObject {
         if (accent) {
             App.setSetting("customAccent", accent)
             App.setSetting("accent", "custom")
-        } else if (look && look.accentName && Theme.accents[look.accentName]) {
+        } else if (look && look.accentName && (Theme.accents[look.accentName] || Theme.retroAccents[look.accentName])) {
             App.setSetting("accent", look.accentName)
         }
         // A version 2 file is the whole look: pages it does not arrange go

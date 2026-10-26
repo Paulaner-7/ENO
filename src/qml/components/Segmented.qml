@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Segmented control with a sliding selection pill.
 Rectangle {
@@ -18,7 +18,7 @@ Rectangle {
 
     implicitHeight: 36
     implicitWidth: row.implicitWidth + 8
-    radius: height / 2
+    radius: Theme.pill(height)
     color: Theme.surface2
     border.width: 1
     border.color: Theme.border
@@ -27,7 +27,7 @@ Rectangle {
         id: pill
         y: 4
         height: parent.height - 8
-        radius: height / 2
+        radius: Theme.pill(height)
         color: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
@@ -65,6 +65,10 @@ Rectangle {
                     }
                     Text {
                         id: label
+                        // Sharing the width, a long label (a translation) ends in "…".
+                        width: root.fill ? Math.min(implicitWidth, root.width / Math.max(1, root.options.length) - 20 - (glyph.visible ? 21 : 0))
+                                         : implicitWidth
+                        elide: Text.ElideRight
                         visible: text.length > 0
                         text: modelData.label || ""
                         color: index === root.currentIndex ? Theme.text : Theme.textMuted

@@ -36,6 +36,8 @@ dependencies {
     api(libs.jsoup)
     api(libs.rxjava)
     api(libs.injekt)
+    // Aniyomi's local video servers (HttpServer).
+    api(libs.nanohttpd)
     api(libs.androidx.preference)
     api(libs.quickjs.android)
     androidTestImplementation(libs.androidx.test.runner)

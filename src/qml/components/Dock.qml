@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Effects
-import ScanCore
+import Scancore
 
 // Navigation as a floating dock along the top or bottom of the window: every
 // section as an icon that grows under the pointer, with its name above (or
@@ -118,7 +118,7 @@ Item {
                     contentItem: Item {
                         Icon {
                             anchors.centerIn: parent
-                            name: slot.modelData.icon || ""
+                            name: slot.key === "notifications" && Notifications.unread > 0 ? "bell-dot" : (slot.modelData.icon || "")
                             size: 20
                             color: dock.current === slot.key ? Theme.text : button.hovered ? Theme.text : Theme.textMuted
                             scale: button.pressed ? 0.86 : button.hovered ? 1.18 : 1
@@ -126,7 +126,8 @@ Item {
                         }
                         Rectangle {
                             readonly property int count: slot.key === "library" ? Library.unreadUpdates
-                                : slot.key === "downloads" ? Downloads.pending : 0
+                                : slot.key === "downloads" ? Downloads.pending
+                                : slot.key === "notifications" ? Notifications.unread : 0
                             visible: count > 0
                             x: parent.width / 2 + 7
                             y: 9

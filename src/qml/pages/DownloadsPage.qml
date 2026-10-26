@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Offline chapters: queue, progress, failures and stored copies.
 Item {
@@ -47,6 +47,8 @@ Item {
     readonly property int failedCount: items.filter(i => i.status === "failed").length
 
     ListView {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         WheelScroll {}
         id: list
         anchors.fill: parent

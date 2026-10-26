@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import ScanCore
+import Scancore
 
 // Which video plays first (Settings → Anime): the picture height and the
 // audio (the original or a dub) asked for. WatchPage ranks a source's

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 // High-performance GPU-accelerated ASCII Fluid Animation background.
 // Implements multidirectional 2-layer domain-warped viscous fluid math

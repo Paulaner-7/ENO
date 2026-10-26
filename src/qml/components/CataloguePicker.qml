@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // The tracker catalogue a page browses and searches, per media (settings
 // "catalogComic", "catalogNovel" and "catalogAnime"). Comick has only

@@ -66,6 +66,11 @@ public:
     // Computers: what the extension host and its extensions wrote since it
     // last started (stack traces), as a file:// address, or "" before then.
     Q_INVOKABLE QString hostLog() const;
+    // Extensions → Diagnostics: the runtime and host (its version, the
+    // extension libraries it takes), the sites each extension contacted
+    // this session ({package: [{host, requests, last}]}), the end of the
+    // host's log and the system, as one report that can be copied.
+    Q_INVOKABLE sc::Task *diagnostics();
 
     int revision() const { return m_revision; }
     QStringList installing() const;

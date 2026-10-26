@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Pill search input with icon, clear button and focus glow.
 TextField {
@@ -33,7 +33,7 @@ TextField {
     }
 
     background: Rectangle {
-        radius: height / 2
+        radius: Theme.pill(height)
         color: field.activeFocus ? Theme.surface : Theme.surface2
         border.width: 1
         border.color: field.activeFocus ? Theme.alpha(Theme.accent, 0.55) : (field.hovered ? Theme.borderStrong : Theme.border)
@@ -43,7 +43,7 @@ TextField {
         Rectangle {
             anchors.fill: parent
             anchors.margins: -4
-            radius: height / 2
+            radius: Theme.pill(height)
             color: "transparent"
             border.width: 4
             border.color: Theme.alpha(Theme.accent, 0.12)

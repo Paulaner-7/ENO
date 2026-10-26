@@ -4,6 +4,9 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QDeadlineTimer>
+#include <QGuiApplication>
+#include <QTimer>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -15,6 +18,7 @@
 #include <cstring>
 #include <exception>
 #include <string>
+#include <thread>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -25,6 +29,7 @@
 #include <csignal>
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <unistd.h>
 #include <unwind.h>
 #endif
@@ -332,7 +337,167 @@ void onTerminate() {
 
 QStringList seenList() { return Database::pref(QStringLiteral("crash.seen")).toStringList(); }
 
+// ------------------------------------------------------------------ hangs
+
+qint64 monotonicMs() { return QDeadlineTimer::current().deadline(); }
+
+// The interface's thread beats once a second while the app is in use; the
+// watchdog reports a gap of kHang.
+constexpr qint64 kHang = 8000;
+std::atomic<qint64> g_beat{0};
+std::atomic_bool g_watching{false};
+
+// Threads that may wait on something that does not answer (Busy).
+struct BusySlot {
+    std::atomic<const char *> what{nullptr};
+    std::atomic<qint64> since{0};
+#ifndef Q_OS_WIN
+    pthread_t thread{};
+#endif
+};
+BusySlot g_busy[8];
+
+#ifndef Q_OS_WIN
+pthread_t g_guiThread{};
+// Where the stacks of a hang report go, while one is written; the thread
+// asked writes its own stack from its signal handler.
+std::atomic<int> g_hangFd{-1};
+std::atomic_bool g_stackDone{false};
+#ifdef SIGRTMIN
+const int kStackSignal = SIGRTMIN + 5;
+#else
+// macOS has no real-time signals.
+const int kStackSignal = SIGUSR2;
+#endif
+
+void onStackSignal(int) {
+    const int fd = g_hangFd.load();
+    if (fd >= 0) {
+        Walk walk{fd, 0};
+        _Unwind_Backtrace(onFrame, &walk);
+    }
+    g_stackDone = true;
+}
+
+// The stack of `thread`, written into fd by the thread itself (it may be
+// blocked; the signal interrupts the wait). Nothing if it does not answer.
+void putStackOf(int fd, pthread_t thread) {
+    g_stackDone = false;
+    g_hangFd = fd;
+    if (pthread_kill(thread, kStackSignal) == 0)
+        for (int i = 0; i < 100 && !g_stackDone; ++i)
+            ::usleep(10000);
+    if (!g_stackDone)
+        put(fd, "(no answer)\n");
+    g_hangFd = -1;
+}
+#endif
+
+void writeHangReport(qint64 stuckMs) {
+    QDir().mkpath(folder());
+    const auto path = folder() + QStringLiteral("/crash-%1-%2-hang.txt")
+                                     .arg(QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss")))
+                                     .arg(QCoreApplication::applicationPid());
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return;
+    QByteArray head = QByteArray(g_header).replace("crash report", "hang report") + "What: the app stopped answering for " + QByteArray::number(stuckMs / 1000) + " s\n";
+    const qint64 now = monotonicMs();
+    for (const auto &slot : g_busy)
+        if (const char *what = slot.what.load())
+            head += "Busy: " + QByteArray(what) + " for " + QByteArray::number((now - slot.since.load()) / 1000.0, 'f', 1) + " s\n";
+    file.write(head);
+    file.flush();
+#ifndef Q_OS_WIN
+    const int fd = file.handle();
+    put(fd, "\nInterface thread:\n");
+    putStackOf(fd, g_guiThread);
+    for (const auto &slot : g_busy)
+        if (const char *what = slot.what.load()) {
+            put(fd, "\nBusy thread (");
+            put(fd, what);
+            put(fd, "):\n");
+            putStackOf(fd, slot.thread);
+        }
+    putLog(fd);
+#else
+    QByteArray log;
+    ringCopy([&log](const char *data, size_t size) { log.append(data, qsizetype(size)); }, true);
+    file.write("\nRecent log:\n" + log);
+#endif
+}
+
 } // namespace
+
+Busy::Busy(const char *what) {
+    for (int i = 0; i < int(std::size(g_busy)); ++i) {
+        const char *none = nullptr;
+        auto &slot = g_busy[i];
+        if (!slot.what.compare_exchange_strong(none, what))
+            continue;
+#ifndef Q_OS_WIN
+        slot.thread = pthread_self();
+#endif
+        slot.since = monotonicMs();
+        m_slot = i;
+        return;
+    }
+}
+
+Busy::~Busy() {
+    if (m_slot >= 0)
+        g_busy[m_slot].what = nullptr;
+}
+
+void watchHangs() {
+#ifndef Q_OS_WIN
+    g_guiThread = pthread_self();
+    struct sigaction action{};
+    action.sa_handler = onStackSignal;
+    action.sa_flags = SA_RESTART | SA_ONSTACK;
+    sigemptyset(&action.sa_mask);
+    sigaction(kStackSignal, &action, nullptr);
+#endif
+    g_beat = monotonicMs();
+    auto *beat = new QTimer(QCoreApplication::instance());
+    beat->setInterval(1000);
+    QObject::connect(beat, &QTimer::timeout, [] { g_beat = monotonicMs(); });
+    beat->start();
+    // Only while in use: Android stops the interface's thread in the
+    // background, and a suspended computer stops every clock but this one.
+    const auto follow = [](Qt::ApplicationState state) {
+        g_beat = monotonicMs();
+        g_watching = state == Qt::ApplicationActive;
+    };
+    QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged, qGuiApp, follow);
+    follow(qGuiApp->applicationState());
+    // Quitting waits for work still running (a page loading): not a hang.
+    static std::atomic_bool quitting{false};
+    QObject::connect(qGuiApp, &QCoreApplication::aboutToQuit, [] {
+        quitting = true;
+        g_watching = false;
+    });
+    QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged, qGuiApp, [] {
+        if (quitting)
+            g_watching = false;
+    });
+    std::thread([] {
+        bool reported = false;
+        while (true) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            const qint64 stuck = monotonicMs() - g_beat.load();
+            if (!g_watching || stuck < kHang) {
+                reported = false;
+                continue;
+            }
+            if (!reported) {
+                reported = true;
+                qWarning("The interface has not answered for %lld s; writing a hang report", stuck / 1000);
+                writeHangReport(stuck);
+            }
+        }
+    }).detach();
+}
 
 void install() {
     QDir().mkpath(folder());

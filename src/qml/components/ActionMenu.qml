@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A small menu of actions, opened at a point (a right click or a long
 // press). items: [{text, icon, danger, enabled, checked, run}]; a falsy

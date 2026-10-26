@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <!-- Casting: finding TVs and Chromecasts on the Wi-Fi (SSDP, mDNS). -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- Reading aloud with the screen off: a media-playback service with
+         controls on the lock screen (ReadAloudService). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <!-- %%INSERT_PERMISSIONS -->
     <!-- Reading novels aloud: Android 11+ only lets apps see the
          text-to-speech engines they declare they look for. -->
@@ -27,6 +31,10 @@
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
+    <!-- Android TV: SCANCORE runs there with the remote (no touch screen
+         needed) and shows in the TV's launcher. -->
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <!-- %%INSERT_FEATURES -->
     <supports-screens
         android:anyDensity="true"
@@ -38,6 +46,7 @@
         android:hardwareAccelerated="true"
         android:label="SCANCORE"
         android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/tv_banner"
         android:enableOnBackInvokedCallback="false"
         android:usesCleartextTraffic="false"
         android:allowBackup="true"
@@ -52,6 +61,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
             <!-- One-tap "add repository" links from repository pages, and
                  SCANCORE's own links. -->
@@ -87,6 +100,11 @@
             android:name="com.mediumdev.scancore.BrowserCheck"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation|density|uiMode"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:exported="false" />
+
+        <service
+            android:name="com.mediumdev.scancore.ReadAloudService"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
 
         <provider

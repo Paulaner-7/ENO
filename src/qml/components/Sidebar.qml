@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Collapsible navigation rail. The selection indicator slides between
 // items; collapsing animates the width and fades the labels.
@@ -22,8 +22,6 @@ Rectangle {
     readonly property var sections: [
         { key: "home", label: qsTr("Home"), icon: "house" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
-        { key: "comics", label: qsTr("Manga"), icon: "book-open" },
-        { key: "novels", label: qsTr("Novels"), icon: "book-text" },
         { key: "divider" },
         { key: "library", label: qsTr("Library"), icon: "library" },
         { key: "history", label: qsTr("History"), icon: "history" },
@@ -207,6 +205,8 @@ Rectangle {
     // Scrolls when the window is too short for every section above the
     // Settings button.
     Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         WheelScroll {}
         id: navArea
         y: searchButton.y + searchButton.height + 18

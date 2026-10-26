@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Every way of adding a repository ends here: a one-tap link, a pasted
 // address, the first-run step. Reads the repository first, says what it is
@@ -59,6 +59,7 @@ Dialog {
     function kindName(media, count) {
         if (media === "anime") return count === 1 ? qsTr("anime extension") : qsTr("anime extensions")
         if (media === "novel") return count === 1 ? qsTr("novel plugin") : qsTr("novel plugins")
+        if (media === "music") return count === 1 ? qsTr("music extension") : qsTr("music extensions")
         return count === 1 ? qsTr("comic extension") : qsTr("comic extensions")
     }
 
@@ -98,9 +99,9 @@ Dialog {
         }
     }
 
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }

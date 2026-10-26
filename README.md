@@ -68,6 +68,10 @@ Read and watch from the sources you choose, on your phone and your computer.
 
 Pull requests are welcome. For bigger changes, open an issue first so we can talk it through. Building, tests and where code goes are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+<a href="https://github.com/medium-gh/scancore/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=medium-gh/scancore" alt="SCANCORE's contributors" />
+</a>
+
 ### Disclaimer
 
 SCANCORE hosts no content and is not affiliated with any site or extension. Extensions are other people's code, and you choose which to run. Rights holders, see [TAKEDOWN.md](TAKEDOWN.md). Please support the creators of the series you enjoy.

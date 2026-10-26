@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Blurred drop shadow drawn from a 9-slice image, cheap enough for grids.
 BorderImage {

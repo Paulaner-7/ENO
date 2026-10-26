@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 // Native macOS 27 Liquid Glass surface (NSGlassEffectView / CASDFLayer + glassBackground).
 // Captures the live page or artwork behind the item, refracts it through a curved

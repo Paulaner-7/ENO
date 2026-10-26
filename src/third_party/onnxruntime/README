@@ -1,0 +1,4 @@
+ONNX Runtime 1.31.0 C API headers (MIT, LICENSE beside them), from
+https://github.com/microsoft/onnxruntime/releases/tag/v1.31.0.
+The library itself is not part of SCANCORE: it is an optional download
+(src/core/translation/Onnx.cpp) loaded at run time.

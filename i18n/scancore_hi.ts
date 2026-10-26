@@ -545,6 +545,10 @@
             <source>Time counts while SCANCORE is in use: in a reader, playing an episode, or browsing. Chapters finished before time was kept come from your reading history.</source>
             <translation>समय तब गिना जाता है जब SCANCORE इस्तेमाल में हो: रीडर में, एपिसोड चलाते हुए या ब्राउज़ करते हुए। समय गिनने से पहले पूरे किए गए चैप्टर आपके पढ़ने के इतिहास से आते हैं।</translation>
         </message>
+        <message>
+            <source>Friends</source>
+            <translation>दोस्त</translation>
+        </message>
     </context>
     <context>
         <name>AddRepositoryDialog</name>
@@ -671,6 +675,14 @@
         <message>
             <source>Skip</source>
             <translation>छोड़ें</translation>
+        </message>
+        <message>
+            <source>music extension</source>
+            <translation>संगीत एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>संगीत एक्सटेंशन</translation>
         </message>
     </context>
     <context>
@@ -1032,6 +1044,26 @@
             <source>You might also like</source>
             <translation>आपको यह भी पसंद आ सकता है</translation>
         </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>हब से अनपिन करें</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>हब पर पिन करें</translation>
+        </message>
+        <message>
+            <source>Songs</source>
+            <translation>गाने</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>इस एनीमे के गाने अभी नहीं हैं</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>ओपनिंग और एंडिंग AnimeThemes से आते हैं।</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -1138,6 +1170,14 @@
         <message>
             <source>All %1</source>
             <translation>सभी %1</translation>
+        </message>
+        <message>
+            <source>Party %1</source>
+            <translation>पार्टी %1</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>वॉच पार्टी</translation>
         </message>
     </context>
     <context>
@@ -1449,6 +1489,34 @@
             <source>All extensions</source>
             <translation>सभी एक्सटेंशन</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>कम रिज़ॉल्यूशन वाले एपिसोड के लिए साफ़ रेखाएँ और बड़ा आकार।</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>कम रिज़ॉल्यूशन वाले एपिसोड के लिए साफ़ रेखाएँ और बड़ा आकार। सबसे अच्छा के लिए दमदार ग्राफ़िक्स कार्ड चाहिए।</translation>
+        </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>वीडियो डिकोडिंग</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>फ़्रेम वापस कॉपी करने वाली हार्डवेयर डिकोडिंग हर फ़ोन पर स्थिर रहती है। डायरेक्ट थोड़ा हल्का है, लेकिन कुछ फ़ोन पर अगले एपिसोड के बाद तस्वीर रुक गई थी। अगले वीडियो से लागू होगा।</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>हार्डवेयर (स्थिर)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>हार्डवेयर, डायरेक्ट</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>सॉफ़्टवेयर</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1596,6 +1664,285 @@
         <message>
             <source>Close</source>
             <translation>बंद करें</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>शैलियाँ</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>थीम</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>फ़ॉर्मैट</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>सामग्री</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>खोज फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick का कैटलॉग। फ़िल्टर चालू हों तो खाली खोज ब्राउज़ करती है।</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>कोई फ़िल्टर नहीं</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>साफ़ करें</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>लागू करें</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>इसके अनुसार क्रम</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>सबसे सटीक</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>सबसे ज़्यादा फ़ॉलो की गई</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>सबसे ज़्यादा देखी गई</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>सबसे ऊंची रेटिंग</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>औसत रेटिंग</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>नए अध्याय</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>हाल में जोड़े</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>स्थिति</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>कोई भी</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>जारी</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>पूरा हुआ</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>रद्द</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>विराम पर</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick में जोड़ा गया</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>कभी भी</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>पिछले हफ़्ते में</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>पिछले महीने में</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>पिछले 3 महीनों में</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>पिछले साल में</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>रेटिंग कम से कम</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>प्रकाशन</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>इस वर्ष से</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>इस वर्ष तक</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>चैप्टर</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>कम से कम</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>ज़्यादा से ज़्यादा</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>पूरी तरह अनुवादित</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>हर अध्याय अंग्रेज़ी में आ चुका है, सिर्फ़ सीरीज़ ख़त्म नहीं हुई।</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>बिना अध्याय गिनती वाली सीरीज़ भी दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>प्रकार</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>मनहवा</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>मंगा</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>मनहुआ</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>हांगकांग</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>पाठक वर्ग</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>शोनेन</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>शोजो</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>सेइनेन</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>जोसेई</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>नहीं बताया</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>सामग्री रेटिंग</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>शामिल करने के लिए एक बार, बाहर करने के लिए दो बार टैप करें</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>सुरक्षित</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>उत्तेजक</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>कामुक</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>अश्लील</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>भीषण हिंसा</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>शैली या टैग खोजें</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>%1 तक शामिल</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>सभी %1 दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>टैग</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>%1 तक शामिल और %2 तक बाहर</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>और टैग</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>“%1” से कोई टैग मेल नहीं खाता।</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>शामिल</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>बाहर</translation>
         </message>
     </context>
     <context>
@@ -1889,6 +2236,122 @@
             <source>Bottom</source>
             <translation>नीचे</translation>
         </message>
+        <message>
+            <source>Finished: </source>
+            <translation>पूरा पढ़ा: </translation>
+        </message>
+        <message>
+            <source>Next: </source>
+            <translation>अगला: </translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>नई विंडो में खोलें</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>मूल दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Translate the pages</source>
+            <translation>पेज अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse (L)</source>
+            <translation>माउस के नीचे आवर्धक लेंस (L)</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>अगले चैप्टर में आगे बढ़ें</translation>
+        </message>
+        <message>
+            <source>Auto-scroll</source>
+            <translation>अपने-आप स्क्रॉल</translation>
+        </message>
+        <message>
+            <source>Turn the pages by themselves</source>
+            <translation>पेज अपने-आप पलटें</translation>
+        </message>
+        <message>
+            <source>Auto-scroll speed · %1</source>
+            <translation>ऑटो-स्क्रॉल गति · %1</translation>
+        </message>
+        <message>
+            <source>A page every %1 s</source>
+            <translation>हर %1 सेकंड में एक पेज</translation>
+        </message>
+        <message>
+            <source>Sharpen small scans</source>
+            <translation>छोटे स्कैन को तीखा करें</translation>
+        </message>
+        <message>
+            <source>Light</source>
+            <translation>हल्का</translation>
+        </message>
+        <message>
+            <source>Strong</source>
+            <translation>तेज़</translation>
+        </message>
+        <message>
+            <source>Slower</source>
+            <translation>धीमा</translation>
+        </message>
+        <message>
+            <source>Faster</source>
+            <translation>और तेज़</translation>
+        </message>
+        <message>
+            <source>Pause auto-scroll</source>
+            <translation>अपने-आप स्क्रॉल रोकें</translation>
+        </message>
+        <message>
+            <source>Translate into %1</source>
+            <translation>%1 में अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>इसके साथ कुछ और पढ़ें</translation>
+        </message>
+        <message>
+            <source>React to this page</source>
+            <translation>इस पन्ने पर प्रतिक्रिया दें</translation>
+        </message>
+        <message>
+            <source>Downloading the upscaler (about 15 MB the first time)…</source>
+            <translation>अपस्केलर डाउनलोड हो रहा है (पहली बार लगभग 15 MB)…</translation>
+        </message>
+        <message>
+            <source>Enlarge downloaded pages (sharper; slower downloads)</source>
+            <translation>डाउनलोड किए पन्ने बड़े करें (ज़्यादा साफ़; डाउनलोड धीमे)</translation>
+        </message>
+        <message>
+            <source>Chapters downloaded from now on are enlarged.</source>
+            <translation>अब से डाउनलोड होने वाले अध्याय बड़े किए जाएँगे।</translation>
+        </message>
+        <message>
+            <source>Keys</source>
+            <translation>कुंजियाँ</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>इस सीरीज़ के लिए कुंजियाँ</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>रोज़ की कुंजियाँ</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>और</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 पर जारी रखें</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>फ़ुल स्क्रीन से बाहर निकलें</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -2027,6 +2490,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 अभी खोज रहे हैं</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>खोज फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 फ़िल्टर चालू</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 फ़िल्टर चालू</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>साफ़ करें</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 के कैटलॉग से %1 शीर्षक, फ़िल्टर किए हुए</translation>
         </message>
     </context>
     <context>
@@ -2528,6 +3011,10 @@
             <source>Choose folder</source>
             <translation>फ़ोल्डर चुनें</translation>
         </message>
+        <message>
+            <source>Your server: series read from other sources move forward on it too. It is managed in Settings → Sources → Your servers.</source>
+            <translation>आपका सर्वर: दूसरे स्रोतों से पढ़ी गई सीरीज़ उस पर भी आगे बढ़ती हैं। इसे सेटिंग → स्रोत → आपके सर्वर में संभाला जाता है।</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2899,6 +3386,121 @@
         </message>
     </context>
     <context>
+        <name>ExtensionsDiagnostics</name>
+        <message>
+            <source>Answered in %1 s with %2 titles.</source>
+            <translation>%1 सेकंड में %2 शीर्षकों के साथ जवाब दिया।</translation>
+        </message>
+        <message>
+            <source>Failed after %1 s: %2</source>
+            <translation>%1 सेकंड बाद विफल: %2</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>जाँच</translation>
+        </message>
+        <message>
+            <source>For when an extension misbehaves</source>
+            <translation>जब कोई एक्सटेंशन गड़बड़ करे</translation>
+        </message>
+        <message>
+            <source>Copy report</source>
+            <translation>रिपोर्ट कॉपी करें</translation>
+        </message>
+        <message>
+            <source>The report is copied. Paste it into an issue or a message.</source>
+            <translation>रिपोर्ट कॉपी हो गई। इसे किसी issue या संदेश में चिपकाएँ।</translation>
+        </message>
+        <message>
+            <source>Refresh</source>
+            <translation>रीफ़्रेश करें</translation>
+        </message>
+        <message>
+            <source>Runtime</source>
+            <translation>रनटाइम</translation>
+        </message>
+        <message>
+            <source>Extensions runtime installed</source>
+            <translation>Extensions रनटाइम इंस्टॉल हुआ</translation>
+        </message>
+        <message>
+            <source>Extensions runtime not installed</source>
+            <translation>एक्सटेंशन रनटाइम इंस्टॉल नहीं है</translation>
+        </message>
+        <message>
+            <source>No runtime for this system</source>
+            <translation>इस सिस्टम के लिए कोई रनटाइम नहीं</translation>
+        </message>
+        <message>
+            <source>Asking the host…</source>
+            <translation>होस्ट से पूछ रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Host %1 answered in %2 ms</source>
+            <translation>रनटाइम %1 ने %2 ms में जवाब दिया</translation>
+        </message>
+        <message>
+            <source>Extension libraries it takes</source>
+            <translation>समर्थित एक्सटेंशन लाइब्रेरी</translation>
+        </message>
+        <message>
+            <source>Mihon %1 · Aniyomi %2</source>
+            <translation>Mihon %1 · Aniyomi %2</translation>
+        </message>
+        <message>
+            <source>This device</source>
+            <translation>यह डिवाइस</translation>
+        </message>
+        <message>
+            <source>Test a source</source>
+            <translation>किसी स्रोत को आज़माएँ</translation>
+        </message>
+        <message>
+            <source>Loads the source's popular titles once and times it.</source>
+            <translation>स्रोत के लोकप्रिय शीर्षक एक बार लोड करके समय मापता है।</translation>
+        </message>
+        <message>
+            <source>Source</source>
+            <translation>स्रोत</translation>
+        </message>
+        <message>
+            <source>Testing…</source>
+            <translation>आज़मा रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Test</source>
+            <translation>आज़माएँ</translation>
+        </message>
+        <message>
+            <source>Sites the extensions contacted</source>
+            <translation>एक्सटेंशन ने जिन साइटों से संपर्क किया</translation>
+        </message>
+        <message>
+            <source>This session only, counted in the extensions runtime. Nothing but the sites' names is kept.</source>
+            <translation>सिर्फ़ यह सत्र, एक्सटेंशन रनटाइम में गिना गया। साइटों के नाम के अलावा कुछ नहीं रखा जाता।</translation>
+        </message>
+        <message>
+            <source>Nothing yet</source>
+            <translation>अभी कुछ नहीं</translation>
+        </message>
+        <message>
+            <source>Browse or read with an extension and come back.</source>
+            <translation>किसी एक्सटेंशन से ब्राउज़ करें या पढ़ें और वापस आएँ।</translation>
+        </message>
+        <message>
+            <source>%1 · %2 requests, %3</source>
+            <translation>%1 · %2 अनुरोध, %3</translation>
+        </message>
+        <message>
+            <source>Host log</source>
+            <translation>रनटाइम लॉग</translation>
+        </message>
+        <message>
+            <source>The end of extensions/host.log.</source>
+            <translation>extensions/host.log का अंत।</translation>
+        </message>
+    </context>
+    <context>
         <name>ExtensionsPage</name>
         <message>
             <source>All languages</source>
@@ -3180,6 +3782,14 @@
             <source>Its extensions</source>
             <translation>इसके एक्सटेंशन</translation>
         </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>जाँच</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -3229,6 +3839,193 @@
         <message>
             <source>Show password</source>
             <translation>पासवर्ड दिखाएं</translation>
+        </message>
+    </context>
+    <context>
+        <name>FriendsPage</name>
+        <message>
+            <source>just now</source>
+            <translation>अभी-अभी</translation>
+        </message>
+        <message>
+            <source>%1 min ago</source>
+            <translation>%1 मिनट पहले</translation>
+        </message>
+        <message>
+            <source>%1 h ago</source>
+            <translation>%1 घंटे पहले</translation>
+        </message>
+        <message>
+            <source>%1 days ago</source>
+            <translation>%1 दिन पहले</translation>
+        </message>
+        <message>
+            <source>%1 shared a list: %2</source>
+            <translation>%1 ने एक सूची साझा की: %2</translation>
+        </message>
+        <message>
+            <source>%1 watched %2</source>
+            <translation>%1 ने %2 देखा</translation>
+        </message>
+        <message>
+            <source>%1 read %2</source>
+            <translation>%1 ने %2 पढ़ा</translation>
+        </message>
+        <message>
+            <source>That list is empty.</source>
+            <translation>वह सूची खाली है।</translation>
+        </message>
+        <message>
+            <source>Shared. The link is copied: %1</source>
+            <translation>साझा की गई। लिंक कॉपी हुआ: %1</translation>
+        </message>
+        <message>
+            <source>%1 added to your library; %2 could not be found on your sources.</source>
+            <translation>%1 आपकी लाइब्रेरी में जोड़ी गईं; %2 आपके स्रोतों पर नहीं मिलीं।</translation>
+        </message>
+        <message>
+            <source>All of it is in your library already.</source>
+            <translation>सब कुछ पहले से आपकी लाइब्रेरी में है।</translation>
+        </message>
+        <message>
+            <source>%1 added to your library.</source>
+            <translation>%1 आपकी लाइब्रेरी में जोड़ी गईं।</translation>
+        </message>
+        <message>
+            <source>Friends</source>
+            <translation>दोस्त</translation>
+        </message>
+        <message>
+            <source>Follow each other on %1 to be friends</source>
+            <translation>दोस्त बनने के लिए %1 पर एक-दूसरे को फ़ॉलो करें</translation>
+        </message>
+        <message>
+            <source>Sign in (Settings → Sync) to add friends, see what they read and share lists.</source>
+            <translation>दोस्त जोड़ने, वे क्या पढ़ते हैं देखने और सूचियाँ साझा करने के लिए साइन इन करें (सेटिंग → सिंक)।</translation>
+        </message>
+        <message>
+            <source>You</source>
+            <translation>आप</translation>
+        </message>
+        <message>
+            <source>Share what I read and watch</source>
+            <translation>मैं जो पढ़ता और देखता हूँ, उसे साझा करें</translation>
+        </message>
+        <message>
+            <source>Your friends see the series you read and watch, and the lists you share. Off: they see nothing.</source>
+            <translation>आपके दोस्त वे सीरीज़ देखते हैं जो आप पढ़ते और देखते हैं, और वे सूचियाँ जो आप साझा करते हैं। बंद: वे कुछ नहीं देखते।</translation>
+        </message>
+        <message>
+            <source>Add a friend</source>
+            <translation>दोस्त जोड़ें</translation>
+        </message>
+        <message>
+            <source>Their username; when they add you too, you are friends. You are @%1.</source>
+            <translation>उनका यूज़रनेम; जब वे भी आपको जोड़ेंगे, आप दोस्त होंगे। आप @%1 हैं।</translation>
+        </message>
+        <message>
+            <source>username</source>
+            <translation>यूज़रनेम</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>जोड़ें</translation>
+        </message>
+        <message>
+            <source>You follow @%1.</source>
+            <translation>आप @%1 को फ़ॉलो करते हैं।</translation>
+        </message>
+        <message>
+            <source>Asking to be friends</source>
+            <translation>दोस्ती का अनुरोध भेजा गया</translation>
+        </message>
+        <message>
+            <source>Added you</source>
+            <translation>आपको जोड़ा</translation>
+        </message>
+        <message>
+            <source>Add back</source>
+            <translation>वापस जोड़ें</translation>
+        </message>
+        <message>
+            <source>No friends yet.</source>
+            <translation>अभी कोई दोस्त नहीं।</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>हटाएं</translation>
+        </message>
+        <message>
+            <source>Waiting for them to add you</source>
+            <translation>उनके आपको जोड़ने का इंतज़ार</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>रद्द करें</translation>
+        </message>
+        <message>
+            <source>What friends read</source>
+            <translation>दोस्त क्या पढ़ रहे हैं</translation>
+        </message>
+        <message>
+            <source>Nothing yet: friends show here once they share what they read.</source>
+            <translation>अभी कुछ नहीं: दोस्त जब बताएँगे कि वे क्या पढ़ते हैं, तब यहाँ दिखेंगे।</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>खोलें</translation>
+        </message>
+        <message>
+            <source>Shared lists</source>
+            <translation>साझा सूचियाँ</translation>
+        </message>
+        <message>
+            <source>Share a list from your library</source>
+            <translation>अपनी लाइब्रेरी से एक सूची साझा करें</translation>
+        </message>
+        <message>
+            <source>Anyone with the link sees it, and can add it all to their library in SCANCORE.</source>
+            <translation>लिंक वाला कोई भी इसे देख सकता है और SCANCORE में सब अपनी लाइब्रेरी में जोड़ सकता है।</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>शेयर करें</translation>
+        </message>
+        <message>
+            <source>Open a shared list</source>
+            <translation>साझा सूची खोलें</translation>
+        </message>
+        <message>
+            <source>Its link or code.</source>
+            <translation>उसका लिंक या कोड।</translation>
+        </message>
+        <message>
+            <source>link or code</source>
+            <translation>लिंक या कोड</translation>
+        </message>
+        <message>
+            <source>%1 series from @%2: %3</source>
+            <translation>@%2 की %1 सीरीज़: %3</translation>
+        </message>
+        <message>
+            <source>Add all to my library</source>
+            <translation>सब मेरी लाइब्रेरी में जोड़ें</translation>
+        </message>
+        <message>
+            <source>%1 series · shared %2</source>
+            <translation>%1 सीरीज़ · %2 को साझा की</translation>
+        </message>
+        <message>
+            <source>Copy link</source>
+            <translation>लिंक कॉपी करें</translation>
+        </message>
+        <message>
+            <source>Link copied</source>
+            <translation>लिंक कॉपी हुआ</translation>
+        </message>
+        <message>
+            <source>Stop sharing</source>
+            <translation>साझा करना बंद करें</translation>
         </message>
     </context>
     <context>
@@ -3683,6 +4480,166 @@
             <source>History</source>
             <translation>इतिहास</translation>
         </message>
+        <message>
+            <source>Highest refresh rate</source>
+            <translation>सबसे ऊँचा रिफ़्रेश रेट</translation>
+        </message>
+        <message>
+            <source>Scroll and animate at your screen's fastest rate, such as 120 Hz, instead of the rate the phone picks for apps. Uses a little more battery.</source>
+            <translation>फ़ोन ऐप्स के लिए जो रेट चुनता है उसकी जगह अपनी स्क्रीन के सबसे तेज़ रेट, जैसे 120 Hz, पर स्क्रॉल और एनिमेट करें। थोड़ी ज़्यादा बैटरी लगती है।</translation>
+        </message>
+        <message>
+            <source>Fling glide</source>
+            <translation>फ़्लिंग ग्लाइड</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a swipe.</source>
+            <translation>स्वाइप के बाद सूचियाँ कितनी देर चलती रहती हैं।</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a touchpad or touch screen swipe.</source>
+            <translation>टचपैड या टच स्क्रीन पर स्वाइप के बाद सूचियाँ कितनी देर चलती रहती हैं।</translation>
+        </message>
+        <message>
+            <source>Short</source>
+            <translation>छोटा</translation>
+        </message>
+        <message>
+            <source>Long</source>
+            <translation>लंबा</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>रूप</translation>
+        </message>
+        <message>
+            <source>Metro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Metro: टाइलों, बड़े अक्षरों और ऐप बार वाला पैनोरमा हब, Windows Phone जैसा।</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>सामान्य</translation>
+        </message>
+        <message>
+            <source>Pages and navigation</source>
+            <translation>पेज और नेविगेशन</translation>
+        </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Tiles and panoramas</source>
+            <translation>टाइलें और पैनोरमा</translation>
+        </message>
+        <message>
+            <source>Hold a tile on the hub to resize, move or unpin it. Series pages have Pin to the hub.</source>
+            <translation>हब पर किसी टाइल को दबाकर रखें ताकि उसका आकार बदलें, उसे हिलाएँ या अनपिन करें। सीरीज़ पेजों पर हब पर पिन करें है।</translation>
+        </message>
+        <message>
+            <source>Hub title</source>
+            <translation>हब का शीर्षक</translation>
+        </message>
+        <message>
+            <source>The big word across the top of the hub.</source>
+            <translation>हब के ऊपर का बड़ा शब्द।</translation>
+        </message>
+        <message>
+            <source>Title colour</source>
+            <translation>शीर्षक का रंग</translation>
+        </message>
+        <message>
+            <source>Accent blend</source>
+            <translation>एक्सेंट मिश्रण</translation>
+        </message>
+        <message>
+            <source>Plain</source>
+            <translation>सादा</translation>
+        </message>
+        <message>
+            <source>Background</source>
+            <translation>बैकग्राउंड</translation>
+        </message>
+        <message>
+            <source>Behind the hub, moving slower than the tiles.</source>
+            <translation>हब के पीछे, टाइलों से धीमे चलता है।</translation>
+        </message>
+        <message>
+            <source>Last read</source>
+            <translation>आखिरी बार पढ़ा</translation>
+        </message>
+        <message>
+            <source>Theme picture</source>
+            <translation>थीम चित्र</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>कोई नहीं</translation>
+        </message>
+        <message>
+            <source>Headers</source>
+            <translation>हेडर</translation>
+        </message>
+        <message>
+            <source>UPPERCASE</source>
+            <translation>बड़े अक्षर</translation>
+        </message>
+        <message>
+            <source>lowercase</source>
+            <translation>छोटे अक्षर</translation>
+        </message>
+        <message>
+            <source>Live tiles</source>
+            <translation>लाइव टाइलें</translation>
+        </message>
+        <message>
+            <source>Tiles turn over now and then to show new chapters and where you are.</source>
+            <translation>टाइलें बीच-बीच में पलटकर नए चैप्टर और आप कहाँ हैं, दिखाती हैं।</translation>
+        </message>
+        <message>
+            <source>Hub sections</source>
+            <translation>हब के सेक्शन</translation>
+        </message>
+        <message>
+            <source>Which sections the hub shows, in this order. Four or five are easiest to find your way in.</source>
+            <translation>हब कौन-से सेक्शन इस क्रम में दिखाए। चार या पाँच हों तो रास्ता ढूँढना सबसे आसान है।</translation>
+        </message>
+        <message>
+            <source>Earlier</source>
+            <translation>पहले</translation>
+        </message>
+        <message>
+            <source>Later</source>
+            <translation>बाद में</translation>
+        </message>
+        <message>
+            <source>Retro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Retro: टाइलों, बड़े अक्षरों और ऐप बार वाला पैनोरमा हब, Windows Phone जैसा।</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
+        <message>
+            <source>Sections</source>
+            <translation>सेक्शन</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>आप क्या पढ़ते और देखते हैं</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>टैब, होम और रेट्रो हब इन्हें दिखाते हैं। लिंक फिर भी बाकी को खोलता है।</translation>
+        </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>संगीत (प्रीव्यू)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>एनीमे ओपनिंग और एंडिंग और आपका अपना संगीत, बोल के साथ, और एक प्लेयर जो पढ़ते समय चलता रहता है। अभी बन रहा है।</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -3744,6 +4701,74 @@
         <message>
             <source>Back to the default</source>
             <translation>डिफ़ॉल्ट पर लौटाएं</translation>
+        </message>
+        <message>
+            <source>Click a shortcut, then press the new keys. Backspace leaves an action without one; Esc keeps what it had. </source>
+            <translation>किसी शॉर्टकट पर क्लिक करें, फिर नई कुंजियाँ दबाएँ। Backspace किसी काम को बिना कुंजी के छोड़ देता है; Esc पुरानी रखता है। </translation>
+        </message>
+        <message>
+            <source>Everyday: </source>
+            <translation>रोज़: </translation>
+        </message>
+        <message>
+            <source>none</source>
+            <translation>कोई नहीं</translation>
+        </message>
+        <message>
+            <source>Back to the everyday keys</source>
+            <translation>रोज़ की कुंजियों पर वापस जाएँ</translation>
+        </message>
+        <message>
+            <source>Key profiles</source>
+            <translation>कुंजी प्रोफ़ाइलें</translation>
+        </message>
+        <message>
+            <source>Other keys for the readers, for the series you choose (in the reader's settings, under Keys): one-handed keys for webtoons, say. Keys a profile leaves alone stay as everyday.</source>
+            <translation>आपकी चुनी सीरीज़ के लिए रीडर की दूसरी कुंजियाँ (रीडर की सेटिंग में, कुंजियाँ के नीचे): जैसे वेबटून के लिए एक हाथ वाली कुंजियाँ। जिन कुंजियों को प्रोफ़ाइल नहीं बदलती, वे रोज़ जैसी रहती हैं।</translation>
+        </message>
+        <message>
+            <source>Readers' keys below</source>
+            <translation>रीडर की कुंजियाँ नीचे</translation>
+        </message>
+        <message>
+            <source>Changing the profile “%1”</source>
+            <translation>प्रोफ़ाइल “%1” बदल रहे हैं</translation>
+        </message>
+        <message>
+            <source>Changing the everyday keys</source>
+            <translation>रोज़ की कुंजियाँ बदल रहे हैं</translation>
+        </message>
+        <message>
+            <source>Key profile</source>
+            <translation>कुंजी प्रोफ़ाइल</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>रोज़ की कुंजियाँ</translation>
+        </message>
+        <message>
+            <source>Delete</source>
+            <translation>हटाएं</translation>
+        </message>
+        <message>
+            <source>New profile</source>
+            <translation>नई प्रोफ़ाइल</translation>
+        </message>
+        <message>
+            <source>Starts as the everyday keys</source>
+            <translation>रोज़ की कुंजियों से शुरू होती है</translation>
+        </message>
+        <message>
+            <source>Name, e.g. Webtoons</source>
+            <translation>नाम, जैसे Webtoons</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>जोड़ें</translation>
+        </message>
+        <message>
+            <source>There is a profile with that name already.</source>
+            <translation>इस नाम की प्रोफ़ाइल पहले से है।</translation>
         </message>
     </context>
     <context>
@@ -3891,6 +4916,14 @@
         <message>
             <source>Anime player</source>
             <translation>एनीमे प्लेयर</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse</source>
+            <translation>माउस के नीचे आवर्धक लेंस</translation>
+        </message>
+        <message>
+            <source>Auto-scroll on or off</source>
+            <translation>अपने-आप स्क्रॉल चालू या बंद</translation>
         </message>
     </context>
     <context>
@@ -4263,6 +5296,18 @@
             <source>Undo</source>
             <translation>वापस लें</translation>
         </message>
+        <message>
+            <source>Most unwatched</source>
+            <translation>सबसे ज़्यादा बिना देखे</translation>
+        </message>
+        <message>
+            <source>Most unread</source>
+            <translation>सबसे ज़्यादा बिना पढ़े</translation>
+        </message>
+        <message>
+            <source>Hide until there is something new</source>
+            <translation>कुछ नया आने तक छिपाएँ</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4566,6 +5611,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>यह वाद्य संगीत है: साथ गाने के लिए बोल नहीं हैं।</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>बोल लोड नहीं हो सके। कनेक्शन जाँचें।</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>इस गाने के बोल अभी नहीं हैं।</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>बोल LRCLIB से आते हैं, जिन्हें उसका समुदाय लिखता है।</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -4638,6 +5702,14 @@
         <message>
             <source>Allow</source>
             <translation>अनुमति दें</translation>
+        </message>
+        <message>
+            <source>The host moved on to %1</source>
+            <translation>होस्ट %1 पर चला गया</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>खोलें</translation>
         </message>
     </context>
     <context>
@@ -4876,6 +5948,168 @@
             <source>Choose</source>
             <translation>चुनें</translation>
         </message>
+        <message>
+            <source>Also the other extension you had in %1</source>
+            <translation>%1 में आपके पास रहा दूसरा एक्सटेंशन भी</translation>
+        </message>
+        <message>
+            <source>Also the %1 other extensions you had in %2</source>
+            <translation>%2 में आपके पास रहे बाकी %1 एक्सटेंशन भी</translation>
+        </message>
+        <message>
+            <source>Install the extension you had in %1</source>
+            <translation>%1 में आपके पास रहा एक्सटेंशन इंस्टॉल करें</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions you had in %2</source>
+            <translation>%2 में आपके पास रहे %1 एक्सटेंशन इंस्टॉल करें</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>अभी चल रहा है: %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>चलाएं</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>अगला</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>रोकें</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>बोल के साथ गाने · प्रीव्यू</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>एनीमे गाने</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>आपकी फ़ाइलें</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>अपने गाने खोजें</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>कोई गाना, गायक या एनीमे खोजें</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>यह फ़ोल्डर दिखाना बंद करें</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>एक और फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>संगीत फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>फिर से खोजें</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>बोल</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>“%1” के गाने</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>आपके गाने</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>यह सीज़न</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>सब चलाएँ</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>अपने संगीत वाला फ़ोल्डर जोड़ें</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>कोई गाना नहीं मिला</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>इन फ़ोल्डरों में कोई संगीत नहीं</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3, FLAC, Ogg, Opus और M4A फ़ाइलें, उनके कवर के साथ, और साथ रखी .lrc फ़ाइलों से बोल। कुछ भी कॉपी नहीं होता।</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>एनीमे गाने अभी बंद हैं</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>एनीमे का नाम रोमाजी में या गायक का नाम आज़माएँ।</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>अपने संगीत एक्सटेंशन में खोजें</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>लोकप्रिय</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>अभी कोई संगीत एक्सटेंशन नहीं</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>कोई गाना खोजें</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>एक्सटेंशन में संगीत एक्सटेंशन की रिपॉज़िटरी जोड़ें, फिर कोई एक इंस्टॉल करें। SCANCORE के साथ कोई नहीं आता।</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>इन एक्सटेंशन की अपनी सूची नहीं है; ऊपर खोजें।</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>एक्सटेंशन खोलें</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -4982,6 +6216,77 @@
         <message>
             <source>Settings</source>
             <translation>सेटिंग</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>तेज़</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>ज़्यादातर ग्राफ़िक्स कार्ड</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>सबसे अच्छा</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>दमदार ग्राफ़िक्स कार्ड चाहिए</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>शार्प करें (Anime4K)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NeuralVoicesDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>शुरू हो रहा है…</translation>
+        </message>
+        <message>
+            <source>Voice ready: choose it under Voice.</source>
+            <translation>आवाज़ तैयार: इसे आवाज़ में चुनें।</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>न्यूरल आवाज़ें</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Natural voices that read on this computer, with no internet once downloaded. The first one also brings the voice program (Piper, about 25 MB).</source>
+            <translation>इस कंप्यूटर पर पढ़ने वाली प्राकृतिक आवाज़ें, डाउनलोड के बाद बिना इंटरनेट। पहली आवाज़ के साथ आवाज़ प्रोग्राम भी आता है (Piper, लगभग 25 MB)।</translation>
+        </message>
+        <message>
+            <source>Find a voice or language</source>
+            <translation>आवाज़ या भाषा खोजें</translation>
+        </message>
+        <message>
+            <source>Best quality</source>
+            <translation>सबसे अच्छी गुणवत्ता</translation>
+        </message>
+        <message>
+            <source>Good quality</source>
+            <translation>अच्छी गुणवत्ता</translation>
+        </message>
+        <message>
+            <source>Smaller</source>
+            <translation>छोटी</translation>
+        </message>
+        <message>
+            <source>Smallest</source>
+            <translation>सबसे छोटी</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>हटाएं</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>डाउनलोड करें</translation>
         </message>
     </context>
     <context>
@@ -5231,6 +6536,106 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>बोला जा रहा पैराग्राफ़ स्क्रीन पर रखें</translation>
         </message>
+        <message>
+            <source>Sleep timer: reading aloud stopped</source>
+            <translation>स्लीप टाइमर: पढ़कर सुनाना रुक गया</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>पिछला वाक्य</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>पढ़कर सुनाना जारी रखें</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>अगला वाक्य</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at %1</source>
+            <translation>स्लीप टाइमर: %1 पर रुकेगा</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at the end of the chapter</source>
+            <translation>स्लीप टाइमर: चैप्टर के अंत में रुकेगा</translation>
+        </message>
+        <message>
+            <source>Sleep timer</source>
+            <translation>स्लीप टाइमर</translation>
+        </message>
+        <message>
+            <source>Off</source>
+            <translation>बंद</translation>
+        </message>
+        <message>
+            <source>In 15 minutes</source>
+            <translation>15 मिनट में</translation>
+        </message>
+        <message>
+            <source>In 30 minutes</source>
+            <translation>30 मिनट में</translation>
+        </message>
+        <message>
+            <source>In 45 minutes</source>
+            <translation>45 मिनट में</translation>
+        </message>
+        <message>
+            <source>In an hour</source>
+            <translation>एक घंटे में</translation>
+        </message>
+        <message>
+            <source>At the end of the chapter</source>
+            <translation>चैप्टर के अंत में</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>नई विंडो में खोलें</translation>
+        </message>
+        <message>
+            <source>Pause reading aloud</source>
+            <translation>पढ़कर सुनाना रोकें</translation>
+        </message>
+        <message>
+            <source>Translating…</source>
+            <translation>अनुवाद हो रहा है…</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>मूल दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Translate the chapter</source>
+            <translation>चैप्टर अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>बोले जा रहे वाक्य को हाइलाइट करें</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs · %1 s</source>
+            <translation>पैराग्राफ़ के बीच विराम · %1 सेकंड</translation>
+        </message>
+        <message>
+            <source>Pause between sentences · %1 s</source>
+            <translation>वाक्यों के बीच विराम · %1 सेकंड</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>इसके साथ कुछ और पढ़ें</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>इस सीरीज़ के लिए कुंजियाँ</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>रोज़ की कुंजियाँ</translation>
+        </message>
     </context>
     <context>
         <name>NovelsPage</name>
@@ -5353,6 +6758,85 @@
         <message>
             <source>All files (*)</source>
             <translation>सभी फ़ाइलें (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>गाने पर वापस</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>वीडियो देखें</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>स्थिति</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>शफ़ल चालू</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>शफ़ल बंद</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>पिछला</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>चलाएं</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>अगला</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>यह गाना दोहराएँ</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>कतार दोहराएँ</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>दोहराना बंद</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>गाना</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>बोल</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>कतार</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>कतार में 1 गाना</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>कतार में %1 गाने</translation>
         </message>
     </context>
     <context>
@@ -5487,7 +6971,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -5629,6 +7113,397 @@
             <source>Your system shows them</source>
             <translation>आपका सिस्टम इन्हें दिखाता है</translation>
         </message>
+        <message>
+            <source>Layout</source>
+            <translation>लेआउट</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>सामान्य</translation>
+        </message>
+        <message>
+            <source>Metro tiles</source>
+            <translation>Metro टाइलें</translation>
+        </message>
+        <message>
+            <source>Retro tiles</source>
+            <translation>Retro टाइलें</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 सीरीज़ जोड़ी गई</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 सीरीज़ जोड़ी गईं</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 अध्याय और एपिसोड चिह्नित</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 एक्सटेंशन इंस्टॉल हुए</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 डाउनलोड किए अध्याय जोड़े गए</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 मिलने का इंतज़ार कर रही हैं</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReader बैकअप (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>सभी फ़ाइलें (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon, Komikku, TachiyomiSY, Tachiyomi या Aniyomi बैकअप (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>छोड़ें</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>छोड़ें</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>स्वागत बंद करें और SCANCORE इस्तेमाल करना शुरू करें</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>अभी नहीं</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>अभी नहीं</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>आगे</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>चरण %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>पीछे</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>स्वागत है</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>आप क्या पढ़ते और देखते हैं?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>जो चाहें चुनें। टैब और होम उसी के हिसाब से होंगे, और सेटिंग्स → इंटरफ़ेस बाकी वापस लाता है।</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>मनह्वा, मंगा और वेबटून</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>वेब उपन्यास और आपकी EPUB किताबें</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>एपिसोड जो वहीं से चलते हैं जहाँ आपने छोड़ा था</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>ऐप बदल रहे हैं?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>किसी दूसरे ऐप से आ रहे हैं?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>आपकी लाइब्रेरी, डाउनलोड और एक्सटेंशन एक साथ आ जाते हैं।</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>लाइब्रेरी, डाउनलोड और एक्सटेंशन, एक साथ।</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>मैं यहाँ नया हूँ</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>आपका स्वागत है</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 से</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader में: More → Backup → Create backup. फिर फ़ाइल यहाँ चुनें।</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 में: More → Settings → Backup and restore → Create backup. फिर फ़ाइल यहाँ चुनें।</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>बैकअप</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>आपकी लाइब्रेरी ला रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>बैकअप पढ़ रहे हैं…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 कॉमिक्स और %2 एनिमे · %3 एक्सटेंशन इंस्टॉल करने हैं</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>आपकी सीरीज़, सूचियाँ, प्रगति और ट्रैकर।</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>दूसरा</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>बैकअप चुनें</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>डाउनलोड फ़ोल्डर</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>बदलें</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>चुनें</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>आपकी सीरीज़ जिन एक्सटेंशन और रिपॉज़िटरी से आईं, वे बैकअप के साथ मिलते हैं, ताकि वे उन्हीं स्रोतों पर खुलें।</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE में कॉमिक्स, उपन्यास और एनिमे के अपने स्रोत हैं। अगर आपके पास किसी एक्सटेंशन रिपॉज़िटरी का लिंक है, तो उसे यहाँ डाल सकते हैं; एक्सटेंशन पेज उसे कभी भी ले लेता है।</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ग्लास</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>मेन्यू और शीट अपने पीछे का हिस्सा दिखाते हैं</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>रीडर आज़माएँ</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>नमूना स्क्रॉल करें, पट्टी पर टैप करें, और जो पसंद हो वह चुनें। यह सब सेटिंग्स → पढ़ना में भी है।</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>प्रगति पट्टी</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>कुछ अतिरिक्त</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>हर एक अभी एक टैप है, या बाद में सेटिंग्स में।</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>कोई अध्याय या एपिसोड पूरा करने पर आपके ट्रैकर पर भी आगे बढ़ता है।</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>एक scancore.onl खाता</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 के रूप में साइन इन। आपकी लाइब्रेरी और प्रगति सिंक होती है।</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>हर डिवाइस पर आपकी प्रगति, दोस्त, साझा सूचियाँ और प्रतिक्रियाएँ। इसके बिना भी सब काम करता है।</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>साइन इन करें या खाता बनाएँ</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>जो आप फ़ॉलो करते हैं उनके नए अध्याय, और SCANCORE की ख़बरें।</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>नए अध्याय और एपिसोड</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>आपने यह चुना है। बदलने के लिए किसी पर टैप करें।</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>पढ़ना और देखना</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>कहाँ से आए</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>नई शुरुआत</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>रूप</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>रीडर</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>कोई प्रगति पट्टी नहीं</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>पेज पट्टी</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>रेखा</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>तैरती पट्टी</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>अतिरिक्त</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>साइन इन है</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>सूचनाएँ चालू</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>सूचनाएँ बंद</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>अपनी लाइब्रेरी खोलें</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>कॉमिक्स देखें</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>एनिमे देखें</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>उपन्यास पढ़ें</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>आप क्या पढ़ते, देखते और सुनते हैं?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>एनीमे गाने और आपके अपने, बोल के साथ</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>संगीत चलाएँ</translation>
+        </message>
+    </context>
+    <context>
+        <name>OnDeviceDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>शुरू हो रहा है…</translation>
+        </message>
+        <message>
+            <source>Ready: pages in this language can be translated on this computer.</source>
+            <translation>तैयार: इस भाषा के पन्ने इस कंप्यूटर पर अनुवाद हो सकते हैं।</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>इस कंप्यूटर पर अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.</source>
+            <translation>हर भाषा अपने पन्ने पढ़ने और उन्हें %1 में अनुवाद करने के लिए ज़रूरी चीज़ें लाती है: लगभग 140 MB। कहीं कुछ नहीं भेजा जाता। यह काम ONNX Runtime (Microsoft), PaddleOCR और Opus-MT करते हैं।</translation>
+        </message>
+        <message>
+            <source>Find a language</source>
+            <translation>भाषा खोजें</translation>
+        </message>
+        <message>
+            <source>Ready · through English</source>
+            <translation>तैयार · अंग्रेज़ी के ज़रिए</translation>
+        </message>
+        <message>
+            <source>Ready</source>
+            <translation>तैयार</translation>
+        </message>
+        <message>
+            <source>About %1 MB</source>
+            <translation>लगभग %1 MB</translation>
+        </message>
+        <message>
+            <source>Nothing more to download</source>
+            <translation>डाउनलोड करने को और कुछ नहीं</translation>
+        </message>
+        <message>
+            <source> · through English</source>
+            <translation> · अंग्रेज़ी के ज़रिए</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>हटाएं</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>डाउनलोड करें</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5714,6 +7589,117 @@
         <message>
             <source>Remove</source>
             <translation>हटाएं</translation>
+        </message>
+    </context>
+    <context>
+        <name>PartyPanel</name>
+        <message>
+            <source>Watch together</source>
+            <translation>साथ देखें</translation>
+        </message>
+        <message>
+            <source>Everyone watches from their own source; the host's player steers the others.</source>
+            <translation>हर कोई अपने स्रोत से देखता है; होस्ट का प्लेयर बाकी सबको चलाता है।</translation>
+        </message>
+        <message>
+            <source>You are the host: your player steers everyone's.</source>
+            <translation>आप होस्ट हैं: आपका प्लेयर सबका प्लेयर चलाता है।</translation>
+        </message>
+        <message>
+            <source>Playing along with %1</source>
+            <translation>%1 के साथ देख रहे हैं</translation>
+        </message>
+        <message>
+            <source>Waiting for the host…</source>
+            <translation>होस्ट का इंतज़ार…</translation>
+        </message>
+        <message>
+            <source>Joining…</source>
+            <translation>जुड़ रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Sign in to scancore.onl (Settings → Account) to watch together.</source>
+            <translation>साथ देखने के लिए scancore.onl में साइन इन करें (सेटिंग → खाता)।</translation>
+        </message>
+        <message>
+            <source>Starting…</source>
+            <translation>शुरू हो रहा है…</translation>
+        </message>
+        <message>
+            <source>Start a watch party</source>
+            <translation>वॉच पार्टी शुरू करें</translation>
+        </message>
+        <message>
+            <source>Or join one</source>
+            <translation>या किसी में जुड़ें</translation>
+        </message>
+        <message>
+            <source>Join a watch party</source>
+            <translation>वॉच पार्टी में जुड़ें</translation>
+        </message>
+        <message>
+            <source>Party code</source>
+            <translation>पार्टी कोड</translation>
+        </message>
+        <message>
+            <source>Join</source>
+            <translation>जुड़ें</translation>
+        </message>
+        <message>
+            <source>Copy the code</source>
+            <translation>कोड कॉपी करें</translation>
+        </message>
+        <message>
+            <source>Code copied</source>
+            <translation>कोड कॉपी हुआ</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>शेयर करें</translation>
+        </message>
+        <message>
+            <source>Watch %1 with me in SCANCORE: join the party with the code %2</source>
+            <translation>SCANCORE में मेरे साथ %1 देखो: कोड %2 से पार्टी में जुड़ो</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>वॉच पार्टी</translation>
+        </message>
+        <message>
+            <source>The host is watching %1, episode %2</source>
+            <translation>होस्ट %1 का एपिसोड %2 देख रहा है</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>खोलें</translation>
+        </message>
+        <message>
+            <source>host</source>
+            <translation>होस्ट</translation>
+        </message>
+        <message>
+            <source>Say hello: everyone in the party sees it.</source>
+            <translation>नमस्ते कहें: पार्टी में सब देखेंगे।</translation>
+        </message>
+        <message>
+            <source>Message</source>
+            <translation>संदेश</translation>
+        </message>
+        <message>
+            <source>Send</source>
+            <translation>भेजें</translation>
+        </message>
+        <message>
+            <source>End the party</source>
+            <translation>पार्टी खत्म करें</translation>
+        </message>
+        <message>
+            <source>Leave the party</source>
+            <translation>पार्टी छोड़ें</translation>
         </message>
     </context>
     <context>
@@ -5898,6 +7884,144 @@
         <message>
             <source>None</source>
             <translation>कोई नहीं</translation>
+        </message>
+    </context>
+    <context>
+        <name>QObject</name>
+        <message>
+            <source>Android could not read the page: %1</source>
+            <translation>Android पेज नहीं पढ़ सका: %1</translation>
+        </message>
+        <message>
+            <source>This device has no text recogniser.</source>
+            <translation>इस डिवाइस में टेक्स्ट पहचान नहीं है।</translation>
+        </message>
+        <message>
+            <source>Android's translator needs to know the language: pick it in the reader.</source>
+            <translation>Android के अनुवादक को भाषा जाननी होती है: रीडर में चुनें।</translation>
+        </message>
+        <message>
+            <source>Android could not translate: %1</source>
+            <translation>Android अनुवाद नहीं कर सका: %1</translation>
+        </message>
+        <message>
+            <source>This device has no translator of its own.</source>
+            <translation>इस डिवाइस का अपना अनुवादक नहीं है।</translation>
+        </message>
+        <message>
+            <source>Pick a way to translate in Settings → Reading → Translate.</source>
+            <translation>सेटिंग → पढ़ना → अनुवाद में अनुवाद का तरीका चुनें।</translation>
+        </message>
+        <message>
+            <source>The page's picture could not be read.</source>
+            <translation>पेज का चित्र पढ़ा नहीं जा सका।</translation>
+        </message>
+        <message>
+            <source>%1 refused the key. Check it in Settings → Reading → Translate.</source>
+            <translation>%1 ने कुंजी अस्वीकार कर दी। सेटिंग → पढ़ना → अनुवाद में जाँचें।</translation>
+        </message>
+        <message>
+            <source>%1 says the key's quota is used up for now.</source>
+            <translation>%1 के अनुसार कुंजी का कोटा फ़िलहाल खत्म हो गया है।</translation>
+        </message>
+        <message>
+            <source>%1 could not be reached.</source>
+            <translation>%1 से संपर्क नहीं हो सका।</translation>
+        </message>
+        <message>
+            <source>%1 answered with an error (%2).</source>
+            <translation>%1 ने त्रुटि लौटाई (%2)।</translation>
+        </message>
+        <message>
+            <source>DeepL needs your key (Settings → Reading → Translate).</source>
+            <translation>DeepL को आपकी कुंजी चाहिए (सेटिंग → पढ़ना → अनुवाद)।</translation>
+        </message>
+        <message>
+            <source>DeepL answered with something else than the texts.</source>
+            <translation>DeepL ने टेक्स्ट के बजाय कुछ और लौटाया।</translation>
+        </message>
+        <message>
+            <source>Google Translate needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Translate को आपकी API कुंजी चाहिए (सेटिंग → पढ़ना → अनुवाद)।</translation>
+        </message>
+        <message>
+            <source>Google Translate answered with something else than the texts.</source>
+            <translation>Google Translate ने टेक्स्ट के बजाय कुछ और लौटाया।</translation>
+        </message>
+        <message>
+            <source>Set the service's address and model in Settings → Reading → Translate.</source>
+            <translation>सेवा का पता और मॉडल सेटिंग → पढ़ना → अनुवाद में सेट करें।</translation>
+        </message>
+        <message>
+            <source>The model did not answer with one translation per text. Try another model.</source>
+            <translation>मॉडल ने हर टेक्स्ट के लिए एक अनुवाद नहीं लौटाया। कोई दूसरा मॉडल आज़माएँ।</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Cloud Vision को आपकी API कुंजी चाहिए (सेटिंग → पढ़ना → अनुवाद)।</translation>
+        </message>
+        <message>
+            <source>MangaSin changed its series page: no chapter list found.</source>
+            <translation>MangaSin ने अपना सीरीज़ पेज बदल दिया: चैप्टर सूची नहीं मिली।</translation>
+        </message>
+        <message>
+            <source>MangaSin's chapter list could not be opened (its key changed).</source>
+            <translation>MangaSin की चैप्टर सूची नहीं खुल सकी (उसकी कुंजी बदल गई)।</translation>
+        </message>
+        <message>
+            <source>%1 refused the login. Check it in Settings → Sources → Your servers.</source>
+            <translation>%1 ने लॉगिन अस्वीकार कर दिया। सेटिंग → स्रोत → आपके सर्वर में जाँचें।</translation>
+        </message>
+        <message>
+            <source>This server is no longer in Settings → Sources → Your servers.</source>
+            <translation>यह सर्वर अब सेटिंग → स्रोत → आपके सर्वर में नहीं है।</translation>
+        </message>
+        <message>
+            <source>The server did not give the image (%1).</source>
+            <translation>सर्वर ने चित्र नहीं दिया (%1)।</translation>
+        </message>
+        <message>
+            <source>The image could not be saved.</source>
+            <translation>चित्र सहेजा नहीं जा सका।</translation>
+        </message>
+    </context>
+    <context>
+        <name>ReadAloudBar</name>
+        <message>
+            <source>Reading aloud: %1</source>
+            <translation>पढ़कर सुना रहे हैं: %1</translation>
+        </message>
+        <message>
+            <source>Loading the chapter…</source>
+            <translation>चैप्टर लोड हो रहा है…</translation>
+        </message>
+        <message>
+            <source>stops at %1</source>
+            <translation>%1 पर रुकेगा</translation>
+        </message>
+        <message>
+            <source>stops after this chapter</source>
+            <translation>इस चैप्टर के बाद रुकेगा</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>पिछला वाक्य</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>रोकें</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>पढ़कर सुनाना जारी रखें</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>अगला वाक्य</translation>
+        </message>
+        <message>
+            <source>Stop reading aloud</source>
+            <translation>ज़ोर से पढ़ना बंद करें</translation>
         </message>
     </context>
     <context>
@@ -6441,6 +8565,174 @@
             <source>Colours</source>
             <translation>रंग</translation>
         </message>
+        <message>
+            <source>Full screen while reading</source>
+            <translation>पढ़ते समय फ़ुल स्क्रीन</translation>
+        </message>
+        <message>
+            <source>The status and navigation bars hide with the reader's controls, so pages fill the screen, beside a punch hole too. Swipe from the edge to see them.</source>
+            <translation>स्टेटस और नेविगेशन बार रीडर के कंट्रोल के साथ छिप जाते हैं, ताकि पेज पूरी स्क्रीन भरें, पंच होल के पास भी। देखने के लिए किनारे से स्वाइप करें।</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>अगले चैप्टर में आगे बढ़ें</translation>
+        </message>
+        <message>
+            <source>The next chapter joins the strip as you near the end, so reading never stops for a button.</source>
+            <translation>अंत के पास अगला चैप्टर पट्टी में जुड़ जाता है, ताकि पढ़ना किसी बटन के लिए न रुके।</translation>
+        </message>
+        <message>
+            <source>Translate</source>
+            <translation>अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Comic readers have Translate the pages in their top bar. Keys stay on this device and are only sent to their own service.</source>
+            <translation>कॉमिक रीडर की ऊपरी पट्टी में पेज अनुवाद करें है। कुंजियाँ इसी डिवाइस पर रहती हैं और सिर्फ़ अपनी सेवा को भेजी जाती हैं।</translation>
+        </message>
+        <message>
+            <source>Translate into</source>
+            <translation>इसमें अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Read the page's text with</source>
+            <translation>पेज का टेक्स्ट इससे पढ़ें</translation>
+        </message>
+        <message>
+            <source>Finds the text in a comic's pages.</source>
+            <translation>कॉमिक के पेजों में लिखा टेक्स्ट ढूँढता है।</translation>
+        </message>
+        <message>
+            <source>Translate with</source>
+            <translation>इससे अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>DeepL key</source>
+            <translation>DeepL कुंजी</translation>
+        </message>
+        <message>
+            <source>From your DeepL account (free keys end in :fx).</source>
+            <translation>आपके DeepL खाते से (मुफ़्त कुंजियाँ :fx पर खत्म होती हैं)।</translation>
+        </message>
+        <message>
+            <source>Not set</source>
+            <translation>सेट नहीं</translation>
+        </message>
+        <message>
+            <source>Google Cloud key</source>
+            <translation>Google Cloud कुंजी</translation>
+        </message>
+        <message>
+            <source>An API key with Cloud Translation and Cloud Vision turned on.</source>
+            <translation>Cloud Translation और Cloud Vision चालू वाली API कुंजी।</translation>
+        </message>
+        <message>
+            <source>Language model</source>
+            <translation>भाषा मॉडल</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service: its address up to /v1 (a local Ollama is http://localhost:11434/v1), a model and a key if it needs one.</source>
+            <translation>कोई भी OpenAI-संगत सेवा: /v1 तक उसका पता (लोकल Ollama है http://localhost:11434/v1), एक मॉडल और ज़रूरत हो तो कुंजी।</translation>
+        </message>
+        <message>
+            <source>Model, e.g. gpt-4o-mini</source>
+            <translation>मॉडल, जैसे gpt-4o-mini</translation>
+        </message>
+        <message>
+            <source>Key (if it needs one)</source>
+            <translation>कुंजी (अगर चाहिए)</translation>
+        </message>
+        <message>
+            <source>Forget translations</source>
+            <translation>अनुवाद भूल जाएँ</translation>
+        </message>
+        <message>
+            <source>Pages and chapters are translated again the next time.</source>
+            <translation>पेज और चैप्टर अगली बार फिर से अनुवादित होंगे।</translation>
+        </message>
+        <message>
+            <source>Forget</source>
+            <translation>भूल जाएं</translation>
+        </message>
+        <message>
+            <source>Translations forgotten</source>
+            <translation>अनुवाद भुला दिए गए</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>बोले जा रहे वाक्य को हाइलाइट करें</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs</source>
+            <translation>पैराग्राफ़ के बीच विराम</translation>
+        </message>
+        <message>
+            <source>Pause between sentences</source>
+            <translation>वाक्यों के बीच विराम</translation>
+        </message>
+        <message>
+            <source>Voice for a language</source>
+            <translation>किसी भाषा की आवाज़</translation>
+        </message>
+        <message>
+            <source>Books in this language are read with this voice.</source>
+            <translation>इस भाषा की किताबें इस आवाज़ में पढ़ी जाती हैं।</translation>
+        </message>
+        <message>
+            <source>The voice above</source>
+            <translation>ऊपर वाली आवाज़</translation>
+        </message>
+        <message>
+            <source>Show the model the page</source>
+            <translation>मॉडल को पेज दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Sends the comic page's picture with its text, so the model can see who speaks. Needs a model that reads images; costs more.</source>
+            <translation>कॉमिक पेज की तस्वीर उसके टेक्स्ट के साथ भेजता है, ताकि मॉडल देख सके कि कौन बोल रहा है। ऐसा मॉडल चाहिए जो तस्वीरें पढ़ सके; खर्च ज़्यादा होता है।</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>इस कंप्यूटर पर अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Pages and chapters translated with nothing sent anywhere. Add or remove languages.</source>
+            <translation>पन्ने और अध्याय कहीं कुछ भेजे बिना अनुवाद होते हैं। भाषाएँ जोड़ें या हटाएँ।</translation>
+        </message>
+        <message>
+            <source>Download a language once; pages and chapters are then translated with nothing sent anywhere.</source>
+            <translation>एक भाषा एक बार डाउनलोड करें; फिर पन्ने और अध्याय कहीं कुछ भेजे बिना अनुवाद होते हैं।</translation>
+        </message>
+        <message>
+            <source>Languages…</source>
+            <translation>भाषाएँ…</translation>
+        </message>
+        <message>
+            <source>Translate novels in other languages</source>
+            <translation>दूसरी भाषाओं के उपन्यासों का अनुवाद करें</translation>
+        </message>
+        <message>
+            <source>Chapters from a source in another language (WTR-LAB's, in English) open translated. The reader's Translate button decides for each series.</source>
+            <translation>दूसरी भाषा के स्रोत के अध्याय (WTR-LAB के, अंग्रेज़ी में) अनुवाद के साथ खुलते हैं। रीडर का अनुवाद करें बटन हर सीरीज़ के लिए तय करता है।</translation>
+        </message>
+        <message>
+            <source>Download a neural voice below, or add one in the system's text-to-speech settings.</source>
+            <translation>नीचे से एक न्यूरल आवाज़ डाउनलोड करें, या सिस्टम की टेक्स्ट-टू-स्पीच सेटिंग में एक जोड़ें।</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>न्यूरल आवाज़ें</translation>
+        </message>
+        <message>
+            <source>%1 downloaded; natural voices that need no internet</source>
+            <translation>%1 डाउनलोड हुईं; प्राकृतिक आवाज़ें जिन्हें इंटरनेट नहीं चाहिए</translation>
+        </message>
+        <message>
+            <source>Natural voices that read without the internet, downloaded once</source>
+            <translation>बिना इंटरनेट पढ़ने वाली प्राकृतिक आवाज़ें, एक बार डाउनलोड</translation>
+        </message>
+        <message>
+            <source>Choose…</source>
+            <translation>चुनें…</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6482,6 +8774,295 @@
         <message>
             <source>Up next: episode %1</source>
             <translation>आगे: एपिसोड %1</translation>
+        </message>
+    </context>
+    <context>
+        <name>Retro</name>
+        <message>
+            <source>Explore</source>
+            <translation>खोजें</translation>
+        </message>
+        <message>
+            <source>Recent</source>
+            <translation>हाल का</translation>
+        </message>
+        <message>
+            <source>Library</source>
+            <translation>लाइब्रेरी</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>कॉमिक्स</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>उपन्यास</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>एनीमे</translation>
+        </message>
+        <message>
+            <source>Pinned to the hub</source>
+            <translation>हब पर पिन किया गया</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroBar</name>
+        <message>
+            <source>Continue</source>
+            <translation>जारी रखें</translation>
+        </message>
+        <message>
+            <source>Check for new chapters</source>
+            <translation>नए चैप्टर देखें</translation>
+        </message>
+        <message>
+            <source>Search comics</source>
+            <translation>कॉमिक्स खोजें</translation>
+        </message>
+        <message>
+            <source>Search novels</source>
+            <translation>उपन्यास खोजें</translation>
+        </message>
+        <message>
+            <source>Search anime</source>
+            <translation>एनीमे खोजें</translation>
+        </message>
+        <message>
+            <source>Search everything</source>
+            <translation>सब कुछ खोजें</translation>
+        </message>
+        <message>
+            <source>Checking your library for new chapters…</source>
+            <translation>आपकी लाइब्रेरी में नए चैप्टर देखे जा रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Everything is up to date</source>
+            <translation>सब कुछ अप टू डेट है</translation>
+        </message>
+        <message>
+            <source>Nothing to continue yet</source>
+            <translation>अभी जारी रखने को कुछ नहीं</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>खोजें</translation>
+        </message>
+        <message>
+            <source>refresh</source>
+            <translation>रीफ़्रेश</translation>
+        </message>
+        <message>
+            <source>alerts</source>
+            <translation>सूचनाएँ</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>सेटिंग</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>इतिहास</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>डाउनलोड</translation>
+        </message>
+        <message>
+            <source>activity</source>
+            <translation>गतिविधि</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>turn incognito off</source>
+            <translation>इनकॉग्निटो बंद</translation>
+        </message>
+        <message>
+            <source>go incognito</source>
+            <translation>इनकॉग्निटो</translation>
+        </message>
+        <message>
+            <source>arrange the hub</source>
+            <translation>हब सजाएँ</translation>
+        </message>
+        <message>
+            <source>Back</source>
+            <translation>पीछे</translation>
+        </message>
+        <message>
+            <source> (hold for more)</source>
+            <translation> (और के लिए दबाकर रखें)</translation>
+        </message>
+        <message>
+            <source>Close the menu</source>
+            <translation>मेनू बंद करें</translation>
+        </message>
+        <message>
+            <source>Open the menu</source>
+            <translation>मेनू खोलें</translation>
+        </message>
+        <message>
+            <source>Incognito off</source>
+            <translation>इनकॉग्निटो बंद</translation>
+        </message>
+        <message>
+            <source>Incognito</source>
+            <translation>इनकॉग्निटो</translation>
+        </message>
+        <message>
+            <source>Account</source>
+            <translation>खाता</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroHub</name>
+        <message>
+            <source>Episode %1</source>
+            <translation>एपिसोड %1</translation>
+        </message>
+        <message>
+            <source>Chapter %1</source>
+            <translation>चैप्टर %1</translation>
+        </message>
+        <message>
+            <source>1 new</source>
+            <translation>1 नया</translation>
+        </message>
+        <message>
+            <source>%1 new</source>
+            <translation>%1 नए</translation>
+        </message>
+        <message>
+            <source>read a random comic</source>
+            <translation>कोई भी कॉमिक पढ़ें</translation>
+        </message>
+        <message>
+            <source>continue</source>
+            <translation>जारी रखें</translation>
+        </message>
+        <message>
+            <source>explore a random genre</source>
+            <translation>कोई भी शैली खोजें</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>खोजें</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>डाउनलोड</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>इतिहास</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>सेटिंग</translation>
+        </message>
+        <message>
+            <source>your %1 wrapped</source>
+            <translation>आपका %1 सार</translation>
+        </message>
+        <message>
+            <source>Nothing to pick from yet</source>
+            <translation>अभी चुनने को कुछ नहीं</translation>
+        </message>
+        <message>
+            <source>Small</source>
+            <translation>छोटा</translation>
+        </message>
+        <message>
+            <source>Medium</source>
+            <translation>मध्यम</translation>
+        </message>
+        <message>
+            <source>Wide</source>
+            <translation>चौड़ा</translation>
+        </message>
+        <message>
+            <source>Move earlier</source>
+            <translation>पहले ले जाएँ</translation>
+        </message>
+        <message>
+            <source>Move later</source>
+            <translation>बाद में ले जाएँ</translation>
+        </message>
+        <message>
+            <source>Unpin</source>
+            <translation>अनपिन करें</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>हब पर पिन करें</translation>
+        </message>
+        <message>
+            <source>What you read and watch shows up here.</source>
+            <translation>आप जो पढ़ते और देखते हैं, वह यहाँ दिखेगा।</translation>
+        </message>
+        <message>
+            <source>Series you save show up here.</source>
+            <translation>आपकी सहेजी सीरीज़ यहाँ दिखेंगी।</translation>
+        </message>
+        <message>
+            <source>all comics</source>
+            <translation>सारी कॉमिक्स</translation>
+        </message>
+        <message>
+            <source>coming up</source>
+            <translation>जल्द आ रहा</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>एक्सटेंशन</translation>
+        </message>
+        <message>
+            <source>Latest chapters</source>
+            <translation>नए चैप्टर</translation>
+        </message>
+        <message>
+            <source>all novels</source>
+            <translation>सारे उपन्यास</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>उपन्यास</translation>
+        </message>
+        <message>
+            <source>all anime</source>
+            <translation>सारे एनिमे</translation>
+        </message>
+        <message>
+            <source>schedule</source>
+            <translation>शेड्यूल</translation>
+        </message>
+        <message>
+            <source>browse</source>
+            <translation>ब्राउज़</translation>
+        </message>
+        <message>
+            <source>Trending</source>
+            <translation>ट्रेंडिंग</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>सारा संगीत</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>अभी चल रहा है</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>यह सीज़न</translation>
         </message>
     </context>
     <context>
@@ -6636,6 +9217,129 @@
         <message>
             <source>SCANCORE does not open browser checks for its own site or your sync server.</source>
             <translation>SCANCORE अपनी साइट या आपके सिंक सर्वर के लिए ब्राउज़र जांच नहीं खोलता।</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Comics</name>
+        <message>
+            <source>That server is not saved.</source>
+            <translation>वह सर्वर सहेजा नहीं गया है।</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Downloads</name>
+        <message>
+            <source>No chapters of this novel are downloaded. Download some first.</source>
+            <translation>इस उपन्यास का कोई चैप्टर डाउनलोड नहीं है। पहले कुछ डाउनलोड करें।</translation>
+        </message>
+        <message>
+            <source>The book could not be saved in %1.</source>
+            <translation>किताब %1 में सहेजी नहीं जा सकी।</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::MediaControls</name>
+        <message>
+            <source>Reading aloud</source>
+            <translation>पढ़कर सुनाना</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Party</name>
+        <message>
+            <source>The party could not be reached (%1).</source>
+            <translation>पार्टी से संपर्क नहीं हो सका (%1)।</translation>
+        </message>
+        <message>
+            <source>Watch parties need scancore.onl (this site has none yet).</source>
+            <translation>वॉच पार्टी के लिए scancore.onl चाहिए (इस साइट पर अभी नहीं है)।</translation>
+        </message>
+        <message>
+            <source>The party could not be opened.</source>
+            <translation>पार्टी खोली नहीं जा सकी।</translation>
+        </message>
+        <message>
+            <source>A party code has six letters and numbers.</source>
+            <translation>पार्टी कोड में छह अक्षर और अंक होते हैं।</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>पार्टी खत्म हो गई।</translation>
+        </message>
+        <message>
+            <source>No party with that code.</source>
+            <translation>इस कोड वाली कोई पार्टी नहीं।</translation>
+        </message>
+        <message>
+            <source>The host ended the party.</source>
+            <translation>होस्ट ने पार्टी खत्म कर दी।</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Translator</name>
+        <message>
+            <source>To translate pages on a computer, add a Google Cloud key in Settings → Reading → Translate (Vision reads the page's text).</source>
+            <translation>कंप्यूटर पर पेज अनुवाद करने के लिए सेटिंग → पढ़ना → अनुवाद में Google Cloud कुंजी जोड़ें (Vision पेज का टेक्स्ट पढ़ता है)।</translation>
+        </message>
+        <message>
+            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.</source>
+            <translation>सेटिंग → पढ़ना → अनुवाद में DeepL या Google की कुंजी, या किसी मॉडल का पता जोड़ें।</translation>
+        </message>
+        <message>
+            <source>Automatic</source>
+            <translation>अपने-आप</translation>
+        </message>
+        <message>
+            <source>This phone</source>
+            <translation>यह फ़ोन</translation>
+        </message>
+        <message>
+            <source>On the phone, with Google Play services</source>
+            <translation>फ़ोन पर, Google Play सेवाओं के साथ</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision</source>
+            <translation>Google Cloud Vision</translation>
+        </message>
+        <message>
+            <source>Your Google Cloud key</source>
+            <translation>आपकी Google Cloud कुंजी</translation>
+        </message>
+        <message>
+            <source>On the phone; a model per language</source>
+            <translation>फ़ोन पर; हर भाषा का एक मॉडल</translation>
+        </message>
+        <message>
+            <source>Your DeepL key</source>
+            <translation>आपकी DeepL कुंजी</translation>
+        </message>
+        <message>
+            <source>Google Translate</source>
+            <translation>Google Translate</translation>
+        </message>
+        <message>
+            <source>A language model</source>
+            <translation>एक भाषा मॉडल</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service, or one on your computer</source>
+            <translation>कोई भी OpenAI-संगत सेवा, या आपके कंप्यूटर पर चलने वाली सेवा</translation>
+        </message>
+        <message>
+            <source>To translate pages on a computer, download a language in Settings → Reading → Translate on this computer, or add a Google Cloud key there.</source>
+            <translation>कंप्यूटर पर पन्नों का अनुवाद करने के लिए, सेटिंग → पढ़ना → इस कंप्यूटर पर अनुवाद करें में एक भाषा डाउनलोड करें, या वहाँ Google Cloud कुंजी जोड़ें।</translation>
+        </message>
+        <message>
+            <source>This computer</source>
+            <translation>यह कंप्यूटर</translation>
+        </message>
+        <message>
+            <source>Downloaded once; pages never leave the computer</source>
+            <translation>एक बार डाउनलोड; पन्ने कभी कंप्यूटर से बाहर नहीं जाते</translation>
+        </message>
+        <message>
+            <source>Downloaded once; nothing leaves the computer</source>
+            <translation>एक बार डाउनलोड; कुछ भी कंप्यूटर से बाहर नहीं जाता</translation>
         </message>
     </context>
     <context>
@@ -6908,6 +9612,121 @@
             <source>Show as a grid</source>
             <translation>ग्रिड में दिखाएँ</translation>
         </message>
+        <message>
+            <source>Saved %1 chapters as %2</source>
+            <translation>%1 चैप्टर %2 के रूप में सहेजे गए</translation>
+        </message>
+        <message>
+            <source>Show</source>
+            <translation>दिखाएं</translation>
+        </message>
+        <message>
+            <source>Save the %1 downloaded chapters</source>
+            <translation>डाउनलोड किए गए %1 चैप्टर सहेजें</translation>
+        </message>
+        <message>
+            <source>Download all %1 chapters, then save</source>
+            <translation>सभी %1 चैप्टर डाउनलोड करें, फिर सहेजें</translation>
+        </message>
+        <message>
+            <source>Stop waiting for the downloads</source>
+            <translation>डाउनलोड का इंतज़ार बंद करें</translation>
+        </message>
+        <message>
+            <source>No chapter downloaded, so there is no EPUB to save.</source>
+            <translation>कोई चैप्टर डाउनलोड नहीं है, इसलिए सहेजने को कोई EPUB नहीं है।</translation>
+        </message>
+        <message>
+            <source>Read in a new window</source>
+            <translation>नई विंडो में पढ़ें</translation>
+        </message>
+        <message>
+            <source>Listen</source>
+            <translation>सुनें</translation>
+        </message>
+        <message>
+            <source>Downloading for the EPUB…</source>
+            <translation>EPUB के लिए डाउनलोड हो रहा है…</translation>
+        </message>
+        <message>
+            <source>Save as EPUB</source>
+            <translation>EPUB के रूप में सहेजें</translation>
+        </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>हब से अनपिन करें</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>हब पर पिन करें</translation>
+        </message>
+    </context>
+    <context>
+        <name>ServerDialog</name>
+        <message>
+            <source>Trying it…</source>
+            <translation>आज़मा रहे हैं…</translation>
+        </message>
+        <message>
+            <source>Connected: 1 series found.</source>
+            <translation>जुड़ गया: 1 सीरीज़ मिली।</translation>
+        </message>
+        <message>
+            <source>Connected: %1 series found.</source>
+            <translation>जुड़ गया: %1 सीरीज़ मिलीं।</translation>
+        </message>
+        <message>
+            <source>Your server</source>
+            <translation>आपका सर्वर</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>अपना सर्वर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Read the comics on your own Komga, Kavita or Suwayomi server. The login stays on this device.</source>
+            <translation>अपने Komga, Kavita या Suwayomi सर्वर की कॉमिक्स पढ़ें। लॉगिन इसी डिवाइस पर रहता है।</translation>
+        </message>
+        <message>
+            <source>Name (optional)</source>
+            <translation>नाम (वैकल्पिक)</translation>
+        </message>
+        <message>
+            <source>Email</source>
+            <translation>ईमेल</translation>
+        </message>
+        <message>
+            <source>User name</source>
+            <translation>यूज़र नेम</translation>
+        </message>
+        <message>
+            <source> (if it asks for one)</source>
+            <translation> (अगर माँगे)</translation>
+        </message>
+        <message>
+            <source>Password (saved; type to change)</source>
+            <translation>पासवर्ड (सहेजा गया; बदलने के लिए लिखें)</translation>
+        </message>
+        <message>
+            <source>Password</source>
+            <translation>पासवर्ड</translation>
+        </message>
+        <message>
+            <source>API key (saved; type to change)</source>
+            <translation>API कुंजी (सहेजी गई; बदलने के लिए लिखें)</translation>
+        </message>
+        <message>
+            <source>Or an API key, instead of the login</source>
+            <translation>या लॉगिन की जगह API कुंजी</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Save and try</source>
+            <translation>सहेजें और आज़माएँ</translation>
+        </message>
     </context>
     <context>
         <name>SettingsPage</name>
@@ -7013,7 +9832,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -7207,6 +10026,14 @@
             <source> · Medium Dev</source>
             <translation> · Medium Dev</translation>
         </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
     </context>
     <context>
         <name>ShortcutsSheet</name>
@@ -7289,6 +10116,10 @@
             <source>Collapse</source>
             <translation>छोटा करें</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -7319,6 +10150,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> अपने ब्राउज़र में।</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>इसके बाद चलाएँ</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>कतार में जोड़ें</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>वीडियो देखें</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>एपिसोड %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>और</translation>
         </message>
     </context>
     <context>
@@ -7683,6 +10537,65 @@
         <message>
             <source>Mihon's downloads · </source>
             <translation>Mihon के डाउनलोड · </translation>
+        </message>
+        <message>
+            <source>Your servers</source>
+            <translation>आपके सर्वर</translation>
+        </message>
+        <message>
+            <source>Komga, Kavita and Suwayomi servers you run: their comics are a source like the others, searched with them and saved to the library.</source>
+            <translation>आपके चलाए Komga, Kavita और Suwayomi सर्वर: उनकी कॉमिक्स बाकी स्रोतों जैसी ही हैं, साथ में खोजी जाती हैं और लाइब्रेरी में सहेजी जाती हैं।</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>बदलें</translation>
+        </message>
+        <message>
+            <source>Open in the browser</source>
+            <translation>ब्राउज़र में खोलें</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>अपना सर्वर जोड़ें</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>जाँच</translation>
+        </message>
+        <message>
+            <source>Whether the extensions runtime answers, a quick test of a source, and the sites each extension contacted.</source>
+            <translation>एक्सटेंशन रनटाइम जवाब देता है या नहीं, किसी स्रोत की झटपट जाँच, और हर एक्सटेंशन ने जिन साइटों से संपर्क किया।</translation>
+        </message>
+    </context>
+    <context>
+        <name>SplitPicker</name>
+        <message>
+            <source>No chapters to read</source>
+            <translation>पढ़ने के लिए कोई अध्याय नहीं</translation>
+        </message>
+        <message>
+            <source>Read beside</source>
+            <translation>साथ-साथ पढ़ें</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>Nothing in progress yet: start a comic or a novel, then read it beside another.</source>
+            <translation>अभी कुछ जारी नहीं: कोई कॉमिक या उपन्यास शुरू करें, फिर उसे किसी दूसरे के साथ पढ़ें।</translation>
+        </message>
+        <message>
+            <source>Opening…</source>
+            <translation>खुल रहा है…</translation>
+        </message>
+        <message>
+            <source>Novel</source>
+            <translation>उपन्यास</translation>
+        </message>
+        <message>
+            <source>Comic</source>
+            <translation>कॉमिक</translation>
         </message>
     </context>
     <context>
@@ -8059,6 +10972,10 @@
             <source>Settings</source>
             <translation>सेटिंग</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>संगीत</translation>
+        </message>
     </context>
     <context>
         <name>Theme</name>
@@ -8143,7 +11060,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>हल्का</translation>
+            <translation>लाइट</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -8365,6 +11282,38 @@
             <source>Saved </source>
             <translation>सहेजा गया </translation>
         </message>
+        <message>
+            <source>Metro colours</source>
+            <translation>Metro रंग</translation>
+        </message>
+        <message>
+            <source>The accent colours of Windows Phone, or any colour from the wheel. Tiles, the hub title and switches take it.</source>
+            <translation>Windows Phone के एक्सेंट रंग, या व्हील से कोई भी रंग। टाइलें, हब शीर्षक और स्विच इसे लेते हैं।</translation>
+        </message>
+        <message>
+            <source>Custom colour</source>
+            <translation>अपना रंग</translation>
+        </message>
+        <message>
+            <source>Tile colour</source>
+            <translation>टाइल का रंग</translation>
+        </message>
+        <message>
+            <source>Retro colours</source>
+            <translation>Retro रंग</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ग्लास</translation>
+        </message>
+        <message>
+            <source>Glass menus and sheets</source>
+            <translation>ग्लास मेन्यू और शीट</translation>
+        </message>
+        <message>
+            <source>Menus, sheets and dialogs show what is behind them, blurred.</source>
+            <translation>मेन्यू, शीट और डायलॉग अपने पीछे की चीज़ धुंधली दिखाते हैं।</translation>
+        </message>
     </context>
     <context>
         <name>TrackerConnect</name>
@@ -8561,6 +11510,13 @@
         <message>
             <source>Connect a tracker such as AniList, MyAnimeList or Kitsu in Settings → Connections to keep your lists there up to date.</source>
             <translation>अपनी सूचियां वहां अपडेट रखने के लिए सेटिंग्स → कनेक्शन में AniList, MyAnimeList या Kitsu जैसा ट्रैकर कनेक्ट करें।</translation>
+        </message>
+    </context>
+    <context>
+        <name>TranslationLayer</name>
+        <message>
+            <source>Translating…</source>
+            <translation>अनुवाद हो रहा है…</translation>
         </message>
     </context>
     <context>
@@ -8984,6 +11940,108 @@
         <message>
             <source>Close player</source>
             <translation>प्लेयर बंद करें</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>बिल्ट-इन</translation>
+        </message>
+        <message>
+            <source>More…</source>
+            <translation>और…</translation>
+        </message>
+        <message>
+            <source>Keep SCANCORE open while it plays there: the video comes through it.</source>
+            <translation>वहाँ चलने तक SCANCORE खुला रखें: वीडियो उसी से होकर आता है।</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>पार्टी खत्म हो गई।</translation>
+        </message>
+        <message>
+            <source>Watch party (%1)</source>
+            <translation>वॉच पार्टी (%1)</translation>
+        </message>
+        <message>
+            <source>Watch together</source>
+            <translation>साथ देखें</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>नई विंडो में खोलें</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>चुने हुए रूप की झलक</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>होम</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>पढ़ना जारी रखें</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>नए अध्याय</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>लाइब्रेरी में जोड़ें</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>डाउनलोड करें</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>शेयर करें</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>होम</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>कॉमिक्स</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>एनिमे</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>नीचे स्क्रॉल करें, या पेज पलटने के लिए किसी किनारे पर टैप करें।</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>पट्टी दिखाती है कि आप अध्याय में कितना आगे हैं।</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>किसी पेज पर जाने के लिए पट्टी पर टैप करें या खींचें।</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>इसके लिए कोई और रूप चुनें और यहाँ देखें।</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>पेज या एक लंबी पट्टी: ऊपर बदलें।</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>समाप्त। आपके असली अध्याय इसके ठीक बाद शुरू होते हैं।</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>नमूना अध्याय</translation>
         </message>
     </context>
     <context>
@@ -9552,6 +12610,10 @@
         <message>
             <source>The voice could not read this.</source>
             <translation>आवाज़ इसे पढ़ नहीं सकी।</translation>
+        </message>
+        <message>
+            <source> (neural)</source>
+            <translation> (न्यूरल)</translation>
         </message>
     </context>
 </TS>

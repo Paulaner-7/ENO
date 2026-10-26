@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Covers the window while the app lock is on (see Lock). On Android the
 // fingerprint or face prompt comes up by itself when allowed. A modal popup

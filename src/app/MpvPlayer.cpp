@@ -1,5 +1,8 @@
 #include "MpvPlayer.h"
 
+#include "App.h"
+#include "CrashLog.h"
+
 #include "core/Http.h"
 #include "core/StreamRelay.h"
 #include "core/Task.h"
@@ -55,7 +58,12 @@ std::atomic_bool g_sceneSupported{true};
 struct MpvCore {
 #ifdef SCANCORE_HAVE_MPV
     mpv_handle *mpv = nullptr;
+    // mpv 0.38+ names subtitle borders "sub-outline-*" (older: "sub-border-*").
+    bool outlineNames = true;
 #endif
+    // The scene draws with OpenGL ES (phones; some computers): mpv's
+    // renderer there garbles Anime4K's largest networks.
+    std::atomic<bool> gles{false};
     QMutex mutex;
     MpvPlayer *item = nullptr;
 
@@ -127,8 +135,33 @@ void command(mpv_handle *mpv, const QStringList &args) {
     mpv_command_async(mpv, 0, argv.data());
 }
 
+// Never a synchronous call from the interface thread while a video is open:
+// mpv may be waiting on the render thread (a new video size, another
+// variant), which waits on the interface thread to sync the scene, and the
+// picture freezes with the app while the sound plays on. Async requests run
+// in the order they are made, so options still come before the loadfile.
 void setString(mpv_handle *mpv, const char *name, const QString &value) {
-    mpv_set_property_string(mpv, name, value.toUtf8().constData());
+    const auto utf8 = value.toUtf8();
+    const char *data = utf8.constData();
+    mpv_set_property_async(mpv, 0, name, MPV_FORMAT_STRING, &data);
+}
+
+void setStrings(mpv_handle *mpv, const char *name, const QStringList &values) {
+    QList<QByteArray> utf8;
+    for (const auto &v : values)
+        utf8.append(v.toUtf8());
+    QList<mpv_node> nodes;
+    for (auto &v : utf8) {
+        mpv_node n;
+        n.format = MPV_FORMAT_STRING;
+        n.u.string = v.data();
+        nodes.append(n);
+    }
+    mpv_node_list list{int(nodes.size()), nodes.data(), nullptr};
+    mpv_node value;
+    value.format = MPV_FORMAT_NODE_ARRAY;
+    value.u.list = &list;
+    mpv_set_property_async(mpv, 0, name, MPV_FORMAT_NODE, &value);
 }
 
 // Options a video's source may set: how to reach and read it, nothing that
@@ -184,6 +217,7 @@ public:
     // On the scene graph's thread, with its OpenGL context current, as
     // mpv requires.
     ~MpvRenderer() override {
+        crashlog::Busy busy("closing mpv's renderer");
         if (m_context)
             mpv_render_context_free(m_context);
     }
@@ -202,10 +236,19 @@ public:
         auto *fbo = framebufferObject();
         mpv_opengl_fbo target{int(fbo->handle()), fbo->width(), fbo->height(), 0};
         int flip = 0;
+        // Never wait here for mpv's video thread to present the frame (mpv's
+        // default, without a time limit): the interface waits on this thread
+        // to sync, so any wait here holds the whole app to mpv's timing. The
+        // scene draws again whenever mpv says a frame is ready.
+        int block = 0;
         mpv_render_param params[]{{MPV_RENDER_PARAM_OPENGL_FBO, &target},
                                   {MPV_RENDER_PARAM_FLIP_Y, &flip},
+                                  {MPV_RENDER_PARAM_BLOCK_FOR_TARGET_TIME, &block},
                                   {MPV_RENDER_PARAM_INVALID, nullptr}};
-        mpv_render_context_render(m_context, params);
+        {
+            crashlog::Busy busy("mpv drawing the video");
+            mpv_render_context_render(m_context, params);
+        }
         QQuickOpenGLUtils::resetOpenGLState();
     }
 
@@ -232,6 +275,8 @@ private:
         }
         mpv_render_context_set_update_callback(
             m_context, [](void *core) { static_cast<MpvCore *>(core)->post(&MpvPlayer::update); }, m_core.get());
+        if (auto *context = QOpenGLContext::currentContext())
+            m_core->gles = context->isOpenGLES();
         m_core->post(&MpvPlayer::rendererReady);
     }
 
@@ -264,6 +309,14 @@ bool MpvPlayer::supported() {
 
 void MpvPlayer::setSceneSupported(bool supported) { g_sceneSupported = supported; }
 
+QString MpvPlayer::prepareAndroid() {
+#if defined(SCANCORE_HAVE_MPV) && defined(Q_OS_ANDROID)
+    return androidSetup();
+#else
+    return {};
+#endif
+}
+
 MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_core(std::make_shared<MpvCore>()) {
     m_core->item = this;
 #ifdef SCANCORE_HAVE_MPV
@@ -281,11 +334,17 @@ MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_co
     }
     const auto option = [mpv](const char *name, const char *value) { mpv_set_option_string(mpv, name, value); };
     option("vo", "libmpv");
-    // Hardware decoding where it is safe (Android: MediaCodec, straight
-    // into OpenGL when it can, else copied); SCANCORE_MPV_HWDEC overrides it
-    // (e.g. "no" to compare).
+    // Hardware decoding where it is safe; SCANCORE_MPV_HWDEC overrides it
+    // (e.g. "no" to compare). Android: MediaCodec with its frames copied
+    // back. Handing them straight to OpenGL ("direct", playerHwdec) could
+    // freeze the picture and the app after a new episode on some phones
+    // (#30): drawing then waited on Android's buffer queue while the
+    // interface waited on the drawing.
 #ifdef Q_OS_ANDROID
-    const char *hwdec = "mediacodec,mediacodec-copy";
+    const auto choice = App::instance()->settings().value(QStringLiteral("playerHwdec")).toString();
+    const char *hwdec = choice == QLatin1String("direct") ? "mediacodec,mediacodec-copy"
+                        : choice == QLatin1String("off")  ? "no"
+                                                          : "mediacodec-copy";
     option("hwdec-codecs", "h264,hevc,mpeg4,mpeg2video,vp8,vp9,av1");
 #else
     const char *hwdec = "auto-safe";
@@ -318,13 +377,25 @@ MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_co
     option("demuxer-max-back-bytes", "50MiB");
 #endif
     option("network-timeout", "30");
+    // Tests: more options as "name=value;name=value".
+    for (const auto &pair : qEnvironmentVariable("SCANCORE_MPV_OPTIONS").split(QLatin1Char(';'), Qt::SkipEmptyParts)) {
+        const auto at = pair.indexOf(QLatin1Char('='));
+        if (at > 0)
+            option(pair.left(at).toUtf8().constData(), pair.mid(at + 1).toUtf8().constData());
+    }
     if (mpv_initialize(mpv) < 0) {
         mpv_terminate_destroy(mpv);
         m_error = QStringLiteral("The video player could not start.");
         return;
     }
     m_core->mpv = mpv;
-    mpv_request_log_messages(mpv, "warn");
+    // Asked once now, before any video: later calls are all async.
+    if (char *name = mpv_get_property_string(mpv, "option-info/sub-outline-size/name"))
+        mpv_free(name);
+    else
+        m_core->outlineNames = false;
+    // Tests: a chattier log (SCANCORE_MPV_LOG=v).
+    mpv_request_log_messages(mpv, qEnvironmentVariableIsSet("SCANCORE_MPV_LOG") ? qgetenv("SCANCORE_MPV_LOG").constData() : "warn");
     mpv_observe_property(mpv, TimePos, "time-pos", MPV_FORMAT_DOUBLE);
     mpv_observe_property(mpv, Duration, "duration", MPV_FORMAT_DOUBLE);
     mpv_observe_property(mpv, Pause, "pause", MPV_FORMAT_FLAG);
@@ -420,6 +491,7 @@ void MpvPlayer::setError(const QString &error) {
 
 void MpvPlayer::rendererReady() {
     m_rendererReady = true;
+    applySharpen();
     if (m_loadWaiting)
         load();
 }
@@ -474,7 +546,7 @@ void MpvPlayer::load() {
     // options.
     QString agent = QString::fromUtf8(Http::userAgent());
     QString referer;
-    QList<QByteArray> fields;
+    QStringList fields;
     for (auto it = m_headers.begin(); it != m_headers.end(); ++it) {
         const auto name = it.key().toLower();
         if (name == QLatin1String("user-agent"))
@@ -482,22 +554,11 @@ void MpvPlayer::load() {
         else if (name == QLatin1String("referer"))
             referer = it.value().toString();
         else
-            fields.append((it.key() + QStringLiteral(": ") + it.value().toString()).toUtf8());
+            fields.append(it.key() + QStringLiteral(": ") + it.value().toString());
     }
     setString(mpv, "user-agent", agent);
     setString(mpv, "referrer", referer);
-    QList<mpv_node> nodes;
-    for (auto &f : fields) {
-        mpv_node n;
-        n.format = MPV_FORMAT_STRING;
-        n.u.string = f.data();
-        nodes.append(n);
-    }
-    mpv_node_list list{int(nodes.size()), nodes.data(), nullptr};
-    mpv_node value;
-    value.format = MPV_FORMAT_NODE_ARRAY;
-    value.u.list = &list;
-    mpv_set_property(mpv, "http-header-fields", MPV_FORMAT_NODE, &value);
+    setStrings(mpv, "http-header-fields", fields);
     // mpv keeps options from one file to the next: the last video's go back
     // to their defaults first (a downloaded episode's HLS demuxer must not
     // reach the next stream). An empty demuxer is mpv's own choice; there is
@@ -507,7 +568,7 @@ void MpvPlayer::load() {
         {"vid", "auto"}, {"sub-delay", "0"}, {"audio-delay", "0"}};
     for (const auto &[name, value] : defaults)
         if (!m_options.contains(QLatin1String(name)))
-            mpv_set_property_string(mpv, name, value);
+            setString(mpv, name, QString::fromLatin1(value));
     for (auto it = m_options.begin(); it != m_options.end(); ++it) {
         if (allowedOptions().contains(it.key()))
             setString(mpv, it.key().toUtf8().constData(), it.value().toString());
@@ -781,39 +842,35 @@ void MpvPlayer::setLook(const QVariantMap &look) {
     setString(mpv, "sub-scale", QString::number(std::clamp(number("subtitleScale", 1), 0.5, 3.0)));
     // Older mpv names it "sub-border-*".
     const auto outline = QString::number(std::clamp(number("subtitleOutline", 3), 0.0, 10.0));
-    if (mpv_set_property_string(mpv, "sub-outline-size", outline.toUtf8().constData()) < 0)
-        setString(mpv, "sub-border-size", outline);
+    setString(mpv, m_core->outlineNames ? "sub-outline-size" : "sub-border-size", outline);
     const auto color = look.value(QStringLiteral("subtitleColor")).toString();
     setString(mpv, "sub-color", QColor::isValidColorName(color) ? color : QStringLiteral("#FFFFFFFF"));
     // A dark box behind the lines instead of an outline.
     const bool box = look.value(QStringLiteral("subtitleBox")).toBool();
     setString(mpv, "sub-border-style", box ? QStringLiteral("opaque-box") : QStringLiteral("outline-and-shadow"));
     const auto boxColor = box ? QStringLiteral("#B0000000") : QStringLiteral("#FF000000");
-    if (mpv_set_property_string(mpv, "sub-outline-color", boxColor.toUtf8().constData()) < 0)
-        setString(mpv, "sub-border-color", boxColor);
+    setString(mpv, m_core->outlineNames ? "sub-outline-color" : "sub-border-color", boxColor);
     // How the picture fills the player: fit (all of it), crop (no bars),
     // stretch, or original (its own pixels, centred).
     const auto fit = look.value(QStringLiteral("fit")).toString();
     setString(mpv, "keepaspect", fit == QLatin1String("stretch") ? QStringLiteral("no") : QStringLiteral("yes"));
     setString(mpv, "panscan", fit == QLatin1String("crop") ? QStringLiteral("1.0") : QStringLiteral("0.0"));
     setString(mpv, "video-unscaled", fit == QLatin1String("original") ? QStringLiteral("yes") : QStringLiteral("no"));
+    applySharpen();
+#endif
+}
+
+void MpvPlayer::applySharpen() {
+#ifdef SCANCORE_HAVE_MPV
+    if (!m_core->mpv)
+        return;
+    auto mode = m_look.value(QStringLiteral("sharpen")).toString();
+    // Best's networks come out tinted and checkered in mpv's OpenGL ES
+    // renderer (desktop OpenGL draws them right): Fast there.
+    if (mode == QLatin1String("hq") && m_core->gles)
+        mode = QStringLiteral("fast");
     // A list, so no separator (":" or ";" by system) gets in the way.
-    const auto shaders = sharpenShaders(look.value(QStringLiteral("sharpen")).toString());
-    QList<QByteArray> paths;
-    for (const auto &path : shaders)
-        paths.append(path.toUtf8());
-    QList<mpv_node> nodes;
-    for (auto &path : paths) {
-        mpv_node n;
-        n.format = MPV_FORMAT_STRING;
-        n.u.string = path.data();
-        nodes.append(n);
-    }
-    mpv_node_list list{int(nodes.size()), nodes.data(), nullptr};
-    mpv_node value;
-    value.format = MPV_FORMAT_NODE_ARRAY;
-    value.u.list = &list;
-    mpv_set_property(mpv, "glsl-shaders", MPV_FORMAT_NODE, &value);
+    setStrings(m_core->mpv, "glsl-shaders", sharpenShaders(mode));
 #endif
 }
 

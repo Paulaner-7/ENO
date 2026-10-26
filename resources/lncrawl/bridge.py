@@ -158,7 +158,7 @@ try:
             crawler.novel_url = request['bookUrl']
         crawler.download_chapter(chapter)
         # Some template cleaners delete direct text inside div/br-based chapters.
-        # Keep the adapter-selected public container; ScanCore sanitizes and splits it.
+        # Keep the adapter-selected public container; SCANCORE sanitizes and splits it.
         if scraper.chapter_snapshot:
             snapshot = PageSoup.create(scraper.chapter_snapshot)
             for tag in snapshot.select('script,style,noscript,iframe,form,[hidden]'):

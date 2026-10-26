@@ -545,6 +545,10 @@
             <source>Time counts while SCANCORE is in use: in a reader, playing an episode, or browsing. Chapters finished before time was kept come from your reading history.</source>
             <translation>SCANCORE の使用中に時間が記録されます: リーダー、エピソード再生中、閲覧中。記録開始前に読み終えた章は読書履歴から取得します。</translation>
         </message>
+        <message>
+            <source>Friends</source>
+            <translation>友達</translation>
+        </message>
     </context>
     <context>
         <name>AddRepositoryDialog</name>
@@ -671,6 +675,14 @@
         <message>
             <source>Skip</source>
             <translation>スキップ</translation>
+        </message>
+        <message>
+            <source>music extension</source>
+            <translation>音楽拡張機能</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>音楽拡張機能</translation>
         </message>
     </context>
     <context>
@@ -1032,6 +1044,26 @@
             <source>Waiting: stop</source>
             <translation>待機中：停止</translation>
         </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>ハブから固定解除</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>ハブに固定</translation>
+        </message>
+        <message>
+            <source>Songs</source>
+            <translation>曲</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>このアニメの曲はまだありません</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>OP・EDはAnimeThemesから再生します。</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -1138,6 +1170,14 @@
         <message>
             <source>All %1</source>
             <translation>すべて（%1）</translation>
+        </message>
+        <message>
+            <source>Party %1</source>
+            <translation>パーティー %1</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>ウォッチパーティー</translation>
         </message>
     </context>
     <context>
@@ -1449,6 +1489,34 @@
             <source>All extensions</source>
             <translation>すべての拡張機能</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>低解像度のエピソードの線をきれいにし、拡大します。</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>低解像度のエピソードの線をきれいにし、拡大します。「最高」には高性能なグラフィックカードが必要です。</translation>
+        </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>動画のデコード</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>フレームを書き戻すハードウェアデコードはどの端末でも安定します。ダイレクトは少し軽いものの、一部の端末で次のエピソードの後に映像が止まりました。次の動画から有効です。</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>ハードウェア(安定)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>ハードウェア(ダイレクト)</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>ソフトウェア</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1596,6 +1664,285 @@
         <message>
             <source>Close</source>
             <translation>閉じる</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>ジャンル</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>テーマ</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>形式</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>内容</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>検索フィルター</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick のカタログ。フィルターを設定すると、空の検索で一覧を表示します。</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>フィルターなし</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>フィルター 1 件</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>フィルター %1 件</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>消去</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>適用</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>並べ替え</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>関連度順</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>フォロー数順</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>閲覧数順</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>高評価</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>平均評価</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新しいチャプター</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>最近追加した順</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>状態</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>すべて</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>連載中</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>完了</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>打ち切り</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>休載中</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick への追加</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>いつでも</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>過去 1 週間</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>過去 1 か月</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>過去 3 か月</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>過去 1 年</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>評価が次以上</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>発表年</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>開始年</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>終了年</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>章</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>最小</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>最大</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>翻訳完了</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>シリーズの完結だけでなく、全話が英語で出ています。</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>話数不明の作品も含める</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>種類</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>韓国マンガ</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>マンガ</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>中国マンガ</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>香港</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>対象読者</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>少年</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>少女</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>青年</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>女性向け</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>指定なし</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>コンテンツ区分</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>1 回タップで含める、2 回で除外</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>全年齢</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>やや過激</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>エロティカ</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>ポルノ</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>過激な暴力</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>ジャンルやタグを探す</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>含めるのは %1 件まで</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>すべて表示（%1）</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>タグ</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>含めるのは %1 件、除外は %2 件まで</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>タグをもっと見る</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>「%1」に一致するタグはありません。</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>含む</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>除外</translation>
         </message>
     </context>
     <context>
@@ -1889,6 +2236,122 @@
             <source>Bottom</source>
             <translation>下</translation>
         </message>
+        <message>
+            <source>Finished: </source>
+            <translation>読了: </translation>
+        </message>
+        <message>
+            <source>Next: </source>
+            <translation>次: </translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>新しいウィンドウで開く</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>原文を表示</translation>
+        </message>
+        <message>
+            <source>Translate the pages</source>
+            <translation>ページを翻訳</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse (L)</source>
+            <translation>マウス下の拡大鏡（L）</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>次の章へ続けて読む</translation>
+        </message>
+        <message>
+            <source>Auto-scroll</source>
+            <translation>自動スクロール</translation>
+        </message>
+        <message>
+            <source>Turn the pages by themselves</source>
+            <translation>ページを自動でめくる</translation>
+        </message>
+        <message>
+            <source>Auto-scroll speed · %1</source>
+            <translation>自動スクロールの速さ · %1</translation>
+        </message>
+        <message>
+            <source>A page every %1 s</source>
+            <translation>%1 秒ごとに 1 ページ</translation>
+        </message>
+        <message>
+            <source>Sharpen small scans</source>
+            <translation>小さなスキャンをシャープに</translation>
+        </message>
+        <message>
+            <source>Light</source>
+            <translation>細字</translation>
+        </message>
+        <message>
+            <source>Strong</source>
+            <translation>強</translation>
+        </message>
+        <message>
+            <source>Slower</source>
+            <translation>遅く</translation>
+        </message>
+        <message>
+            <source>Faster</source>
+            <translation>より速い</translation>
+        </message>
+        <message>
+            <source>Pause auto-scroll</source>
+            <translation>自動スクロールを一時停止</translation>
+        </message>
+        <message>
+            <source>Translate into %1</source>
+            <translation>%1 に翻訳</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>隣に別の作品を読む</translation>
+        </message>
+        <message>
+            <source>React to this page</source>
+            <translation>このページにリアクション</translation>
+        </message>
+        <message>
+            <source>Downloading the upscaler (about 15 MB the first time)…</source>
+            <translation>高画質化ツールをダウンロード中 (初回は約 15 MB)…</translation>
+        </message>
+        <message>
+            <source>Enlarge downloaded pages (sharper; slower downloads)</source>
+            <translation>ダウンロードしたページを拡大 (より鮮明に、ダウンロードは遅く)</translation>
+        </message>
+        <message>
+            <source>Chapters downloaded from now on are enlarged.</source>
+            <translation>これからダウンロードする話は拡大されます。</translation>
+        </message>
+        <message>
+            <source>Keys</source>
+            <translation>キー</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>このシリーズのキー</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>普段のキー</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>もっと見る</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 で続ける</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>全画面を終了</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -2027,6 +2490,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 件がまだ検索中</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>検索フィルター</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>フィルター 1 件オン</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>フィルター %1 件オン</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>消去</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 のカタログから %1 作品(絞り込み)</translation>
         </message>
     </context>
     <context>
@@ -2528,6 +3011,10 @@
             <source>Choose folder</source>
             <translation>フォルダーを選択</translation>
         </message>
+        <message>
+            <source>Your server: series read from other sources move forward on it too. It is managed in Settings → Sources → Your servers.</source>
+            <translation>自分のサーバー: ほかのソースで読んだシリーズの進み具合もここに反映されます。設定 → ソース → 自分のサーバー で管理します。</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2907,6 +3394,121 @@
         </message>
     </context>
     <context>
+        <name>ExtensionsDiagnostics</name>
+        <message>
+            <source>Answered in %1 s with %2 titles.</source>
+            <translation>%1 秒で %2 作品を返しました。</translation>
+        </message>
+        <message>
+            <source>Failed after %1 s: %2</source>
+            <translation>%1 秒後に失敗: %2</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>診断</translation>
+        </message>
+        <message>
+            <source>For when an extension misbehaves</source>
+            <translation>拡張機能の調子が悪いときに</translation>
+        </message>
+        <message>
+            <source>Copy report</source>
+            <translation>レポートをコピー</translation>
+        </message>
+        <message>
+            <source>The report is copied. Paste it into an issue or a message.</source>
+            <translation>レポートをコピーしました。Issue やメッセージに貼り付けてください。</translation>
+        </message>
+        <message>
+            <source>Refresh</source>
+            <translation>更新</translation>
+        </message>
+        <message>
+            <source>Runtime</source>
+            <translation>ランタイム</translation>
+        </message>
+        <message>
+            <source>Extensions runtime installed</source>
+            <translation>拡張機能ランタイムをインストールしました</translation>
+        </message>
+        <message>
+            <source>Extensions runtime not installed</source>
+            <translation>拡張機能ランタイムが未インストール</translation>
+        </message>
+        <message>
+            <source>No runtime for this system</source>
+            <translation>このシステム用のランタイムはありません</translation>
+        </message>
+        <message>
+            <source>Asking the host…</source>
+            <translation>ホストに問い合わせ中…</translation>
+        </message>
+        <message>
+            <source>Host %1 answered in %2 ms</source>
+            <translation>ランタイム %1 は %2 ms で応答しました</translation>
+        </message>
+        <message>
+            <source>Extension libraries it takes</source>
+            <translation>対応する拡張機能ライブラリ</translation>
+        </message>
+        <message>
+            <source>Mihon %1 · Aniyomi %2</source>
+            <translation>Mihon %1 · Aniyomi %2</translation>
+        </message>
+        <message>
+            <source>This device</source>
+            <translation>この端末</translation>
+        </message>
+        <message>
+            <source>Test a source</source>
+            <translation>ソースをテスト</translation>
+        </message>
+        <message>
+            <source>Loads the source's popular titles once and times it.</source>
+            <translation>ソースの人気作品を一度読み込んで時間を測ります。</translation>
+        </message>
+        <message>
+            <source>Source</source>
+            <translation>ソース</translation>
+        </message>
+        <message>
+            <source>Testing…</source>
+            <translation>テスト中…</translation>
+        </message>
+        <message>
+            <source>Test</source>
+            <translation>テスト</translation>
+        </message>
+        <message>
+            <source>Sites the extensions contacted</source>
+            <translation>拡張機能が接続したサイト</translation>
+        </message>
+        <message>
+            <source>This session only, counted in the extensions runtime. Nothing but the sites' names is kept.</source>
+            <translation>このセッションのみ。拡張機能ランタイムで数えます。保存するのはサイト名だけです。</translation>
+        </message>
+        <message>
+            <source>Nothing yet</source>
+            <translation>まだありません</translation>
+        </message>
+        <message>
+            <source>Browse or read with an extension and come back.</source>
+            <translation>拡張機能で閲覧するか読んでから戻ってきてください。</translation>
+        </message>
+        <message>
+            <source>%1 · %2 requests, %3</source>
+            <translation>%1 · リクエスト %2 件、%3</translation>
+        </message>
+        <message>
+            <source>Host log</source>
+            <translation>ランタイムのログ</translation>
+        </message>
+        <message>
+            <source>The end of extensions/host.log.</source>
+            <translation>extensions/host.log の末尾。</translation>
+        </message>
+    </context>
+    <context>
         <name>ExtensionsPage</name>
         <message>
             <source>All languages</source>
@@ -3188,6 +3790,14 @@
             <source>Its extensions</source>
             <translation>このリポジトリの拡張機能</translation>
         </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>診断</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -3237,6 +3847,193 @@
         <message>
             <source>Show password</source>
             <translation>パスワードを表示</translation>
+        </message>
+    </context>
+    <context>
+        <name>FriendsPage</name>
+        <message>
+            <source>just now</source>
+            <translation>たった今</translation>
+        </message>
+        <message>
+            <source>%1 min ago</source>
+            <translation>%1 分前</translation>
+        </message>
+        <message>
+            <source>%1 h ago</source>
+            <translation>%1 時間前</translation>
+        </message>
+        <message>
+            <source>%1 days ago</source>
+            <translation>%1 日前</translation>
+        </message>
+        <message>
+            <source>%1 shared a list: %2</source>
+            <translation>%1 さんがリストを共有しました: %2</translation>
+        </message>
+        <message>
+            <source>%1 watched %2</source>
+            <translation>%1 さんが %2 を視聴しました</translation>
+        </message>
+        <message>
+            <source>%1 read %2</source>
+            <translation>%1 さんが %2 を読みました</translation>
+        </message>
+        <message>
+            <source>That list is empty.</source>
+            <translation>そのリストは空です。</translation>
+        </message>
+        <message>
+            <source>Shared. The link is copied: %1</source>
+            <translation>共有しました。リンクをコピーしました: %1</translation>
+        </message>
+        <message>
+            <source>%1 added to your library; %2 could not be found on your sources.</source>
+            <translation>%1 件をライブラリに追加しました。%2 件はソースで見つかりませんでした。</translation>
+        </message>
+        <message>
+            <source>All of it is in your library already.</source>
+            <translation>すべてライブラリにあります。</translation>
+        </message>
+        <message>
+            <source>%1 added to your library.</source>
+            <translation>%1 件をライブラリに追加しました。</translation>
+        </message>
+        <message>
+            <source>Friends</source>
+            <translation>友達</translation>
+        </message>
+        <message>
+            <source>Follow each other on %1 to be friends</source>
+            <translation>%1 でお互いをフォローすると友達になります</translation>
+        </message>
+        <message>
+            <source>Sign in (Settings → Sync) to add friends, see what they read and share lists.</source>
+            <translation>友達の追加、友達が読んでいるものの表示、リストの共有にはサインインしてください (設定 → 同期)。</translation>
+        </message>
+        <message>
+            <source>You</source>
+            <translation>あなた</translation>
+        </message>
+        <message>
+            <source>Share what I read and watch</source>
+            <translation>読んでいるもの・見ているものを共有</translation>
+        </message>
+        <message>
+            <source>Your friends see the series you read and watch, and the lists you share. Off: they see nothing.</source>
+            <translation>友達には、あなたが読んだり見たりしているシリーズと共有したリストが見えます。オフ: 何も見えません。</translation>
+        </message>
+        <message>
+            <source>Add a friend</source>
+            <translation>友達を追加</translation>
+        </message>
+        <message>
+            <source>Their username; when they add you too, you are friends. You are @%1.</source>
+            <translation>相手のユーザー名。相手もあなたを追加すると友達になります。あなたは @%1 です。</translation>
+        </message>
+        <message>
+            <source>username</source>
+            <translation>ユーザー名</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>追加</translation>
+        </message>
+        <message>
+            <source>You follow @%1.</source>
+            <translation>@%1 さんをフォロー中です。</translation>
+        </message>
+        <message>
+            <source>Asking to be friends</source>
+            <translation>友達リクエスト送信済み</translation>
+        </message>
+        <message>
+            <source>Added you</source>
+            <translation>あなたを追加しました</translation>
+        </message>
+        <message>
+            <source>Add back</source>
+            <translation>追加し返す</translation>
+        </message>
+        <message>
+            <source>No friends yet.</source>
+            <translation>まだ友達がいません。</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>Waiting for them to add you</source>
+            <translation>相手があなたを追加するのを待っています</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>キャンセル</translation>
+        </message>
+        <message>
+            <source>What friends read</source>
+            <translation>友達が読んでいるもの</translation>
+        </message>
+        <message>
+            <source>Nothing yet: friends show here once they share what they read.</source>
+            <translation>まだ何もありません: 友達が読んでいるものを共有するとここに表示されます。</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>開く</translation>
+        </message>
+        <message>
+            <source>Shared lists</source>
+            <translation>共有リスト</translation>
+        </message>
+        <message>
+            <source>Share a list from your library</source>
+            <translation>ライブラリからリストを共有</translation>
+        </message>
+        <message>
+            <source>Anyone with the link sees it, and can add it all to their library in SCANCORE.</source>
+            <translation>リンクを知っている人なら誰でも見られ、SCANCORE で自分のライブラリにまとめて追加できます。</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>共有</translation>
+        </message>
+        <message>
+            <source>Open a shared list</source>
+            <translation>共有リストを開く</translation>
+        </message>
+        <message>
+            <source>Its link or code.</source>
+            <translation>リンクまたはコード。</translation>
+        </message>
+        <message>
+            <source>link or code</source>
+            <translation>リンクまたはコード</translation>
+        </message>
+        <message>
+            <source>%1 series from @%2: %3</source>
+            <translation>@%2 さんの %1 シリーズ: %3</translation>
+        </message>
+        <message>
+            <source>Add all to my library</source>
+            <translation>すべてライブラリに追加</translation>
+        </message>
+        <message>
+            <source>%1 series · shared %2</source>
+            <translation>%1 シリーズ · %2 に共有</translation>
+        </message>
+        <message>
+            <source>Copy link</source>
+            <translation>リンクをコピー</translation>
+        </message>
+        <message>
+            <source>Link copied</source>
+            <translation>リンクをコピーしました</translation>
+        </message>
+        <message>
+            <source>Stop sharing</source>
+            <translation>共有をやめる</translation>
         </message>
     </context>
     <context>
@@ -3691,6 +4488,166 @@
             <source>A moment of black when a comic page turns clears the last page's ghost.</source>
             <translation>コミックのページをめくるときに一瞬黒くして、前のページの残像を消します。</translation>
         </message>
+        <message>
+            <source>Highest refresh rate</source>
+            <translation>最高リフレッシュレート</translation>
+        </message>
+        <message>
+            <source>Scroll and animate at your screen's fastest rate, such as 120 Hz, instead of the rate the phone picks for apps. Uses a little more battery.</source>
+            <translation>スマホがアプリ用に選ぶレートではなく、画面の最高レート（120 Hz など）でスクロールとアニメーションを表示します。電池を少し多く使います。</translation>
+        </message>
+        <message>
+            <source>Fling glide</source>
+            <translation>スクロールの慣性</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a swipe.</source>
+            <translation>スワイプ後にリストが動き続ける長さ。</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a touchpad or touch screen swipe.</source>
+            <translation>タッチパッドやタッチスクリーンでスワイプした後にリストが動き続ける長さ。</translation>
+        </message>
+        <message>
+            <source>Short</source>
+            <translation>短い</translation>
+        </message>
+        <message>
+            <source>Long</source>
+            <translation>長い</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>見た目</translation>
+        </message>
+        <message>
+            <source>Metro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Metro: タイル、大きな文字、アプリバーを備えたパノラマのハブ。Windows Phone 風です。</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>標準</translation>
+        </message>
+        <message>
+            <source>Pages and navigation</source>
+            <translation>ページとナビゲーション</translation>
+        </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Tiles and panoramas</source>
+            <translation>タイルとパノラマ</translation>
+        </message>
+        <message>
+            <source>Hold a tile on the hub to resize, move or unpin it. Series pages have Pin to the hub.</source>
+            <translation>ハブのタイルを長押しすると、サイズ変更、移動、固定解除ができます。作品ページには「ハブに固定」があります。</translation>
+        </message>
+        <message>
+            <source>Hub title</source>
+            <translation>ハブのタイトル</translation>
+        </message>
+        <message>
+            <source>The big word across the top of the hub.</source>
+            <translation>ハブの上部にある大きな文字。</translation>
+        </message>
+        <message>
+            <source>Title colour</source>
+            <translation>タイトルの色</translation>
+        </message>
+        <message>
+            <source>Accent blend</source>
+            <translation>アクセントの混ぜ具合</translation>
+        </message>
+        <message>
+            <source>Plain</source>
+            <translation>シンプル</translation>
+        </message>
+        <message>
+            <source>Background</source>
+            <translation>バックグラウンド</translation>
+        </message>
+        <message>
+            <source>Behind the hub, moving slower than the tiles.</source>
+            <translation>ハブの後ろで、タイルよりゆっくり動きます。</translation>
+        </message>
+        <message>
+            <source>Last read</source>
+            <translation>最後に読んだ</translation>
+        </message>
+        <message>
+            <source>Theme picture</source>
+            <translation>テーマの画像</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>なし</translation>
+        </message>
+        <message>
+            <source>Headers</source>
+            <translation>ヘッダー</translation>
+        </message>
+        <message>
+            <source>UPPERCASE</source>
+            <translation>大文字</translation>
+        </message>
+        <message>
+            <source>lowercase</source>
+            <translation>小文字</translation>
+        </message>
+        <message>
+            <source>Live tiles</source>
+            <translation>ライブタイル</translation>
+        </message>
+        <message>
+            <source>Tiles turn over now and then to show new chapters and where you are.</source>
+            <translation>タイルは時々裏返って、新しい章や読んでいる位置を表示します。</translation>
+        </message>
+        <message>
+            <source>Hub sections</source>
+            <translation>ハブのセクション</translation>
+        </message>
+        <message>
+            <source>Which sections the hub shows, in this order. Four or five are easiest to find your way in.</source>
+            <translation>ハブに表示するセクションとその順番。4 つか 5 つが一番わかりやすいです。</translation>
+        </message>
+        <message>
+            <source>Earlier</source>
+            <translation>以前</translation>
+        </message>
+        <message>
+            <source>Later</source>
+            <translation>あとで</translation>
+        </message>
+        <message>
+            <source>Retro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Retro: タイル、大きな文字、アプリバーを備えたパノラマのハブ。Windows Phone 風です。</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
+        <message>
+            <source>Sections</source>
+            <translation>セクション</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>読むもの・観るもの</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>タブ、ホーム、Retro のハブにこれらが表示されます。リンクからは他も開けます。</translation>
+        </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>音楽（プレビュー）</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>アニメのOP・EDと手持ちの音楽を歌詞付きで。読んでいる間も再生が続きます。開発中です。</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -3752,6 +4709,74 @@
         <message>
             <source>Back to the default</source>
             <translation>初期設定に戻す</translation>
+        </message>
+        <message>
+            <source>Click a shortcut, then press the new keys. Backspace leaves an action without one; Esc keeps what it had. </source>
+            <translation>ショートカットをクリックし、新しいキーを押してください。Backspace でキーなしに、Esc で元のままにします。 </translation>
+        </message>
+        <message>
+            <source>Everyday: </source>
+            <translation>普段: </translation>
+        </message>
+        <message>
+            <source>none</source>
+            <translation>なし</translation>
+        </message>
+        <message>
+            <source>Back to the everyday keys</source>
+            <translation>普段のキーに戻す</translation>
+        </message>
+        <message>
+            <source>Key profiles</source>
+            <translation>キープロファイル</translation>
+        </message>
+        <message>
+            <source>Other keys for the readers, for the series you choose (in the reader's settings, under Keys): one-handed keys for webtoons, say. Keys a profile leaves alone stay as everyday.</source>
+            <translation>選んだシリーズでリーダーに使う別のキー (リーダーの設定の「キー」から): たとえば Webtoon 用の片手操作キー。プロファイルで変えないキーは普段のままです。</translation>
+        </message>
+        <message>
+            <source>Readers' keys below</source>
+            <translation>リーダーのキーは下にあります</translation>
+        </message>
+        <message>
+            <source>Changing the profile “%1”</source>
+            <translation>プロファイル「%1」を変更中</translation>
+        </message>
+        <message>
+            <source>Changing the everyday keys</source>
+            <translation>普段のキーを変更中</translation>
+        </message>
+        <message>
+            <source>Key profile</source>
+            <translation>キープロファイル</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>普段のキー</translation>
+        </message>
+        <message>
+            <source>Delete</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>New profile</source>
+            <translation>新しいプロファイル</translation>
+        </message>
+        <message>
+            <source>Starts as the everyday keys</source>
+            <translation>普段のキーから始まります</translation>
+        </message>
+        <message>
+            <source>Name, e.g. Webtoons</source>
+            <translation>名前 (例: Webtoon)</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>追加</translation>
+        </message>
+        <message>
+            <source>There is a profile with that name already.</source>
+            <translation>その名前のプロファイルはすでにあります。</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +4924,14 @@
         <message>
             <source>Anime player</source>
             <translation>アニメプレーヤー</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse</source>
+            <translation>マウス下の拡大鏡</translation>
+        </message>
+        <message>
+            <source>Auto-scroll on or off</source>
+            <translation>自動スクロールのオン／オフ</translation>
         </message>
     </context>
     <context>
@@ -4271,6 +5304,18 @@
             <source>Undo</source>
             <translation>元に戻す</translation>
         </message>
+        <message>
+            <source>Most unwatched</source>
+            <translation>未視聴が多い順</translation>
+        </message>
+        <message>
+            <source>Most unread</source>
+            <translation>未読が多い順</translation>
+        </message>
+        <message>
+            <source>Hide until there is something new</source>
+            <translation>新しいことがあるまで隠す</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4574,6 +5619,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>インストゥルメンタルです。歌詞はありません。</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>歌詞を読み込めませんでした。接続を確認してください。</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>この曲の歌詞はまだありません。</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>歌詞はLRCLIBのコミュニティが書いたものです。</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -4646,6 +5710,14 @@
         <message>
             <source>Continue</source>
             <translation>続ける</translation>
+        </message>
+        <message>
+            <source>The host moved on to %1</source>
+            <translation>ホストは %1 に移りました</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>開く</translation>
         </message>
     </context>
     <context>
@@ -4884,6 +5956,168 @@
             <source>Choose</source>
             <translation>選択</translation>
         </message>
+        <message>
+            <source>Also the other extension you had in %1</source>
+            <translation>%1 にあったもう 1 つの拡張機能も</translation>
+        </message>
+        <message>
+            <source>Also the %1 other extensions you had in %2</source>
+            <translation>%2 にあったほかの %1 個の拡張機能も</translation>
+        </message>
+        <message>
+            <source>Install the extension you had in %1</source>
+            <translation>%1 にあった拡張機能をインストール</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions you had in %2</source>
+            <translation>%2 にあった %1 個の拡張機能をインストール</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>再生中：%1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>再生</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>停止</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>歌詞付きの曲 · プレビュー</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>アニメソング</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>手持ちのファイル</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>手持ちの曲を検索</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>曲・歌手・アニメを検索</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>このフォルダーを一覧から外す</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>別のフォルダーを追加</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>音楽フォルダーを追加</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>もう一度探す</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌詞</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>「%1」の曲</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>手持ちの曲</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>今期</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>すべて再生</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>音楽のフォルダーを追加しましょう</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>曲が見つかりません</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>これらのフォルダーに音楽はありません</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>MP3・FLAC・Ogg・Opus・M4Aファイルをジャケット付きで。隣の.lrcファイルから歌詞も読みます。何もコピーしません。</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>アニメソングは現在オフになっています</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>アニメ名をローマ字で、または歌手名で試してください。</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>拡張機能</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>音楽拡張機能で検索</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>人気</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>音楽拡張機能はまだありません</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>曲を検索しましょう</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>「拡張機能」で音楽拡張機能のリポジトリを追加し、インストールしてください。SCANCOREには付属していません。</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>これらの拡張機能には一覧がありません。上で検索してください。</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>拡張機能を開く</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -4990,6 +6224,77 @@
         <message>
             <source>Settings</source>
             <translation>設定</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>高速</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>ほとんどのグラフィックカード</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>最高</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>高性能なグラフィックカードが必要</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>シャープ化 (Anime4K)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NeuralVoicesDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>開始中…</translation>
+        </message>
+        <message>
+            <source>Voice ready: choose it under Voice.</source>
+            <translation>音声の準備ができました: 「音声」で選んでください。</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>ニューラル音声</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Natural voices that read on this computer, with no internet once downloaded. The first one also brings the voice program (Piper, about 25 MB).</source>
+            <translation>このコンピューターで読み上げる自然な音声。ダウンロード後はインターネット不要です。最初の音声と一緒に音声プログラム (Piper、約 25 MB) も入ります。</translation>
+        </message>
+        <message>
+            <source>Find a voice or language</source>
+            <translation>音声または言語を探す</translation>
+        </message>
+        <message>
+            <source>Best quality</source>
+            <translation>最高品質</translation>
+        </message>
+        <message>
+            <source>Good quality</source>
+            <translation>高品質</translation>
+        </message>
+        <message>
+            <source>Smaller</source>
+            <translation>小さめ</translation>
+        </message>
+        <message>
+            <source>Smallest</source>
+            <translation>最小</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>ダウンロード</translation>
         </message>
     </context>
     <context>
@@ -5239,6 +6544,106 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>読み上げ中の段落を画面に保つ</translation>
         </message>
+        <message>
+            <source>Sleep timer: reading aloud stopped</source>
+            <translation>スリープタイマー: 読み上げを停止しました</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>前の文</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>読み上げを続ける</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>次の文</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at %1</source>
+            <translation>スリープタイマー: %1 に停止</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at the end of the chapter</source>
+            <translation>スリープタイマー: 章の終わりで停止</translation>
+        </message>
+        <message>
+            <source>Sleep timer</source>
+            <translation>スリープタイマー</translation>
+        </message>
+        <message>
+            <source>Off</source>
+            <translation>オフ</translation>
+        </message>
+        <message>
+            <source>In 15 minutes</source>
+            <translation>15 分後</translation>
+        </message>
+        <message>
+            <source>In 30 minutes</source>
+            <translation>30 分後</translation>
+        </message>
+        <message>
+            <source>In 45 minutes</source>
+            <translation>45 分後</translation>
+        </message>
+        <message>
+            <source>In an hour</source>
+            <translation>1 時間後</translation>
+        </message>
+        <message>
+            <source>At the end of the chapter</source>
+            <translation>章の終わりで</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>新しいウィンドウで開く</translation>
+        </message>
+        <message>
+            <source>Pause reading aloud</source>
+            <translation>読み上げを一時停止</translation>
+        </message>
+        <message>
+            <source>Translating…</source>
+            <translation>翻訳中…</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>原文を表示</translation>
+        </message>
+        <message>
+            <source>Translate the chapter</source>
+            <translation>章を翻訳</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>読み上げ中の文を強調</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs · %1 s</source>
+            <translation>段落間の間 · %1 秒</translation>
+        </message>
+        <message>
+            <source>Pause between sentences · %1 s</source>
+            <translation>文の間の間 · %1 秒</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>隣に別の作品を読む</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>このシリーズのキー</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>普段のキー</translation>
+        </message>
     </context>
     <context>
         <name>NovelsPage</name>
@@ -5361,6 +6766,85 @@
         <message>
             <source>All files (*)</source>
             <translation>すべてのファイル (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>曲に戻る</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>映像を見る</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>再生位置</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>シャッフルオン</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>シャッフルオフ</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>前へ</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>再生</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>この曲をリピート</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>キューをリピート</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>リピートオフ</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>曲</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>歌詞</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>キュー</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>キューに1曲</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>キューに%1曲</translation>
         </message>
     </context>
     <context>
@@ -5495,7 +6979,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -5637,6 +7121,397 @@
             <source>Your system shows them</source>
             <translation>システムが表示します</translation>
         </message>
+        <message>
+            <source>Layout</source>
+            <translation>レイアウト</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>標準</translation>
+        </message>
+        <message>
+            <source>Metro tiles</source>
+            <translation>Metro タイル</translation>
+        </message>
+        <message>
+            <source>Retro tiles</source>
+            <translation>Retro タイル</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 作品を追加しました</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 作品を追加しました</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 件の話数を既読にしました</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>拡張機能を %1 件インストールしました</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>ダウンロード済みの %1 話を関連付けました</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 作品が見つかるのを待っています</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>LNReaderのバックアップ (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>すべてのファイル (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Mihon・Komikku・TachiyomiSY・Tachiyomi・Aniyomi のバックアップ (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>スキップ</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>スキップ</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>ようこそ画面を閉じて SCANCORE を使い始める</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>今はしない</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>あとで</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>次へ</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>ステップ %1 / %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>戻る</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>ようこそ</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>何を読んで、何を観ますか?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>好きなものを選んでください。タブとホームが合わせて変わり、設定 → インターフェースで残りを戻せます。</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>マンファ、マンガ、Webtoon</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Web 小説と EPUB の本</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>止めたところから再生されるエピソード</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>乗り換えですか?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>別のアプリから移りますか?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>ライブラリ、ダウンロード、拡張機能がまとめて移ります。</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>ライブラリ、ダウンロード、拡張機能をまとめて。</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>初めて使います</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>ようこそ</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>%1 から</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>LNReader で:その他 → バックアップ → バックアップを作成。そのファイルをここで選んでください。</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>%1 で:その他 → 設定 → バックアップと復元 → バックアップを作成。そのファイルをここで選んでください。</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>バックアップ</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>ライブラリを取り込み中…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>バックアップを読み込み中…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>コミック %1 件・アニメ %2 件・インストールする拡張機能 %3 件</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>作品、リスト、進行状況、トラッカー。</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>別のファイル</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>バックアップを選ぶ</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>ダウンロードフォルダ</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>変更</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>選択</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>作品の元になった拡張機能とリポジトリもバックアップと一緒に提案されるので、同じソースで開けます。</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE にはコミック、小説、アニメの独自ソースがあります。拡張機能リポジトリのリンクがあればここに入れられます。拡張機能ページでもいつでも追加できます。</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ガラス</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>メニューやシートの背後が透けて見えます</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>リーダーを試す</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>サンプルをスクロールし、バーをタップして、好みのものを選んでください。すべて設定 → 読書にもあります。</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>進行バー</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>いくつかの追加設定</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>どれも今すぐワンタップ、または後で設定から。</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>話を読み終えると、トラッカーでも進みます。</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>scancore.onl アカウント</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>%1 としてログイン中。ライブラリと進行状況が同期されます。</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>すべての端末での進行状況、フレンド、共有リスト、リアクション。アカウントなしでも全部使えます。</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>ログインまたはアカウント作成</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>フォロー中の作品の新しい話と、SCANCORE からのお知らせ。</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>新しい話とエピソード</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>選んだ内容です。タップして変更できます。</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>読むことと観ること</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>移行元</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>ゼロから</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>見た目</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>リーダー</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>進行バーなし</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>ページバー</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>ライン</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>フローティングバー</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>番外編</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>ログイン済み</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>通知オン</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>通知オフ</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>ライブラリを開く</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>コミックを見る</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>アニメを観る</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>小説を読む</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>何を読んで、観て、聴きますか？</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>アニメソングと手持ちの曲を歌詞付きで</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>音楽を再生</translation>
+        </message>
+    </context>
+    <context>
+        <name>OnDeviceDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>開始中…</translation>
+        </message>
+        <message>
+            <source>Ready: pages in this language can be translated on this computer.</source>
+            <translation>準備完了: この言語のページをこのコンピューターで翻訳できます。</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>このコンピューターで翻訳</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.</source>
+            <translation>各言語には、そのページを読み取り %1 に翻訳するのに必要なものが含まれます: 約 140 MB。何も送信されません。処理は ONNX Runtime (Microsoft)、PaddleOCR、Opus-MT が行います。</translation>
+        </message>
+        <message>
+            <source>Find a language</source>
+            <translation>言語を探す</translation>
+        </message>
+        <message>
+            <source>Ready · through English</source>
+            <translation>準備完了 · 英語経由</translation>
+        </message>
+        <message>
+            <source>Ready</source>
+            <translation>準備完了</translation>
+        </message>
+        <message>
+            <source>About %1 MB</source>
+            <translation>約 %1 MB</translation>
+        </message>
+        <message>
+            <source>Nothing more to download</source>
+            <translation>これ以上ダウンロードするものはありません</translation>
+        </message>
+        <message>
+            <source> · through English</source>
+            <translation> · 英語経由</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>ダウンロード</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5722,6 +7597,117 @@
         <message>
             <source>Remove</source>
             <translation>削除</translation>
+        </message>
+    </context>
+    <context>
+        <name>PartyPanel</name>
+        <message>
+            <source>Watch together</source>
+            <translation>一緒に見る</translation>
+        </message>
+        <message>
+            <source>Everyone watches from their own source; the host's player steers the others.</source>
+            <translation>各自が自分のソースで視聴し、ホストのプレーヤーが全員を操作します。</translation>
+        </message>
+        <message>
+            <source>You are the host: your player steers everyone's.</source>
+            <translation>あなたがホストです: あなたのプレーヤーが全員を操作します。</translation>
+        </message>
+        <message>
+            <source>Playing along with %1</source>
+            <translation>%1 と一緒に視聴中</translation>
+        </message>
+        <message>
+            <source>Waiting for the host…</source>
+            <translation>ホストを待っています…</translation>
+        </message>
+        <message>
+            <source>Joining…</source>
+            <translation>参加中…</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Sign in to scancore.onl (Settings → Account) to watch together.</source>
+            <translation>一緒に視聴するには scancore.onl にサインインしてください（設定 → アカウント）。</translation>
+        </message>
+        <message>
+            <source>Starting…</source>
+            <translation>開始中…</translation>
+        </message>
+        <message>
+            <source>Start a watch party</source>
+            <translation>ウォッチパーティーを始める</translation>
+        </message>
+        <message>
+            <source>Or join one</source>
+            <translation>または参加する</translation>
+        </message>
+        <message>
+            <source>Join a watch party</source>
+            <translation>ウォッチパーティーに参加</translation>
+        </message>
+        <message>
+            <source>Party code</source>
+            <translation>パーティーコード</translation>
+        </message>
+        <message>
+            <source>Join</source>
+            <translation>参加</translation>
+        </message>
+        <message>
+            <source>Copy the code</source>
+            <translation>コードをコピー</translation>
+        </message>
+        <message>
+            <source>Code copied</source>
+            <translation>コードをコピーしました</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>共有</translation>
+        </message>
+        <message>
+            <source>Watch %1 with me in SCANCORE: join the party with the code %2</source>
+            <translation>SCANCORE で一緒に %1 を見よう: コード %2 でパーティーに参加してね</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>ウォッチパーティー</translation>
+        </message>
+        <message>
+            <source>The host is watching %1, episode %2</source>
+            <translation>ホストは %1 の第 %2 話を視聴中</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>開く</translation>
+        </message>
+        <message>
+            <source>host</source>
+            <translation>ホスト</translation>
+        </message>
+        <message>
+            <source>Say hello: everyone in the party sees it.</source>
+            <translation>あいさつしましょう: パーティーの全員に表示されます。</translation>
+        </message>
+        <message>
+            <source>Message</source>
+            <translation>メッセージ</translation>
+        </message>
+        <message>
+            <source>Send</source>
+            <translation>送信</translation>
+        </message>
+        <message>
+            <source>End the party</source>
+            <translation>パーティーを終了</translation>
+        </message>
+        <message>
+            <source>Leave the party</source>
+            <translation>パーティーを退出</translation>
         </message>
     </context>
     <context>
@@ -5906,6 +7892,144 @@
         <message>
             <source>None</source>
             <translation>なし</translation>
+        </message>
+    </context>
+    <context>
+        <name>QObject</name>
+        <message>
+            <source>Android could not read the page: %1</source>
+            <translation>Android がページを読み取れませんでした: %1</translation>
+        </message>
+        <message>
+            <source>This device has no text recogniser.</source>
+            <translation>この端末には文字認識がありません。</translation>
+        </message>
+        <message>
+            <source>Android's translator needs to know the language: pick it in the reader.</source>
+            <translation>Android の翻訳には言語の指定が必要です。リーダーで選んでください。</translation>
+        </message>
+        <message>
+            <source>Android could not translate: %1</source>
+            <translation>Android が翻訳できませんでした: %1</translation>
+        </message>
+        <message>
+            <source>This device has no translator of its own.</source>
+            <translation>この端末には翻訳機能がありません。</translation>
+        </message>
+        <message>
+            <source>Pick a way to translate in Settings → Reading → Translate.</source>
+            <translation>設定 → 読書 → 翻訳 で翻訳方法を選んでください。</translation>
+        </message>
+        <message>
+            <source>The page's picture could not be read.</source>
+            <translation>ページの画像を読み取れませんでした。</translation>
+        </message>
+        <message>
+            <source>%1 refused the key. Check it in Settings → Reading → Translate.</source>
+            <translation>%1 がキーを拒否しました。設定 → 読書 → 翻訳 で確認してください。</translation>
+        </message>
+        <message>
+            <source>%1 says the key's quota is used up for now.</source>
+            <translation>%1 によると、キーの割り当て量は今のところ使い切られています。</translation>
+        </message>
+        <message>
+            <source>%1 could not be reached.</source>
+            <translation>%1 に接続できませんでした。</translation>
+        </message>
+        <message>
+            <source>%1 answered with an error (%2).</source>
+            <translation>%1 がエラーを返しました（%2）。</translation>
+        </message>
+        <message>
+            <source>DeepL needs your key (Settings → Reading → Translate).</source>
+            <translation>DeepL にはキーが必要です（設定 → 読書 → 翻訳）。</translation>
+        </message>
+        <message>
+            <source>DeepL answered with something else than the texts.</source>
+            <translation>DeepL がテキスト以外のものを返しました。</translation>
+        </message>
+        <message>
+            <source>Google Translate needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google 翻訳には API キーが必要です（設定 → 読書 → 翻訳）。</translation>
+        </message>
+        <message>
+            <source>Google Translate answered with something else than the texts.</source>
+            <translation>Google 翻訳がテキスト以外のものを返しました。</translation>
+        </message>
+        <message>
+            <source>Set the service's address and model in Settings → Reading → Translate.</source>
+            <translation>設定 → 読書 → 翻訳 でサービスのアドレスとモデルを設定してください。</translation>
+        </message>
+        <message>
+            <source>The model did not answer with one translation per text. Try another model.</source>
+            <translation>モデルがテキストごとに 1 つの翻訳を返しませんでした。別のモデルを試してください。</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Cloud Vision には API キーが必要です（設定 → 読書 → 翻訳）。</translation>
+        </message>
+        <message>
+            <source>MangaSin changed its series page: no chapter list found.</source>
+            <translation>MangaSin の作品ページが変わり、章リストが見つかりません。</translation>
+        </message>
+        <message>
+            <source>MangaSin's chapter list could not be opened (its key changed).</source>
+            <translation>MangaSin の章リストを開けませんでした（キーが変わりました）。</translation>
+        </message>
+        <message>
+            <source>%1 refused the login. Check it in Settings → Sources → Your servers.</source>
+            <translation>%1 がログインを拒否しました。設定 → ソース → 自分のサーバー で確認してください。</translation>
+        </message>
+        <message>
+            <source>This server is no longer in Settings → Sources → Your servers.</source>
+            <translation>このサーバーはもう 設定 → ソース → 自分のサーバー にありません。</translation>
+        </message>
+        <message>
+            <source>The server did not give the image (%1).</source>
+            <translation>サーバーが画像を返しませんでした（%1）。</translation>
+        </message>
+        <message>
+            <source>The image could not be saved.</source>
+            <translation>画像を保存できませんでした。</translation>
+        </message>
+    </context>
+    <context>
+        <name>ReadAloudBar</name>
+        <message>
+            <source>Reading aloud: %1</source>
+            <translation>読み上げ中: %1</translation>
+        </message>
+        <message>
+            <source>Loading the chapter…</source>
+            <translation>章を読み込み中…</translation>
+        </message>
+        <message>
+            <source>stops at %1</source>
+            <translation>%1 に停止</translation>
+        </message>
+        <message>
+            <source>stops after this chapter</source>
+            <translation>この章のあとで停止</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>前の文</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>一時停止</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>読み上げを続ける</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>次の文</translation>
+        </message>
+        <message>
+            <source>Stop reading aloud</source>
+            <translation>読み上げを停止</translation>
         </message>
     </context>
     <context>
@@ -6449,6 +8573,174 @@
             <source>Colours</source>
             <translation>色</translation>
         </message>
+        <message>
+            <source>Full screen while reading</source>
+            <translation>読書中は全画面</translation>
+        </message>
+        <message>
+            <source>The status and navigation bars hide with the reader's controls, so pages fill the screen, beside a punch hole too. Swipe from the edge to see them.</source>
+            <translation>ステータスバーとナビゲーションバーはリーダーの操作部と一緒に隠れ、パンチホールの横までページが画面いっぱいに広がります。端からスワイプすると表示されます。</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>次の章へ続けて読む</translation>
+        </message>
+        <message>
+            <source>The next chapter joins the strip as you near the end, so reading never stops for a button.</source>
+            <translation>終わりに近づくと次の章が縦読みにつながるので、ボタンのために読むのが止まりません。</translation>
+        </message>
+        <message>
+            <source>Translate</source>
+            <translation>翻訳</translation>
+        </message>
+        <message>
+            <source>Comic readers have Translate the pages in their top bar. Keys stay on this device and are only sent to their own service.</source>
+            <translation>コミックのリーダーには上部バーに「ページを翻訳」があります。キーはこの端末に保存され、それぞれのサービスにだけ送られます。</translation>
+        </message>
+        <message>
+            <source>Translate into</source>
+            <translation>翻訳先</translation>
+        </message>
+        <message>
+            <source>Read the page's text with</source>
+            <translation>ページの文字を読み取る方法</translation>
+        </message>
+        <message>
+            <source>Finds the text in a comic's pages.</source>
+            <translation>コミックのページから文字を見つけます。</translation>
+        </message>
+        <message>
+            <source>Translate with</source>
+            <translation>翻訳方法</translation>
+        </message>
+        <message>
+            <source>DeepL key</source>
+            <translation>DeepL キー</translation>
+        </message>
+        <message>
+            <source>From your DeepL account (free keys end in :fx).</source>
+            <translation>DeepL アカウントから（無料キーは :fx で終わります）。</translation>
+        </message>
+        <message>
+            <source>Not set</source>
+            <translation>未設定</translation>
+        </message>
+        <message>
+            <source>Google Cloud key</source>
+            <translation>Google Cloud キー</translation>
+        </message>
+        <message>
+            <source>An API key with Cloud Translation and Cloud Vision turned on.</source>
+            <translation>Cloud Translation と Cloud Vision を有効にした API キー。</translation>
+        </message>
+        <message>
+            <source>Language model</source>
+            <translation>言語モデル</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service: its address up to /v1 (a local Ollama is http://localhost:11434/v1), a model and a key if it needs one.</source>
+            <translation>OpenAI 互換のサービス: /v1 までのアドレス（ローカルの Ollama なら http://localhost:11434/v1）、モデル、必要ならキー。</translation>
+        </message>
+        <message>
+            <source>Model, e.g. gpt-4o-mini</source>
+            <translation>モデル（例: gpt-4o-mini）</translation>
+        </message>
+        <message>
+            <source>Key (if it needs one)</source>
+            <translation>キー（必要な場合）</translation>
+        </message>
+        <message>
+            <source>Forget translations</source>
+            <translation>翻訳を消去</translation>
+        </message>
+        <message>
+            <source>Pages and chapters are translated again the next time.</source>
+            <translation>ページと章は次回あらためて翻訳されます。</translation>
+        </message>
+        <message>
+            <source>Forget</source>
+            <translation>削除</translation>
+        </message>
+        <message>
+            <source>Translations forgotten</source>
+            <translation>翻訳を消去しました</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>読み上げ中の文を強調</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs</source>
+            <translation>段落間の間</translation>
+        </message>
+        <message>
+            <source>Pause between sentences</source>
+            <translation>文の間の間</translation>
+        </message>
+        <message>
+            <source>Voice for a language</source>
+            <translation>言語ごとの声</translation>
+        </message>
+        <message>
+            <source>Books in this language are read with this voice.</source>
+            <translation>この言語の本はこの声で読み上げます。</translation>
+        </message>
+        <message>
+            <source>The voice above</source>
+            <translation>上の声</translation>
+        </message>
+        <message>
+            <source>Show the model the page</source>
+            <translation>モデルにページを見せる</translation>
+        </message>
+        <message>
+            <source>Sends the comic page's picture with its text, so the model can see who speaks. Needs a model that reads images; costs more.</source>
+            <translation>コミックのページの画像をテキストと一緒に送り、誰が話しているかをモデルが見られるようにします。画像を読めるモデルが必要で、費用が増えます。</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>このコンピューターで翻訳</translation>
+        </message>
+        <message>
+            <source>Pages and chapters translated with nothing sent anywhere. Add or remove languages.</source>
+            <translation>どこにも送らずに翻訳されるページと話。言語を追加・削除します。</translation>
+        </message>
+        <message>
+            <source>Download a language once; pages and chapters are then translated with nothing sent anywhere.</source>
+            <translation>言語を一度ダウンロードすれば、ページや話はどこにも送らずに翻訳されます。</translation>
+        </message>
+        <message>
+            <source>Languages…</source>
+            <translation>言語…</translation>
+        </message>
+        <message>
+            <source>Translate novels in other languages</source>
+            <translation>他言語の小説を翻訳</translation>
+        </message>
+        <message>
+            <source>Chapters from a source in another language (WTR-LAB's, in English) open translated. The reader's Translate button decides for each series.</source>
+            <translation>他言語のソースの話 (WTR-LAB は英語) は翻訳して開きます。シリーズごとにリーダーの「翻訳」ボタンで切り替えられます。</translation>
+        </message>
+        <message>
+            <source>Download a neural voice below, or add one in the system's text-to-speech settings.</source>
+            <translation>下のニューラル音声をダウンロードするか、システムの読み上げ設定で追加してください。</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>ニューラル音声</translation>
+        </message>
+        <message>
+            <source>%1 downloaded; natural voices that need no internet</source>
+            <translation>%1 件ダウンロード済み。インターネット不要の自然な音声</translation>
+        </message>
+        <message>
+            <source>Natural voices that read without the internet, downloaded once</source>
+            <translation>インターネットなしで読み上げる自然な音声 (一度ダウンロード)</translation>
+        </message>
+        <message>
+            <source>Choose…</source>
+            <translation>選択…</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6490,6 +8782,295 @@
         <message>
             <source>Up next: episode %1</source>
             <translation>次: 第 %1 話</translation>
+        </message>
+    </context>
+    <context>
+        <name>Retro</name>
+        <message>
+            <source>Explore</source>
+            <translation>探索</translation>
+        </message>
+        <message>
+            <source>Recent</source>
+            <translation>最近</translation>
+        </message>
+        <message>
+            <source>Library</source>
+            <translation>ライブラリ</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>コミック</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>小説</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>アニメ</translation>
+        </message>
+        <message>
+            <source>Pinned to the hub</source>
+            <translation>ハブに固定しました</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroBar</name>
+        <message>
+            <source>Continue</source>
+            <translation>続ける</translation>
+        </message>
+        <message>
+            <source>Check for new chapters</source>
+            <translation>新しい章を確認</translation>
+        </message>
+        <message>
+            <source>Search comics</source>
+            <translation>コミックを検索</translation>
+        </message>
+        <message>
+            <source>Search novels</source>
+            <translation>小説を検索</translation>
+        </message>
+        <message>
+            <source>Search anime</source>
+            <translation>アニメを検索</translation>
+        </message>
+        <message>
+            <source>Search everything</source>
+            <translation>すべてを検索</translation>
+        </message>
+        <message>
+            <source>Checking your library for new chapters…</source>
+            <translation>ライブラリの新しい章を確認中…</translation>
+        </message>
+        <message>
+            <source>Everything is up to date</source>
+            <translation>すべて最新です</translation>
+        </message>
+        <message>
+            <source>Nothing to continue yet</source>
+            <translation>まだ続きはありません</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>検索</translation>
+        </message>
+        <message>
+            <source>refresh</source>
+            <translation>更新</translation>
+        </message>
+        <message>
+            <source>alerts</source>
+            <translation>お知らせ</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>履歴</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>ダウンロード</translation>
+        </message>
+        <message>
+            <source>activity</source>
+            <translation>アクティビティ</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>拡張機能</translation>
+        </message>
+        <message>
+            <source>turn incognito off</source>
+            <translation>シークレットモードを解除</translation>
+        </message>
+        <message>
+            <source>go incognito</source>
+            <translation>シークレットモード</translation>
+        </message>
+        <message>
+            <source>arrange the hub</source>
+            <translation>ハブを並べ替え</translation>
+        </message>
+        <message>
+            <source>Back</source>
+            <translation>戻る</translation>
+        </message>
+        <message>
+            <source> (hold for more)</source>
+            <translation> （長押しでその他）</translation>
+        </message>
+        <message>
+            <source>Close the menu</source>
+            <translation>メニューを閉じる</translation>
+        </message>
+        <message>
+            <source>Open the menu</source>
+            <translation>メニューを開く</translation>
+        </message>
+        <message>
+            <source>Incognito off</source>
+            <translation>シークレット: オフ</translation>
+        </message>
+        <message>
+            <source>Incognito</source>
+            <translation>シークレット</translation>
+        </message>
+        <message>
+            <source>Account</source>
+            <translation>アカウント</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroHub</name>
+        <message>
+            <source>Episode %1</source>
+            <translation>エピソード %1</translation>
+        </message>
+        <message>
+            <source>Chapter %1</source>
+            <translation>チャプター %1</translation>
+        </message>
+        <message>
+            <source>1 new</source>
+            <translation>新着 1</translation>
+        </message>
+        <message>
+            <source>%1 new</source>
+            <translation>新着 %1</translation>
+        </message>
+        <message>
+            <source>read a random comic</source>
+            <translation>ランダムなコミックを読む</translation>
+        </message>
+        <message>
+            <source>continue</source>
+            <translation>続きから</translation>
+        </message>
+        <message>
+            <source>explore a random genre</source>
+            <translation>ランダムなジャンルを探す</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>検索</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>ダウンロード</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>履歴</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>設定</translation>
+        </message>
+        <message>
+            <source>your %1 wrapped</source>
+            <translation>あなたの %1 まとめ</translation>
+        </message>
+        <message>
+            <source>Nothing to pick from yet</source>
+            <translation>まだ選べるものがありません</translation>
+        </message>
+        <message>
+            <source>Small</source>
+            <translation>小</translation>
+        </message>
+        <message>
+            <source>Medium</source>
+            <translation>中</translation>
+        </message>
+        <message>
+            <source>Wide</source>
+            <translation>ワイド</translation>
+        </message>
+        <message>
+            <source>Move earlier</source>
+            <translation>前へ移動</translation>
+        </message>
+        <message>
+            <source>Move later</source>
+            <translation>後ろへ移動</translation>
+        </message>
+        <message>
+            <source>Unpin</source>
+            <translation>固定解除</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>ハブに固定</translation>
+        </message>
+        <message>
+            <source>What you read and watch shows up here.</source>
+            <translation>読んだもの、見たものがここに表示されます。</translation>
+        </message>
+        <message>
+            <source>Series you save show up here.</source>
+            <translation>保存した作品がここに表示されます。</translation>
+        </message>
+        <message>
+            <source>all comics</source>
+            <translation>すべてのコミック</translation>
+        </message>
+        <message>
+            <source>coming up</source>
+            <translation>近日公開</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>拡張機能</translation>
+        </message>
+        <message>
+            <source>Latest chapters</source>
+            <translation>最新の章</translation>
+        </message>
+        <message>
+            <source>all novels</source>
+            <translation>すべての小説</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>小説</translation>
+        </message>
+        <message>
+            <source>all anime</source>
+            <translation>すべてのアニメ</translation>
+        </message>
+        <message>
+            <source>schedule</source>
+            <translation>スケジュール</translation>
+        </message>
+        <message>
+            <source>browse</source>
+            <translation>ブラウズ</translation>
+        </message>
+        <message>
+            <source>Trending</source>
+            <translation>トレンド</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>すべての音楽</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>再生中</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>今期</translation>
         </message>
     </context>
     <context>
@@ -6651,6 +9232,129 @@
         <message>
             <source>Another app</source>
             <translation>別のアプリ</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Comics</name>
+        <message>
+            <source>That server is not saved.</source>
+            <translation>そのサーバーは保存されていません。</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Downloads</name>
+        <message>
+            <source>No chapters of this novel are downloaded. Download some first.</source>
+            <translation>この小説の章はダウンロードされていません。先にいくつかダウンロードしてください。</translation>
+        </message>
+        <message>
+            <source>The book could not be saved in %1.</source>
+            <translation>%1 に本を保存できませんでした。</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::MediaControls</name>
+        <message>
+            <source>Reading aloud</source>
+            <translation>読み上げ</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Party</name>
+        <message>
+            <source>The party could not be reached (%1).</source>
+            <translation>パーティーに接続できませんでした（%1）。</translation>
+        </message>
+        <message>
+            <source>Watch parties need scancore.onl (this site has none yet).</source>
+            <translation>ウォッチパーティーには scancore.onl が必要です（このサイトにはまだありません）。</translation>
+        </message>
+        <message>
+            <source>The party could not be opened.</source>
+            <translation>パーティーを開けませんでした。</translation>
+        </message>
+        <message>
+            <source>A party code has six letters and numbers.</source>
+            <translation>パーティーコードは英数字 6 文字です。</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>パーティーは終了しました。</translation>
+        </message>
+        <message>
+            <source>No party with that code.</source>
+            <translation>そのコードのパーティーはありません。</translation>
+        </message>
+        <message>
+            <source>The host ended the party.</source>
+            <translation>ホストがパーティーを終了しました。</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Translator</name>
+        <message>
+            <source>To translate pages on a computer, add a Google Cloud key in Settings → Reading → Translate (Vision reads the page's text).</source>
+            <translation>パソコンでページを翻訳するには、設定 → 読書 → 翻訳 で Google Cloud キーを追加してください（Vision がページの文字を読み取ります）。</translation>
+        </message>
+        <message>
+            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.</source>
+            <translation>設定 → 読書 → 翻訳 で DeepL か Google のキー、またはモデルのアドレスを追加してください。</translation>
+        </message>
+        <message>
+            <source>Automatic</source>
+            <translation>自動</translation>
+        </message>
+        <message>
+            <source>This phone</source>
+            <translation>このスマホ</translation>
+        </message>
+        <message>
+            <source>On the phone, with Google Play services</source>
+            <translation>スマホで、Google Play 開発者サービスを使用</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision</source>
+            <translation>Google Cloud Vision</translation>
+        </message>
+        <message>
+            <source>Your Google Cloud key</source>
+            <translation>あなたの Google Cloud キー</translation>
+        </message>
+        <message>
+            <source>On the phone; a model per language</source>
+            <translation>スマホで、言語ごとのモデル</translation>
+        </message>
+        <message>
+            <source>Your DeepL key</source>
+            <translation>あなたの DeepL キー</translation>
+        </message>
+        <message>
+            <source>Google Translate</source>
+            <translation>Google 翻訳</translation>
+        </message>
+        <message>
+            <source>A language model</source>
+            <translation>言語モデル</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service, or one on your computer</source>
+            <translation>OpenAI 互換のサービス、またはパソコン上のサービス</translation>
+        </message>
+        <message>
+            <source>To translate pages on a computer, download a language in Settings → Reading → Translate on this computer, or add a Google Cloud key there.</source>
+            <translation>コンピューターでページを翻訳するには、設定 → 読書 → このコンピューターで翻訳 で言語をダウンロードするか、そこで Google Cloud のキーを追加してください。</translation>
+        </message>
+        <message>
+            <source>This computer</source>
+            <translation>このコンピューター</translation>
+        </message>
+        <message>
+            <source>Downloaded once; pages never leave the computer</source>
+            <translation>一度ダウンロード。ページがコンピューターの外に出ることはありません</translation>
+        </message>
+        <message>
+            <source>Downloaded once; nothing leaves the computer</source>
+            <translation>一度ダウンロード。何もコンピューターの外に出ません</translation>
         </message>
     </context>
     <context>
@@ -6923,6 +9627,121 @@
             <source>Show as a grid</source>
             <translation>グリッドで表示</translation>
         </message>
+        <message>
+            <source>Saved %1 chapters as %2</source>
+            <translation>%1 章を %2 として保存しました</translation>
+        </message>
+        <message>
+            <source>Show</source>
+            <translation>表示</translation>
+        </message>
+        <message>
+            <source>Save the %1 downloaded chapters</source>
+            <translation>ダウンロード済みの %1 章を保存</translation>
+        </message>
+        <message>
+            <source>Download all %1 chapters, then save</source>
+            <translation>全 %1 章をダウンロードしてから保存</translation>
+        </message>
+        <message>
+            <source>Stop waiting for the downloads</source>
+            <translation>ダウンロードを待つのをやめる</translation>
+        </message>
+        <message>
+            <source>No chapter downloaded, so there is no EPUB to save.</source>
+            <translation>ダウンロード済みの章がないため、保存する EPUB がありません。</translation>
+        </message>
+        <message>
+            <source>Read in a new window</source>
+            <translation>新しいウィンドウで読む</translation>
+        </message>
+        <message>
+            <source>Listen</source>
+            <translation>聴く</translation>
+        </message>
+        <message>
+            <source>Downloading for the EPUB…</source>
+            <translation>EPUB 用にダウンロード中…</translation>
+        </message>
+        <message>
+            <source>Save as EPUB</source>
+            <translation>EPUB として保存</translation>
+        </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>ハブから固定解除</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>ハブに固定</translation>
+        </message>
+    </context>
+    <context>
+        <name>ServerDialog</name>
+        <message>
+            <source>Trying it…</source>
+            <translation>試しています…</translation>
+        </message>
+        <message>
+            <source>Connected: 1 series found.</source>
+            <translation>接続しました: 1 作品が見つかりました。</translation>
+        </message>
+        <message>
+            <source>Connected: %1 series found.</source>
+            <translation>接続しました: %1 作品が見つかりました。</translation>
+        </message>
+        <message>
+            <source>Your server</source>
+            <translation>自分のサーバー</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>自分のサーバーを追加</translation>
+        </message>
+        <message>
+            <source>Read the comics on your own Komga, Kavita or Suwayomi server. The login stays on this device.</source>
+            <translation>自分の Komga、Kavita、Suwayomi サーバーのコミックを読めます。ログイン情報はこの端末に残ります。</translation>
+        </message>
+        <message>
+            <source>Name (optional)</source>
+            <translation>名前（任意）</translation>
+        </message>
+        <message>
+            <source>Email</source>
+            <translation>メール</translation>
+        </message>
+        <message>
+            <source>User name</source>
+            <translation>ユーザー名</translation>
+        </message>
+        <message>
+            <source> (if it asks for one)</source>
+            <translation> （求められた場合）</translation>
+        </message>
+        <message>
+            <source>Password (saved; type to change)</source>
+            <translation>パスワード（保存済み。変更するには入力）</translation>
+        </message>
+        <message>
+            <source>Password</source>
+            <translation>パスワード</translation>
+        </message>
+        <message>
+            <source>API key (saved; type to change)</source>
+            <translation>API キー（保存済み。変更するには入力）</translation>
+        </message>
+        <message>
+            <source>Or an API key, instead of the login</source>
+            <translation>またはログインの代わりに API キー</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Save and try</source>
+            <translation>保存してテスト</translation>
+        </message>
     </context>
     <context>
         <name>SettingsPage</name>
@@ -7028,7 +9847,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -7222,6 +10041,14 @@
             <source> · Medium Dev</source>
             <translation> · Medium Dev</translation>
         </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
     </context>
     <context>
         <name>ShortcutsSheet</name>
@@ -7304,6 +10131,10 @@
             <source>Collapse</source>
             <translation>折りたたむ</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -7334,6 +10165,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> をブラウザで開いてください。</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>次に再生</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>キューに追加</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>映像を見る</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>第%1話</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>もっと見る</translation>
         </message>
     </context>
     <context>
@@ -7698,6 +10552,65 @@
         <message>
             <source>Mihon's downloads · </source>
             <translation>Mihon のダウンロード · </translation>
+        </message>
+        <message>
+            <source>Your servers</source>
+            <translation>自分のサーバー</translation>
+        </message>
+        <message>
+            <source>Komga, Kavita and Suwayomi servers you run: their comics are a source like the others, searched with them and saved to the library.</source>
+            <translation>自分で運用している Komga、Kavita、Suwayomi サーバー: そのコミックは他と同じソースとして一緒に検索され、ライブラリに保存されます。</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>変更</translation>
+        </message>
+        <message>
+            <source>Open in the browser</source>
+            <translation>ブラウザーで開く</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>自分のサーバーを追加</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>診断</translation>
+        </message>
+        <message>
+            <source>Whether the extensions runtime answers, a quick test of a source, and the sites each extension contacted.</source>
+            <translation>拡張機能ランタイムが応答するか、ソースの簡単なテスト、各拡張機能が接続したサイト。</translation>
+        </message>
+    </context>
+    <context>
+        <name>SplitPicker</name>
+        <message>
+            <source>No chapters to read</source>
+            <translation>読める話がありません</translation>
+        </message>
+        <message>
+            <source>Read beside</source>
+            <translation>並べて読む</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>Nothing in progress yet: start a comic or a novel, then read it beside another.</source>
+            <translation>まだ読みかけがありません: コミックか小説を読み始めてから、別の作品と並べて読みましょう。</translation>
+        </message>
+        <message>
+            <source>Opening…</source>
+            <translation>開いています…</translation>
+        </message>
+        <message>
+            <source>Novel</source>
+            <translation>小説</translation>
+        </message>
+        <message>
+            <source>Comic</source>
+            <translation>コミック</translation>
         </message>
     </context>
     <context>
@@ -8074,6 +10987,10 @@
             <source>Settings</source>
             <translation>設定</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>音楽</translation>
+        </message>
     </context>
     <context>
         <name>Theme</name>
@@ -8158,7 +11075,7 @@
         </message>
         <message>
             <source>Light</source>
-            <translation>細字</translation>
+            <translation>ライト</translation>
         </message>
         <message>
             <source>Dark</source>
@@ -8380,6 +11297,38 @@
             <source>Saved </source>
             <translation>保存済み </translation>
         </message>
+        <message>
+            <source>Metro colours</source>
+            <translation>Metro の色</translation>
+        </message>
+        <message>
+            <source>The accent colours of Windows Phone, or any colour from the wheel. Tiles, the hub title and switches take it.</source>
+            <translation>Windows Phone のアクセントカラー、またはカラーホイールの好きな色。タイル、ハブのタイトル、スイッチに使われます。</translation>
+        </message>
+        <message>
+            <source>Custom colour</source>
+            <translation>カスタムカラー</translation>
+        </message>
+        <message>
+            <source>Tile colour</source>
+            <translation>タイルの色</translation>
+        </message>
+        <message>
+            <source>Retro colours</source>
+            <translation>Retro の色</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>ガラス</translation>
+        </message>
+        <message>
+            <source>Glass menus and sheets</source>
+            <translation>ガラスのメニューとシート</translation>
+        </message>
+        <message>
+            <source>Menus, sheets and dialogs show what is behind them, blurred.</source>
+            <translation>メニュー、シート、ダイアログの背後がぼかして透けて見えます。</translation>
+        </message>
     </context>
     <context>
         <name>TrackerConnect</name>
@@ -8576,6 +11525,13 @@
         <message>
             <source>Connect a tracker such as AniList, MyAnimeList or Kitsu in Settings → Connections to keep your lists there up to date.</source>
             <translation>設定 → 接続でAniList、MyAnimeList、Kitsuなどのトラッカーを接続すると、そちらのリストも最新に保たれます。</translation>
+        </message>
+    </context>
+    <context>
+        <name>TranslationLayer</name>
+        <message>
+            <source>Translating…</source>
+            <translation>翻訳中…</translation>
         </message>
     </context>
     <context>
@@ -8999,6 +11955,108 @@
         <message>
             <source>Close player</source>
             <translation>プレーヤーを閉じる</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>内蔵</translation>
+        </message>
+        <message>
+            <source>More…</source>
+            <translation>その他…</translation>
+        </message>
+        <message>
+            <source>Keep SCANCORE open while it plays there: the video comes through it.</source>
+            <translation>そちらで再生中は SCANCORE を開いたままにしてください。動画は SCANCORE を通ります。</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>パーティーは終了しました。</translation>
+        </message>
+        <message>
+            <source>Watch party (%1)</source>
+            <translation>ウォッチパーティー（%1）</translation>
+        </message>
+        <message>
+            <source>Watch together</source>
+            <translation>一緒に見る</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>新しいウィンドウで開く</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>選んだ見た目のプレビュー</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>ホーム</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>続きを読む</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新しいチャプター</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>ライブラリに追加</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>ダウンロード</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>共有</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>ホーム</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>コミック</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>アニメ</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>下へスクロールするか、端をタップしてページをめくります。</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>バーは話のどこまで読んだかを示します。</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>バーをタップまたはドラッグしてページに移動します。</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>ほかの見た目を選んで、ここで確かめてください。</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>ページかひと続きのストリップか:上で切り替え。</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>おわり。本当の話はこのすぐ後から始まります。</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>サンプルの話</translation>
         </message>
     </context>
     <context>
@@ -9560,6 +12618,10 @@
         <message>
             <source>The voice could not read this.</source>
             <translation>この部分は音声で読めませんでした。</translation>
+        </message>
+        <message>
+            <source> (neural)</source>
+            <translation> (ニューラル)</translation>
         </message>
     </context>
 </TS>

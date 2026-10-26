@@ -46,4 +46,9 @@ QString contentLanguage();
 // these languages keeps its English ones (the registries see to that).
 QStringList builtinLanguages();
 
+// Where the sentences of a text are, as (start, length), without the spaces
+// around them and without runs of punctuation alone (reading aloud).
+// Follows Unicode's sentence rules, so 。！？ end sentences too.
+QList<QPair<int, int>> sentenceSpans(const QString &text);
+
 } // namespace sc

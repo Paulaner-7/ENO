@@ -17,8 +17,8 @@ Koin and Typesafe Config replaced by plain singletons, the JCEF web view
 set up by the host (CefRuntime) with scripts registered before the page's
 own and touches sent as real ones, QuickJS's API on Mozilla Rhino instead of GraalJS, Java 17 instead
 of 21, kotlin-logging replaced by SLF4J, its own NetworkHelper, cookie jar
-and JavaScriptEngine; Aniyomi's local video server (NanoHTTPD) kept only as
-a stub and its torrent helpers left out.
+and JavaScriptEngine; Aniyomi's local video server listening on this device only, and its
+torrent helpers left out.
 
 The MPL-2.0 text is at https://mozilla.org/MPL/2.0/ and the Apache License
 2.0 at https://www.apache.org/licenses/LICENSE-2.0. The source of every
@@ -26,7 +26,7 @@ MPL-covered file is this folder.
 
 Libraries the host uses at run time (downloaded by Gradle, shipped in the
 Extensions runtime): Kotlin, kotlinx.coroutines, kotlinx.serialization,
-OkHttp, Okio, Brotli, Jsoup, RxJava, Injekt, dex2jar, apk-parser, apksig,
+OkHttp, Okio, Brotli, Jsoup, RxJava, Injekt, NanoHTTPD (BSD-3-Clause), dex2jar, apk-parser, apksig,
 AOSP android.jar stubs, xmlpull, multiplatform-settings, ICU4J,
 TwelveMonkeys ImageIO, webp-imageio, sqlite-jdbc, SLF4J, Mozilla Rhino,
 JetBrains' JCEF (BSD), and a trimmed OpenJDK runtime (GPLv2 with the
@@ -35,6 +35,6 @@ Framework, BSD, with Chromium's licences, inside a JetBrains Runtime
 release, GPLv2 with the Classpath Exception) is downloaded from JetBrains
 the first time a source needs it, not shipped. On
 Android, inside the APK: Kotlin, kotlinx.coroutines, kotlinx.serialization,
-OkHttp, Okio, Brotli, Jsoup, RxJava, Injekt, AndroidX Preference and
+OkHttp, Okio, Brotli, Jsoup, RxJava, Injekt, NanoHTTPD (BSD-3-Clause), AndroidX Preference and
 QuickJS (zhanghai's quickjs-java). Their licences are listed in the app's
 licences screen.

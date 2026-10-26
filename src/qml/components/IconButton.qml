@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Round icon button with hover wash, press squish and an optional tooltip.
 AbstractButton {

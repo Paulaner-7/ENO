@@ -192,10 +192,17 @@ bool openSiteCheck(const QString &url, const QString &title, const QString &done
 #ifdef Q_OS_ANDROID
     if (!registerBrowserCheck())
         return false;
+    // AniList's sign-in only hands back a token in its address, and nothing
+    // uses its cookies afterwards, so it keeps the web view's own user agent
+    // (empty: BrowserCheck leaves it as it is). SCANCORE's desktop Chrome
+    // agent on a TV box's older web view did not match what the page saw,
+    // and Cloudflare refused the check.
+    const QUrl address(url);
+    const bool signInOnly = address.host() == QLatin1String("anilist.co") && address.path().startsWith(QLatin1String("/api/v2/oauth/"));
     QJniObject::callStaticMethod<void>(
         kBrowserCheckClass, "start", "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
         QNativeInterface::QAndroidApplication::context().object(), QJniObject::fromString(url).object<jstring>(),
-        QJniObject::fromString(ext::ExtensionSource::checkAgent(url)).object<jstring>(),
+        QJniObject::fromString(signInOnly ? QString() : ext::ExtensionSource::checkAgent(url)).object<jstring>(),
         QJniObject::fromString(title).object<jstring>(), QJniObject::fromString(doneLabel).object<jstring>());
     return true;
 #else
@@ -238,6 +245,21 @@ bool shareText(const QString &text, const QString &subject) {
                                                   QJniObject::fromString(text).object<jstring>(), QJniObject::fromString(subject).object<jstring>());
 #else
     Q_UNUSED(text)
+    Q_UNUSED(subject)
+    return false;
+#endif
+}
+
+bool shareFile(const QString &path, const QString &mime, const QString &subject) {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kShareClass, "file",
+                                                  "(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object(),
+                                                  QJniObject::fromString(path).object<jstring>(), QJniObject::fromString(mime).object<jstring>(),
+                                                  QJniObject::fromString(subject).object<jstring>());
+#else
+    Q_UNUSED(path)
+    Q_UNUSED(mime)
     Q_UNUSED(subject)
     return false;
 #endif
@@ -333,6 +355,15 @@ void prepareWebPlayer() {
 #endif
 }
 
+bool closeWebPlayerMenu() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>(kWebPlayerClass, "closeMenu", "(Landroid/app/Activity;)Z",
+                                                  QNativeInterface::QAndroidApplication::context().object());
+#else
+    return false;
+#endif
+}
+
 void setOrientation(const QString &mode) {
 #ifdef Q_OS_ANDROID
     QJniObject::callStaticMethod<void>(kScreenClass, "orient", "(Landroid/app/Activity;Ljava/lang/String;)V",
@@ -376,6 +407,35 @@ void setMediaVolume(double level) {
                                        QNativeInterface::QAndroidApplication::context().object(), jfloat(level));
 #else
     Q_UNUSED(level)
+#endif
+}
+
+void setFastestRefresh(bool on) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "fastestRefresh", "(Landroid/app/Activity;Z)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jboolean(on));
+#else
+    Q_UNUSED(on)
+#endif
+}
+
+bool isTv() {
+#ifdef Q_OS_ANDROID
+    static const bool tv = QJniObject::callStaticMethod<jboolean>(kScreenClass, "isTv", "(Landroid/content/Context;)Z",
+                                                                  QNativeInterface::QAndroidApplication::context().object());
+    return tv;
+#else
+    // SCANCORE_TV=1 tries the TV's remote navigation on a computer.
+    return qEnvironmentVariableIsSet("SCANCORE_TV");
+#endif
+}
+
+void setSystemBars(bool shown) {
+#ifdef Q_OS_ANDROID
+    QJniObject::callStaticMethod<void>(kScreenClass, "systemBars", "(Landroid/app/Activity;Z)V",
+                                       QNativeInterface::QAndroidApplication::context().object(), jboolean(shown));
+#else
+    Q_UNUSED(shown)
 #endif
 }
 

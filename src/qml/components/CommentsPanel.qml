@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // The comments of the chapter or episode being read or watched, in a panel
 // that slides in from the right (from the bottom on phones).
@@ -24,8 +24,8 @@ Drawer {
     modal: true
     dim: true
     Overlay.modal: Rectangle { color: Theme.overlay }
-    background: Rectangle {
-        color: Theme.surface
+    background: GlassPanel {
+        fill: Theme.surface
         radius: Theme.compact ? Theme.radiusXl : 0
         Rectangle {
             visible: !Theme.compact

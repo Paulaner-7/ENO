@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // One Settings category: a heading and its groups. On desktop every pane is
 // stacked on one scrolling page; on phones each opens on its own page, which

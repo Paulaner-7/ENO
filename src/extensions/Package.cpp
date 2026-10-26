@@ -11,6 +11,7 @@ QString kindName(Kind kind) {
     case Kind::Mihon: return QStringLiteral("mihon");
     case Kind::Aniyomi: return QStringLiteral("aniyomi");
     case Kind::LNReader: return QStringLiteral("lnreader");
+    case Kind::Music: return QStringLiteral("music");
     }
     return {};
 }
@@ -22,6 +23,8 @@ std::optional<Kind> kindFrom(const QString &name) {
         return Kind::Aniyomi;
     if (name == QLatin1String("lnreader"))
         return Kind::LNReader;
+    if (name == QLatin1String("music"))
+        return Kind::Music;
     return std::nullopt;
 }
 
@@ -30,6 +33,7 @@ QString kindMedia(Kind kind) {
     case Kind::Mihon: return QStringLiteral("comic");
     case Kind::Aniyomi: return QStringLiteral("anime");
     case Kind::LNReader: return QStringLiteral("novel");
+    case Kind::Music: return QStringLiteral("music");
     }
     return {};
 }
@@ -109,13 +113,14 @@ QStringList supportedLibs(Kind kind) {
     switch (kind) {
     case Kind::Mihon: return {QStringLiteral("1.4"), QStringLiteral("1.5"), QStringLiteral("1.6")};
     case Kind::Aniyomi: return {QStringLiteral("14"), QStringLiteral("16"), QStringLiteral("17")};
-    case Kind::LNReader: return {};
+    case Kind::LNReader:
+    case Kind::Music: return {};
     }
     return {};
 }
 
 LibSupport libSupport(Kind kind, const QString &lib) {
-    if (kind == Kind::LNReader)
+    if (isPluginKind(kind))
         return LibSupport::Supported;
     const auto supported = supportedLibs(kind);
     const auto wanted = QVersionNumber::fromString(lib);

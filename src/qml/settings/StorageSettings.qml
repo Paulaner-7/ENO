@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 SettingsPane {
     id: pane

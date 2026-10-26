@@ -1,15 +1,16 @@
 import QtQuick
 import QtQuick.Window
 import QtWebView
-import ScanCore
+import Scancore
 
 // Player in the system's web view: Android WebView on phones, WebView2 on
 // Windows and WKWebView on macOS. These play the H.264 episodes that the Qt
 // WebEngine in Qt's own packages cannot. Like any native view it is drawn
 // above everything Qt renders, so nothing can overlap it.
 //
-// Phones load the player inside a small page of ours, as WebPlayer does, and
-// read its time through getTime/seek messages. The page reports back through
+// Phones load the player inside a small page of ours (PlayerPage), as
+// WebPlayer does, and read its time through getTime/seek messages; taps go
+// to the player's own controls. The page reports back through
 // its title, never through runJavaScript callbacks: on Android, Qt WebView
 // runs those callbacks on the Android UI thread, alongside the QML engine on
 // Qt's own thread, which crashes the app (a SIGSEGV in the JavaScript engine,
@@ -448,10 +449,7 @@ Item {
         else web.loadHtml(wrapper(url), "https://reanime.to/")
     }
     onReadyChanged: load()
-    onUrlChanged: {
-        taps = 0
-        load()
-    }
+    onUrlChanged: load()
 
     Connections {
         target: root.Window.window

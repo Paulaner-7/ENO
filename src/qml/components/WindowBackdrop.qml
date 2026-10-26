@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import ScanCore
+import Scancore
 
 // Behind everything in the window: the theme's window colour (see-through
 // when the custom theme says so), and the custom theme's picture or GIF,

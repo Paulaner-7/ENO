@@ -545,6 +545,10 @@
             <source>Time counts while SCANCORE is in use: in a reader, playing an episode, or browsing. Chapters finished before time was kept come from your reading history.</source>
             <translation>Le temps compte quand vous utilisez SCANCORE : dans un lecteur, pendant un épisode ou en parcourant. Les chapitres terminés avant le suivi du temps viennent de votre historique.</translation>
         </message>
+        <message>
+            <source>Friends</source>
+            <translation>Amis</translation>
+        </message>
     </context>
     <context>
         <name>AddRepositoryDialog</name>
@@ -671,6 +675,14 @@
         <message>
             <source>Skip</source>
             <translation>Passer</translation>
+        </message>
+        <message>
+            <source>music extension</source>
+            <translation>extension musicale</translation>
+        </message>
+        <message>
+            <source>music extensions</source>
+            <translation>extensions musicales</translation>
         </message>
     </context>
     <context>
@@ -1032,6 +1044,26 @@
             <source>Waiting: stop</source>
             <translation>En attente : arrêter</translation>
         </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>Détacher du hub</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Épingler au hub</translation>
+        </message>
+        <message>
+            <source>Songs</source>
+            <translation>Chansons</translation>
+        </message>
+        <message>
+            <source>No songs for this anime yet</source>
+            <translation>Pas encore de chansons pour cet anime</translation>
+        </message>
+        <message>
+            <source>Openings and endings come from AnimeThemes.</source>
+            <translation>Les openings et endings viennent d'AnimeThemes.</translation>
+        </message>
     </context>
     <context>
         <name>AnimePage</name>
@@ -1138,6 +1170,14 @@
         <message>
             <source>All %1</source>
             <translation>Toutes (%1)</translation>
+        </message>
+        <message>
+            <source>Party %1</source>
+            <translation>Soirée %1</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>Soirée de visionnage</translation>
         </message>
     </context>
     <context>
@@ -1449,6 +1489,34 @@
             <source>All extensions</source>
             <translation>Toutes les extensions</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Des traits plus nets et un agrandissement pour les épisodes en basse résolution.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Des traits plus nets et un agrandissement pour les épisodes en basse résolution. Meilleur demande une carte graphique puissante.</translation>
+        </message>
+        <message>
+            <source>Video decoding</source>
+            <translation>Décodage vidéo</translation>
+        </message>
+        <message>
+            <source>Hardware decoding with the frames copied back is steady on every phone. Direct is a little lighter but froze the picture on some phones after the next episode. Takes effect on the next video.</source>
+            <translation>Le décodage matériel avec les images recopiées est stable sur tous les téléphones. Direct est un peu plus léger mais a figé l’image sur certains téléphones après l’épisode suivant. S’applique à la vidéo suivante.</translation>
+        </message>
+        <message>
+            <source>Hardware (steady)</source>
+            <translation>Matériel (stable)</translation>
+        </message>
+        <message>
+            <source>Hardware, direct</source>
+            <translation>Matériel, direct</translation>
+        </message>
+        <message>
+            <source>Software</source>
+            <translation>Logiciel</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1596,6 +1664,285 @@
         <message>
             <source>Close</source>
             <translation>Fermer</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Genres</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Thèmes</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Format</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Contenu</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filtres de recherche</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Catalogue de Comick. Avec des filtres, une recherche vide parcourt le catalogue.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Aucun filtre</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filtre</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filtres</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Effacer</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Appliquer</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Trier par</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Meilleure correspondance</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Les plus suivies</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Les plus vues</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Mieux notés</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Note moyenne</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Nouveaux chapitres</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Ajoutés récemment</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Statut</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Tous</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>En cours</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Terminé</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Abandonnée</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>En pause</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Ajouté à Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>N’importe quand</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>La semaine dernière</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Le mois dernier</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Ces 3 derniers mois</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>L’année dernière</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Note minimale</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Parution</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>À partir de</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Jusqu’à</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Chapitres</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Au moins</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Au plus</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Entièrement traduit</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Tous les chapitres sont sortis en anglais, pas seulement la série terminée.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Inclure les séries sans nombre de chapitres</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Type</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Public</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Non précisé</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Classification du contenu</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Touchez une fois pour inclure, deux fois pour exclure</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Tous publics</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Suggestif</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Érotique</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornographique</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Violence explicite</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Chercher un genre ou un tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>Jusqu’à %1 inclus</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Tout voir (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Tags</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>Jusqu’à %1 inclus et %2 exclus</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Plus de tags</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Aucun tag ne correspond à « %1 ».</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Inclus</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Exclu</translation>
         </message>
     </context>
     <context>
@@ -1889,6 +2236,122 @@
             <source>Bottom</source>
             <translation>Bas</translation>
         </message>
+        <message>
+            <source>Finished: </source>
+            <translation>Terminé : </translation>
+        </message>
+        <message>
+            <source>Next: </source>
+            <translation>Suivant : </translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Ouvrir dans une nouvelle fenêtre</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>Afficher l’original</translation>
+        </message>
+        <message>
+            <source>Translate the pages</source>
+            <translation>Traduire les pages</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse (L)</source>
+            <translation>Loupe sous la souris (L)</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>Enchaîner sur le chapitre suivant</translation>
+        </message>
+        <message>
+            <source>Auto-scroll</source>
+            <translation>Défilement automatique</translation>
+        </message>
+        <message>
+            <source>Turn the pages by themselves</source>
+            <translation>Tourner les pages tout seul</translation>
+        </message>
+        <message>
+            <source>Auto-scroll speed · %1</source>
+            <translation>Vitesse du défilement automatique · %1</translation>
+        </message>
+        <message>
+            <source>A page every %1 s</source>
+            <translation>Une page toutes les %1 s</translation>
+        </message>
+        <message>
+            <source>Sharpen small scans</source>
+            <translation>Affiner les petits scans</translation>
+        </message>
+        <message>
+            <source>Light</source>
+            <translation>Fine</translation>
+        </message>
+        <message>
+            <source>Strong</source>
+            <translation>Fort</translation>
+        </message>
+        <message>
+            <source>Slower</source>
+            <translation>Plus lent</translation>
+        </message>
+        <message>
+            <source>Faster</source>
+            <translation>Très rapide</translation>
+        </message>
+        <message>
+            <source>Pause auto-scroll</source>
+            <translation>Mettre en pause le défilement automatique</translation>
+        </message>
+        <message>
+            <source>Translate into %1</source>
+            <translation>Traduire en %1</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>Lire autre chose à côté</translation>
+        </message>
+        <message>
+            <source>React to this page</source>
+            <translation>Réagir à cette page</translation>
+        </message>
+        <message>
+            <source>Downloading the upscaler (about 15 MB the first time)…</source>
+            <translation>Téléchargement de l’agrandisseur (environ 15 Mo la première fois)…</translation>
+        </message>
+        <message>
+            <source>Enlarge downloaded pages (sharper; slower downloads)</source>
+            <translation>Agrandir les pages téléchargées (plus nettes ; téléchargements plus lents)</translation>
+        </message>
+        <message>
+            <source>Chapters downloaded from now on are enlarged.</source>
+            <translation>Les chapitres téléchargés désormais sont agrandis.</translation>
+        </message>
+        <message>
+            <source>Keys</source>
+            <translation>Touches</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>Touches pour cette série</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Touches habituelles</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Plus</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Continuer sur %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Quitter le plein écran</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
@@ -2027,6 +2490,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 cherchent encore</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filtres de recherche</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filtre actif</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filtres actifs</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Effacer</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 titres du catalogue de %2, filtrés</translation>
         </message>
     </context>
     <context>
@@ -2528,6 +3011,10 @@
             <source>Choose folder</source>
             <translation>Choisir un dossier</translation>
         </message>
+        <message>
+            <source>Your server: series read from other sources move forward on it too. It is managed in Settings → Sources → Your servers.</source>
+            <translation>Votre serveur : les séries lues sur d’autres sources y avancent aussi. Il se gère dans Réglages → Sources → Vos serveurs.</translation>
+        </message>
     </context>
     <context>
         <name>ContinueOn</name>
@@ -2907,6 +3394,121 @@
         </message>
     </context>
     <context>
+        <name>ExtensionsDiagnostics</name>
+        <message>
+            <source>Answered in %1 s with %2 titles.</source>
+            <translation>Réponse en %1 s avec %2 titres.</translation>
+        </message>
+        <message>
+            <source>Failed after %1 s: %2</source>
+            <translation>Échec après %1 s : %2</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Diagnostic</translation>
+        </message>
+        <message>
+            <source>For when an extension misbehaves</source>
+            <translation>Quand une extension se comporte mal</translation>
+        </message>
+        <message>
+            <source>Copy report</source>
+            <translation>Copier le rapport</translation>
+        </message>
+        <message>
+            <source>The report is copied. Paste it into an issue or a message.</source>
+            <translation>Le rapport est copié. Collez-le dans un ticket ou un message.</translation>
+        </message>
+        <message>
+            <source>Refresh</source>
+            <translation>Actualiser</translation>
+        </message>
+        <message>
+            <source>Runtime</source>
+            <translation>Environnement</translation>
+        </message>
+        <message>
+            <source>Extensions runtime installed</source>
+            <translation>Environnement des extensions installé</translation>
+        </message>
+        <message>
+            <source>Extensions runtime not installed</source>
+            <translation>Environnement des extensions non installé</translation>
+        </message>
+        <message>
+            <source>No runtime for this system</source>
+            <translation>Pas d’environnement pour ce système</translation>
+        </message>
+        <message>
+            <source>Asking the host…</source>
+            <translation>Demande à l’hôte…</translation>
+        </message>
+        <message>
+            <source>Host %1 answered in %2 ms</source>
+            <translation>L’environnement %1 a répondu en %2 ms</translation>
+        </message>
+        <message>
+            <source>Extension libraries it takes</source>
+            <translation>Bibliothèques d’extensions prises en charge</translation>
+        </message>
+        <message>
+            <source>Mihon %1 · Aniyomi %2</source>
+            <translation>Mihon %1 · Aniyomi %2</translation>
+        </message>
+        <message>
+            <source>This device</source>
+            <translation>Cet appareil</translation>
+        </message>
+        <message>
+            <source>Test a source</source>
+            <translation>Tester une source</translation>
+        </message>
+        <message>
+            <source>Loads the source's popular titles once and times it.</source>
+            <translation>Charge une fois les titres populaires de la source et mesure le temps.</translation>
+        </message>
+        <message>
+            <source>Source</source>
+            <translation>Source</translation>
+        </message>
+        <message>
+            <source>Testing…</source>
+            <translation>Test…</translation>
+        </message>
+        <message>
+            <source>Test</source>
+            <translation>Tester</translation>
+        </message>
+        <message>
+            <source>Sites the extensions contacted</source>
+            <translation>Sites contactés par les extensions</translation>
+        </message>
+        <message>
+            <source>This session only, counted in the extensions runtime. Nothing but the sites' names is kept.</source>
+            <translation>Cette session uniquement, comptée dans l’environnement des extensions. Seuls les noms des sites sont gardés.</translation>
+        </message>
+        <message>
+            <source>Nothing yet</source>
+            <translation>Rien pour l’instant</translation>
+        </message>
+        <message>
+            <source>Browse or read with an extension and come back.</source>
+            <translation>Parcourez ou lisez avec une extension, puis revenez.</translation>
+        </message>
+        <message>
+            <source>%1 · %2 requests, %3</source>
+            <translation>%1 · %2 requêtes, %3</translation>
+        </message>
+        <message>
+            <source>Host log</source>
+            <translation>Journal de l’environnement</translation>
+        </message>
+        <message>
+            <source>The end of extensions/host.log.</source>
+            <translation>La fin de extensions/host.log.</translation>
+        </message>
+    </context>
+    <context>
         <name>ExtensionsPage</name>
         <message>
             <source>All languages</source>
@@ -3188,6 +3790,14 @@
             <source>Its extensions</source>
             <translation>Ses extensions</translation>
         </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Diagnostic</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
     </context>
     <context>
         <name>FilterSheet</name>
@@ -3237,6 +3847,193 @@
         <message>
             <source>Show password</source>
             <translation>Afficher le mot de passe</translation>
+        </message>
+    </context>
+    <context>
+        <name>FriendsPage</name>
+        <message>
+            <source>just now</source>
+            <translation>à l’instant</translation>
+        </message>
+        <message>
+            <source>%1 min ago</source>
+            <translation>il y a %1 min</translation>
+        </message>
+        <message>
+            <source>%1 h ago</source>
+            <translation>il y a %1 h</translation>
+        </message>
+        <message>
+            <source>%1 days ago</source>
+            <translation>il y a %1 jours</translation>
+        </message>
+        <message>
+            <source>%1 shared a list: %2</source>
+            <translation>%1 a partagé une liste : %2</translation>
+        </message>
+        <message>
+            <source>%1 watched %2</source>
+            <translation>%1 a regardé %2</translation>
+        </message>
+        <message>
+            <source>%1 read %2</source>
+            <translation>%1 a lu %2</translation>
+        </message>
+        <message>
+            <source>That list is empty.</source>
+            <translation>Cette liste est vide.</translation>
+        </message>
+        <message>
+            <source>Shared. The link is copied: %1</source>
+            <translation>Partagée. Lien copié : %1</translation>
+        </message>
+        <message>
+            <source>%1 added to your library; %2 could not be found on your sources.</source>
+            <translation>%1 ajoutées à votre bibliothèque ; %2 introuvables dans vos sources.</translation>
+        </message>
+        <message>
+            <source>All of it is in your library already.</source>
+            <translation>Tout est déjà dans votre bibliothèque.</translation>
+        </message>
+        <message>
+            <source>%1 added to your library.</source>
+            <translation>%1 ajoutées à votre bibliothèque.</translation>
+        </message>
+        <message>
+            <source>Friends</source>
+            <translation>Amis</translation>
+        </message>
+        <message>
+            <source>Follow each other on %1 to be friends</source>
+            <translation>Suivez-vous mutuellement sur %1 pour être amis</translation>
+        </message>
+        <message>
+            <source>Sign in (Settings → Sync) to add friends, see what they read and share lists.</source>
+            <translation>Connectez-vous (Réglages → Synchronisation) pour ajouter des amis, voir ce qu’ils lisent et partager des listes.</translation>
+        </message>
+        <message>
+            <source>You</source>
+            <translation>Vous</translation>
+        </message>
+        <message>
+            <source>Share what I read and watch</source>
+            <translation>Partager ce que je lis et regarde</translation>
+        </message>
+        <message>
+            <source>Your friends see the series you read and watch, and the lists you share. Off: they see nothing.</source>
+            <translation>Vos amis voient les séries que vous lisez et regardez, et les listes que vous partagez. Désactivé : ils ne voient rien.</translation>
+        </message>
+        <message>
+            <source>Add a friend</source>
+            <translation>Ajouter un ami</translation>
+        </message>
+        <message>
+            <source>Their username; when they add you too, you are friends. You are @%1.</source>
+            <translation>Son nom d’utilisateur ; quand il vous ajoute aussi, vous êtes amis. Vous êtes @%1.</translation>
+        </message>
+        <message>
+            <source>username</source>
+            <translation>nom d’utilisateur</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ajouter</translation>
+        </message>
+        <message>
+            <source>You follow @%1.</source>
+            <translation>Vous suivez @%1.</translation>
+        </message>
+        <message>
+            <source>Asking to be friends</source>
+            <translation>Demande d’ami envoyée</translation>
+        </message>
+        <message>
+            <source>Added you</source>
+            <translation>Vous a ajouté</translation>
+        </message>
+        <message>
+            <source>Add back</source>
+            <translation>Ajouter en retour</translation>
+        </message>
+        <message>
+            <source>No friends yet.</source>
+            <translation>Pas encore d’amis.</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Supprimer</translation>
+        </message>
+        <message>
+            <source>Waiting for them to add you</source>
+            <translation>En attente de son ajout</translation>
+        </message>
+        <message>
+            <source>Cancel</source>
+            <translation>Annuler</translation>
+        </message>
+        <message>
+            <source>What friends read</source>
+            <translation>Ce que lisent vos amis</translation>
+        </message>
+        <message>
+            <source>Nothing yet: friends show here once they share what they read.</source>
+            <translation>Rien pour l’instant : vos amis apparaissent ici dès qu’ils partagent ce qu’ils lisent.</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Ouvrir</translation>
+        </message>
+        <message>
+            <source>Shared lists</source>
+            <translation>Listes partagées</translation>
+        </message>
+        <message>
+            <source>Share a list from your library</source>
+            <translation>Partager une liste de votre bibliothèque</translation>
+        </message>
+        <message>
+            <source>Anyone with the link sees it, and can add it all to their library in SCANCORE.</source>
+            <translation>Quiconque a le lien la voit et peut tout ajouter à sa bibliothèque dans SCANCORE.</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Partager</translation>
+        </message>
+        <message>
+            <source>Open a shared list</source>
+            <translation>Ouvrir une liste partagée</translation>
+        </message>
+        <message>
+            <source>Its link or code.</source>
+            <translation>Son lien ou son code.</translation>
+        </message>
+        <message>
+            <source>link or code</source>
+            <translation>lien ou code</translation>
+        </message>
+        <message>
+            <source>%1 series from @%2: %3</source>
+            <translation>%1 séries de @%2 : %3</translation>
+        </message>
+        <message>
+            <source>Add all to my library</source>
+            <translation>Tout ajouter à ma bibliothèque</translation>
+        </message>
+        <message>
+            <source>%1 series · shared %2</source>
+            <translation>%1 séries · partagée %2</translation>
+        </message>
+        <message>
+            <source>Copy link</source>
+            <translation>Copier le lien</translation>
+        </message>
+        <message>
+            <source>Link copied</source>
+            <translation>Lien copié</translation>
+        </message>
+        <message>
+            <source>Stop sharing</source>
+            <translation>Ne plus partager</translation>
         </message>
     </context>
     <context>
@@ -3691,6 +4488,166 @@
             <source>A moment of black when a comic page turns clears the last page's ghost.</source>
             <translation>Un instant de noir quand une page de BD tourne efface la rémanence de la précédente.</translation>
         </message>
+        <message>
+            <source>Highest refresh rate</source>
+            <translation>Fréquence d’affichage maximale</translation>
+        </message>
+        <message>
+            <source>Scroll and animate at your screen's fastest rate, such as 120 Hz, instead of the rate the phone picks for apps. Uses a little more battery.</source>
+            <translation>Défile et anime à la fréquence la plus élevée de votre écran, comme 120 Hz, au lieu de celle que le téléphone choisit pour les applis. Consomme un peu plus de batterie.</translation>
+        </message>
+        <message>
+            <source>Fling glide</source>
+            <translation>Inertie du défilement</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a swipe.</source>
+            <translation>Combien de temps les listes continuent après un glissement.</translation>
+        </message>
+        <message>
+            <source>How long lists keep moving after a touchpad or touch screen swipe.</source>
+            <translation>Combien de temps les listes continuent après un glissement sur le pavé tactile ou l’écran tactile.</translation>
+        </message>
+        <message>
+            <source>Short</source>
+            <translation>Courte</translation>
+        </message>
+        <message>
+            <source>Long</source>
+            <translation>Longue</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Apparence</translation>
+        </message>
+        <message>
+            <source>Metro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Metro : un hub panoramique avec des tuiles, de grands caractères et une barre d’application, à la manière de Windows Phone.</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>Standard</translation>
+        </message>
+        <message>
+            <source>Pages and navigation</source>
+            <translation>Pages et navigation</translation>
+        </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Tiles and panoramas</source>
+            <translation>Tuiles et panoramas</translation>
+        </message>
+        <message>
+            <source>Hold a tile on the hub to resize, move or unpin it. Series pages have Pin to the hub.</source>
+            <translation>Maintenez une tuile du hub pour la redimensionner, la déplacer ou la détacher. Les pages de série ont Épingler au hub.</translation>
+        </message>
+        <message>
+            <source>Hub title</source>
+            <translation>Titre du hub</translation>
+        </message>
+        <message>
+            <source>The big word across the top of the hub.</source>
+            <translation>Le grand mot en haut du hub.</translation>
+        </message>
+        <message>
+            <source>Title colour</source>
+            <translation>Couleur du titre</translation>
+        </message>
+        <message>
+            <source>Accent blend</source>
+            <translation>Mélange d’accent</translation>
+        </message>
+        <message>
+            <source>Plain</source>
+            <translation>Simple</translation>
+        </message>
+        <message>
+            <source>Background</source>
+            <translation>Arrière-plan</translation>
+        </message>
+        <message>
+            <source>Behind the hub, moving slower than the tiles.</source>
+            <translation>Derrière le hub, plus lent que les tuiles.</translation>
+        </message>
+        <message>
+            <source>Last read</source>
+            <translation>Dernière lecture</translation>
+        </message>
+        <message>
+            <source>Theme picture</source>
+            <translation>Image du thème</translation>
+        </message>
+        <message>
+            <source>None</source>
+            <translation>Aucun</translation>
+        </message>
+        <message>
+            <source>Headers</source>
+            <translation>En-têtes</translation>
+        </message>
+        <message>
+            <source>UPPERCASE</source>
+            <translation>MAJUSCULES</translation>
+        </message>
+        <message>
+            <source>lowercase</source>
+            <translation>minuscules</translation>
+        </message>
+        <message>
+            <source>Live tiles</source>
+            <translation>Tuiles dynamiques</translation>
+        </message>
+        <message>
+            <source>Tiles turn over now and then to show new chapters and where you are.</source>
+            <translation>Les tuiles se retournent de temps en temps pour montrer les nouveaux chapitres et où vous en êtes.</translation>
+        </message>
+        <message>
+            <source>Hub sections</source>
+            <translation>Sections du hub</translation>
+        </message>
+        <message>
+            <source>Which sections the hub shows, in this order. Four or five are easiest to find your way in.</source>
+            <translation>Les sections affichées par le hub, dans cet ordre. Quatre ou cinq, c’est le plus simple pour s’y retrouver.</translation>
+        </message>
+        <message>
+            <source>Earlier</source>
+            <translation>Plus tôt</translation>
+        </message>
+        <message>
+            <source>Later</source>
+            <translation>Plus tard</translation>
+        </message>
+        <message>
+            <source>Retro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.</source>
+            <translation>Retro : un hub panoramique avec des tuiles, de grands caractères et une barre d’application, à la manière de Windows Phone.</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
+        <message>
+            <source>Sections</source>
+            <translation>Sections</translation>
+        </message>
+        <message>
+            <source>What you read and watch</source>
+            <translation>Ce que vous lisez et regardez</translation>
+        </message>
+        <message>
+            <source>The tabs, Home and Retro's hub show these. A link still opens the others.</source>
+            <translation>Les onglets, l’accueil et le hub Retro affichent ceux-ci. Un lien ouvre toujours les autres.</translation>
+        </message>
+        <message>
+            <source>Music (preview)</source>
+            <translation>Musique (aperçu)</translation>
+        </message>
+        <message>
+            <source>Anime openings and endings and your own music, with lyrics, and a player that keeps going while you read. Still being built.</source>
+            <translation>Openings et endings d'anime et votre propre musique, avec les paroles, et un lecteur qui continue pendant que vous lisez. Encore en chantier.</translation>
+        </message>
     </context>
     <context>
         <name>KeyRecorder</name>
@@ -3752,6 +4709,74 @@
         <message>
             <source>Back to the default</source>
             <translation>Rétablir par défaut</translation>
+        </message>
+        <message>
+            <source>Click a shortcut, then press the new keys. Backspace leaves an action without one; Esc keeps what it had. </source>
+            <translation>Cliquez sur un raccourci, puis appuyez sur les nouvelles touches. Retour arrière laisse une action sans touche ; Échap garde ce qu’elle avait. </translation>
+        </message>
+        <message>
+            <source>Everyday: </source>
+            <translation>Habituel : </translation>
+        </message>
+        <message>
+            <source>none</source>
+            <translation>aucune</translation>
+        </message>
+        <message>
+            <source>Back to the everyday keys</source>
+            <translation>Revenir aux touches habituelles</translation>
+        </message>
+        <message>
+            <source>Key profiles</source>
+            <translation>Profils de touches</translation>
+        </message>
+        <message>
+            <source>Other keys for the readers, for the series you choose (in the reader's settings, under Keys): one-handed keys for webtoons, say. Keys a profile leaves alone stay as everyday.</source>
+            <translation>D’autres touches pour les lecteurs, pour les séries de votre choix (dans les réglages du lecteur, sous Touches) : des touches à une main pour les webtoons, par exemple. Les touches qu’un profil ne change pas restent habituelles.</translation>
+        </message>
+        <message>
+            <source>Readers' keys below</source>
+            <translation>Touches des lecteurs ci-dessous</translation>
+        </message>
+        <message>
+            <source>Changing the profile “%1”</source>
+            <translation>Modification du profil « %1 »</translation>
+        </message>
+        <message>
+            <source>Changing the everyday keys</source>
+            <translation>Modification des touches habituelles</translation>
+        </message>
+        <message>
+            <source>Key profile</source>
+            <translation>Profil de touches</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Touches habituelles</translation>
+        </message>
+        <message>
+            <source>Delete</source>
+            <translation>Effacer</translation>
+        </message>
+        <message>
+            <source>New profile</source>
+            <translation>Nouveau profil</translation>
+        </message>
+        <message>
+            <source>Starts as the everyday keys</source>
+            <translation>Commence avec les touches habituelles</translation>
+        </message>
+        <message>
+            <source>Name, e.g. Webtoons</source>
+            <translation>Nom, p. ex. Webtoons</translation>
+        </message>
+        <message>
+            <source>Add</source>
+            <translation>Ajouter</translation>
+        </message>
+        <message>
+            <source>There is a profile with that name already.</source>
+            <translation>Un profil porte déjà ce nom.</translation>
         </message>
     </context>
     <context>
@@ -3899,6 +4924,14 @@
         <message>
             <source>Anime player</source>
             <translation>Lecteur d’anime</translation>
+        </message>
+        <message>
+            <source>Magnifying lens under the mouse</source>
+            <translation>Loupe sous la souris</translation>
+        </message>
+        <message>
+            <source>Auto-scroll on or off</source>
+            <translation>Activer ou couper le défilement automatique</translation>
         </message>
     </context>
     <context>
@@ -4271,6 +5304,18 @@
             <source>Undo</source>
             <translation>Annuler</translation>
         </message>
+        <message>
+            <source>Most unwatched</source>
+            <translation>Le plus de non vus</translation>
+        </message>
+        <message>
+            <source>Most unread</source>
+            <translation>Le plus de non lus</translation>
+        </message>
+        <message>
+            <source>Hide until there is something new</source>
+            <translation>Masquer jusqu’à du nouveau</translation>
+        </message>
     </context>
     <context>
         <name>LibrarySettings</name>
@@ -4574,6 +5619,25 @@
         </message>
     </context>
     <context>
+        <name>LyricsView</name>
+        <message>
+            <source>An instrumental: no words to sing along to.</source>
+            <translation>Un instrumental : pas de paroles à chanter.</translation>
+        </message>
+        <message>
+            <source>Lyrics could not be loaded. Check the connection.</source>
+            <translation>Impossible de charger les paroles. Vérifiez la connexion.</translation>
+        </message>
+        <message>
+            <source>No lyrics for this song yet.</source>
+            <translation>Pas encore de paroles pour cette chanson.</translation>
+        </message>
+        <message>
+            <source>Lyrics come from LRCLIB, written by its community.</source>
+            <translation>Les paroles viennent de LRCLIB, écrites par sa communauté.</translation>
+        </message>
+    </context>
+    <context>
         <name>Main</name>
         <message>
             <source> new chapter</source>
@@ -4646,6 +5710,14 @@
         <message>
             <source>Continue</source>
             <translation>Continuer</translation>
+        </message>
+        <message>
+            <source>The host moved on to %1</source>
+            <translation>L’hôte est passé à %1</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Ouvrir</translation>
         </message>
     </context>
     <context>
@@ -4884,6 +5956,168 @@
             <source>Choose</source>
             <translation>Choisir</translation>
         </message>
+        <message>
+            <source>Also the other extension you had in %1</source>
+            <translation>Aussi l’autre extension que vous aviez dans %1</translation>
+        </message>
+        <message>
+            <source>Also the %1 other extensions you had in %2</source>
+            <translation>Aussi les %1 autres extensions que vous aviez dans %2</translation>
+        </message>
+        <message>
+            <source>Install the extension you had in %1</source>
+            <translation>Installer l’extension que vous aviez dans %1</translation>
+        </message>
+        <message>
+            <source>Install the %1 extensions you had in %2</source>
+            <translation>Installer les %1 extensions que vous aviez dans %2</translation>
+        </message>
+    </context>
+    <context>
+        <name>MiniPlayer</name>
+        <message>
+            <source>Now playing: %1</source>
+            <translation>En cours de lecture : %1</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Lecture</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Suivante</translation>
+        </message>
+        <message>
+            <source>Stop</source>
+            <translation>Arrêter</translation>
+        </message>
+    </context>
+    <context>
+        <name>MusicPage</name>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
+        <message>
+            <source>Songs with their lyrics · preview</source>
+            <translation>Chansons avec leurs paroles · aperçu</translation>
+        </message>
+        <message>
+            <source>Anime songs</source>
+            <translation>Chansons d'anime</translation>
+        </message>
+        <message>
+            <source>Your files</source>
+            <translation>Vos fichiers</translation>
+        </message>
+        <message>
+            <source>Search your songs</source>
+            <translation>Rechercher dans vos chansons</translation>
+        </message>
+        <message>
+            <source>Search a song, a singer or an anime</source>
+            <translation>Cherchez une chanson, un interprète ou un anime</translation>
+        </message>
+        <message>
+            <source>Stop listing this folder</source>
+            <translation>Ne plus lister ce dossier</translation>
+        </message>
+        <message>
+            <source>Add another folder</source>
+            <translation>Ajouter un autre dossier</translation>
+        </message>
+        <message>
+            <source>Add a music folder</source>
+            <translation>Ajouter un dossier de musique</translation>
+        </message>
+        <message>
+            <source>Look again</source>
+            <translation>Chercher à nouveau</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>En cours de lecture</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Paroles</translation>
+        </message>
+        <message>
+            <source>Songs for “%1”</source>
+            <translation>Chansons pour « %1 »</translation>
+        </message>
+        <message>
+            <source>Your songs</source>
+            <translation>Vos chansons</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Cette saison</translation>
+        </message>
+        <message>
+            <source>Play all</source>
+            <translation>Tout lire</translation>
+        </message>
+        <message>
+            <source>Add a folder with your music</source>
+            <translation>Ajoutez un dossier avec votre musique</translation>
+        </message>
+        <message>
+            <source>No songs found</source>
+            <translation>Aucune chanson trouvée</translation>
+        </message>
+        <message>
+            <source>No music in these folders</source>
+            <translation>Aucune musique dans ces dossiers</translation>
+        </message>
+        <message>
+            <source>MP3, FLAC, Ogg, Opus and M4A files, with their covers, and lyrics from .lrc files beside them. Nothing is copied.</source>
+            <translation>Fichiers MP3, FLAC, Ogg, Opus et M4A, avec leurs pochettes, et les paroles des fichiers .lrc placés à côté. Rien n'est copié.</translation>
+        </message>
+        <message>
+            <source>Anime songs are turned off for now</source>
+            <translation>Les chansons d'anime sont désactivées pour l'instant</translation>
+        </message>
+        <message>
+            <source>Try the anime's name in romaji, or the singer.</source>
+            <translation>Essayez le nom de l'anime en romaji, ou l'interprète.</translation>
+        </message>
+        <message>
+            <source>Extensions</source>
+            <translation>Extensions</translation>
+        </message>
+        <message>
+            <source>Search your music extensions</source>
+            <translation>Rechercher dans vos extensions musicales</translation>
+        </message>
+        <message>
+            <source>Popular</source>
+            <translation>Populaires</translation>
+        </message>
+        <message>
+            <source>No music extensions yet</source>
+            <translation>Pas encore d'extension musicale</translation>
+        </message>
+        <message>
+            <source>Search for a song</source>
+            <translation>Cherchez une chanson</translation>
+        </message>
+        <message>
+            <source>Add a repository of music extensions in Extensions, then install one. SCANCORE doesn't come with any.</source>
+            <translation>Ajoutez un dépôt d'extensions musicales dans Extensions, puis installez-en une. SCANCORE n'en fournit aucune.</translation>
+        </message>
+        <message>
+            <source>These extensions have no list of their own; search them above.</source>
+            <translation>Ces extensions n'ont pas de liste à elles ; cherchez-y ci-dessus.</translation>
+        </message>
+        <message>
+            <source>Open Extensions</source>
+            <translation>Ouvrir Extensions</translation>
+        </message>
     </context>
     <context>
         <name>NativePlayer</name>
@@ -4990,6 +6224,77 @@
         <message>
             <source>Settings</source>
             <translation>Réglages</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Rapide</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>La plupart des cartes graphiques</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Meilleur</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Demande une carte graphique puissante</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Netteté (Anime4K)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NeuralVoicesDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>Démarrage…</translation>
+        </message>
+        <message>
+            <source>Voice ready: choose it under Voice.</source>
+            <translation>Voix prête : choisissez-la sous Voix.</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>Voix neuronales</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Natural voices that read on this computer, with no internet once downloaded. The first one also brings the voice program (Piper, about 25 MB).</source>
+            <translation>Des voix naturelles qui lisent sur cet ordinateur, sans internet une fois téléchargées. La première apporte aussi le programme vocal (Piper, environ 25 Mo).</translation>
+        </message>
+        <message>
+            <source>Find a voice or language</source>
+            <translation>Chercher une voix ou une langue</translation>
+        </message>
+        <message>
+            <source>Best quality</source>
+            <translation>Meilleure qualité</translation>
+        </message>
+        <message>
+            <source>Good quality</source>
+            <translation>Bonne qualité</translation>
+        </message>
+        <message>
+            <source>Smaller</source>
+            <translation>Plus petite</translation>
+        </message>
+        <message>
+            <source>Smallest</source>
+            <translation>La plus petite</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Supprimer</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Télécharger</translation>
         </message>
     </context>
     <context>
@@ -5239,6 +6544,106 @@
             <source>Keep the spoken paragraph on screen</source>
             <translation>Garder à l&apos;écran le paragraphe lu</translation>
         </message>
+        <message>
+            <source>Sleep timer: reading aloud stopped</source>
+            <translation>Minuterie : lecture à voix haute arrêtée</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>Phrase précédente</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>Continuer la lecture à voix haute</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>Phrase suivante</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at %1</source>
+            <translation>Minuterie : s’arrête à %1</translation>
+        </message>
+        <message>
+            <source>Sleep timer: stops at the end of the chapter</source>
+            <translation>Minuterie : s’arrête à la fin du chapitre</translation>
+        </message>
+        <message>
+            <source>Sleep timer</source>
+            <translation>Minuterie</translation>
+        </message>
+        <message>
+            <source>Off</source>
+            <translation>Désactivée</translation>
+        </message>
+        <message>
+            <source>In 15 minutes</source>
+            <translation>Dans 15 minutes</translation>
+        </message>
+        <message>
+            <source>In 30 minutes</source>
+            <translation>Dans 30 minutes</translation>
+        </message>
+        <message>
+            <source>In 45 minutes</source>
+            <translation>Dans 45 minutes</translation>
+        </message>
+        <message>
+            <source>In an hour</source>
+            <translation>Dans une heure</translation>
+        </message>
+        <message>
+            <source>At the end of the chapter</source>
+            <translation>À la fin du chapitre</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Ouvrir dans une nouvelle fenêtre</translation>
+        </message>
+        <message>
+            <source>Pause reading aloud</source>
+            <translation>Mettre en pause la lecture à voix haute</translation>
+        </message>
+        <message>
+            <source>Translating…</source>
+            <translation>Traduction…</translation>
+        </message>
+        <message>
+            <source>Show the original</source>
+            <translation>Afficher l’original</translation>
+        </message>
+        <message>
+            <source>Translate the chapter</source>
+            <translation>Traduire le chapitre</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>Surligner la phrase lue</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs · %1 s</source>
+            <translation>Pause entre les paragraphes · %1 s</translation>
+        </message>
+        <message>
+            <source>Pause between sentences · %1 s</source>
+            <translation>Pause entre les phrases · %1 s</translation>
+        </message>
+        <message>
+            <source>Read another beside this</source>
+            <translation>Lire autre chose à côté</translation>
+        </message>
+        <message>
+            <source>Keys for this series</source>
+            <translation>Touches pour cette série</translation>
+        </message>
+        <message>
+            <source>Everyday keys</source>
+            <translation>Touches habituelles</translation>
+        </message>
     </context>
     <context>
         <name>NovelsPage</name>
@@ -5361,6 +6766,85 @@
         <message>
             <source>All files (*)</source>
             <translation>Tous les fichiers (*)</translation>
+        </message>
+    </context>
+    <context>
+        <name>NowPlayingPage</name>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Now playing</source>
+            <translation>En cours de lecture</translation>
+        </message>
+        <message>
+            <source>Back to the song</source>
+            <translation>Revenir à la chanson</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Voir la vidéo</translation>
+        </message>
+        <message>
+            <source>Position</source>
+            <translation>Position</translation>
+        </message>
+        <message>
+            <source>Shuffle on</source>
+            <translation>Lecture aléatoire activée</translation>
+        </message>
+        <message>
+            <source>Shuffle off</source>
+            <translation>Lecture aléatoire désactivée</translation>
+        </message>
+        <message>
+            <source>Previous</source>
+            <translation>Précédente</translation>
+        </message>
+        <message>
+            <source>Play</source>
+            <translation>Lecture</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Next</source>
+            <translation>Suivante</translation>
+        </message>
+        <message>
+            <source>Repeat this song</source>
+            <translation>Répéter cette chanson</translation>
+        </message>
+        <message>
+            <source>Repeat the queue</source>
+            <translation>Répéter la file</translation>
+        </message>
+        <message>
+            <source>Repeat off</source>
+            <translation>Répétition désactivée</translation>
+        </message>
+        <message>
+            <source>Song</source>
+            <translation>Chanson</translation>
+        </message>
+        <message>
+            <source>Lyrics</source>
+            <translation>Paroles</translation>
+        </message>
+        <message>
+            <source>Queue</source>
+            <translation>File d'attente</translation>
+        </message>
+        <message>
+            <source>1 song in the queue</source>
+            <translation>1 titre dans la file</translation>
+        </message>
+        <message>
+            <source>%1 songs in the queue</source>
+            <translation>%1 titres dans la file</translation>
         </message>
     </context>
     <context>
@@ -5637,6 +7121,397 @@
             <source>Your system shows them</source>
             <translation>Votre système les affiche</translation>
         </message>
+        <message>
+            <source>Layout</source>
+            <translation>Disposition</translation>
+        </message>
+        <message>
+            <source>Standard</source>
+            <translation>Standard</translation>
+        </message>
+        <message>
+            <source>Metro tiles</source>
+            <translation>Tuiles Metro</translation>
+        </message>
+        <message>
+            <source>Retro tiles</source>
+            <translation>Tuiles Retro</translation>
+        </message>
+        <message>
+            <source>1 series added</source>
+            <translation>1 série ajoutée</translation>
+        </message>
+        <message>
+            <source>%1 series added</source>
+            <translation>%1 séries ajoutées</translation>
+        </message>
+        <message>
+            <source>%1 chapters and episodes marked</source>
+            <translation>%1 chapitres et épisodes marqués</translation>
+        </message>
+        <message>
+            <source>%1 extensions installed</source>
+            <translation>%1 extensions installées</translation>
+        </message>
+        <message>
+            <source>%1 downloaded chapters linked</source>
+            <translation>%1 chapitres téléchargés liés</translation>
+        </message>
+        <message>
+            <source>%1 waiting to be found</source>
+            <translation>%1 en attente d’être trouvées</translation>
+        </message>
+        <message>
+            <source>LNReader backup (*.zip)</source>
+            <translation>Sauvegarde LNReader (*.zip)</translation>
+        </message>
+        <message>
+            <source>All files (*)</source>
+            <translation>Tous les fichiers (*)</translation>
+        </message>
+        <message>
+            <source>Mihon, Komikku, TachiyomiSY, Tachiyomi or Aniyomi backup (*.tachibk *.proto.gz)</source>
+            <translation>Sauvegarde Mihon, Komikku, TachiyomiSY, Tachiyomi ou Aniyomi (*.tachibk *.proto.gz)</translation>
+        </message>
+        <message>
+            <source>skip</source>
+            <translation>passer</translation>
+        </message>
+        <message>
+            <source>Skip</source>
+            <translation>Passer</translation>
+        </message>
+        <message>
+            <source>Close the welcome and start using SCANCORE</source>
+            <translation>Fermer l’accueil et commencer à utiliser SCANCORE</translation>
+        </message>
+        <message>
+            <source>not now</source>
+            <translation>pas maintenant</translation>
+        </message>
+        <message>
+            <source>Not now</source>
+            <translation>Pas maintenant</translation>
+        </message>
+        <message>
+            <source>next</source>
+            <translation>suivant</translation>
+        </message>
+        <message>
+            <source>Step %1 of %2</source>
+            <translation>Étape %1 sur %2</translation>
+        </message>
+        <message>
+            <source>back</source>
+            <translation>retour</translation>
+        </message>
+        <message>
+            <source>Welcome</source>
+            <translation>Bienvenue</translation>
+        </message>
+        <message>
+            <source>What do you read and watch?</source>
+            <translation>Que lisez-vous et regardez-vous ?</translation>
+        </message>
+        <message>
+            <source>Pick any. The tabs and Home follow, and Settings → Interface brings back the rest.</source>
+            <translation>Choisissez ce que vous voulez. Les onglets et l’accueil suivent, et Réglages → Interface ramène le reste.</translation>
+        </message>
+        <message>
+            <source>Manhwa, manga and webtoons</source>
+            <translation>Manhwa, manga et webtoons</translation>
+        </message>
+        <message>
+            <source>Web novels and your EPUB books</source>
+            <translation>Romans web et vos livres EPUB</translation>
+        </message>
+        <message>
+            <source>Episodes that resume where you stopped</source>
+            <translation>Des épisodes qui reprennent là où vous vous êtes arrêté</translation>
+        </message>
+        <message>
+            <source>Switching?</source>
+            <translation>Vous changez d’app ?</translation>
+        </message>
+        <message>
+            <source>Coming from another app?</source>
+            <translation>Vous venez d’une autre app ?</translation>
+        </message>
+        <message>
+            <source>Your library, your downloads and your extensions come over in one go.</source>
+            <translation>Votre bibliothèque, vos téléchargements et vos extensions arrivent d’un coup.</translation>
+        </message>
+        <message>
+            <source>Library, downloads and extensions, in one go.</source>
+            <translation>Bibliothèque, téléchargements et extensions, d’un coup.</translation>
+        </message>
+        <message>
+            <source>I'm new here</source>
+            <translation>Je suis nouveau</translation>
+        </message>
+        <message>
+            <source>Welcome aboard</source>
+            <translation>Bienvenue à bord</translation>
+        </message>
+        <message>
+            <source>From %1</source>
+            <translation>Depuis %1</translation>
+        </message>
+        <message>
+            <source>In LNReader: More → Backup → Create backup. Then choose the file here.</source>
+            <translation>Dans LNReader : Plus → Sauvegarde → Créer une sauvegarde. Puis choisissez le fichier ici.</translation>
+        </message>
+        <message>
+            <source>In %1: More → Settings → Backup and restore → Create backup. Then choose the file here.</source>
+            <translation>Dans %1 : Plus → Réglages → Sauvegarde et restauration → Créer une sauvegarde. Puis choisissez le fichier ici.</translation>
+        </message>
+        <message>
+            <source>Backup</source>
+            <translation>Sauvegarde</translation>
+        </message>
+        <message>
+            <source>Bringing your library over…</source>
+            <translation>Votre bibliothèque arrive…</translation>
+        </message>
+        <message>
+            <source>Reading the backup…</source>
+            <translation>Lecture de la sauvegarde…</translation>
+        </message>
+        <message>
+            <source>%1 comics and %2 anime · %3 extensions to install</source>
+            <translation>%1 comics et %2 anime · %3 extensions à installer</translation>
+        </message>
+        <message>
+            <source>Your series, lists, progress and trackers.</source>
+            <translation>Vos séries, listes, progression et trackers.</translation>
+        </message>
+        <message>
+            <source>Another</source>
+            <translation>Une autre</translation>
+        </message>
+        <message>
+            <source>Choose backup</source>
+            <translation>Choisir la sauvegarde</translation>
+        </message>
+        <message>
+            <source>Downloads folder</source>
+            <translation>Dossier des téléchargements</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Modifier</translation>
+        </message>
+        <message>
+            <source>Choose</source>
+            <translation>Choisir</translation>
+        </message>
+        <message>
+            <source>The extensions and repositories your series came from are offered with the backup, so they open on the same sources.</source>
+            <translation>Les extensions et dépôts d’où viennent vos séries sont proposés avec la sauvegarde, pour qu’elles s’ouvrent sur les mêmes sources.</translation>
+        </message>
+        <message>
+            <source>SCANCORE comes with its own sources for comics, novels and anime. If you have a link to an extension repository, it can go here; the Extensions page takes one any time.</source>
+            <translation>SCANCORE a ses propres sources pour les comics, les romans et les anime. Si vous avez le lien d’un dépôt d’extensions, il peut aller ici ; la page Extensions l’accepte à tout moment.</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Verre</translation>
+        </message>
+        <message>
+            <source>Menus and sheets show what is behind them</source>
+            <translation>Les menus et panneaux laissent voir ce qu’il y a derrière</translation>
+        </message>
+        <message>
+            <source>Try the reader</source>
+            <translation>Essayez le lecteur</translation>
+        </message>
+        <message>
+            <source>Scroll the sample, tap the bar, and pick what suits you. All of it is in Settings → Reading too.</source>
+            <translation>Faites défiler l’exemple, touchez la barre et choisissez ce qui vous plaît. Tout est aussi dans Réglages → Lecture.</translation>
+        </message>
+        <message>
+            <source>Progress bar</source>
+            <translation>Barre de progression</translation>
+        </message>
+        <message>
+            <source>A few extras</source>
+            <translation>Quelques extras</translation>
+        </message>
+        <message>
+            <source>Each takes a tap now, or later in Settings.</source>
+            <translation>Chacun prend un geste maintenant, ou plus tard dans Réglages.</translation>
+        </message>
+        <message>
+            <source>Finishing a chapter or episode moves it forward on your trackers.</source>
+            <translation>Finir un chapitre ou un épisode le fait avancer sur vos trackers.</translation>
+        </message>
+        <message>
+            <source>A scancore.onl account</source>
+            <translation>Un compte scancore.onl</translation>
+        </message>
+        <message>
+            <source>Signed in as %1. Your library and progress sync.</source>
+            <translation>Connecté en tant que %1. Votre bibliothèque et votre progression se synchronisent.</translation>
+        </message>
+        <message>
+            <source>Your progress on every device, friends, shared lists and reactions. Everything works without one too.</source>
+            <translation>Votre progression sur tous vos appareils, des amis, des listes partagées et des réactions. Tout marche aussi sans compte.</translation>
+        </message>
+        <message>
+            <source>Sign in or create one</source>
+            <translation>Se connecter ou créer un compte</translation>
+        </message>
+        <message>
+            <source>New chapters of what you follow, and news from SCANCORE.</source>
+            <translation>Les nouveaux chapitres de ce que vous suivez, et les nouvelles de SCANCORE.</translation>
+        </message>
+        <message>
+            <source>New chapters and episodes</source>
+            <translation>Nouveaux chapitres et épisodes</translation>
+        </message>
+        <message>
+            <source>Here is what you picked. Tap one to change it.</source>
+            <translation>Voici ce que vous avez choisi. Touchez-en un pour le changer.</translation>
+        </message>
+        <message>
+            <source>Reading and watching</source>
+            <translation>Lecture et visionnage</translation>
+        </message>
+        <message>
+            <source>Coming from</source>
+            <translation>Venu de</translation>
+        </message>
+        <message>
+            <source>Starting fresh</source>
+            <translation>Nouveau départ</translation>
+        </message>
+        <message>
+            <source>Look</source>
+            <translation>Apparence</translation>
+        </message>
+        <message>
+            <source>Reader</source>
+            <translation>Lecteur</translation>
+        </message>
+        <message>
+            <source>No progress bar</source>
+            <translation>Pas de barre de progression</translation>
+        </message>
+        <message>
+            <source>Pages bar</source>
+            <translation>Barre des pages</translation>
+        </message>
+        <message>
+            <source>Line</source>
+            <translation>Ligne</translation>
+        </message>
+        <message>
+            <source>Floating bar</source>
+            <translation>Barre flottante</translation>
+        </message>
+        <message>
+            <source>Extras</source>
+            <translation>Bonus</translation>
+        </message>
+        <message>
+            <source>Signed in</source>
+            <translation>Connecté</translation>
+        </message>
+        <message>
+            <source>Notifications on</source>
+            <translation>Notifications activées</translation>
+        </message>
+        <message>
+            <source>Notifications off</source>
+            <translation>Notifications désactivées</translation>
+        </message>
+        <message>
+            <source>Open your library</source>
+            <translation>Ouvrir votre bibliothèque</translation>
+        </message>
+        <message>
+            <source>Browse comics</source>
+            <translation>Parcourir les comics</translation>
+        </message>
+        <message>
+            <source>Watch anime</source>
+            <translation>Regarder des anime</translation>
+        </message>
+        <message>
+            <source>Read novels</source>
+            <translation>Lire des romans</translation>
+        </message>
+        <message>
+            <source>What do you read, watch and listen to?</source>
+            <translation>Que lisez-vous, regardez-vous et écoutez-vous ?</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
+        <message>
+            <source>Anime songs and your own, with their lyrics</source>
+            <translation>Chansons d'anime et les vôtres, avec les paroles</translation>
+        </message>
+        <message>
+            <source>Play music</source>
+            <translation>Écouter de la musique</translation>
+        </message>
+    </context>
+    <context>
+        <name>OnDeviceDialog</name>
+        <message>
+            <source>Starting…</source>
+            <translation>Démarrage…</translation>
+        </message>
+        <message>
+            <source>Ready: pages in this language can be translated on this computer.</source>
+            <translation>Prête : les pages dans cette langue peuvent être traduites sur cet ordinateur.</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>Traduire sur cet ordinateur</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.</source>
+            <translation>Chaque langue apporte ce qu’il faut pour lire ses pages et les traduire en %1 : environ 140 Mo. Rien n’est envoyé. ONNX Runtime (Microsoft), PaddleOCR et Opus-MT font le travail.</translation>
+        </message>
+        <message>
+            <source>Find a language</source>
+            <translation>Chercher une langue</translation>
+        </message>
+        <message>
+            <source>Ready · through English</source>
+            <translation>Prête · via l’anglais</translation>
+        </message>
+        <message>
+            <source>Ready</source>
+            <translation>Prête</translation>
+        </message>
+        <message>
+            <source>About %1 MB</source>
+            <translation>Environ %1 Mo</translation>
+        </message>
+        <message>
+            <source>Nothing more to download</source>
+            <translation>Plus rien à télécharger</translation>
+        </message>
+        <message>
+            <source> · through English</source>
+            <translation> · via l’anglais</translation>
+        </message>
+        <message>
+            <source>Remove</source>
+            <translation>Supprimer</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Télécharger</translation>
+        </message>
     </context>
     <context>
         <name>PageHeader</name>
@@ -5722,6 +7597,117 @@
         <message>
             <source>Remove</source>
             <translation>Supprimer</translation>
+        </message>
+    </context>
+    <context>
+        <name>PartyPanel</name>
+        <message>
+            <source>Watch together</source>
+            <translation>Regarder ensemble</translation>
+        </message>
+        <message>
+            <source>Everyone watches from their own source; the host's player steers the others.</source>
+            <translation>Chacun regarde depuis sa propre source ; le lecteur de l’hôte guide les autres.</translation>
+        </message>
+        <message>
+            <source>You are the host: your player steers everyone's.</source>
+            <translation>Vous êtes l’hôte : votre lecteur guide celui de tout le monde.</translation>
+        </message>
+        <message>
+            <source>Playing along with %1</source>
+            <translation>En visionnage avec %1</translation>
+        </message>
+        <message>
+            <source>Waiting for the host…</source>
+            <translation>En attente de l’hôte…</translation>
+        </message>
+        <message>
+            <source>Joining…</source>
+            <translation>Connexion…</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Sign in to scancore.onl (Settings → Account) to watch together.</source>
+            <translation>Connectez-vous à scancore.onl (Réglages → Compte) pour regarder ensemble.</translation>
+        </message>
+        <message>
+            <source>Starting…</source>
+            <translation>Démarrage…</translation>
+        </message>
+        <message>
+            <source>Start a watch party</source>
+            <translation>Lancer une soirée de visionnage</translation>
+        </message>
+        <message>
+            <source>Or join one</source>
+            <translation>Ou en rejoindre une</translation>
+        </message>
+        <message>
+            <source>Join a watch party</source>
+            <translation>Rejoindre une soirée de visionnage</translation>
+        </message>
+        <message>
+            <source>Party code</source>
+            <translation>Code de la soirée</translation>
+        </message>
+        <message>
+            <source>Join</source>
+            <translation>Rejoindre</translation>
+        </message>
+        <message>
+            <source>Copy the code</source>
+            <translation>Copier le code</translation>
+        </message>
+        <message>
+            <source>Code copied</source>
+            <translation>Code copié</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Partager</translation>
+        </message>
+        <message>
+            <source>Watch %1 with me in SCANCORE: join the party with the code %2</source>
+            <translation>Regarde %1 avec moi dans SCANCORE : rejoins la soirée avec le code %2</translation>
+        </message>
+        <message>
+            <source>Watch party</source>
+            <translation>Soirée de visionnage</translation>
+        </message>
+        <message>
+            <source>The host is watching %1, episode %2</source>
+            <translation>L’hôte regarde %1, épisode %2</translation>
+        </message>
+        <message>
+            <source>Open</source>
+            <translation>Ouvrir</translation>
+        </message>
+        <message>
+            <source>host</source>
+            <translation>hôte</translation>
+        </message>
+        <message>
+            <source>Say hello: everyone in the party sees it.</source>
+            <translation>Dites bonjour : tout le monde dans la soirée le voit.</translation>
+        </message>
+        <message>
+            <source>Message</source>
+            <translation>Message</translation>
+        </message>
+        <message>
+            <source>Send</source>
+            <translation>Envoyer</translation>
+        </message>
+        <message>
+            <source>End the party</source>
+            <translation>Terminer la soirée</translation>
+        </message>
+        <message>
+            <source>Leave the party</source>
+            <translation>Quitter la soirée</translation>
         </message>
     </context>
     <context>
@@ -5906,6 +7892,144 @@
         <message>
             <source>None</source>
             <translation>Aucun</translation>
+        </message>
+    </context>
+    <context>
+        <name>QObject</name>
+        <message>
+            <source>Android could not read the page: %1</source>
+            <translation>Android n’a pas pu lire la page : %1</translation>
+        </message>
+        <message>
+            <source>This device has no text recogniser.</source>
+            <translation>Cet appareil n’a pas de reconnaissance de texte.</translation>
+        </message>
+        <message>
+            <source>Android's translator needs to know the language: pick it in the reader.</source>
+            <translation>Le traducteur d’Android doit connaître la langue : choisissez-la dans le lecteur.</translation>
+        </message>
+        <message>
+            <source>Android could not translate: %1</source>
+            <translation>Android n’a pas pu traduire : %1</translation>
+        </message>
+        <message>
+            <source>This device has no translator of its own.</source>
+            <translation>Cet appareil n’a pas de traducteur intégré.</translation>
+        </message>
+        <message>
+            <source>Pick a way to translate in Settings → Reading → Translate.</source>
+            <translation>Choisissez une façon de traduire dans Réglages → Lecture → Traduire.</translation>
+        </message>
+        <message>
+            <source>The page's picture could not be read.</source>
+            <translation>L’image de la page n’a pas pu être lue.</translation>
+        </message>
+        <message>
+            <source>%1 refused the key. Check it in Settings → Reading → Translate.</source>
+            <translation>%1 a refusé la clé. Vérifiez-la dans Réglages → Lecture → Traduire.</translation>
+        </message>
+        <message>
+            <source>%1 says the key's quota is used up for now.</source>
+            <translation>%1 indique que le quota de la clé est épuisé pour le moment.</translation>
+        </message>
+        <message>
+            <source>%1 could not be reached.</source>
+            <translation>%1 est injoignable.</translation>
+        </message>
+        <message>
+            <source>%1 answered with an error (%2).</source>
+            <translation>%1 a répondu par une erreur (%2).</translation>
+        </message>
+        <message>
+            <source>DeepL needs your key (Settings → Reading → Translate).</source>
+            <translation>DeepL a besoin de votre clé (Réglages → Lecture → Traduire).</translation>
+        </message>
+        <message>
+            <source>DeepL answered with something else than the texts.</source>
+            <translation>DeepL a répondu autre chose que les textes.</translation>
+        </message>
+        <message>
+            <source>Google Translate needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Traduction a besoin de votre clé d’API (Réglages → Lecture → Traduire).</translation>
+        </message>
+        <message>
+            <source>Google Translate answered with something else than the texts.</source>
+            <translation>Google Traduction a répondu autre chose que les textes.</translation>
+        </message>
+        <message>
+            <source>Set the service's address and model in Settings → Reading → Translate.</source>
+            <translation>Indiquez l’adresse et le modèle du service dans Réglages → Lecture → Traduire.</translation>
+        </message>
+        <message>
+            <source>The model did not answer with one translation per text. Try another model.</source>
+            <translation>Le modèle n’a pas répondu par une traduction par texte. Essayez un autre modèle.</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision needs your API key (Settings → Reading → Translate).</source>
+            <translation>Google Cloud Vision a besoin de votre clé d’API (Réglages → Lecture → Traduire).</translation>
+        </message>
+        <message>
+            <source>MangaSin changed its series page: no chapter list found.</source>
+            <translation>MangaSin a changé sa page de série : aucune liste de chapitres trouvée.</translation>
+        </message>
+        <message>
+            <source>MangaSin's chapter list could not be opened (its key changed).</source>
+            <translation>La liste de chapitres de MangaSin n’a pas pu être ouverte (sa clé a changé).</translation>
+        </message>
+        <message>
+            <source>%1 refused the login. Check it in Settings → Sources → Your servers.</source>
+            <translation>%1 a refusé l’identification. Vérifiez-la dans Réglages → Sources → Vos serveurs.</translation>
+        </message>
+        <message>
+            <source>This server is no longer in Settings → Sources → Your servers.</source>
+            <translation>Ce serveur n’est plus dans Réglages → Sources → Vos serveurs.</translation>
+        </message>
+        <message>
+            <source>The server did not give the image (%1).</source>
+            <translation>Le serveur n’a pas fourni l’image (%1).</translation>
+        </message>
+        <message>
+            <source>The image could not be saved.</source>
+            <translation>L’image n’a pas pu être enregistrée.</translation>
+        </message>
+    </context>
+    <context>
+        <name>ReadAloudBar</name>
+        <message>
+            <source>Reading aloud: %1</source>
+            <translation>Lecture à voix haute : %1</translation>
+        </message>
+        <message>
+            <source>Loading the chapter…</source>
+            <translation>Chargement du chapitre…</translation>
+        </message>
+        <message>
+            <source>stops at %1</source>
+            <translation>s’arrête à %1</translation>
+        </message>
+        <message>
+            <source>stops after this chapter</source>
+            <translation>s’arrête après ce chapitre</translation>
+        </message>
+        <message>
+            <source>Previous sentence</source>
+            <translation>Phrase précédente</translation>
+        </message>
+        <message>
+            <source>Pause</source>
+            <translation>Pause</translation>
+        </message>
+        <message>
+            <source>Go on reading aloud</source>
+            <translation>Continuer la lecture à voix haute</translation>
+        </message>
+        <message>
+            <source>Next sentence</source>
+            <translation>Phrase suivante</translation>
+        </message>
+        <message>
+            <source>Stop reading aloud</source>
+            <translation>Arrêter la lecture à voix haute</translation>
         </message>
     </context>
     <context>
@@ -6449,6 +8573,174 @@
             <source>Colours</source>
             <translation>Couleurs</translation>
         </message>
+        <message>
+            <source>Full screen while reading</source>
+            <translation>Plein écran pendant la lecture</translation>
+        </message>
+        <message>
+            <source>The status and navigation bars hide with the reader's controls, so pages fill the screen, beside a punch hole too. Swipe from the edge to see them.</source>
+            <translation>Les barres d’état et de navigation se masquent avec les commandes du lecteur, pour que les pages remplissent l’écran, même à côté d’une encoche. Balayez depuis le bord pour les voir.</translation>
+        </message>
+        <message>
+            <source>Run on into the next chapter</source>
+            <translation>Enchaîner sur le chapitre suivant</translation>
+        </message>
+        <message>
+            <source>The next chapter joins the strip as you near the end, so reading never stops for a button.</source>
+            <translation>Le chapitre suivant rejoint la bande à l’approche de la fin : la lecture ne s’arrête jamais pour un bouton.</translation>
+        </message>
+        <message>
+            <source>Translate</source>
+            <translation>Traduire</translation>
+        </message>
+        <message>
+            <source>Comic readers have Translate the pages in their top bar. Keys stay on this device and are only sent to their own service.</source>
+            <translation>Les lecteurs de BD ont Traduire les pages dans leur barre du haut. Les clés restent sur cet appareil et ne sont envoyées qu’à leur propre service.</translation>
+        </message>
+        <message>
+            <source>Translate into</source>
+            <translation>Traduire en</translation>
+        </message>
+        <message>
+            <source>Read the page's text with</source>
+            <translation>Lire le texte de la page avec</translation>
+        </message>
+        <message>
+            <source>Finds the text in a comic's pages.</source>
+            <translation>Trouve le texte dans les pages d’une BD.</translation>
+        </message>
+        <message>
+            <source>Translate with</source>
+            <translation>Traduire avec</translation>
+        </message>
+        <message>
+            <source>DeepL key</source>
+            <translation>Clé DeepL</translation>
+        </message>
+        <message>
+            <source>From your DeepL account (free keys end in :fx).</source>
+            <translation>Depuis votre compte DeepL (les clés gratuites finissent par :fx).</translation>
+        </message>
+        <message>
+            <source>Not set</source>
+            <translation>Non défini</translation>
+        </message>
+        <message>
+            <source>Google Cloud key</source>
+            <translation>Clé Google Cloud</translation>
+        </message>
+        <message>
+            <source>An API key with Cloud Translation and Cloud Vision turned on.</source>
+            <translation>Une clé d’API avec Cloud Translation et Cloud Vision activés.</translation>
+        </message>
+        <message>
+            <source>Language model</source>
+            <translation>Modèle de langage</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service: its address up to /v1 (a local Ollama is http://localhost:11434/v1), a model and a key if it needs one.</source>
+            <translation>Tout service compatible OpenAI : son adresse jusqu’à /v1 (un Ollama local est http://localhost:11434/v1), un modèle et une clé si nécessaire.</translation>
+        </message>
+        <message>
+            <source>Model, e.g. gpt-4o-mini</source>
+            <translation>Modèle, par ex. gpt-4o-mini</translation>
+        </message>
+        <message>
+            <source>Key (if it needs one)</source>
+            <translation>Clé (si nécessaire)</translation>
+        </message>
+        <message>
+            <source>Forget translations</source>
+            <translation>Oublier les traductions</translation>
+        </message>
+        <message>
+            <source>Pages and chapters are translated again the next time.</source>
+            <translation>Les pages et chapitres seront traduits à nouveau la prochaine fois.</translation>
+        </message>
+        <message>
+            <source>Forget</source>
+            <translation>Oublier</translation>
+        </message>
+        <message>
+            <source>Translations forgotten</source>
+            <translation>Traductions oubliées</translation>
+        </message>
+        <message>
+            <source>Highlight the spoken sentence</source>
+            <translation>Surligner la phrase lue</translation>
+        </message>
+        <message>
+            <source>Pause between paragraphs</source>
+            <translation>Pause entre les paragraphes</translation>
+        </message>
+        <message>
+            <source>Pause between sentences</source>
+            <translation>Pause entre les phrases</translation>
+        </message>
+        <message>
+            <source>Voice for a language</source>
+            <translation>Voix pour une langue</translation>
+        </message>
+        <message>
+            <source>Books in this language are read with this voice.</source>
+            <translation>Les livres dans cette langue sont lus avec cette voix.</translation>
+        </message>
+        <message>
+            <source>The voice above</source>
+            <translation>La voix ci-dessus</translation>
+        </message>
+        <message>
+            <source>Show the model the page</source>
+            <translation>Montrer la page au modèle</translation>
+        </message>
+        <message>
+            <source>Sends the comic page's picture with its text, so the model can see who speaks. Needs a model that reads images; costs more.</source>
+            <translation>Envoie l’image de la page de BD avec son texte, pour que le modèle voie qui parle. Il faut un modèle qui lit les images ; cela coûte plus cher.</translation>
+        </message>
+        <message>
+            <source>Translate on this computer</source>
+            <translation>Traduire sur cet ordinateur</translation>
+        </message>
+        <message>
+            <source>Pages and chapters translated with nothing sent anywhere. Add or remove languages.</source>
+            <translation>Pages et chapitres traduits sans rien envoyer. Ajoutez ou retirez des langues.</translation>
+        </message>
+        <message>
+            <source>Download a language once; pages and chapters are then translated with nothing sent anywhere.</source>
+            <translation>Téléchargez une langue une fois ; les pages et chapitres sont ensuite traduits sans rien envoyer.</translation>
+        </message>
+        <message>
+            <source>Languages…</source>
+            <translation>Langues…</translation>
+        </message>
+        <message>
+            <source>Translate novels in other languages</source>
+            <translation>Traduire les romans dans d’autres langues</translation>
+        </message>
+        <message>
+            <source>Chapters from a source in another language (WTR-LAB's, in English) open translated. The reader's Translate button decides for each series.</source>
+            <translation>Les chapitres d’une source dans une autre langue (ceux de WTR-LAB, en anglais) s’ouvrent traduits. Le bouton Traduire du lecteur décide pour chaque série.</translation>
+        </message>
+        <message>
+            <source>Download a neural voice below, or add one in the system's text-to-speech settings.</source>
+            <translation>Téléchargez une voix neuronale ci-dessous, ou ajoutez-en une dans les réglages de synthèse vocale du système.</translation>
+        </message>
+        <message>
+            <source>Neural voices</source>
+            <translation>Voix neuronales</translation>
+        </message>
+        <message>
+            <source>%1 downloaded; natural voices that need no internet</source>
+            <translation>%1 téléchargées ; des voix naturelles sans internet</translation>
+        </message>
+        <message>
+            <source>Natural voices that read without the internet, downloaded once</source>
+            <translation>Des voix naturelles qui lisent sans internet, téléchargées une fois</translation>
+        </message>
+        <message>
+            <source>Choose…</source>
+            <translation>Choisir…</translation>
+        </message>
     </context>
     <context>
         <name>RecentSearches</name>
@@ -6490,6 +8782,295 @@
         <message>
             <source>Up next: episode %1</source>
             <translation>À suivre : épisode %1</translation>
+        </message>
+    </context>
+    <context>
+        <name>Retro</name>
+        <message>
+            <source>Explore</source>
+            <translation>Explorer</translation>
+        </message>
+        <message>
+            <source>Recent</source>
+            <translation>Récents</translation>
+        </message>
+        <message>
+            <source>Library</source>
+            <translation>Bibliothèque</translation>
+        </message>
+        <message>
+            <source>Comics</source>
+            <translation>BD</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Romans</translation>
+        </message>
+        <message>
+            <source>Anime</source>
+            <translation>Anime</translation>
+        </message>
+        <message>
+            <source>Pinned to the hub</source>
+            <translation>Épinglé au hub</translation>
+        </message>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroBar</name>
+        <message>
+            <source>Continue</source>
+            <translation>Continuer</translation>
+        </message>
+        <message>
+            <source>Check for new chapters</source>
+            <translation>Rechercher de nouveaux chapitres</translation>
+        </message>
+        <message>
+            <source>Search comics</source>
+            <translation>Chercher des BD</translation>
+        </message>
+        <message>
+            <source>Search novels</source>
+            <translation>Chercher des romans</translation>
+        </message>
+        <message>
+            <source>Search anime</source>
+            <translation>Chercher un anime</translation>
+        </message>
+        <message>
+            <source>Search everything</source>
+            <translation>Tout rechercher</translation>
+        </message>
+        <message>
+            <source>Checking your library for new chapters…</source>
+            <translation>Recherche de nouveaux chapitres dans votre bibliothèque…</translation>
+        </message>
+        <message>
+            <source>Everything is up to date</source>
+            <translation>Tout est à jour</translation>
+        </message>
+        <message>
+            <source>Nothing to continue yet</source>
+            <translation>Rien à reprendre pour l’instant</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>rechercher</translation>
+        </message>
+        <message>
+            <source>refresh</source>
+            <translation>actualiser</translation>
+        </message>
+        <message>
+            <source>alerts</source>
+            <translation>alertes</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>réglages</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>historique</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>téléchargements</translation>
+        </message>
+        <message>
+            <source>activity</source>
+            <translation>activité</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>extensions</translation>
+        </message>
+        <message>
+            <source>turn incognito off</source>
+            <translation>quitter la navigation privée</translation>
+        </message>
+        <message>
+            <source>go incognito</source>
+            <translation>navigation privée</translation>
+        </message>
+        <message>
+            <source>arrange the hub</source>
+            <translation>organiser le hub</translation>
+        </message>
+        <message>
+            <source>Back</source>
+            <translation>Retour</translation>
+        </message>
+        <message>
+            <source> (hold for more)</source>
+            <translation> (maintenir pour plus)</translation>
+        </message>
+        <message>
+            <source>Close the menu</source>
+            <translation>Fermer le menu</translation>
+        </message>
+        <message>
+            <source>Open the menu</source>
+            <translation>Ouvrir le menu</translation>
+        </message>
+        <message>
+            <source>Incognito off</source>
+            <translation>Navigation privée désactivée</translation>
+        </message>
+        <message>
+            <source>Incognito</source>
+            <translation>Navigation privée</translation>
+        </message>
+        <message>
+            <source>Account</source>
+            <translation>Compte</translation>
+        </message>
+    </context>
+    <context>
+        <name>RetroHub</name>
+        <message>
+            <source>Episode %1</source>
+            <translation>Épisode %1</translation>
+        </message>
+        <message>
+            <source>Chapter %1</source>
+            <translation>Chapitre %1</translation>
+        </message>
+        <message>
+            <source>1 new</source>
+            <translation>1 nouveau</translation>
+        </message>
+        <message>
+            <source>%1 new</source>
+            <translation>%1 nouveaux</translation>
+        </message>
+        <message>
+            <source>read a random comic</source>
+            <translation>lire une bd au hasard</translation>
+        </message>
+        <message>
+            <source>continue</source>
+            <translation>reprendre</translation>
+        </message>
+        <message>
+            <source>explore a random genre</source>
+            <translation>explorer un genre au hasard</translation>
+        </message>
+        <message>
+            <source>search</source>
+            <translation>rechercher</translation>
+        </message>
+        <message>
+            <source>downloads</source>
+            <translation>téléchargements</translation>
+        </message>
+        <message>
+            <source>history</source>
+            <translation>historique</translation>
+        </message>
+        <message>
+            <source>settings</source>
+            <translation>réglages</translation>
+        </message>
+        <message>
+            <source>your %1 wrapped</source>
+            <translation>votre %1 en bref</translation>
+        </message>
+        <message>
+            <source>Nothing to pick from yet</source>
+            <translation>Rien à choisir pour l’instant</translation>
+        </message>
+        <message>
+            <source>Small</source>
+            <translation>Petit</translation>
+        </message>
+        <message>
+            <source>Medium</source>
+            <translation>Moyenne</translation>
+        </message>
+        <message>
+            <source>Wide</source>
+            <translation>Large</translation>
+        </message>
+        <message>
+            <source>Move earlier</source>
+            <translation>Avancer</translation>
+        </message>
+        <message>
+            <source>Move later</source>
+            <translation>Reculer</translation>
+        </message>
+        <message>
+            <source>Unpin</source>
+            <translation>Détacher</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Épingler au hub</translation>
+        </message>
+        <message>
+            <source>What you read and watch shows up here.</source>
+            <translation>Ce que vous lisez et regardez apparaît ici.</translation>
+        </message>
+        <message>
+            <source>Series you save show up here.</source>
+            <translation>Les séries que vous enregistrez apparaissent ici.</translation>
+        </message>
+        <message>
+            <source>all comics</source>
+            <translation>toutes les bd</translation>
+        </message>
+        <message>
+            <source>coming up</source>
+            <translation>à venir</translation>
+        </message>
+        <message>
+            <source>extensions</source>
+            <translation>extensions</translation>
+        </message>
+        <message>
+            <source>Latest chapters</source>
+            <translation>Derniers chapitres</translation>
+        </message>
+        <message>
+            <source>all novels</source>
+            <translation>tous les romans</translation>
+        </message>
+        <message>
+            <source>Novels</source>
+            <translation>Romans</translation>
+        </message>
+        <message>
+            <source>all anime</source>
+            <translation>tous les animes</translation>
+        </message>
+        <message>
+            <source>schedule</source>
+            <translation>programme</translation>
+        </message>
+        <message>
+            <source>browse</source>
+            <translation>parcourir</translation>
+        </message>
+        <message>
+            <source>Trending</source>
+            <translation>Tendances</translation>
+        </message>
+        <message>
+            <source>all music</source>
+            <translation>toute la musique</translation>
+        </message>
+        <message>
+            <source>now playing</source>
+            <translation>en cours de lecture</translation>
+        </message>
+        <message>
+            <source>This season</source>
+            <translation>Cette saison</translation>
         </message>
     </context>
     <context>
@@ -6651,6 +9232,129 @@
         <message>
             <source>Another app</source>
             <translation>Autre app</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Comics</name>
+        <message>
+            <source>That server is not saved.</source>
+            <translation>Ce serveur n’est pas enregistré.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Downloads</name>
+        <message>
+            <source>No chapters of this novel are downloaded. Download some first.</source>
+            <translation>Aucun chapitre de ce roman n’est téléchargé. Téléchargez-en d’abord.</translation>
+        </message>
+        <message>
+            <source>The book could not be saved in %1.</source>
+            <translation>Le livre n’a pas pu être enregistré dans %1.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::MediaControls</name>
+        <message>
+            <source>Reading aloud</source>
+            <translation>Lecture à voix haute</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Party</name>
+        <message>
+            <source>The party could not be reached (%1).</source>
+            <translation>La soirée est injoignable (%1).</translation>
+        </message>
+        <message>
+            <source>Watch parties need scancore.onl (this site has none yet).</source>
+            <translation>Les soirées de visionnage nécessitent scancore.onl (ce site n’en propose pas encore).</translation>
+        </message>
+        <message>
+            <source>The party could not be opened.</source>
+            <translation>La soirée n’a pas pu être ouverte.</translation>
+        </message>
+        <message>
+            <source>A party code has six letters and numbers.</source>
+            <translation>Un code de soirée comporte six lettres et chiffres.</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>La soirée est terminée.</translation>
+        </message>
+        <message>
+            <source>No party with that code.</source>
+            <translation>Aucune soirée avec ce code.</translation>
+        </message>
+        <message>
+            <source>The host ended the party.</source>
+            <translation>L’hôte a terminé la soirée.</translation>
+        </message>
+    </context>
+    <context>
+        <name>sc::Translator</name>
+        <message>
+            <source>To translate pages on a computer, add a Google Cloud key in Settings → Reading → Translate (Vision reads the page's text).</source>
+            <translation>Pour traduire des pages sur un ordinateur, ajoutez une clé Google Cloud dans Réglages → Lecture → Traduire (Vision lit le texte de la page).</translation>
+        </message>
+        <message>
+            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.</source>
+            <translation>Ajoutez une clé DeepL ou Google, ou l’adresse d’un modèle, dans Réglages → Lecture → Traduire.</translation>
+        </message>
+        <message>
+            <source>Automatic</source>
+            <translation>Automatique</translation>
+        </message>
+        <message>
+            <source>This phone</source>
+            <translation>Ce téléphone</translation>
+        </message>
+        <message>
+            <source>On the phone, with Google Play services</source>
+            <translation>Sur le téléphone, avec les services Google Play</translation>
+        </message>
+        <message>
+            <source>Google Cloud Vision</source>
+            <translation>Google Cloud Vision</translation>
+        </message>
+        <message>
+            <source>Your Google Cloud key</source>
+            <translation>Votre clé Google Cloud</translation>
+        </message>
+        <message>
+            <source>On the phone; a model per language</source>
+            <translation>Sur le téléphone ; un modèle par langue</translation>
+        </message>
+        <message>
+            <source>Your DeepL key</source>
+            <translation>Votre clé DeepL</translation>
+        </message>
+        <message>
+            <source>Google Translate</source>
+            <translation>Google Traduction</translation>
+        </message>
+        <message>
+            <source>A language model</source>
+            <translation>Un modèle de langage</translation>
+        </message>
+        <message>
+            <source>Any OpenAI-compatible service, or one on your computer</source>
+            <translation>Tout service compatible OpenAI, ou un service sur votre ordinateur</translation>
+        </message>
+        <message>
+            <source>To translate pages on a computer, download a language in Settings → Reading → Translate on this computer, or add a Google Cloud key there.</source>
+            <translation>Pour traduire des pages sur un ordinateur, téléchargez une langue dans Réglages → Lecture → Traduire sur cet ordinateur, ou ajoutez-y une clé Google Cloud.</translation>
+        </message>
+        <message>
+            <source>This computer</source>
+            <translation>Cet ordinateur</translation>
+        </message>
+        <message>
+            <source>Downloaded once; pages never leave the computer</source>
+            <translation>Téléchargé une fois ; les pages ne quittent jamais l’ordinateur</translation>
+        </message>
+        <message>
+            <source>Downloaded once; nothing leaves the computer</source>
+            <translation>Téléchargé une fois ; rien ne quitte l’ordinateur</translation>
         </message>
     </context>
     <context>
@@ -6922,6 +9626,121 @@
         <message>
             <source>Show as a grid</source>
             <translation>Afficher en grille</translation>
+        </message>
+        <message>
+            <source>Saved %1 chapters as %2</source>
+            <translation>%1 chapitres enregistrés sous %2</translation>
+        </message>
+        <message>
+            <source>Show</source>
+            <translation>Afficher</translation>
+        </message>
+        <message>
+            <source>Save the %1 downloaded chapters</source>
+            <translation>Enregistrer les %1 chapitres téléchargés</translation>
+        </message>
+        <message>
+            <source>Download all %1 chapters, then save</source>
+            <translation>Télécharger les %1 chapitres, puis enregistrer</translation>
+        </message>
+        <message>
+            <source>Stop waiting for the downloads</source>
+            <translation>Ne plus attendre les téléchargements</translation>
+        </message>
+        <message>
+            <source>No chapter downloaded, so there is no EPUB to save.</source>
+            <translation>Aucun chapitre téléchargé, donc aucun EPUB à enregistrer.</translation>
+        </message>
+        <message>
+            <source>Read in a new window</source>
+            <translation>Lire dans une nouvelle fenêtre</translation>
+        </message>
+        <message>
+            <source>Listen</source>
+            <translation>Écouter</translation>
+        </message>
+        <message>
+            <source>Downloading for the EPUB…</source>
+            <translation>Téléchargement pour l’EPUB…</translation>
+        </message>
+        <message>
+            <source>Save as EPUB</source>
+            <translation>Enregistrer en EPUB</translation>
+        </message>
+        <message>
+            <source>Unpin from the hub</source>
+            <translation>Détacher du hub</translation>
+        </message>
+        <message>
+            <source>Pin to the hub</source>
+            <translation>Épingler au hub</translation>
+        </message>
+    </context>
+    <context>
+        <name>ServerDialog</name>
+        <message>
+            <source>Trying it…</source>
+            <translation>Essai…</translation>
+        </message>
+        <message>
+            <source>Connected: 1 series found.</source>
+            <translation>Connecté : 1 série trouvée.</translation>
+        </message>
+        <message>
+            <source>Connected: %1 series found.</source>
+            <translation>Connecté : %1 séries trouvées.</translation>
+        </message>
+        <message>
+            <source>Your server</source>
+            <translation>Votre serveur</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>Ajouter votre serveur</translation>
+        </message>
+        <message>
+            <source>Read the comics on your own Komga, Kavita or Suwayomi server. The login stays on this device.</source>
+            <translation>Lisez les BD de votre propre serveur Komga, Kavita ou Suwayomi. L’identification reste sur cet appareil.</translation>
+        </message>
+        <message>
+            <source>Name (optional)</source>
+            <translation>Nom (facultatif)</translation>
+        </message>
+        <message>
+            <source>Email</source>
+            <translation>E-mail</translation>
+        </message>
+        <message>
+            <source>User name</source>
+            <translation>Nom d’utilisateur</translation>
+        </message>
+        <message>
+            <source> (if it asks for one)</source>
+            <translation> (s’il le demande)</translation>
+        </message>
+        <message>
+            <source>Password (saved; type to change)</source>
+            <translation>Mot de passe (enregistré ; tapez pour le changer)</translation>
+        </message>
+        <message>
+            <source>Password</source>
+            <translation>Mot de passe</translation>
+        </message>
+        <message>
+            <source>API key (saved; type to change)</source>
+            <translation>Clé d’API (enregistrée ; tapez pour la changer)</translation>
+        </message>
+        <message>
+            <source>Or an API key, instead of the login</source>
+            <translation>Ou une clé d’API, au lieu de l’identification</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Save and try</source>
+            <translation>Enregistrer et tester</translation>
         </message>
     </context>
     <context>
@@ -7222,6 +10041,14 @@
             <source> · Medium Dev</source>
             <translation> · Medium Dev</translation>
         </message>
+        <message>
+            <source>Metro</source>
+            <translation>Metro</translation>
+        </message>
+        <message>
+            <source>Retro</source>
+            <translation>Retro</translation>
+        </message>
     </context>
     <context>
         <name>ShortcutsSheet</name>
@@ -7304,6 +10131,10 @@
             <source>Collapse</source>
             <translation>Réduire</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
     </context>
     <context>
         <name>SiteCheck</name>
@@ -7334,6 +10165,29 @@
         <message>
             <source> in your browser instead.</source>
             <translation> dans votre navigateur.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SongRow</name>
+        <message>
+            <source>Play next</source>
+            <translation>Lire ensuite</translation>
+        </message>
+        <message>
+            <source>Add to queue</source>
+            <translation>Ajouter à la file</translation>
+        </message>
+        <message>
+            <source>Watch the video</source>
+            <translation>Voir la vidéo</translation>
+        </message>
+        <message>
+            <source>Episodes %1</source>
+            <translation>Épisodes %1</translation>
+        </message>
+        <message>
+            <source>More</source>
+            <translation>Plus</translation>
         </message>
     </context>
     <context>
@@ -7698,6 +10552,65 @@
         <message>
             <source>Mihon's downloads · </source>
             <translation>Téléchargements de Mihon · </translation>
+        </message>
+        <message>
+            <source>Your servers</source>
+            <translation>Vos serveurs</translation>
+        </message>
+        <message>
+            <source>Komga, Kavita and Suwayomi servers you run: their comics are a source like the others, searched with them and saved to the library.</source>
+            <translation>Les serveurs Komga, Kavita et Suwayomi que vous gérez : leurs BD sont une source comme les autres, cherchées avec elles et enregistrées dans la bibliothèque.</translation>
+        </message>
+        <message>
+            <source>Change</source>
+            <translation>Modifier</translation>
+        </message>
+        <message>
+            <source>Open in the browser</source>
+            <translation>Ouvrir dans le navigateur</translation>
+        </message>
+        <message>
+            <source>Add your server</source>
+            <translation>Ajouter votre serveur</translation>
+        </message>
+        <message>
+            <source>Diagnostics</source>
+            <translation>Diagnostic</translation>
+        </message>
+        <message>
+            <source>Whether the extensions runtime answers, a quick test of a source, and the sites each extension contacted.</source>
+            <translation>Si l’environnement des extensions répond, un test rapide d’une source et les sites contactés par chaque extension.</translation>
+        </message>
+    </context>
+    <context>
+        <name>SplitPicker</name>
+        <message>
+            <source>No chapters to read</source>
+            <translation>Aucun chapitre à lire</translation>
+        </message>
+        <message>
+            <source>Read beside</source>
+            <translation>Lire à côté</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>Nothing in progress yet: start a comic or a novel, then read it beside another.</source>
+            <translation>Rien en cours pour l’instant : commencez une BD ou un roman, puis lisez-le à côté d’un autre.</translation>
+        </message>
+        <message>
+            <source>Opening…</source>
+            <translation>Ouverture…</translation>
+        </message>
+        <message>
+            <source>Novel</source>
+            <translation>Roman</translation>
+        </message>
+        <message>
+            <source>Comic</source>
+            <translation>BD</translation>
         </message>
     </context>
     <context>
@@ -8074,6 +10987,10 @@
             <source>Settings</source>
             <translation>Réglages</translation>
         </message>
+        <message>
+            <source>Music</source>
+            <translation>Musique</translation>
+        </message>
     </context>
     <context>
         <name>Theme</name>
@@ -8380,6 +11297,38 @@
             <source>Saved </source>
             <translation>Enregistré </translation>
         </message>
+        <message>
+            <source>Metro colours</source>
+            <translation>Couleurs Metro</translation>
+        </message>
+        <message>
+            <source>The accent colours of Windows Phone, or any colour from the wheel. Tiles, the hub title and switches take it.</source>
+            <translation>Les couleurs d’accent de Windows Phone, ou n’importe quelle couleur de la roue. Les tuiles, le titre du hub et les interrupteurs la prennent.</translation>
+        </message>
+        <message>
+            <source>Custom colour</source>
+            <translation>Couleur personnalisée</translation>
+        </message>
+        <message>
+            <source>Tile colour</source>
+            <translation>Couleur des tuiles</translation>
+        </message>
+        <message>
+            <source>Retro colours</source>
+            <translation>Couleurs Retro</translation>
+        </message>
+        <message>
+            <source>Glass</source>
+            <translation>Verre</translation>
+        </message>
+        <message>
+            <source>Glass menus and sheets</source>
+            <translation>Menus et panneaux en verre</translation>
+        </message>
+        <message>
+            <source>Menus, sheets and dialogs show what is behind them, blurred.</source>
+            <translation>Les menus, panneaux et boîtes de dialogue laissent voir ce qui est derrière, flouté.</translation>
+        </message>
     </context>
     <context>
         <name>TrackerConnect</name>
@@ -8576,6 +11525,13 @@
         <message>
             <source>Connect a tracker such as AniList, MyAnimeList or Kitsu in Settings → Connections to keep your lists there up to date.</source>
             <translation>Connectez un tracker comme AniList, MyAnimeList ou Kitsu dans Paramètres → Connexions pour garder vos listes à jour.</translation>
+        </message>
+    </context>
+    <context>
+        <name>TranslationLayer</name>
+        <message>
+            <source>Translating…</source>
+            <translation>Traduction…</translation>
         </message>
     </context>
     <context>
@@ -8999,6 +11955,108 @@
         <message>
             <source>Close player</source>
             <translation>Fermer le lecteur</translation>
+        </message>
+        <message>
+            <source>Built-in</source>
+            <translation>Intégrés</translation>
+        </message>
+        <message>
+            <source>More…</source>
+            <translation>Plus…</translation>
+        </message>
+        <message>
+            <source>Keep SCANCORE open while it plays there: the video comes through it.</source>
+            <translation>Gardez SCANCORE ouvert pendant la lecture là-bas : la vidéo passe par lui.</translation>
+        </message>
+        <message>
+            <source>The party is over.</source>
+            <translation>La soirée est terminée.</translation>
+        </message>
+        <message>
+            <source>Watch party (%1)</source>
+            <translation>Soirée de visionnage (%1)</translation>
+        </message>
+        <message>
+            <source>Watch together</source>
+            <translation>Regarder ensemble</translation>
+        </message>
+        <message>
+            <source>Open in a new window</source>
+            <translation>Ouvrir dans une nouvelle fenêtre</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomePreview</name>
+        <message>
+            <source>Preview of the look you picked</source>
+            <translation>Aperçu du style choisi</translation>
+        </message>
+        <message>
+            <source>Home</source>
+            <translation>Accueil</translation>
+        </message>
+        <message>
+            <source>Continue reading</source>
+            <translation>Continuer la lecture</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Nouveaux chapitres</translation>
+        </message>
+        <message>
+            <source>Add to library</source>
+            <translation>Ajouter à la bibliothèque</translation>
+        </message>
+        <message>
+            <source>Download</source>
+            <translation>Télécharger</translation>
+        </message>
+        <message>
+            <source>Share</source>
+            <translation>Partager</translation>
+        </message>
+        <message>
+            <source>home</source>
+            <translation>accueil</translation>
+        </message>
+        <message>
+            <source>comics</source>
+            <translation>comics</translation>
+        </message>
+        <message>
+            <source>anime</source>
+            <translation>anime</translation>
+        </message>
+    </context>
+    <context>
+        <name>WelcomeStrip</name>
+        <message>
+            <source>Scroll down, or tap a side to turn the page.</source>
+            <translation>Faites défiler, ou touchez un côté pour tourner la page.</translation>
+        </message>
+        <message>
+            <source>The bar shows how far into the chapter you are.</source>
+            <translation>La barre montre où vous en êtes dans le chapitre.</translation>
+        </message>
+        <message>
+            <source>Tap or drag the bar to jump to a page.</source>
+            <translation>Touchez ou faites glisser la barre pour aller à une page.</translation>
+        </message>
+        <message>
+            <source>Pick another look for it and see it here.</source>
+            <translation>Choisissez-lui un autre style et voyez-le ici.</translation>
+        </message>
+        <message>
+            <source>Pages or one long strip: switch above.</source>
+            <translation>Pages ou une longue bande : changez au-dessus.</translation>
+        </message>
+        <message>
+            <source>The end. Your real chapters start right after this.</source>
+            <translation>Fin. Vos vrais chapitres commencent juste après.</translation>
+        </message>
+        <message>
+            <source>Sample chapter</source>
+            <translation>Chapitre d’exemple</translation>
         </message>
     </context>
     <context>
@@ -9560,6 +12618,10 @@
         <message>
             <source>The voice could not read this.</source>
             <translation>La voix n&apos;a pas pu lire ce texte.</translation>
+        </message>
+        <message>
+            <source> (neural)</source>
+            <translation> (neuronale)</translation>
         </message>
     </context>
 </TS>

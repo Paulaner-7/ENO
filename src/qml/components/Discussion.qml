@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Comments of a series, or of one of its chapters or episodes, from the
 // account's site (scancore.onl): the same threads as the website. Anyone can

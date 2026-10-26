@@ -1,6 +1,6 @@
 import QtQuick
 import QtWebEngine
-import ScanCore
+import Scancore
 
 // A sign-in page inside SCANCORE: reports each address it goes to, so the
 // page that hosts it can take what the service hands back (AniList's token).

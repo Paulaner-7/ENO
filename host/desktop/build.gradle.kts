@@ -75,7 +75,7 @@ fun sqliteNative(): String {
     }
 }
 
-val hostVersion = "5"
+val hostVersion = "6"
 
 val runtimeImage by tasks.registering {
     dependsOn("installDist")

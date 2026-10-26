@@ -1,8 +1,8 @@
 pragma Singleton
 import QtQuick
-import ScanCore
+import Scancore
 
-// Colour, type and shape tokens. The default palette follows the ScanCore
+// Colour, type and shape tokens. The default palette follows the SCANCORE
 // website: neutral greys with white (dark) or near-black (light) accents.
 // The custom theme makes a whole palette from one window colour, and can add
 // a background picture and a see-through window.
@@ -20,6 +20,13 @@ QtObject {
     readonly property bool dark: eink ? false : custom ? isDark(customBase)
         : mode === "dark" || mode === "black" || (mode === "system" && Qt.styleHints.colorScheme !== Qt.ColorScheme.Light)
     readonly property bool black: mode === "black" && !eink
+    // Settings → Interface → Look: the Retro mode (tiles, panoramas and
+    // pivots in the Windows Phone manner, retro/*.qml) instead of the
+    // standard pages and navigation.
+    readonly property bool retro: App.settings.uiMode === "retro"
+    // Menus, sheets and dialogs show what is behind them, blurred
+    // (GlassPanel). Not on e-ink, which cannot show it.
+    readonly property bool glass: App.settings.glass === true && !eink
 
     // Base colours per theme. Settings draws its theme previews from these.
     readonly property var palettes: ({
@@ -78,14 +85,34 @@ QtObject {
     })
     // In the order Settings shows them.
     readonly property var accentNames: ["mono", "violet", "indigo", "sky", "emerald", "amber", "ember", "rose"]
-    readonly property var accentSet: accents[App.settings.accent] || accents.mono
+    // Windows Phone 8's twenty accents, for the Retro mode: one colour in
+    // light and dark, white on it, as on the phones' tiles.
+    readonly property var retroAccents: ({
+        "retro-lime": "#a4c400", "retro-green": "#60a917", "retro-emerald": "#008a00", "retro-teal": "#00aba9",
+        "retro-cyan": "#1ba1e2", "retro-cobalt": "#0050ef", "retro-indigo": "#6a00ff", "retro-violet": "#aa00ff",
+        "retro-pink": "#f472d0", "retro-magenta": "#d80073", "retro-crimson": "#a20025", "retro-red": "#e51400",
+        "retro-orange": "#fa6800", "retro-amber": "#f0a30a", "retro-yellow": "#e3c800", "retro-brown": "#825a2c",
+        "retro-olive": "#6d8764", "retro-steel": "#647687", "retro-mauve": "#76608a", "retro-taupe": "#87794e"
+    })
+    readonly property var retroAccentNames: ["retro-lime", "retro-green", "retro-emerald", "retro-teal", "retro-cyan",
+        "retro-cobalt", "retro-indigo", "retro-violet", "retro-pink", "retro-magenta", "retro-crimson", "retro-red",
+        "retro-orange", "retro-amber", "retro-yellow", "retro-brown", "retro-olive", "retro-steel", "retro-mauve", "retro-taupe"]
+    readonly property string retroAccent: retroAccents[App.settings.accent] || ""
+    readonly property var accentSet: retroAccent ? ({ dark: retroAccent, light: retroAccent, on: { dark: "#ffffff", light: "#ffffff" } })
+        : accents[App.settings.accent] || accents.mono
     // Any colour, from the colour wheel.
     readonly property bool customAccent: App.settings.accent === "custom" && hexOr(App.settings.customAccent, "") !== ""
-    readonly property color accent: eink ? "#000000" : customAccent ? App.settings.customAccent : dark ? accentSet.dark : accentSet.light
+    readonly property color accent: eink ? "#000000" : customAccent ? App.settings.customAccent
+        : retro && accentIsMono ? "#fa6800" : dark ? accentSet.dark : accentSet.light
     // Text and icons on the accent colour. (A name starting with "on" would be
     // read as a signal handler and silently never bound.)
     readonly property color accentInk: eink ? "#ffffff" : customAccent ? (luminance(accent) > 0.36 ? "#0c0c0d" : "#ffffff")
-        : dark ? accentSet.on.dark : accentSet.on.light
+        : retro && accentIsMono ? "#ffffff" : dark ? accentSet.on.dark : accentSet.on.light
+    // Retro tiles (and its accent) are a colour, never white or black: the
+    // website's "mono" accent gives the phones' orange instead.
+    readonly property bool accentIsMono: !customAccent && !retroAccent && (accents[App.settings.accent] || accents.mono) === accents.mono
+    readonly property color tile: eink ? "#000000" : accentIsMono ? "#fa6800" : accent
+    readonly property color tileInk: eink || accentIsMono || retroAccent ? "#ffffff" : accentInk
 
     // Novel reader page colours; "app" follows the app theme.
     readonly property var readingThemes: ({
@@ -106,12 +133,15 @@ QtObject {
         return readingThemes[name] || readingThemes.app
     }
 
-    readonly property string fontSans: "DM Sans"
-    readonly property string fontDisplay: "Space Grotesk"
+    // Selawik (Microsoft's open Segoe UI stand-in) in the Retro mode.
+    readonly property string fontSans: retro ? "Selawik" : "DM Sans"
+    readonly property string fontDisplay: retro ? "Selawik" : "Space Grotesk"
     readonly property string fontSerif: "Literata"
 
     // Settings → Interface → Corners: square, subtle, default or round.
     readonly property real roundness: {
+        // Retro is square.
+        if (retro) return 0
         const scales = { square: 0, subtle: 0.5, round: 1.6 }
         const v = App.settings.roundness
         return scales.hasOwnProperty(v) ? scales[v] : 1
@@ -146,6 +176,9 @@ QtObject {
     property bool compact: false
     readonly property bool touch: App.platform === "android"
     readonly property int gutter: compact ? 16 : 32
+
+    // A pill's corner for its height: square in the Retro mode.
+    function pill(h) { return retro ? 0 : h / 2 }
 
     function alpha(c, a) {
         // "#rrggbb" strings have no r, g, b until they are made colours.

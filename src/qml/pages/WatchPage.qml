@@ -1,13 +1,13 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 // Anime player. Episodes from anime extensions play in SCANCORE's own player
 // (NativePlayer, libmpv): an extension's own anime from its source, an
 // AniList anime from the source picked in "Watch from". Otherwise ReAnime's
 // streams are the provider's own player page, shown in an embedded browser.
-// Either way ScanCore follows the position for resume, auto-next and
+// Either way SCANCORE follows the position for resume, auto-next and
 // skipping intros (AniSkip, or the video's own chapters).
 //
 // Desktop with Qt WebEngine (Linux): the video fills the page and the top
@@ -18,9 +18,10 @@ import ScanCore
 // Desktops dock the bar above the video and the episode list beside it; in
 // full screen they hide until the pointer reaches the top edge.
 // Phone portrait puts the controls and episodes below a 16:9 player;
-// landscape is full screen, its controls over the video (a strip above a
-// system web view, which nothing can cover). Hidden controls take no taps:
-// the first tap only shows them. Settings and actions are one panel
+// landscape is full screen, its controls over the video (over a system web
+// view, which nothing can cover, a strip above it that shows on its own:
+// taps there are the web player's). Hidden controls take no taps: the first
+// tap only shows them. Settings and actions are one panel
 // (PlayerPanel).
 Rectangle {
     id: watch
@@ -113,6 +114,36 @@ Rectangle {
         }
         return out
     }
+    // Where tracker anime can play from, as chips in the server area: the
+    // built-in servers, the source in use and a few more (the ones ticked
+    // for matching first), never every installed extension; More… has
+    // the rest.
+    readonly property var sourceChips: {
+        if (fromSource || !hasSources) return []
+        const all = Anime.sources().filter(s => s.enabled)
+        const keys = []
+        if (provider.source) keys.push(provider.source)
+        for (const k of Array.from(App.settings.animeMatchSources || []))
+            if (keys.length < 4 && keys.indexOf(k) < 0 && all.some(s => s.key === k)) keys.push(k)
+        for (const s of all)
+            if (keys.length < 4 && keys.indexOf(s.key) < 0) keys.push(s.key)
+        const out = Anime.playerEngine !== "" ? [{ key: "", label: qsTr("Built-in") }] : []
+        for (const k of keys) out.push({ key: k, label: Anime.sourceLabel(k) })
+        if (all.length > keys.length) out.push({ key: "more", label: qsTr("More…") })
+        return out
+    }
+    function pickSource(key) {
+        if (key === "more") return watchFrom.start(media, false)
+        if (key === (provider.source || "")) return
+        if (!key) {
+            Anime.setProvider(media.anilistId || 0, {})
+            provider = { builtIn: true }
+            load(index)
+            return
+        }
+        watchFrom.startWith(media, [key])
+    }
+
     // A video's own chapters, else AniSkip's.
     readonly property var skips: currentVideo.skips && currentVideo.skips.length ? currentVideo.skips
                                : skipTask && skipTask.ok ? skipTask.result : []
@@ -208,12 +239,14 @@ Rectangle {
         if (phone && landscape) Window.window.showFullScreen()
         wake()
         Activity.setMedia("anime")
+        Party.watching = media.anilistId || 0
     }
     // However the player is closed (Back, Esc, the arrow), save progress.
     Component.onDestruction: {
         App.keepAwake("watch", false)
         Activity.setMedia("")
         Presence.clear()
+        if (Party.watching === (media.anilistId || 0)) Party.watching = 0
         saveProgress(true)
         if (castDevice) Cast.stop()
         if (phone && fullScreen) Window.window.showNormal()
@@ -389,6 +422,9 @@ Rectangle {
         if (Anime.openExternally(p.id, video, (series.title || "") + " · " + qsTr("Episode ") + (episode.number || ""), position)) {
             saveProgress(true)
             if (player.item && player.item.player) player.item.player.paused = true
+            // The stream reaches the other player through SCANCORE.
+            if (Anime.relayedExternally(video))
+                Router.toast(qsTr("Keep SCANCORE open while it plays there: the video comes through it."), "info")
         } else
             Router.toast(qsTr("Could not open it there."), "error")
     }
@@ -396,6 +432,40 @@ Rectangle {
         if (outsidePlayers.length === 1) return openOutside(outsidePlayers[0])
         moreMenu.openAt(anchor, 0, anchor.height, outsidePlayers.map(p => ({ text: p.name, icon: "external-link", run: () => openOutside(p) })))
     }
+    // Watch parties (Party): the host's player goes out on every tick and
+    // its changes; someone playing along follows it (episode, position, and
+    // with SCANCORE's player, play and pause).
+    readonly property var partyAnime: ({ anilistId: media.anilistId || 0, title: series.title || media.title || "",
+                                         cover: series.cover || media.cover || "", episode: Number(episode.number) || 1 })
+    readonly property bool playingNow: casting ? Cast.state === "playing" : nativeStream ? !!player.item && player.item.playing === true : webPlaying
+    readonly property bool following: Party.active && !Party.hosting && !!Party.state.anime && Party.state.anime.anilistId === (media.anilistId || 0)
+    function reportParty() {
+        if (Party.hosting && media.anilistId)
+            Party.report(partyAnime, Number(episode.number) || 0, playingNow, position)
+    }
+    onPlayingNowChanged: reportParty()
+    function followParty() {
+        if (!following) return
+        const s = Party.state
+        const i = episodes.findIndex(e => Number(e.number) === Number(s.episode))
+        if (i >= 0 && i !== index) {
+            load(i)
+            return
+        }
+        // Once the video is there (followParty again when it says how long it is).
+        if (!player.item || duration <= 0 || casting) return
+        const target = Math.min(Party.hostPosition(), duration - 1)
+        if (Math.abs(target - position) > 2.5) player.seek(target)
+        if (nativeStream && player.item.setPlaying) player.item.setPlaying(s.playing === true)
+    }
+    Connections {
+        target: Party
+        function onStateReceived() { watch.followParty() }
+        function onMessageReceived(name, text) { if (!partyPanel.opened) Router.toast(name + ": " + text, "info") }
+        function onEnded() { Router.toast(Party.error || qsTr("The party is over."), "info") }
+    }
+    PartyPanel { id: partyPanel; anime: watch.partyAnime }
+
     // Phones: what does not fit on the bar.
     function moreItems() {
         const items = []
@@ -414,6 +484,8 @@ Rectangle {
                                : { text: qsTr("Cast to a TV"), icon: "cast", run: () => castPicker.open() })
         if (canOpenOutside)
             items.push({ text: qsTr("Open in another app"), icon: "external-link", run: () => openOutside(outsidePlayers[0]) })
+        if (media.anilistId)
+            items.push({ text: Party.active ? qsTr("Watch party (%1)").arg(Party.code) : qsTr("Watch together"), icon: "users", run: () => partyPanel.open() })
         if (media.anilistId)
             items.push({ text: qsTr("Comments"), icon: "message-circle", run: () => comments.open() })
         return items
@@ -579,6 +651,7 @@ Rectangle {
                 Router.toast(qsTr("Resumed at ") + formatTime(resumeAt))
             }
         }
+        if (total > 0 && duration === 0 && following) Qt.callLater(followParty)
         if (total > 0) duration = total
 
         if (!resumed && resumeAt > 5 && total > 0) {
@@ -598,11 +671,10 @@ Rectangle {
 
         // Moving forward: the episode is playing, which counts as watching
         // time on the Activity page.
-        if (resumed || resumeAt <= 5) {
-            if (seconds > position && seconds - position < 5) Activity.playing()
-            position = seconds
-            saveProgress(false)
-        }
+        if (seconds > position && seconds - position < 5) Activity.playing()
+        position = seconds
+        if (resumed || resumeAt <= 5) saveProgress(false)
+        reportParty()
         if (skipsItself(activeSkip))
             player.seek(activeSkip.end)
         if ((status === "Ended" || (total > 0 && seconds >= total - 1)) && !ended) {
@@ -634,18 +706,24 @@ Rectangle {
 
     function exit() {
         saveProgress(true)
-        Router.back()
+        if (fullScreen) Window.window.showNormal()
+        Router.leave(watch)
     }
 
-    // Android's Back: the panel closes, then full screen ends, then the
-    // player closes (Main asks before popping the page).
+    // Android's Back: the panel closes (or the web player's own menu), then
+    // full screen ends, then the player closes (Main asks before popping the
+    // page). A TV skips the middle step: it is always on its side and cannot
+    // turn to portrait, so Back only ever tried to and the player could not
+    // be left.
     function handleBack() {
         if (panel.back() || comments.visible && (comments.close(), true)) return true
-        if (phone && landscape) {
+        // The site's own menu (quality, subtitles) in the web player.
+        if (systemView && App.closeWebPlayerMenu()) return true
+        if (phone && landscape && !App.tv) {
             toggleFullScreen()
             return true
         }
-        if (fullScreen) {
+        if (fullScreen && !App.tv) {
             Window.window.showNormal()
             return true
         }
@@ -807,6 +885,9 @@ Rectangle {
                 item.hasNext = Qt.binding(() => watch.hasNext)
                 item.panelOpen = Qt.binding(() => panel.opened)
                 item.fullScreen = Qt.binding(() => watch.immersed || watch.fullScreen)
+                // Phone landscape: the picture may go under a side cutout.
+                item.bleedLeft = Qt.binding(() => watch.immersed && watch.StackView.view ? watch.StackView.view.cutoutLeft : 0)
+                item.bleedRight = Qt.binding(() => watch.immersed && watch.StackView.view ? watch.StackView.view.cutoutRight : 0)
             }
             function seek(seconds) { if (item) item.seek(seconds) }
             Connections {
@@ -814,6 +895,7 @@ Rectangle {
                 // NativePlayer has more to say than the web players.
                 ignoreUnknownSignals: true
                 function onTime(seconds, total, status) { watch.onPlayerTime(seconds, total, status) }
+                // NativePlayer's controls in use (web players' taps are theirs).
                 function onInteracted() { watch.wake() }
                 function onKey(press) { watch.pageKey(press) }
                 function onUnsupported() { watch.unsupported = true }
@@ -1113,6 +1195,17 @@ Rectangle {
             spacing: 6
             visible: !watch.phone
             Repeater {
+                model: watch.sourceChips
+                Chip {
+                    required property var modelData
+                    text: modelData.label
+                    iconName: modelData.key === "more" ? "" : "server"
+                    selected: modelData.key === (watch.provider.source || "")
+                    onClicked: watch.pickSource(modelData.key)
+                }
+            }
+            Rectangle { visible: watch.sourceChips.length > 0 && watch.streams.length > 0; width: 1; height: 20; color: "#3f3f46"; anchors.verticalCenter: parent.verticalCenter }
+            Repeater {
                 model: watch.streams
                 Chip {
                     required property var modelData
@@ -1132,6 +1225,35 @@ Rectangle {
                 iconColor: "white"
                 tip: qsTr("Watch from")
                 onClicked: watchFrom.start(watch.media, false)
+            }
+            // On in a window of its own (a second screen).
+            IconButton {
+                visible: Router.windows && !(Window.window && Window.window.isPageWindow === true)
+                iconName: "columns-2"
+                iconColor: "white"
+                tip: qsTr("Open in a new window")
+                onClicked: {
+                    watch.saveProgress(true)
+                    Router.openWindow("pages/WatchPage.qml", { media: watch.media, episodes: watch.episodes, index: watch.index })
+                    Router.leave(watch)
+                }
+            }
+            IconButton {
+                visible: !!watch.media.anilistId
+                iconName: "users"
+                iconColor: Party.active ? Theme.accent : "white"
+                tip: Party.active ? qsTr("Watch party (%1)").arg(Party.code) : qsTr("Watch together")
+                onClicked: partyPanel.open()
+                Rectangle {
+                    visible: Party.unread > 0
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.margins: 4
+                    width: 8
+                    height: 8
+                    radius: 4
+                    color: Theme.accent
+                }
             }
             IconButton { filled: true; visible: !!watch.media.anilistId; iconName: "message-circle"; iconColor: "white"; tip: qsTr("Comments"); onClicked: comments.open() }
             ContinueOn { seriesId: watch.series.id || ""; iconColor: "white"; save: () => watch.saveProgress(true) }
@@ -1259,6 +1381,8 @@ Rectangle {
         }
 
         ListView {
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             WheelScroll {}
             anchors.fill: parent
             anchors.margins: 8
@@ -1304,6 +1428,8 @@ Rectangle {
                 width: parent.width - 32
                 height: 36
                 Flickable {
+                    maximumFlickVelocity: Motion.flickVelocity
+                    flickDeceleration: Motion.flickDeceleration
                     anchors.left: parent.left
                     anchors.right: phoneNav.left
                     anchors.rightMargin: 8
@@ -1315,6 +1441,17 @@ Rectangle {
                         id: chips
                         spacing: 6
                         anchors.verticalCenter: parent.verticalCenter
+                        Repeater {
+                            model: watch.sourceChips
+                            Chip {
+                                required property var modelData
+                                text: modelData.label
+                                iconName: modelData.key === "more" ? "" : "server"
+                                selected: modelData.key === (watch.provider.source || "")
+                                onClicked: watch.pickSource(modelData.key)
+                            }
+                        }
+                        Rectangle { visible: watch.sourceChips.length > 0 && watch.streams.length > 0; width: 1; height: 20; color: "#3f3f46"; anchors.verticalCenter: parent.verticalCenter }
                         Repeater {
                             model: watch.streams
                             Chip {
@@ -1381,6 +1518,8 @@ Rectangle {
         }
 
         ListView {
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             WheelScroll {}
             id: phoneList
             anchors.top: phoneHead.bottom
@@ -1506,12 +1645,15 @@ Rectangle {
         Behavior on opacity { NumberAnimation { duration: Motion.normal } }
         enabled: watch.chromeSettled
     }
+    // Over a web player taps belong to its own controls, so this strip only
+    // shows on its own: as the player opens and while skip or the next
+    // episode is on offer. Back leaves full screen for the rest.
     LandscapeTop {
         id: strip
         overVideo: false
         width: watch.width
-        visible: watch.immersed && watch.systemView && watch.chromeShown
-        enabled: watch.chromeSettled
+        visible: watch.immersed && watch.systemView && (watch.chromeShown || watch.showSkip || nextCountdown.running)
+        enabled: watch.chromeSettled || watch.showSkip || nextCountdown.running
     }
 
     PlayerPanel {

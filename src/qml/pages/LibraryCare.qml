@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // What the library needs: sources that stopped answering or updating, with
 // a move to another source one tap away, and series saved twice, to merge.

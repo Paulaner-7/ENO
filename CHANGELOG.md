@@ -2,6 +2,124 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.15.0 — 2026-10-26
+
+Music: anime songs, your own files and music extensions, with lyrics that follow along.
+
+- **Music** is a new section (a preview: turn it on in the welcome's first step or Settings → Interface). It plays on while you read or watch, from a mini player above the tabs, and in the system's media controls.
+- **Anime songs**: openings, endings and inserts from AnimeThemes. Search by song, singer or anime, play this season's by anime, or open the **Songs** tab on an anime's page.
+- **Your files**: pick folders of MP3, FLAC, Ogg, Opus or M4A files. They're listed album by album with their covers; nothing is copied. Android reads folders chosen in the system picker.
+- **Music extensions**: add a repository of music extensions in Extensions and their songs show under Music → Extensions. SCANCORE doesn't come with any; how to write one is in docs/music-plugins.md.
+- **Now Playing**: the cover over a backdrop in its colours, a scrubber, shuffle and repeat, and the queue. Synced lyrics light up line by line and a tap jumps there. They come from a .lrc file next to your file, lyrics kept in the file, the extension, or LRCLIB.
+- **Watch the video**: an anime song's creditless video plays beside its lyrics, from where the song was.
+- Retro's hub gets a Music section, and the welcome asks what you read, watch and listen to.
+- Fixed: in the comic reader on phones, the previous-chapter button ran into the close button. When the top bar is too narrow, reactions, comments, another device and full screen move into a More menu.
+
+## 2.14.1 — 2026-10-26
+
+- **Android player**: the picture no longer freezes, with the app, when the next episode starts on some phones (#30). Video is decoded by the phone's hardware with its frames copied back; Settings → Anime → Picture → Video decoding keeps the faster direct way to choose.
+- **macOS**: the release can now be signed and notarized by Apple (#31), so the app opens without a trip to Privacy & Security. This starts once the project has an Apple developer account.
+
+## 2.14.0 — 2026-10-26
+
+A new welcome: real covers, what you read and watch, your Mihon library in one step, and a look you can see before you pick it.
+
+- **Opening**: the mark draws in over drifting covers of the most followed comics and trending anime, then settles into the first question.
+- **What do you read and watch?** Comics, novels and anime as three big toggles. The tabs, the sidebar, Home and Retro's hub follow, and Settings → Interface → Sections brings any back.
+- **Coming from another app?** Pick Mihon, Tachiyomi, Komikku, Aniyomi or LNReader: the backup, Mihon's downloads folder and the extensions your series came from, in one card that counts what is coming over.
+- **Pick a look** beside a live preview of Home or Retro's hub that changes with the layout, theme, accent and glass.
+- **Try the reader** on a short sample chapter of our own: scroll it or turn its pages, and see the progress bar you pick on it.
+- **Extras** as three short cards: trackers, the scancore.onl account and notifications. The last step sums up your answers, each a tap away from changing it.
+- Swipe between steps on phones, tap the dots, use the arrow keys or Back; on a TV the remote's D-pad moves between controls. Standard and Retro each have their own layout, on phones, tablets and computers.
+- Fixed: in most languages the light theme was called "thin" (the font weight) in Settings.
+
+## 2.13.2 — 2026-10-26
+
+Search Comick your way, and Anime4K's Best looks right on Linux.
+
+- **Search filters**: the funnel beside the Comics search box opens Comick's own filters: sort, status, type, demographic, content rating, genres and tags to include or leave out (every one of Comick's tags can be searched), years, chapter counts, rating, how recently a series was added, and fully translated. Filters stay until you clear them, and with some set an empty search browses by them.
+- **Sharpen (Anime4K)** is also in the player's settings while watching, to compare. On Linux, Best no longer turns the picture teal and checkered: SCANCORE now draws with desktop OpenGL where the computer has it. Phones offer Off and Fast.
+
+## 2.13.1 — 2026-10-25
+
+Back does what you expect in the anime player's own menus and on the welcome screens.
+
+- **Anime player (built-in servers, Android)**: Back closes the player's own menu (quality, subtitles, speed) first, also in full screen, instead of closing the whole player.
+- **Welcome screens**: Back goes to the previous step. On the first step it leaves SCANCORE in the background, as on any first screen, or closes the welcome when Settings opened it again.
+- **Sources** show their catalogue right below the source chips when you pick one. Thanks to Fpsroxas (#27).
+
+## 2.13.0 — 2026-10-25
+
+Friends, reactions and shared lists; two readers side by side; voices, translation and sharper scans that work on the computer with nothing sent anywhere; and glass.
+
+- **Friends**: Activity → Friends. Follow each other by username on scancore.onl (or your own SCANCORE server) to be friends; once they choose to share it, you see what they read and watch. Sharing is off until you turn it on. Share a library list by link, and add a list someone shared with you to your library in one go.
+- **Reactions**: the comic reader's heart reacts to the page you are on, and pages other readers reacted to show as dots beside the page bar.
+- **Side by side**: in a wide window, a reader's Read beside opens another comic or novel you are reading on the right half, at the chapter you are on. Keys go to the reader you clicked last.
+- **Key profiles**: Settings → Keyboard can keep other reader keys for the series you choose, one-handed keys for webtoons, say. Pick a series' profile in the reader's settings, under Keys.
+- **Neural voices on computers**: Settings → Reading → Neural voices downloads natural voices (Piper) that read aloud with no internet. On Android, read aloud uses the best offline voice for the language by itself.
+- **Translate on this computer**: download a language once in Settings → Reading, and comic pages and novel chapters are translated on the computer, with nothing sent anywhere (ONNX Runtime, PaddleOCR and Opus-MT).
+- **Novels in your language**: chapters from a source in another language, such as WTR-LAB's English novels, can open translated by themselves, and the reader remembers Translate for each series.
+- **Sharper downloads on computers**: Enlarge downloaded pages, in the reader's settings, enlarges small scans as they download (waifu2x), on the computer.
+- **Komga and Kavita as trackers**: a series you read from another source moves forward on your server too.
+- **Mihon import** also offers the extensions you had set up there, even ones with no series in your library (#25).
+- **Glass**: menus, sheets and dialogs can show what is behind them, blurred (Settings → Theme) (#25).
+- **Retro** page turns now move smoothly instead of jumping to their last frame.
+- **Player**: in Stretch and Crop to fill, the picture reaches under a phone's camera cutout. The player no longer waits on mpv to draw, and when the app stops answering it offers a report like a crash report.
+- The name is spelt SCANCORE everywhere, including the app's folders. Folders made under the old spelling move over the first time you start this version.
+- Fixed, thanks to Fpsroxas: sites' browser checks keep the extension's own User-Agent (#28).
+- Not yet checked on real devices: neural voices and on-device translation on Windows and macOS (tested on Linux).
+
+## 2.12.3 — 2026-10-25
+
+Retro's pages show again: Settings and other pages could stay empty in the Retro look.
+
+- **Retro page turns** are back to the way 2.12.0 drew them. The page drawn as one turning picture (2.12.1) could leave the page itself hidden, so a section such as Settings stayed empty under the app bar.
+
+## 2.12.2 — 2026-10-25
+
+Fixes the empty pages of 2.12.1, which was withdrawn, and makes SCANCORE easier to use with a TV's remote. Everything 2.12.1 brought is in this release too (below).
+
+- **Pages show again**: after updating to 2.12.1, Home and every other section could stay empty under the tabs, and the first reader or player opened blank. Page slides and the reader's fade are drawn as in 2.12.0 again; Retro's page turns stay on the drawing thread.
+- **Android TV**:
+  - Back leaves the player. Before, it only tried to turn the screen to portrait, so the player could not be closed.
+  - Drop-downs in Settings no longer take the remote's up and down: the D-pad moves on to the next setting, Select opens the list, and in it the D-pad picks and Select chooses.
+  - Settings' list of categories scrolls, so Storage and About can be reached with the D-pad or a pointer remote.
+  - A setting whose choices do not fit beside its text puts them under it, instead of squeezing the text into a column a few letters wide (Settings → Connections).
+  - Signing in to AniList no longer presents the TV's web view as desktop Chrome, which Cloudflare's check refused.
+- Not yet checked on a real TV: the Android TV fixes were tested with the interface on a computer, as a TV with its remote.
+
+## 2.12.1 — 2026-10-24
+
+Withdrawn: its pages could stay empty. Its changes are in 2.12.2.
+
+- **Retro**: the Windows Phone look is now called Retro (it was Metro). Your choice, title, sections, pinned tiles and accent carry over, and so do theme files saved in 2.12.0.
+- **Smooth Retro animations**: page turns, the pivot, opening a reader and the standard page slides now run on the drawing thread, so they stay smooth while the page they open is still loading (on phones they could drop to a few frames). The hub switches sections once a swipe settles, and remembering the last section no longer stalls the next swipe.
+- **Translation as one story**: with a language model, each page is translated with the pages before it (and what they said), the page after it, the series' title and chapter, and a running summary and glossary of names kept for the series, so a sentence that runs over several bubbles or onto the next page reads as one. It can also show the model the page itself (Settings → Reading → Translate). Novels keep the story between parts of a chapter too.
+- **Pick the language in the reader**: while translating, the reader's bar has the language to translate into (on phones, tap the Translate button), and the bar stays up while you pick.
+- **Player freeze fixed**: after moving to the next episode the picture could freeze while the sound went on and the app stopped answering (Android). The player no longer waits on the video engine from the interface's thread.
+
+## 2.12.0 — 2026-10-24
+
+A Windows Phone look, comic pages translated where they are, your own comic servers, watching together, and scrolling that keeps up with your finger.
+
+- **Metro**: a new look (Settings → Interface → Look) in the manner of Windows Phone, on phones, tablets and computers. A panorama hub with a big title over a picture from what you read, sections you swipe through (Explore, Recent, Library, Comics, Novels, Anime and more, in the order you pick), tiles in three sizes that flip to show new chapters, pivots, turnstile page turns, an app bar with a button you can hold for more, Selawik type, uppercase or lowercase headers, and Windows Phone's twenty accent colours or any colour from the wheel. Series pages can pin themselves to the hub.
+- **Scrolling that keeps up**: on phones a quick swipe now glides the way Android's own lists do, as far as Mihon's; before, a list often stopped the moment the finger lifted (#22, #25). Swipes in a row add up, so long libraries go fast. On computers, two-finger touchpad scrolling moves 2.5 times further (as in GTK apps and browsers) and glides on when the fingers lift. On Linux with NVIDIA graphics, the interface now draws on its own thread, so animations no longer stutter while pages load.
+- **Translate comic pages**: the reader's Translate button finds the speech bubbles, translates them and draws the translation over the page, in strip and page mode. On Android it works on the phone with Google's ML Kit (Japanese, Korean, Chinese and Latin-script languages); everywhere it can use DeepL, Google Cloud or any OpenAI-compatible model (a local Ollama works) with your own key, set in Settings → Reading → Translate. Novels can translate a chapter too.
+- **Watch together**: start a watch party from the player, share its six-letter code, and everyone watches the same episode from their own source while the host's play, pause and seek steer the others. Chat beside it. Needs a scancore.onl account.
+- **Your own comic servers**: add Komga, Kavita or Suwayomi in Settings → Sources → Your servers. Their comics are searched with your other sources, saved to your library, and chapters you finish are marked read on the server too.
+- **Webtoons run on into the next chapter**: the next chapter joins the strip as you near the end, with a line naming it, so reading never stops for a button (#9). **Auto-scroll** in the reader's settings (or S), with its speed by your thumb; in page mode the pages turn by themselves. A quick flick now turns a manga page however short it is.
+- **Read aloud, rebuilt**: sentence by sentence with the spoken one highlighted, pauses you choose, a voice per language, a sleep timer, and it goes on with the screen off and into the next chapter, with controls in the notification and on headphones.
+- **Novels as EPUB**: Save as EPUB on a novel's page makes a book for any e-reader, from the downloaded chapters or after downloading the rest.
+- **Spanish**: MangaSin is built in.
+- **Phones**: the screen's full refresh rate on ColorOS and realme phones too; readers fill the screen beside a punch hole, with the status and navigation bars hidden while you read (Settings → Reading). The reader's settings are a sheet from the bottom that scrolls (#25).
+- **Library**: tapping a list no longer opens its menu on phones; hold it for that (#9, #25). Swipe sideways to move between lists. A Most unread sort. The card about things that need a look can be hidden until there is something new (#25).
+- **Computers**: readers and the player open in windows of their own; a magnifying lens under the mouse in the comic reader (L); Android TV runs SCANCORE in the TV's launcher, driven by the remote.
+- **Extensions**: Aniyomi extensions that run their own video server play; videos from other players, VLC and casts go through SCANCORE's relay; Extensions → Diagnostics tests a source and lists the sites each extension contacts; the Extensions list keeps its place when one installs (#25). Computers get Extensions runtime 6 by themselves.
+- A series' own reader settings now follow you to your other devices; small scans can be sharpened as they are enlarged; the player shows its sources as chips.
+- Fixed, thanks to Fpsroxas: a source without settings showed an error instead of "no settings", and opening some sources' settings on computers failed.
+- Contributors now appear with their pictures in the README and CONTRIBUTING.
+- Not yet checked on real devices: page translation with ML Kit on a phone and with real cloud keys (tested with test engines and on the emulator), the 120 Hz request on a realme GT 6T, Android TV on a real TV, and a live Suwayomi server.
+
 ## 2.11.0 — 2026-10-24
 
 Switch from Mihon without losing your downloads, a progress bar you can make your own, and web views for extensions on computers.

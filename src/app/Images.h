@@ -61,6 +61,9 @@ class PanelImage : public QQuickItem {
     // "grey", "invert" or both ("grey invert"), applied while decoding, so
     // drawing costs nothing extra.
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY sourceChanged)
+    // 0 to 1: how much a page drawn larger than its picture (a small scan)
+    // is sharpened as it is enlarged (resources/shaders/panel.frag).
+    Q_PROPERTY(qreal sharpen READ sharpen WRITE setSharpen NOTIFY sharpenChanged)
     // "left" or "right": only that half (a wide spread shown as two pages).
     Q_PROPERTY(QString half READ half WRITE setHalf NOTIFY sourceChanged)
     // Smooth shrinking (mipmaps) for pages shown smaller than they were
@@ -90,6 +93,8 @@ public:
     void setCropBorders(bool crop);
     QString filter() const { return m_filter; }
     void setFilter(const QString &filter);
+    qreal sharpen() const { return m_sharpen; }
+    void setSharpen(qreal sharpen);
     QString half() const { return m_half; }
     void setHalf(const QString &half);
     bool mipmap() const { return m_mipmap; }
@@ -109,6 +114,7 @@ public:
 
 signals:
     void sourceChanged();
+    void sharpenChanged();
     void loaded();
     void statusChanged();
     void mipmapChanged();
@@ -140,6 +146,7 @@ private:
     int m_maxDecodeWidth = 1600;
     bool m_cropBorders = false;
     QString m_filter;
+    qreal m_sharpen = 0;
     QString m_half;
     bool m_mipmap = false;
     qreal m_zoom = 1;

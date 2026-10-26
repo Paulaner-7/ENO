@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // One movable, hideable part of a page (a shelf, the search bar, the
 // spotlight…). Outside edit mode it is just its content; in edit mode it
@@ -217,9 +217,9 @@ Item {
         // Kept inside the window (it moves up near the bottom edge).
         margins: 12
         modal: false
-        background: Rectangle {
+        background: GlassPanel {
             radius: Theme.radiusLg
-            color: Theme.surface
+            fill: Theme.surface
             border.width: 1
             border.color: Theme.border
         }

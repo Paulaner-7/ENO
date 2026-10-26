@@ -19,6 +19,9 @@ class App : public QObject {
     QML_SINGLETON
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(QString platform READ platform CONSTANT)
+    // On a television: driven by a remote's D-pad (spatial focus, a focus
+    // ring, Select presses).
+    Q_PROPERTY(bool tv READ tv CONSTANT)
     Q_PROPERTY(QVariantMap settings READ settings NOTIFY settingsChanged)
     Q_PROPERTY(QString dataFolder READ dataFolder CONSTANT)
     Q_PROPERTY(int manifestVersion READ manifestVersion NOTIFY manifestChanged)
@@ -45,9 +48,15 @@ public:
     int manifestVersion() const;
     bool webEngine() const;
     bool batteryRestricted() const { return m_batteryRestricted; }
+    bool tv() const;
     QVariantMap startAction() const;
 
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
+    // Stored and kept in `settings`, without settingsChanged: for what only
+    // matters the next time it is read (a place to come back to). Every
+    // binding on App.settings runs again on a change, which costs a phone a
+    // frame or more.
+    Q_INVOKABLE void rememberSetting(const QString &key, const QVariant &value);
     // A value QML handed to a QVariant parameter, as plain data: JS arrays
     // and objects arrive as QJSValue, which JSON (the database, sync) turns
     // into null.
@@ -78,6 +87,8 @@ public:
     // Android: the anime player's web view, and turning the phone for its
     // full screen (see Platform.h). Nothing elsewhere.
     Q_INVOKABLE void prepareWebPlayer() const;
+    // Back: the player's own menu closes first (true if one was open).
+    Q_INVOKABLE bool closeWebPlayerMenu() const;
     Q_INVOKABLE void setOrientation(const QString &mode) const;
     // The player's swipes on phones (see platform::brightness).
     Q_INVOKABLE double screenBrightness() const;
@@ -85,6 +96,8 @@ public:
     Q_INVOKABLE double mediaVolume() const;
     Q_INVOKABLE void setMediaVolume(double level) const;
     Q_INVOKABLE void setBarIcons(bool darkScreen) const;
+    // Android: the system bars shown or hidden (readers on full screen).
+    Q_INVOKABLE void setSystemBars(bool shown) const;
     // Keeps the screen on while `holder` wants it (a playing video).
     Q_INVOKABLE void keepAwake(const QString &holder, bool on) const;
     // Android: volume keys come as volumeKey() instead of changing the

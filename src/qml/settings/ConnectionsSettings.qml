@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // Other services: lists on AniList and MyAnimeList that follow what you
 // finish, Discord showing what you read, and libraries brought in from
@@ -82,12 +82,14 @@ SettingsPane {
                     shikimori: ["list", Theme.dark ? "#94a3b8" : "#475569", qsTr("Comics, novels and anime on Shikimori.")],
                     bangumi: ["list", Theme.dark ? "#f472b6" : "#db2777", qsTr("Comics, novels and anime on Bangumi.")],
                     simkl: ["play", Theme.dark ? "#a3a3a3" : "#262626", qsTr("Anime on Simkl.")]
-                }[modelData.key] || ["link", Theme.textMuted, ""])
+                }[modelData.key] || (modelData.auth === "server"
+                    ? ["hard-drive", Theme.textMuted, qsTr("Your server: series read from other sources move forward on it too. It is managed in Settings → Sources → Your servers.")]
+                    : ["link", Theme.textMuted, ""]))
                 iconName: look[0]
                 iconTint: look[1]
                 title: modelData.key === "comick" ? qsTr("Comick") : modelData.label
-                description: connector.status || look[2]
-                TrackerConnect { id: connector; service: trackerRow.modelData.key }
+                description: modelData.auth === "server" ? look[2] : connector.status || look[2]
+                TrackerConnect { id: connector; visible: trackerRow.modelData.auth !== "server"; service: trackerRow.modelData.key }
             }
         }
     }

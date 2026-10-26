@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Details page shared by comics and novels: header, actions and a fast
 // chapter list with read state, downloads and multi-select.
@@ -48,7 +48,47 @@ Item {
     }
     onVisibleChanged: if (visible) libraryRevision = Library.revision
     readonly property var progress: { App.dependOn(page.libraryRevision); return Library.progressMap(seriesId) }
+    // Export as EPUB, while it runs and once it is saved.
+    property var epubTask: null
+    Connections {
+        target: page.epubTask
+        function onFinished(result) {
+            if (result.shared) return
+            Router.toast(qsTr("Saved %1 chapters as %2").arg(result.chapters).arg(String(result.path).replace(/^.*[\\/]/, "")), "success",
+                         { label: qsTr("Show"), run: () => App.openFolder(String(result.path).replace(/[\\/][^\\/]*$/, "")) })
+        }
+        function onFailed(error) { Router.toast(error, "error") }
+    }
     readonly property var downloads: { App.dependOn(Downloads.revision); return Downloads.states(seriesId) }
+    // Save as EPUB: the chapters already downloaded, or all of them (the
+    // missing ones download first, then the book is made).
+    property bool epubPending: false
+    readonly property int downloadedCount: chapters.filter(c => downloads[c.key] && downloads[c.key].status === "done").length
+    function epubMenu(anchor) {
+        const missing = chapters.filter(c => !(downloads[c.key] && downloads[c.key].status === "done"))
+        const items = []
+        if (downloadedCount > 0)
+            items.push({ text: qsTr("Save the %1 downloaded chapters").arg(downloadedCount), icon: "file-text",
+                         run: () => page.epubTask = Downloads.exportEpub(page.seriesId) })
+        if (missing.length > 0)
+            items.push({ text: qsTr("Download all %1 chapters, then save").arg(chapters.length), icon: "download", run: () => {
+                download(missing)
+                epubPending = true
+            } })
+        if (epubPending)
+            items.push({ text: qsTr("Stop waiting for the downloads"), icon: "x", run: () => epubPending = false })
+        if (items.length === 1 && !epubPending && downloadedCount === chapters.length) return items[0].run()
+        chapterMenu.openAt(anchor, 0, anchor.height, items)
+    }
+    // Once every chapter has finished (or failed): the book.
+    onDownloadsChanged: {
+        if (!epubPending) return
+        const busy = chapters.some(c => !downloads[c.key] || (downloads[c.key].status !== "done" && downloads[c.key].status !== "failed"))
+        if (busy) return
+        epubPending = false
+        if (downloadedCount > 0) epubTask = Downloads.exportEpub(seriesId)
+        else Router.toast(qsTr("No chapter downloaded, so there is no EPUB to save."), "error")
+    }
     readonly property bool saved: { App.dependOn(page.libraryRevision); return Library.isSaved(seriesId) }
     readonly property var bookmarks: { App.dependOn(page.libraryRevision); return Library.bookmarks(seriesId) }
     // This series' own chapter list settings: sort and filters.
@@ -209,6 +249,11 @@ Item {
             { text: qsTr("Mark previous as unread"), icon: "undo-2", enabled: index > 0,
               run: () => Library.markUnits(series, before(index), false) }
         ]
+        // Computers: this chapter in a window of its own.
+        if (Router.windows)
+            items.unshift({ text: qsTr("Read in a new window"), icon: "external-link",
+                            run: () => { Library.markSeen(seriesId); Router.openWindow(media === "novel" ? "pages/NovelReader.qml" : "pages/ComicReader.qml",
+                                                                                      { series: series, chapters: chapters, index: index }) } }, null)
         if (!local) {
             items.push(null)
             items.push(dl && dl.status === "done"
@@ -264,9 +309,9 @@ Item {
         padding: 14
         focus: true
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-        background: Rectangle {
+        background: GlassPanel {
             radius: Theme.radiusLg
-            color: Theme.surface
+            fill: Theme.surface
             border.width: 1
             border.color: Theme.borderStrong
         }
@@ -373,12 +418,13 @@ Item {
     }
 
     ListView {
+        flickDeceleration: Motion.flickDeceleration
         WheelScroll {}
         id: list
         anchors.fill: parent
         clip: true
         boundsBehavior: Flickable.StopAtBounds
-        maximumFlickVelocity: 5000
+        maximumFlickVelocity: Motion.flickVelocity
         cacheBuffer: 1200
         reuseItems: true
         ScrollBar.vertical: ScScrollBar {}
@@ -472,6 +518,42 @@ Item {
                     tip: qsTr("Find it on my extensions")
                     onClicked: readFrom.start(migrate.itemFor({ media: page.media, title: page.series.title || "",
                                                                 cover: page.series.cover || "", extra: page.series.extra || {} }), true)
+                }
+                // Novels: listen without the reader (it goes on with the
+                // screen off, and the mini player has it).
+                IconButton {
+                    visible: page.media === "novel" && Speech.available && page.chapters.length > 0
+                    iconName: "volume-2"
+                    filled: true
+                    tip: qsTr("Listen")
+                    onClicked: {
+                        const at = Math.max(0, Math.min(page.chapters.length - 1, page.resumeInfo.index))
+                        const last = Library.lastProgress(page.seriesId)
+                        const block = last && last.unitKey === page.chapters[at].key && last.position ? (last.position.block || -1) : -1
+                        ReadAloud.start(Object.assign({}, page.series, { id: page.seriesId, media: "novel", sourceUrl: page.url }),
+                                        page.chapters, at, [], block)
+                    }
+                }
+                // Novels: the book as an EPUB for e-readers, from the chapters
+                // downloaded, or after downloading the rest.
+                IconButton {
+                    id: epubButton
+                    visible: page.media === "novel" && page.chapters.length > 0
+                    iconName: page.epubPending ? "loader-circle" : "file-text"
+                    filled: true
+                    tip: page.epubPending ? qsTr("Downloading for the EPUB…") : qsTr("Save as EPUB")
+                    onClicked: page.epubMenu(epubButton)
+                }
+                // Retro: a tile for it on the hub.
+                IconButton {
+                    readonly property bool pinned: Retro.isPinned(page.seriesId)
+                    visible: Theme.retro
+                    iconName: pinned ? "pin-off" : "pin"
+                    filled: true
+                    tip: pinned ? qsTr("Unpin from the hub") : qsTr("Pin to the hub")
+                    onClicked: pinned ? Retro.unpin(page.seriesId)
+                        : Retro.pin(Object.assign({}, page.series, { id: page.seriesId, media: page.media, sourceUrl: page.url,
+                                                                     referer: page.coverReferer }), "medium")
                 }
                 IconButton {
                     visible: !page.local

@@ -4,6 +4,7 @@
 #include "CastProxy.h"
 #include "Platform.h"
 #include "core/Http.h"
+#include "core/StreamRelay.h"
 
 #include <QHostInfo>
 #include <QJsonArray>
@@ -645,7 +646,19 @@ void Cast::play(const QString &deviceId, const QVariantMap &video, const QString
     for (auto h = wanted.begin(); h != wanted.end(); ++h)
         headers.append({h.key().toUtf8(), h.value().toString().toUtf8()});
     const QUrl source(video.value(QStringLiteral("url")).toString());
-    const auto url = m_proxy->share(source, headers, it->host);
+    // A stream goes through the relay first (it undoes disguised HLS, as for
+    // SCANCORE's own player); the cast proxy shares the relay's address on
+    // the network, so the relay itself never listens beyond this device.
+    QUrl from = source;
+    Headers forProxy = headers;
+    if (video::StreamRelay::wanted(source) && qgetenv("SCANCORE_STREAM_RELAY") != "0") {
+        const auto relayed = video::StreamRelay::wrap(source, headers);
+        if (relayed.host() == QLatin1String("127.0.0.1")) {
+            from = relayed;
+            forProxy.clear();
+        }
+    }
+    const auto url = m_proxy->share(from, forProxy, it->host);
     m_error.clear();
     if (url.isEmpty()) {
         m_state = QStringLiteral("error");

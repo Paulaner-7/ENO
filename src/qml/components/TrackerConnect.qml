@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Connect and Disconnect for one tracker, with the step each one needs:
 // pasting the token AniList or Bangumi shows, a user name and password

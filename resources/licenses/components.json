@@ -18,7 +18,7 @@
   "file": "Apache-2.0.txt"
  },
  {
-  "name": "DM Sans, Space Grotesk, Literata",
+  "name": "DM Sans, Space Grotesk, Literata, Selawik",
   "use": "Fonts",
   "licence": "OFL-1.1",
   "file": "OFL-1.1.txt"
@@ -92,6 +92,12 @@
  {
   "name": "AndroidX Preference",
   "use": "Extension settings on Android",
+  "licence": "Apache-2.0",
+  "file": "Apache-2.0.txt"
+ },
+ {
+  "name": "AndroidX WebKit",
+  "use": "Back in the anime player's own menus on Android",
   "licence": "Apache-2.0",
   "file": "Apache-2.0.txt"
  },
@@ -190,6 +196,12 @@
   "use": "Subtitle fonts in the video player",
   "licence": "FTL",
   "file": "FTL.txt"
+ },
+ {
+  "name": "ONNX Runtime (C API headers)",
+  "use": "Translating on the computer; the runtime itself is an optional download",
+  "licence": "MIT",
+  "file": "MIT.txt"
  },
  {
   "name": "zlib",

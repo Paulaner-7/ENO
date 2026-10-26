@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // The last searches on a search page, as chips that run them again. Kept in
 // settings under `key`, newest first.

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Colour picker: a hue and saturation wheel, a brightness slider (how dark
 // the colour is), a hex field and a few swatches. `changed` fires as the
@@ -57,9 +57,9 @@ Popup {
         }
     }
     exit: Transition { NumberAnimation { property: "opacity"; to: 0; duration: Motion.fast } }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.palette.surface
+        fill: Theme.palette.surface
         border.width: 1
         border.color: Theme.borderStrong
     }

@@ -76,6 +76,9 @@ public:
     // API.
     static bool supported();
     static void setSceneSupported(bool supported);
+    // Android: FFmpeg and mpv reach Java through the VM, once per process
+    // (also for AudioPlayer). Returns mpv's config folder; "" elsewhere.
+    static QString prepareAndroid();
 
     Renderer *createRenderer() const override;
 
@@ -161,6 +164,8 @@ signals:
 private:
     void load();
     void drainEvents();
+    // Anime4K's shaders for the look's "sharpen".
+    void applySharpen();
     void setError(const QString &error);
     // The variant for preferredHeight, once a new file's tracks are known.
     void pickVariant();

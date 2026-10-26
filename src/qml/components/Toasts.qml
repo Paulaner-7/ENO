@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Stacked notifications in the bottom-right corner. Each slides in, shows how
 // long it will stay with a thin bar, pauses while the pointer rests on it,

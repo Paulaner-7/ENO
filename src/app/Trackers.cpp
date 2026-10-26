@@ -1,4 +1,5 @@
 #include "Trackers.h"
+#include "sources/servers/Servers.h"
 #include "TrackerCommon.h"
 
 #include "Notifications.h"
@@ -794,6 +795,12 @@ QVariantList Trackers::services() const {
     for (const auto &s : tracking::services())
         if (s.available())
             add(s.key, s.label, s.media, QString::fromLatin1(more.value(s.key).first), QString::fromLatin1(more.value(s.key).second));
+    // The reader's Komga and Kavita servers: connected while they are in
+    // Settings → Sources → Your servers.
+    for (const auto &s : tracking::allServices())
+        if (s.own)
+            out.append(QVariantMap{{"key", s.key}, {"label", s.label}, {"media", s.media}, {"auth", "server"}, {"site", ""},
+                                   {"name", s.label}, {"avatar", QString()}, {"expired", false}, {"connected", true}});
     return out;
 }
 
@@ -1061,14 +1068,17 @@ Task *Trackers::comickSignIn() {
 }
 
 void Trackers::signOut(const QString &service) {
-    if (service == QLatin1String("mal") || service == QLatin1String("comick") || service == QLatin1String("anilist") || tracking::service(service))
+    const auto other = tracking::service(service);
+    if (other && other->own)
+        return; // signed in with the server itself
+    if (service == QLatin1String("mal") || service == QLatin1String("comick") || service == QLatin1String("anilist") || other)
         Database::setPref(QStringLiteral("tracker.") + service, QVariantMap());
     emit changed();
 }
 
 Task *Trackers::search(const QString &service, const QString &media, const QString &title) {
     return Task::run([service, media, title]() -> QVariant {
-        if (const auto *other = tracking::service(service))
+        if (const auto other = tracking::service(service))
             return other->search(media, title);
         return service == QLatin1String("mal")      ? malSearch(media, title)
                : service == QLatin1String("comick") ? comickSearch(media, title)
@@ -1209,6 +1219,9 @@ void Trackers::unitFinished(const QString &seriesId) {
     bool any = false;
     for (const auto *key : {"anilist", "mal", "comick", "kitsu", "mangaupdates", "shikimori", "bangumi", "simkl"})
         any = any || !Database::pref(QStringLiteral("tracker.") + QLatin1String(key)).toMap().isEmpty();
+    // The reader's Komga and Kavita servers track as well.
+    for (const auto &server : servers::load())
+        any = any || server.kind == QLatin1String("komga") || server.kind == QLatin1String("kavita");
     if (!any)
         return;
     runInBackground([seriesId] {
@@ -1241,11 +1254,11 @@ void Trackers::unitFinished(const QString &seriesId) {
                 signedOut(QStringLiteral("comick"), QStringLiteral("Comick"));
             qWarning().noquote() << "Comick:" << e.message();
         }
-        for (const auto &other : tracking::services()) {
+        for (const auto &other : tracking::allServices()) {
             try {
                 update(other, seriesId, media, title, progress);
             } catch (const Error &e) {
-                if (e.status() == 401)
+                if (e.status() == 401 && !other.own)
                     signedOut(other.key, other.label);
                 qWarning().noquote() << other.label + QLatin1Char(':') << e.message();
             }

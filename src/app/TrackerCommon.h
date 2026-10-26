@@ -5,6 +5,7 @@
 #include <QVariantMap>
 
 #include <functional>
+#include <optional>
 
 // Shared by Trackers.cpp (AniList, MyAnimeList, Comick) and
 // MoreTrackers.cpp (Kitsu, MangaUpdates, Shikimori, Bangumi, Simkl).
@@ -38,9 +39,15 @@ struct Service {
     std::function<bool()> available;
     std::function<QVariantList(const QString &media, const QString &title)> search;
     std::function<void(const QVariant &id, const QString &media, int progress)> push;
+    // The reader's own server (Komga, Kavita): signed in with the server
+    // itself (Settings → Sources → Your servers), not here.
+    bool own = false;
 };
 const QList<Service> &services();
-const Service *service(const QString &key);
+// services() and one for each of the reader's Komga and Kavita servers
+// ("server-<id>").
+QList<Service> allServices();
+std::optional<Service> service(const QString &key);
 
 // Signs in and stores the account; returns {name}. Blocking.
 QVariantMap passwordSignIn(const QString &service, const QString &user, const QString &password);

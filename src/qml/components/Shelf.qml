@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A titled horizontal row of covers with smooth arrow and wheel scrolling,
 // or a grid. Inside a PageSection it follows the user's look for it.
@@ -151,6 +151,8 @@ Column {
             y: -22
             width: parent.width
             height: parent.height + 44
+            maximumFlickVelocity: Motion.flickVelocity
+            Glide { flick: list }
             visible: !shelf.grid && shelf.items.length > 0 && !shelf.loading && shelf.error.length === 0
             orientation: ListView.Horizontal
             flickableDirection: Flickable.HorizontalFlick
@@ -160,7 +162,7 @@ Column {
             clip: true
             model: shelf.grid ? [] : shelf.shownItems
             boundsBehavior: Flickable.StopAtBounds
-            flickDeceleration: 4000
+            flickDeceleration: Motion.flickDeceleration
             reuseItems: true
             cacheBuffer: 600
             // Covers that scroll into view later appear at once; the

@@ -1,6 +1,8 @@
 #include "Updater.h"
 
 #include "App.h"
+#include "Notifications.h"
+#include "core/Database.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -143,9 +145,24 @@ void Updater::check(bool quiet) {
         }
         if (latest.isNull() || latest < current || (latest == current && !prerelease)) {
             setState(m_quiet ? QStringLiteral("idle") : QStringLiteral("current"));
+            Notifications::withdraw(QStringLiteral("app:upstream"));
             return;
         }
         setState(QStringLiteral("available"));
+        const auto notifKey = QStringLiteral("app:upstream");
+        const auto lastNotified = Database::pref(QStringLiteral("updater.notifiedVersion"), QString()).toString();
+        const bool inDb = Database::scalar(QStringLiteral("SELECT COUNT(*) FROM notifications WHERE key = ?"), {notifKey}).toInt() > 0;
+        if (lastNotified != tag || (!m_quiet && !inDb)) {
+            Database::setPref(QStringLiteral("updater.notifiedVersion"), tag);
+            Notifications::post({
+                QStringLiteral("app"),
+                notifKey,
+                tr("Upstream SCANCORE %1 is out").arg(tag),
+                tr("Ask Antigravity to sync ENO with this update."),
+                QVariantMap{{QStringLiteral("url"), m_pageUrl.isEmpty() ? QStringLiteral("https://github.com/medium-gh/scancore/releases") : m_pageUrl}},
+                false /* system */
+            });
+        }
         // Updates download in the background when automatic updates are on.
         if (canInstall() && !m_assetUrl.isEmpty() && App::instance()->settings().value(QStringLiteral("autoUpdate"), true).toBool())
             download();

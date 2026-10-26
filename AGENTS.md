@@ -7,7 +7,7 @@
 ## 1. What ENO Is
 
 **ENO** is a native desktop media application written in **C++20** and **Qt 6 (Qt Quick / QML)**, forked from `medium-gh/scancore`.
-- **Anime-only scope**: ENO plays Anime. The Comics/Manga and Novels sections have been removed from the interface (`Router.animeOnly` in `src/qml/Router.qml`): their code, readers and engines may still exist in the tree, but nothing leads to them and they are out of scope for this fork — including upstream updates (see § 5.3).
+- **Anime-only scope**: ENO plays Anime. The Comics/Manga, Novels and Music sections have been removed from the interface (`Router.animeOnly` in `src/qml/Router.qml`): their code, readers, engines and players may still exist in the tree, but nothing leads to them and they are out of scope for this fork — including upstream updates (see § 5.3).
 - **Bundle & Identity**: Built as `ENO.app` (`com.vittorio.eno`), display name `ENO`, organization `ENO`.
 - **Local Data Isolation**: All user data, SQLite database, cookies, image cache, and backups live under macOS standard paths for `ENO`:
   - App Data: `~/Library/Application Support/ENO/` (`scancore.db`, `cookies.txt`, `manifest.json`)
@@ -136,12 +136,13 @@ ENO is designed to receive official upstream improvements from `medium-gh/scanco
    - Standard upstream sources automatically receive live domain updates and fixes from `medium-gh/scancore`.
    - Any custom source added to ENO's `sources/manifest.json` with a new `"id"`, or any existing source customized with `"enoOverride": true` (or `"kaiOverride": true`, `"custom": true`), is **automatically preserved** and never overwritten by upstream manifest refreshes.
 
-3. **Anime-only Scope of Every Sync (Manga & Novels Excluded)**:
-   - ENO shows Anime only, so upstream work on the Comics/Manga and Novels sections is of no use here. **Every upstream sync must exclude it**: for the paths below, keep ENO's version (drop the upstream change) instead of merging it.
+3. **Anime-only Scope of Every Sync (Manga, Novels & Music Excluded)**:
+   - ENO shows Anime only, so upstream work on the Comics/Manga, Novels and Music sections is of no use here. **Every upstream sync must exclude it**: for the paths below, keep ENO's version (drop the upstream change) instead of merging it.
      - **Engines and adapters**: `src/sources/comics/**`, `src/sources/bundled/comics/**`, `src/sources/novels/**`, `src/sources/bundled/novels/**`.
+     - **Music**: `src/app/Music.*`, `src/app/AudioPlayer.*`, `src/sources/local/AudioTags.*`, `src/qml/MusicQueue.qml`, `src/qml/pages/MusicPage.qml`, `src/qml/pages/NowPlayingPage.qml`, `src/qml/components/MiniPlayer.qml`, `src/qml/components/SongRow.qml`, `src/qml/components/LyricsView.qml`, `docs/music-plugins.md` and its test fixture. Remove any that upstream adds, along with their CMake registrations, settings toggles and Retro/hub entries.
      - **Manifest**: ENO's `sources/manifest.json` keeps its own `comics` and `novels` lists (`enoExclusive`) and never gains upstream comic/novel sources, engines or domain fixes.
-     - **Interface**: the comic/novel pages and readers (`ComicsPage.qml`, `ComicDetails.qml`, `ComicReader.qml`, `NovelsPage.qml`, `NovelDetails.qml`, `NovelReader.qml`), reader-only settings (`ReadingSettings.qml`) and any component or string used only by those sections.
-     - **Fixtures and tests** that only exercise comic/novel engines (`tests/fixtures/` files for manga/manhwa/mangadex/inmanga/naver/leercapitulo/mangaverse/kakaopage/olympus/… sites, and their cases in `tests/tst_parsing.cpp`).
+     - **Interface**: the comic/novel pages and readers (`ComicsPage.qml`, `ComicDetails.qml`, `ComicReader.qml`, `NovelsPage.qml`, `NovelDetails.qml`, `NovelReader.qml`), reader-only settings (`ReadingSettings.qml`), the Music section, and any component or string used only by those sections.
+     - **Fixtures and tests** that only exercise comic/novel/music engines (`tests/fixtures/` files for manga/manhwa/mangadex/inmanga/naver/leercapitulo/mangaverse/kakaopage/olympus/… sites, music plugin fixtures, and their cases in `tests/tst_parsing.cpp`, `tests/tst_plugins.cpp`, `tests/tst_extensions.cpp`).
    - Everything else is still synced normally: the Anime section (`src/sources/anime/**`), shared services and infrastructure (`src/core/**`, `src/app/**`), the catalogue, local file handling, the build system, i18n and docs.
-   - If excluding a path leaves the tree broken (a shared header changed under it), apply the smallest compatibility fix that makes Debug/Release build and `ctest` pass — never to bring manga/novel behaviour back into the interface.
-   - **Never re-introduce manga/novel entry points**: no nav item, onboarding step, palette entry, shortcut, open-file handler, settings pane or manifest source that leads to them (`Router.animeOnly` stays `true`, `Router.mediaAllowed()` / `Router.sectionAllowed()` keep refusing them).
+   - If excluding a path leaves the tree broken (a shared header changed under it), apply the smallest compatibility fix that makes Debug/Release build and `ctest` pass — never to bring manga/novel/music behaviour back into the interface.
+   - **Never re-introduce manga/novel/music entry points**: no nav item, onboarding step, palette entry, shortcut, open-file handler, settings pane or manifest/repository source that leads to them (`Router.animeOnly` stays `true`, `Router.mediaAllowed()` / `Router.sectionAllowed()` keep refusing comics and novels, and Music stays out of `Sidebar`, `Dock`, `TabBar`, `HomePage`, `Retro` and `Settings → Interface`).

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Switch with a springy knob.
 Switch {
@@ -13,7 +13,7 @@ Switch {
     indicator: Rectangle {
         width: 44
         height: 26
-        radius: 13
+        radius: Theme.retro ? 0 : 13
         color: control.checked ? Theme.accent : Theme.surface3
         border.width: control.checked ? 0 : 1
         border.color: Theme.borderStrong
@@ -21,7 +21,7 @@ Switch {
         Rectangle {
             width: control.pressed ? 24 : 20
             height: 20
-            radius: 10
+            radius: Theme.retro ? 0 : 10
             y: 3
             x: control.checked ? parent.width - width - 3 : 3
             color: control.checked ? Theme.accentInk : (Theme.dark ? "#d8d8dc" : "#ffffff")

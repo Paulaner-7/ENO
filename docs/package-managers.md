@@ -34,25 +34,25 @@ The AUR package builds from source and downloads Lexbor v2.7.0 as a separate, ha
 
 ## WinGet
 
-The three-file manifest is in [`packaging/winget/MediumDev.ScanCore/<version>`](../packaging/winget/MediumDev.ScanCore/). It uses the x64 Inno Setup installer and its silent switches from [`packaging/windows/scancore.iss`](../packaging/windows/scancore.iss).
+The three-file manifest is in [`packaging/winget/MediumDev.Scancore/<version>`](../packaging/winget/MediumDev.Scancore/). It uses the x64 Inno Setup installer and its silent switches from [`packaging/windows/scancore.iss`](../packaging/windows/scancore.iss).
 
 1. On Windows, install Microsoft's `wingetcreate` tool using the [WinGet Create instructions](https://learn.microsoft.com/windows/package-manager/package/manifest).
 2. Validate the draft from PowerShell:
 
    ```powershell
-   winget validate .\packaging\winget\MediumDev.ScanCore\<version>
+   winget validate .\packaging\winget\MediumDev.Scancore\<version>
    ```
 
 3. Install it locally from that manifest directory to verify the installer, Start-menu shortcut and uninstall behavior:
 
    ```powershell
-   winget install --manifest .\packaging\winget\MediumDev.ScanCore\<version>
+   winget install --manifest .\packaging\winget\MediumDev.Scancore\<version>
    ```
 
 4. Submit the three YAML files through `wingetcreate submit` or the Microsoft `winget-pkgs` repository's normal pull-request process. Check Microsoft's current submission instructions before submitting.
 5. For each release, generate the new version directory with `update-manifests.py`, then submit the update.
 
-The identifier in the draft is `MediumDev.ScanCore`. Keep it stable after WinGet accepts the package. The draft has not yet been accepted by WinGet, and the package id may need adjustment if Microsoft reports a naming conflict.
+The identifier in the draft is `MediumDev.Scancore`. Keep it stable after WinGet accepts the package. The draft has not yet been accepted by WinGet, and the package id may need adjustment if Microsoft reports a naming conflict.
 
 ## Scoop
 

@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Loading placeholder with a light sweep moving across it.
 Rectangle {

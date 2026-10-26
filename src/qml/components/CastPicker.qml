@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // The TVs and Chromecasts on this network, to cast an episode to. Looks for
 // them while open; picking one emits picked(device).
@@ -17,9 +17,9 @@ Dialog {
     onOpened: Cast.search()
 
     Overlay.modal: Rectangle { color: Theme.overlay }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }

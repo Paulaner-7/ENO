@@ -10,6 +10,7 @@
 #include "core/Database.h"
 #include "core/Html.h"
 #include "core/Parallel.h"
+#include "core/StreamRelay.h"
 #include "core/Text.h"
 #include "extensions/ExtensionSource.h"
 #include "extensions/Host.h"
@@ -1265,6 +1266,10 @@ QList<Player> desktopPlayers() {
 
 } // namespace
 
+bool Anime::relayedExternally(const QVariantMap &video) const {
+    return video::StreamRelay::wanted(QUrl(video.value(QStringLiteral("url")).toString())) && qgetenv("SCANCORE_STREAM_RELAY") != "0";
+}
+
 QVariantList Anime::externalPlayers() const {
     QVariantList out;
 #ifdef Q_OS_ANDROID
@@ -1277,9 +1282,21 @@ QVariantList Anime::externalPlayers() const {
 }
 
 bool Anime::openExternally(const QString &id, const QVariantMap &video, const QString &title, double startAt) const {
-    const auto url = video.value(QStringLiteral("url")).toString();
+    auto url = video.value(QStringLiteral("url")).toString();
     if (url.isEmpty())
         return false;
+    // Streams go through SCANCORE's relay as in its own player, so other
+    // players get them undressed (disguised HLS) and with their headers;
+    // the relay lives as long as SCANCORE does (relayedExternally).
+    if (relayedExternally(video)) {
+        Headers relayHeaders;
+        const auto wanted = video.value(QStringLiteral("headers")).toMap();
+        for (auto h = wanted.begin(); h != wanted.end(); ++h)
+            relayHeaders.append({h.key().toUtf8(), h.value().toString().toUtf8()});
+        const auto relayed = video::StreamRelay::wrap(QUrl(url), relayHeaders);
+        if (relayed.host() == QLatin1String("127.0.0.1"))
+            url = relayed.toString(QUrl::FullyEncoded);
+    }
     QString agent = QString::fromUtf8(Http::userAgent());
     QString referer;
     QStringList others;

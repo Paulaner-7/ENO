@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // The notification area: new chapters, announcements, extension and app
 // updates, newest first. A sheet from the right on desktop, from the bottom
@@ -120,6 +120,8 @@ Popup {
         }
 
         ListView {
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             WheelScroll {}
             id: list
             anchors.top: head.bottom
@@ -149,12 +151,12 @@ Popup {
                         width: 34
                         height: 34
                         radius: 17
-                        color: row.modelData.kind === "announcement" ? Theme.alpha(Theme.accent, 0.18) : Theme.surface2
+                        color: (row.modelData.kind === "announcement" || row.modelData.kind === "app") ? Theme.alpha(Theme.accent, 0.18) : Theme.surface2
                         Icon {
                             anchors.centerIn: parent
                             name: panel.iconFor(row.modelData.kind)
                             size: 16
-                            color: row.modelData.kind === "announcement" ? Theme.accent : Theme.textMuted
+                            color: (row.modelData.kind === "announcement" || row.modelData.kind === "app") ? Theme.accent : Theme.textMuted
                         }
                     }
                     Column {

@@ -87,6 +87,9 @@ struct MihonBackup {
     // Lists the backup hides (Komikku): SCANCORE ids, or "custom:<name>".
     QStringList hiddenLists;
     QList<Repository> repositories;
+    // Sources with their own settings in the backup (105, "source_<id>"):
+    // ones set up in that app, whether or not a series here is on them.
+    QList<quint64> configuredSources;
     // What TachiyomiSY and Komikku keep that SCANCORE has no place for:
     // saved searches and feeds, and entries with edited info.
     int savedSearches = 0;
@@ -95,7 +98,8 @@ struct MihonBackup {
 };
 
 // Mihon's Backup, and Aniyomi's (the same with anime): manga (1),
-// categories (2), sources (101), extension repositories (106); anime (3, or
+// categories (2), sources (101), source settings (105), extension
+// repositories (106); anime (3, or
 // 501 in older Aniyomi backups), their categories (4 or 502) and sources
 // (103 or 503). Entries outside the library are left out. TachiyomiSY and
 // Komikku backups are the same with their own fields: merged entries

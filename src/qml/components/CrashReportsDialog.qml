@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Crash reports and diagnostics, ready to send to the developer: after a
 // crash it opens by itself on the newest report; Settings → About lists them.
@@ -41,9 +41,9 @@ Dialog {
     focus: true
     padding: 22
     Overlay.modal: Rectangle { color: Theme.overlay }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }
@@ -76,6 +76,8 @@ Dialog {
             radius: Theme.radiusMd
             color: Theme.surface2
             Flickable {
+                maximumFlickVelocity: Motion.flickVelocity
+                flickDeceleration: Motion.flickDeceleration
                 anchors.fill: parent
                 anchors.margins: 10
                 clip: true

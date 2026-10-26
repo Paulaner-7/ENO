@@ -38,6 +38,8 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Response
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.withContext
 
 // What one extension holds: Mihon sources (comics) or Aniyomi sources
 // (anime).
@@ -98,18 +100,49 @@ class ExtensionHost(
                 JsonNull
             }
             "setCookies" -> setCookies(params)
-            else -> call(method, params)
+            // Extensions → Diagnostics: the sites each extension contacted.
+            "networkUse" ->
+                buildJsonObject {
+                    for ((pkg, hosts) in eu.kanade.tachiyomi.network.NetworkUse.report()) {
+                        put(
+                            pkg,
+                            buildJsonArray {
+                                for ((host, use) in hosts) {
+                                    add(
+                                        buildJsonObject {
+                                            put("host", host)
+                                            put("requests", use.first)
+                                            put("last", use.second)
+                                        },
+                                    )
+                                }
+                            },
+                        )
+                    }
+                }
+            else -> {
+                // Everything the call does over the network counts for its
+                // extension, whichever thread it runs on.
+                val pkg = params.optString("pkg") ?: packages[params.optString("source")?.toLongOrNull()]
+                if (pkg == null) call(method, params) else withContext(eu.kanade.tachiyomi.network.NetworkUse.For(pkg)) { call(method, params) }
+            }
         }
+
+    // Which extension each source came in.
+    private val packages = ConcurrentHashMap<Long, String>()
 
     private suspend fun sources(params: JsonObject): Map<Long, Any> {
         val pkg = params.string("pkg")
         loaded[pkg]?.let { return it }
         val lock = locks.getOrPut(pkg) { Mutex() }
         return lock.withLock {
-            loaded[pkg] ?: loader
-                .load(pkg, params.string("apk"), params.optString("signer"))
+            loaded[pkg] ?: eu.kanade.tachiyomi.network.NetworkUse
+                .during(pkg) { loader.load(pkg, params.string("apk"), params.optString("signer")) }
                 .let { it.sources.associateBy { s -> s.id } + it.anime.associateBy { s -> s.id } }
-                .also { loaded[pkg] = it }
+                .also {
+                    loaded[pkg] = it
+                    for (id in it.keys) packages[id] = pkg
+                }
         }
     }
 
@@ -226,7 +259,7 @@ class ExtensionHost(
                 }
             }
         if (first) {
-            updateScope.launch {
+            updateScope.launch(coroutineContext[eu.kanade.tachiyomi.network.NetworkUse.For] ?: kotlin.coroutines.EmptyCoroutineContext) {
                 delay(UPDATE_GATHER_MS)
                 updateLocks.getOrPut(key) { Mutex() }.withLock {
                     synchronized(updateJobs) {
@@ -301,7 +334,7 @@ class ExtensionHost(
             }
             "fetchImage" -> fetchImage(source, params)
             "filters" -> Codec.filters(source.getFilterList())
-            "preferences" -> settings.describe(configurable(source))
+            "preferences" -> (source as? ConfigurableSource)?.let { settings.describe(Configurable.of(it)) } ?: JsonArray(emptyList())
             "setPreference" -> {
                 settings.set(configurable(source), params.string("key"), params["value"] ?: JsonNull)
                 JsonNull

@@ -23,7 +23,17 @@ class NetworkHelper(
 ) {
     val cookieJar get() = HostNetwork.cookieJar
 
-    val client: OkHttpClient by lazy {
+    // The extension asking (NetworkUse) gets its own copy, which counts
+    // the sites it contacts; it shares the connections, cache and cookies.
+    val client: OkHttpClient
+        get() {
+            val pkg = NetworkUse.current.get() ?: return base
+            return clients.getOrPut(pkg) { base.newBuilder().addNetworkInterceptor(NetworkUseInterceptor(pkg)).build() }
+        }
+
+    private val clients = java.util.concurrent.ConcurrentHashMap<String, OkHttpClient>()
+
+    private val base: OkHttpClient by lazy {
         OkHttpClient
             .Builder()
             .cookieJar(HostNetwork.cookieJar)

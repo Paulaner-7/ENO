@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // A card of SettingRows with an optional small heading above and a note
 // below.

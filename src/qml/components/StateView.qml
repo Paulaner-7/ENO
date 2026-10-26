@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Loading, error and empty states for a task-backed view.
 Item {

@@ -1,12 +1,17 @@
 pragma Singleton
 import QtQuick
-import ScanCore
+import Scancore
 
 // Keyboard shortcuts that can be changed in Settings → Keyboard. Each action
 // has default keys; the keybinds setting holds the ones changed, as
 // {action: ["Ctrl+K", …]} in Qt's portable notation. Escape and the
 // reader's Left and Right arrows (page and chapter turns) are fixed and not
 // listed.
+//
+// Key profiles (keyProfiles setting, {name: {action: [keys]}}) change the
+// readers' keys for the series given one (series setting "keys"), say
+// one-handed keys for webtoons. An action a profile leaves alone keeps its
+// everyday keys, and a profile that is gone means the everyday keys.
 QtObject {
     id: keymap
 
@@ -31,6 +36,8 @@ QtObject {
         { id: "reader.prev", scope: "reader", label: qsTr("Previous chapter"), keys: ["P"] },
         { id: "reader.mode", scope: "reader", label: qsTr("Switch between strip and pages"), keys: ["M"] },
         { id: "reader.fullscreen", scope: "reader", label: qsTr("Full screen"), keys: ["F"] },
+        { id: "reader.lens", scope: "reader", label: qsTr("Magnifying lens under the mouse"), keys: ["L"] },
+        { id: "reader.auto", scope: "reader", label: qsTr("Auto-scroll on or off"), keys: ["S"] },
         { id: "reader.wider", scope: "reader", label: qsTr("Wider strip, larger text"), keys: ["+", "="] },
         { id: "reader.narrower", scope: "reader", label: qsTr("Narrower strip, smaller text"), keys: ["-"] },
         { id: "reader.first", scope: "reader", label: qsTr("First page"), keys: ["Home"] },
@@ -58,6 +65,8 @@ QtObject {
     ].filter(s => s.scope !== "reader" || !Router.animeOnly)
 
     readonly property var changed: App.settings.keybinds || ({})
+    readonly property var profiles: App.settings.keyProfiles || ({})
+    readonly property var profileNames: Object.keys(profiles).sort((a, b) => a.localeCompare(b))
 
     // Lists stored in settings come back from C++ as list objects that are
     // not JavaScript arrays (Array.isArray says no); this makes them one.
@@ -72,8 +81,17 @@ QtObject {
         return null
     }
 
-    // The keys for an action, changed or default.
-    function sequences(id) {
+    // A profile's own keys for an action (reader ones only), or null.
+    function profileKeys(id, profile) {
+        if (!profile || !id.startsWith("reader.")) return null
+        const own = profiles[profile]
+        return own ? listOf(own[id]) : null
+    }
+
+    // The keys for an action, changed or default; in a profile, its own.
+    function sequences(id, profile) {
+        const mine = profileKeys(id, profile)
+        if (mine) return mine
         const own = listOf(changed[id])
         if (own) return own
         const a = action(id)
@@ -81,19 +99,37 @@ QtObject {
     }
 
     // How they read on this system ("⌘K" on macOS).
-    function labels(id) {
-        return sequences(id).map(s => Customize.keyText(s))
+    function labels(id, profile) {
+        return sequences(id, profile).map(s => Customize.keyText(s))
     }
 
-    function isDefault(id) { return listOf(changed[id]) === null }
+    function isDefault(id, profile) {
+        return profile ? profileKeys(id, profile) === null : listOf(changed[id]) === null
+    }
 
-    function set(id, keys) {
+    function set(id, keys, profile) {
+        if (profile && id.startsWith("reader.")) {
+            const all = Object.assign({}, profiles)
+            const own = Object.assign({}, all[profile] || {})
+            own[id] = keys
+            all[profile] = own
+            App.setSetting("keyProfiles", all)
+            return
+        }
         const all = Object.assign({}, changed)
         all[id] = keys
         App.setSetting("keybinds", all)
     }
 
-    function reset(id) {
+    function reset(id, profile) {
+        if (profile) {
+            const all = Object.assign({}, profiles)
+            const own = Object.assign({}, all[profile] || {})
+            delete own[id]
+            all[profile] = own
+            App.setSetting("keyProfiles", all)
+            return
+        }
         const all = Object.assign({}, changed)
         delete all[id]
         App.setSetting("keybinds", all)
@@ -101,14 +137,30 @@ QtObject {
 
     function resetAll() { App.setSetting("keybinds", ({})) }
 
-    // Another action that already answers to `key` where `id` would.
-    function conflict(id, key) {
+    // A new profile starts as the everyday keys; false if the name is taken.
+    function addProfile(name) {
+        name = name.trim()
+        if (!name || profiles[name] !== undefined) return false
+        const all = Object.assign({}, profiles)
+        all[name] = {}
+        App.setSetting("keyProfiles", all)
+        return true
+    }
+    function removeProfile(name) {
+        const all = Object.assign({}, profiles)
+        delete all[name]
+        App.setSetting("keyProfiles", all)
+    }
+
+    // Another action that already answers to `key` where `id` would (in
+    // `profile`, for the readers' keys).
+    function conflict(id, key, profile) {
         const mine = action(id)
         if (!mine) return null
         for (const a of actions) {
             if (a.id === id) continue
             if (mine.scope !== "app" && a.scope !== "app" && a.scope !== mine.scope) continue
-            for (const other of sequences(a.id))
+            for (const other of sequences(a.id, profile))
                 if (Customize.sameKeys(other, key)) return a
         }
         return null
@@ -116,9 +168,9 @@ QtObject {
 
     // A key event (Keys.onPressed) matched against an action's keys, for
     // keys that only count while one item has focus.
-    function matches(id, event) {
+    function matches(id, event, profile) {
         const typed = Customize.keySequence(event.key, event.modifiers)
-        return typed !== "" && sequences(id).some(s => Customize.sameKeys(s, typed))
+        return typed !== "" && sequences(id, profile).some(s => Customize.sameKeys(s, typed))
     }
 
     // A key pressed inside a web page ({key, ctrl, alt, shift, meta} from the

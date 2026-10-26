@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Opens a title from the chosen tracker's catalogue: finds it on the
 // built-in sources (under any of its names) and opens it there. It opens
@@ -185,11 +185,11 @@ Dialog {
         NumberAnimation { property: "y"; to: dialog.parent ? dialog.parent.height : 800; duration: Motion.normal; easing.type: Easing.InCubic }
     }
 
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
         bottomLeftRadius: dialog.sheet ? 0 : Theme.radiusXl
         bottomRightRadius: dialog.sheet ? 0 : Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: dialog.sheet ? 0 : 1
         border.color: Theme.borderStrong
         Rectangle {
@@ -333,6 +333,8 @@ Dialog {
 
         ListView {
             id: list
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             // Its whole height when it fits.
             readonly property real wanted: contentHeight
             y: header.height + 16

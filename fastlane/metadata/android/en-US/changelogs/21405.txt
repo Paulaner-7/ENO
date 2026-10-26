@@ -1,0 +1,6 @@
+• Friends: see what they read, share lists by link
+• React to a page; see where others reacted
+• Two readers side by side on wide screens
+• Novels in other languages open translated
+• Komga and Kavita as trackers; Mihon's extensions come along on import
+• Glass menus and sheets (Settings → Theme)

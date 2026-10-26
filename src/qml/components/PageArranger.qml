@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Puts a page's PageSections (children of `column`) in the user's order and
 // runs its edit mode. The sections stay where the page declares them; they

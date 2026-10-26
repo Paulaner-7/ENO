@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // "Add section" while arranging a page: sections taken off it, and shelves
 // of an installed extension's own listings (its latest releases or what is
@@ -48,9 +48,9 @@ Dialog {
     focus: true
     padding: 24
     Overlay.modal: Rectangle { color: Theme.overlay }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }
@@ -101,6 +101,8 @@ Dialog {
     }
 
     contentItem: Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         implicitHeight: body.height
         contentHeight: body.height
         clip: true

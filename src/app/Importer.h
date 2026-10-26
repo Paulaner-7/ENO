@@ -32,7 +32,8 @@ public:
     // What a Mihon, Tachiyomi or Aniyomi backup holds and needs: {comics,
     // anime, lists: [names], repositories: [{url, name, added, count,
     // error}], extensions: [{kind, pkg, name, series}] not installed that its
-    // series came from, unknownSources (series no repository here offers)}.
+    // series came from (and, with series 0, the other sources set up in that
+    // app), unknownSources (series no repository here offers)}.
     Q_INVOKABLE sc::Task *previewMihon(const QUrl &file);
     // A Mihon, Tachiyomi or Aniyomi backup (.tachibk, .proto.gz). Series
     // from an extension installed here are restored onto it exactly (its

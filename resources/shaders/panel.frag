@@ -3,7 +3,11 @@
 // than its picture, enlarged with Catmull-Rom: sharper lines than the
 // GPU's bilinear filter. Five bilinear samples stand in for the sixteen
 // texels of the filter (the four corner taps weigh least and are left out),
-// so phones keep up while a strip scrolls.
+// so phones keep up while a strip scrolls. Low-resolution scans enlarged
+// this way can be sharpened as well (Settings → Reading → Sharpen): AMD's
+// Contrast Adaptive Sharpening (FidelityFX CAS, MIT), which strengthens
+// lines where the contrast is low and leaves strong edges alone, so it adds
+// no halos. Four more samples.
 // Rebuild panel.frag.qsb with resources/shaders/build.sh after changing it.
 #version 440
 
@@ -15,6 +19,7 @@ layout(std140, binding = 0) uniform buf {
     float qt_Opacity;
     float bicubic;
     vec2 texSize;
+    float sharpen;
 };
 layout(binding = 1) uniform sampler2D source;
 
@@ -47,7 +52,26 @@ vec4 catmullRom(vec2 uv) {
     return vec4(min(color.rgb, vec3(color.a)), color.a);
 }
 
+// CAS on the picture's own pixels around uv, applied to `base` (the
+// enlarged colour).
+vec4 contrastAdaptiveSharpen(vec2 uv, vec4 base) {
+    vec2 px = 1.0 / texSize;
+    vec3 n = texture(source, uv + vec2(0.0, -px.y)).rgb;
+    vec3 w = texture(source, uv + vec2(-px.x, 0.0)).rgb;
+    vec3 e = texture(source, uv + vec2(px.x, 0.0)).rgb;
+    vec3 s = texture(source, uv + vec2(0.0, px.y)).rgb;
+    vec3 c = base.rgb;
+    vec3 mn = min(min(min(n, w), min(c, e)), s);
+    vec3 mx = max(max(max(n, w), max(c, e)), s);
+    vec3 amp = sqrt(clamp(min(mn, 2.0 - mx) / max(mx, vec3(0.0001)), 0.0, 1.0));
+    vec3 weight = amp * (-1.0 / mix(8.0, 5.0, clamp(sharpen, 0.0, 1.0)));
+    vec3 rgb = clamp(((n + w + e + s) * weight + c) / (1.0 + 4.0 * weight), 0.0, 1.0);
+    return vec4(min(rgb, vec3(base.a)), base.a);
+}
+
 void main() {
     vec4 color = bicubic > 0.5 ? catmullRom(texCoord) : texture(source, texCoord);
+    if (bicubic > 0.5 && sharpen > 0.0)
+        color = contrastAdaptiveSharpen(texCoord, color);
     fragColor = color * qt_Opacity;
 }

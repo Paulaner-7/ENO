@@ -4,6 +4,7 @@
 #include "core/Http.h"
 #include "core/ImageCache.h"
 #include "core/StreamRelay.h"
+#include "app/CastProxy.h"
 #include "core/VideoSave.h"
 
 #include <QDateTime>
@@ -371,6 +372,35 @@ private slots:
 
     // Against a real server: SCANCORE_VIDEO_URL (HLS or a file) is saved
     // into SCANCORE_VIDEO_DIR; skipped without them.
+    // Casting: the TV is given the cast proxy's address for the relay's, so
+    // it gets disguised streams undressed (the relay stays on this device).
+    void castsThroughTheRelay() {
+        Fixture server;
+        const auto base = QStringLiteral("http://127.0.0.1:%1").arg(server.port());
+        server.files.insert("/master", {"text/plain", "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1\nmedia\n"});
+        server.files.insert("/media", {"text/plain", "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\nseg.image\n#EXT-X-ENDLIST\n"});
+        server.files.insert("/seg.image", {"image/png", png() + ts(40)});
+        QNetworkAccessManager client;
+        const auto get = [&](const QUrl &url) {
+            auto *reply = client.get(QNetworkRequest(url));
+            QSignalSpy done(reply, &QNetworkReply::finished);
+            done.wait(10000);
+            reply->deleteLater();
+            return reply->readAll();
+        };
+        const auto relayed = video::StreamRelay::wrap(QUrl(base + QStringLiteral("/master")), {{"Referer", "https://site.test/"}});
+        CastProxy proxy;
+        const QUrl shared(proxy.share(relayed, {}, QHostAddress(QHostAddress::LocalHost)));
+        QVERIFY(shared.isValid());
+        QVERIFY(shared.port() != relayed.port());
+        const auto variant = QUrl(QString::fromUtf8(get(shared).split('\n').value(2)));
+        QCOMPARE(variant.port(), shared.port());
+        const auto part = QUrl(QString::fromUtf8(get(variant).split('\n').value(3)));
+        QCOMPARE(part.port(), shared.port());
+        QCOMPARE(get(part), ts(40));
+        QCOMPARE(server.lastHeaders.value("referer"), QByteArray("https://site.test/"));
+    }
+
     void savesFromNetwork() {
         const auto url = qEnvironmentVariable("SCANCORE_VIDEO_URL");
         if (url.isEmpty())

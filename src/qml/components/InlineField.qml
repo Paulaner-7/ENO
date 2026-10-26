@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A small single-line input for a settings row.
 TextField {
@@ -15,7 +15,7 @@ TextField {
     selectByMouse: true
     verticalAlignment: TextInput.AlignVCenter
     background: Rectangle {
-        radius: height / 2
+        radius: Theme.pill(height)
         color: parent.activeFocus ? Theme.surface : Theme.surface2
         border.width: 1
         border.color: parent.activeFocus ? Theme.alpha(Theme.accent, 0.55) : Theme.border

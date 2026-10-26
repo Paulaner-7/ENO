@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Repositories the user added, the extensions installed from them (trust,
 // updates, their sources, settings and health) and the ones they offer.
@@ -55,6 +55,20 @@ Item {
             || (e.sources || []).some(s => (s.name || "").toLowerCase().indexOf(q) >= 0 || (s.baseUrl || "").toLowerCase().indexOf(q) >= 0))
     }
     readonly property var rows: tab === "installed" ? installedShown : tab === "available" ? availableList : repositories
+    // The list gets its rows from here: a new list (an extension installed
+    // or updated) would otherwise send it back to the top; on the same tab
+    // it stays where it was.
+    property var shownRows: []
+    property string shownTab: ""
+    function showRows() {
+        const keep = shownTab === tab
+        const y = list.contentY
+        shownTab = tab
+        shownRows = rows
+        if (keep) Qt.callLater(() => list.contentY = Math.max(list.originY, Math.min(y, list.originY + list.contentHeight - list.height)))
+    }
+    onRowsChanged: showRows()
+    Component.onCompleted: showRows()
     readonly property bool needsRuntime: App.platform !== "android" && Extensions.runtimeAvailable && !Extensions.runtimeInstalled
 
     function installing(id) { return Extensions.installing.indexOf(id) >= 0 }
@@ -109,10 +123,12 @@ Item {
     }
 
     ListView {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         WheelScroll {}
         id: list
         anchors.fill: parent
-        model: page.rows
+        model: page.shownRows
         clip: true
         bottomMargin: 40
         boundsBehavior: Flickable.StopAtBounds
@@ -128,6 +144,7 @@ Item {
                 subtitle: page.installedList.length + (page.installedList.length === 1 ? qsTr(" installed") : qsTr(" installed"))
                     + " · " + page.repositories.length + (page.repositories.length === 1 ? qsTr(" repository") : qsTr(" repositories"))
                 ScButton { text: qsTr("Add repository"); iconName: "plus"; variant: "primary"; onClicked: Router.addRepository("") }
+                IconButton { iconName: "gauge"; filled: true; tip: qsTr("Diagnostics"); onClicked: Router.openExtensionsDiagnostics() }
             }
 
             // Updates, where they are looked for: what is ready, or when
@@ -303,6 +320,13 @@ Item {
                     iconName: "tv"
                     selected: page.media === "anime"
                     onClicked: page.media = "anime"
+                }
+                Chip {
+                    visible: page.repoMedia.length > 1 && page.repoMedia.indexOf("music") >= 0
+                    text: qsTr("Music")
+                    iconName: "volume-2"
+                    selected: page.media === "music"
+                    onClicked: page.media = "music"
                 }
                 Select {
                     visible: page.repositories.length > 1
@@ -750,7 +774,7 @@ Item {
                 height: 40
                 radius: 10
                 color: Theme.alpha(row.repo.error ? Theme.danger : Theme.accent, 0.12)
-                Icon { anchors.centerIn: parent; name: row.repo.media === "anime" ? "tv" : row.repo.media === "novel" ? "book-text" : "book-open"; size: 18; color: row.repo.error ? Theme.danger : Theme.accent }
+                Icon { anchors.centerIn: parent; name: row.repo.media === "anime" ? "tv" : row.repo.media === "novel" ? "book-text" : row.repo.media === "music" ? "volume-2" : "book-open"; size: 18; color: row.repo.error ? Theme.danger : Theme.accent }
             }
             Column {
                 anchors.left: badge.right

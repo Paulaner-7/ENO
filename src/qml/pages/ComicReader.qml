@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import ScanCore
+import Scancore
 
 // Full-window comic reader. Vertical strip (webtoons) or single pages
 // (manga), with eased scrolling, auto-hiding controls, progress saved as you

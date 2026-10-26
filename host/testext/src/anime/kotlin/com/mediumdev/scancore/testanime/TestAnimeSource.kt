@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
 import eu.kanade.tachiyomi.animesource.model.FetchType
 import eu.kanade.tachiyomi.animesource.model.Hoster
+import eu.kanade.tachiyomi.animesource.model.HttpServer
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Track
@@ -167,8 +168,10 @@ class TestAnimeSource :
 
     private fun video(o: JsonObject): Video {
         val path = o["url"]!!.jsonPrimitive.content
+        // Served from this device by the extension's own server.
+        val local = o["local"]?.jsonPrimitive?.boolean == true
         return Video(
-            videoUrl = if (path.isEmpty()) "" else baseUrl + path,
+            videoUrl = if (local) HttpServer.PLACEHOLDER_URL + path else if (path.isEmpty()) "" else baseUrl + path,
             videoTitle = o["title"]!!.jsonPrimitive.content,
             resolution = o["resolution"]?.jsonPrimitive?.int,
             preferred = o["preferred"]?.jsonPrimitive?.boolean == true,
@@ -183,6 +186,14 @@ class TestAnimeSource :
         val target = client.newCall(GET("$baseUrl/resolve", headers)).execute().use { it.obj()["url"]!!.jsonPrimitive.content }
         return video.copy(videoUrl = baseUrl + target)
     }
+
+    // Aniyomi's local video server: some extensions serve a video they
+    // put together (or decrypt) themselves.
+    override fun createHttpServer(): HttpServer =
+        object : HttpServer() {
+            override fun serve(session: fi.iki.elonen.NanoHTTPD.IHTTPSession): fi.iki.elonen.NanoHTTPD.Response =
+                newFixedLengthResponse(fi.iki.elonen.NanoHTTPD.Response.Status.OK, "video/mp4", "served by the extension at ${session.uri}")
+        }
 
     // Higher resolutions first.
     override fun List<Video>.sortVideos(): List<Video> = sortedByDescending { it.resolution ?: 0 }

@@ -1,18 +1,19 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Floating card that appears when a new version is downloaded (or can be).
+// In ENO, updates are added directly to Notifications without a floating banner.
 Item {
     id: banner
-    readonly property bool shown: Updater.state === "ready" || (Updater.state === "available" && !Updater.canInstall)
-    property bool dismissed: false
+    readonly property bool shown: false
+    property bool dismissed: true
+    visible: false
 
     width: Math.min(parent.width - 32, 420)
     height: content.implicitHeight + 28
     anchors.horizontalCenter: parent.horizontalCenter
     y: shown && !dismissed ? parent.height - height - 24 - (Theme.compact ? 70 : 0) : parent.height + 20
     opacity: shown && !dismissed ? 1 : 0
-    visible: opacity > 0
     Behavior on y { NumberAnimation { duration: Motion.page; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
     Behavior on opacity { NumberAnimation { duration: Motion.normal } }
 

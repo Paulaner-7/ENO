@@ -1,0 +1,3 @@
+{"hosters": [
+  {"name": "Local", "videos": [{"url": "/served.mp4", "title": "Local 720p", "resolution": 720, "local": true}]}
+]}

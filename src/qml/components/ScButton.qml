@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Text button. variant: "primary" | "secondary" | "ghost" | "plain" | "danger".
 // iconAfter puts the icon after the text (an arrow on "Continue").
@@ -71,7 +71,7 @@ AbstractButton {
         Rectangle {
             anchors.fill: parent
             anchors.margins: -3
-            radius: height / 2
+            radius: Theme.pill(height)
             color: "transparent"
             border.width: 2
             border.color: Theme.alpha(Theme.accent, 0.6)

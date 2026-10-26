@@ -1,0 +1,125 @@
+import QtQuick
+import QtQuick.Controls.Basic
+import Scancore
+
+// Adding or changing one of the reader's own comic servers (Komga, Kavita,
+// Suwayomi): its kind, address and login, saved and tried at once.
+Dialog {
+    id: dialog
+    property var server: ({})
+    property string kind: "komga"
+    property var testTask: null
+    property string outcome: ""
+
+    function start(existing) {
+        server = existing || {}
+        kind = server.kind || "komga"
+        nameField.text = server.label || ""
+        urlField.text = server.url || ""
+        userField.text = server.username || ""
+        passwordField.text = ""
+        keyField.text = ""
+        outcome = ""
+        testTask = null
+        open()
+    }
+    function save() {
+        const id = Comics.saveServer({ id: server.id || "", kind: kind, label: nameField.text, url: urlField.text,
+                                       username: userField.text, password: passwordField.text, apiKey: keyField.text })
+        server = Object.assign({}, server, { id: id })
+        outcome = qsTr("Trying it…")
+        testTask = Comics.testServer(id)
+    }
+    Connections {
+        target: dialog.testTask
+        function onFinished(r) {
+            dialog.outcome = r.count === 1 ? qsTr("Connected: 1 series found.") : qsTr("Connected: %1 series found.").arg(r.count)
+        }
+        function onFailed(error) { dialog.outcome = error }
+    }
+
+    parent: Overlay.overlay
+    anchors.centerIn: parent
+    width: Math.min(460, (parent ? parent.width : 460) - 32)
+    modal: true
+    focus: true
+    padding: 24
+    Overlay.modal: Rectangle { color: Theme.overlay }
+    background: GlassPanel {
+        radius: Theme.radiusXl
+        fill: Theme.surface
+        border.width: 1
+        border.color: Theme.borderStrong
+    }
+
+    contentItem: Column {
+        spacing: 14
+        Text {
+            width: parent.width
+            text: dialog.server.id ? qsTr("Your server") : qsTr("Add your server")
+            color: Theme.text
+            font.family: Theme.fontDisplay
+            font.pixelSize: Theme.textXl
+            font.weight: Font.DemiBold
+        }
+        Text {
+            width: parent.width
+            text: qsTr("Read the comics on your own Komga, Kavita or Suwayomi server. The login stays on this device.")
+            color: Theme.textMuted
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+            wrapMode: Text.Wrap
+        }
+        Segmented {
+            options: [{ value: "komga", label: "Komga" }, { value: "kavita", label: "Kavita" }, { value: "suwayomi", label: "Suwayomi" }]
+            value: dialog.kind
+            onPicked: (v) => dialog.kind = v
+        }
+        InlineField { id: nameField; width: parent.width; placeholderText: qsTr("Name (optional)") }
+        InlineField {
+            id: urlField
+            width: parent.width
+            placeholderText: dialog.kind === "suwayomi" ? "http://192.168.1.20:4567" : dialog.kind === "kavita" ? "http://192.168.1.20:5000" : "http://192.168.1.20:25600"
+            inputMethodHints: Qt.ImhUrlCharactersOnly | Qt.ImhNoAutoUppercase
+        }
+        InlineField {
+            id: userField
+            width: parent.width
+            placeholderText: dialog.kind === "komga" ? qsTr("Email") : qsTr("User name") + (dialog.kind === "suwayomi" ? qsTr(" (if it asks for one)") : "")
+            inputMethodHints: Qt.ImhNoAutoUppercase
+        }
+        InlineField {
+            id: passwordField
+            width: parent.width
+            echoMode: TextInput.Password
+            placeholderText: dialog.server.hasPassword ? qsTr("Password (saved; type to change)") : qsTr("Password")
+        }
+        InlineField {
+            id: keyField
+            visible: dialog.kind === "kavita"
+            width: parent.width
+            echoMode: TextInput.Password
+            placeholderText: dialog.server.hasKey ? qsTr("API key (saved; type to change)") : qsTr("Or an API key, instead of the login")
+        }
+        Text {
+            visible: dialog.outcome.length > 0
+            width: parent.width
+            text: dialog.outcome
+            color: dialog.testTask && dialog.testTask.ok ? Theme.success : dialog.testTask && dialog.testTask.loading ? Theme.textMuted : Theme.danger
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.textSm
+            wrapMode: Text.Wrap
+        }
+        Row {
+            anchors.right: parent.right
+            spacing: 8
+            ScButton { text: qsTr("Close"); variant: "ghost"; onClicked: dialog.close() }
+            ScButton {
+                text: qsTr("Save and try")
+                variant: "primary"
+                enabled: urlField.text.trim().length > 0 && !(dialog.testTask && dialog.testTask.loading)
+                onClicked: dialog.save()
+            }
+        }
+    }
+}

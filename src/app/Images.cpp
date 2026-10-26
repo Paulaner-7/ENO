@@ -516,11 +516,14 @@ public:
         const auto *o = static_cast<const PanelMaterial *>(other);
         if (o->texture != texture)
             return texture < o->texture ? -1 : 1;
-        return int(bicubic) - int(o->bicubic);
+        if (bicubic != o->bicubic)
+            return int(bicubic) - int(o->bicubic);
+        return sharpen < o->sharpen ? -1 : sharpen > o->sharpen ? 1 : 0;
     }
 
     QSGTexture *texture;
     bool bicubic = false;
+    float sharpen = 0;
 };
 
 class PanelShader : public QSGMaterialShader {
@@ -530,7 +533,8 @@ public:
         setShaderFileName(FragmentStage, QStringLiteral(":/shaders/panel.frag.qsb"));
     }
 
-    // std140: mat4 qt_Matrix, float qt_Opacity, float bicubic, vec2 texSize.
+    // std140: mat4 qt_Matrix, float qt_Opacity, float bicubic, vec2 texSize,
+    // float sharpen.
     bool updateUniformData(RenderState &state, QSGMaterial *newMaterial, QSGMaterial *) override {
         auto *data = state.uniformData()->data();
         if (state.isMatrixDirty())
@@ -541,7 +545,7 @@ public:
         }
         const auto *material = static_cast<PanelMaterial *>(newMaterial);
         const auto size = material->texture->textureSize();
-        const float values[3] = {material->bicubic ? 1.f : 0.f, float(size.width()), float(size.height())};
+        const float values[4] = {material->bicubic ? 1.f : 0.f, float(size.width()), float(size.height()), material->sharpen};
         std::memcpy(data + 68, values, sizeof values);
         return true;
     }
@@ -569,12 +573,13 @@ public:
 
     QSGTexture *texture() const { return m_texture.get(); }
 
-    void place(const QRectF &rect, QSGTexture::Filtering filtering, bool mipmaps, bool bicubic) {
+    void place(const QRectF &rect, QSGTexture::Filtering filtering, bool mipmaps, bool bicubic, float sharpen) {
         // Bicubic sampling builds on bilinear samples.
         m_texture->setFiltering(bicubic ? QSGTexture::Linear : filtering);
         m_texture->setMipmapFiltering(mipmaps ? QSGTexture::Linear : QSGTexture::None);
-        if (m_blending.bicubic != bicubic) {
+        if (m_blending.bicubic != bicubic || m_blending.sharpen != sharpen) {
             m_blending.bicubic = m_opaque.bicubic = bicubic;
+            m_blending.sharpen = m_opaque.sharpen = sharpen;
             markDirty(DirtyMaterial);
         }
         if (rect != m_rect) {
@@ -675,6 +680,15 @@ void PanelImage::setCropBorders(bool crop) {
     m_cropBorders = crop;
     emit sourceChanged();
     startSoon();
+}
+
+void PanelImage::setSharpen(qreal sharpen) {
+    sharpen = std::clamp<qreal>(sharpen, 0, 1);
+    if (qFuzzyCompare(sharpen + 1, m_sharpen + 1))
+        return;
+    m_sharpen = sharpen;
+    emit sharpenChanged();
+    update();
 }
 
 void PanelImage::setFilter(const QString &filter) {
@@ -908,7 +922,7 @@ QSGNode *PanelImage::updatePaintNode(QSGNode *old, UpdatePaintNodeData *) {
         const auto texSize = tile->texture()->textureSize();
         const double h = texSize.height() * (m_size.width() / double(texSize.width())) * scale;
         tile->place(QRectF(0, y, width(), h), exact ? QSGTexture::Nearest : QSGTexture::Linear, m_textureMipmaps && !exact && !larger,
-                    larger);
+                    larger, float(m_sharpen));
         y += h;
     }
     return root;

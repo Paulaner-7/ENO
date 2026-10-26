@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // One Settings category on its own page (phones).
 Item {

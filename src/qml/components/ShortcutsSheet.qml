@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Every keyboard shortcut on one sheet, as set in Settings → Keyboard. Opens
 // with ? or from the command palette.
@@ -92,6 +92,8 @@ Popup {
         }
 
         Flickable {
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             WheelScroll {}
             anchors.fill: parent
             anchors.topMargin: 76

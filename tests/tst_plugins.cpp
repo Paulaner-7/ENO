@@ -27,6 +27,14 @@ private slots:
     void initTestCase() {
         Database::open(m_dir.filePath(QStringLiteral("test.db")));
         Http::setTestHandler([this](const Request &request) -> std::optional<Response> {
+            if (request.url.host() == QLatin1String("music.test")) {
+                Response r;
+                r.status = 200;
+                r.finalUrl = request.url;
+                r.contentType = "application/json";
+                r.body = R"([{"n":7,"name":"Gurenge","by":"LiSA","s":239.5}])";
+                return r;
+            }
             if (request.url.host() != QLatin1String("novels.test"))
                 return std::nullopt;
             Response r;

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // The list view of a library: one row per series with a small cover, title,
 // subtitle, progress and a badge. Like CoverGrid, it lives inside a

@@ -22,4 +22,5 @@ dependencies {
     api(libs.jsoup)
     api(libs.rxjava)
     api(libs.injekt)
+    api(libs.nanohttpd)
 }

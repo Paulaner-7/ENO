@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // The bar along the bottom of a page in edit mode: what to do, Reset and
 // Done. `arrangers` are the page's PageArrangers (Reset clears them all).

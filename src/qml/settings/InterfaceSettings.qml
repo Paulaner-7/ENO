@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 SettingsPane {
     id: pane
@@ -102,8 +102,199 @@ SettingsPane {
         }
     }
 
+    // Standard or Retro, drawn small.
+    component LookPreview: Item {
+        id: look
+        property bool retro: false
+        anchors.fill: parent
+        Rectangle { anchors.fill: parent; color: look.retro ? "#101012" : Theme.surface2 }
+        // Standard: a sidebar and covers.
+        Rectangle { visible: !look.retro; width: 40; height: parent.height; color: Theme.surface3 }
+        Row {
+            visible: !look.retro
+            x: 52; y: 22; spacing: 5
+            Repeater { model: 3; Rectangle { width: 18; height: 26; radius: 3; color: Theme.borderStrong } }
+        }
+        // Retro: the big thin title, a header and tiles in the accent.
+        Text {
+            visible: look.retro
+            x: 6; y: -8
+            text: "scancore"
+            color: Theme.tile
+            font.family: "Selawik"
+            font.pixelSize: 30
+            font.weight: Font.Light
+        }
+        Grid {
+            visible: look.retro
+            x: 8; y: 34; columns: 4; spacing: 3
+            Repeater {
+                model: [1, 0, 1, 1, 0, 1, 1, 0]
+                Rectangle { width: 15; height: 15; color: modelData ? Theme.tile : "#3a3a40" }
+            }
+        }
+    }
+
     SettingsGroup {
-        visible: App.platform !== "android"
+        title: qsTr("Look")
+        note: qsTr("Retro: a panorama hub with tiles, big type and an app bar, in the manner of Windows Phone.")
+        Flow {
+            x: 12
+            width: parent.width - 24
+            topPadding: 12
+            bottomPadding: 12
+            spacing: 12
+            Repeater {
+                model: [{ value: "standard", label: qsTr("Standard"), detail: qsTr("Pages and navigation") },
+                        { value: "retro", label: qsTr("Retro"), detail: qsTr("Tiles and panoramas") }]
+                ChoiceTile {
+                    required property var modelData
+                    width: pane.tileWidth
+                    label: modelData.label
+                    detail: modelData.detail
+                    selected: (Theme.retro ? "retro" : "standard") === modelData.value
+                    onClicked: App.setSetting("uiMode", modelData.value)
+                    LookPreview { retro: modelData.value === "retro" }
+                }
+            }
+        }
+    }
+
+    SettingsGroup {
+        visible: Theme.retro
+        title: qsTr("Retro")
+        note: qsTr("Hold a tile on the hub to resize, move or unpin it. Series pages have Pin to the hub.")
+        SettingRow {
+            iconName: "type"
+            title: qsTr("Hub title")
+            description: qsTr("The big word across the top of the hub.")
+            InlineField {
+                width: 180
+                text: Retro.title
+                placeholderText: "scancore"
+                maximumLength: 24
+                onEditingFinished: App.setSetting("retroTitle", text.trim())
+            }
+        }
+        SettingRow {
+            iconName: "palette"
+            title: qsTr("Title colour")
+            Segmented {
+                options: [{ value: "gradient", label: qsTr("Accent blend") }, { value: "plain", label: qsTr("Plain") }]
+                value: Retro.gradientTitle ? "gradient" : "plain"
+                onPicked: (v) => App.setSetting("retroTitleColor", v)
+            }
+        }
+        SettingRow {
+            iconName: "layers"
+            title: qsTr("Background")
+            description: qsTr("Behind the hub, moving slower than the tiles.")
+            Segmented {
+                options: [{ value: "recent", label: qsTr("Last read") }, { value: "theme", label: qsTr("Theme picture") },
+                          { value: "none", label: qsTr("None") }]
+                value: Retro.background
+                onPicked: (v) => App.setSetting("retroBackground", v)
+            }
+        }
+        SettingRow {
+            iconName: "type"
+            title: qsTr("Headers")
+            Segmented {
+                options: [{ value: "upper", label: qsTr("UPPERCASE") }, { value: "lower", label: qsTr("lowercase") }]
+                value: Retro.upperCase ? "upper" : "lower"
+                onPicked: (v) => App.setSetting("retroCase", v)
+            }
+        }
+        SettingRow {
+            iconName: "refresh-cw"
+            title: qsTr("Live tiles")
+            description: qsTr("Tiles turn over now and then to show new chapters and where you are.")
+            Toggle { checked: Retro.liveTiles; onToggled: App.setSetting("retroLiveTiles", checked) }
+        }
+        SettingRow {
+            iconName: "columns-2"
+            title: qsTr("Hub sections")
+            description: qsTr("Which sections the hub shows, in this order. Four or five are easiest to find your way in.")
+        }
+        Repeater {
+            model: (Retro.sectionList, Retro.sectionKeys.sort((a, b) => {
+                const order = Retro.sectionList.map(s => s.key)
+                const ia = order.indexOf(a), ib = order.indexOf(b)
+                return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
+            }))
+            SettingRow {
+                id: sectionRow
+                required property string modelData
+                readonly property var shown: Retro.sectionList.map(s => s.key)
+                readonly property int at: shown.indexOf(modelData)
+                title: Retro.sectionLabel(modelData)
+                Row {
+                    spacing: 4
+                    IconButton {
+                        iconName: "chevron-up"
+                        tip: qsTr("Earlier")
+                        enabled: sectionRow.at > 0
+                        onClicked: {
+                            const list = sectionRow.shown.slice()
+                            list.splice(sectionRow.at, 1)
+                            list.splice(sectionRow.at - 1, 0, sectionRow.modelData)
+                            Retro.setSections(list)
+                        }
+                    }
+                    IconButton {
+                        iconName: "chevron-down"
+                        tip: qsTr("Later")
+                        enabled: sectionRow.at >= 0 && sectionRow.at < sectionRow.shown.length - 1
+                        onClicked: {
+                            const list = sectionRow.shown.slice()
+                            list.splice(sectionRow.at, 1)
+                            list.splice(sectionRow.at + 1, 0, sectionRow.modelData)
+                            Retro.setSections(list)
+                        }
+                    }
+                    Toggle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked: sectionRow.at >= 0
+                        enabled: !(checked && sectionRow.shown.length <= 1)
+                        onToggled: {
+                            const list = sectionRow.shown.filter(k => k !== sectionRow.modelData)
+                            if (checked) list.push(sectionRow.modelData)
+                            Retro.setSections(list)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SettingsGroup {
+        visible: !Router.animeOnly
+        title: qsTr("Sections")
+        SettingRow {
+            iconName: "layers"
+            title: qsTr("What you read and watch")
+            description: qsTr("The tabs, Home and Retro's hub show these. A link still opens the others.")
+            Row {
+                spacing: 6
+                Repeater {
+                    model: [{ key: "comic", label: qsTr("Comics") }, { key: "novel", label: qsTr("Novels") }, { key: "anime", label: qsTr("Anime") }]
+                    Chip {
+                        required property var modelData
+                        readonly property var shown: { const s = Array.from(App.settings.shownMedia || []); return s.length ? s : ["comic", "novel", "anime"] }
+                        text: modelData.label
+                        selected: shown.indexOf(modelData.key) >= 0
+                        iconName: selected ? "check" : ""
+                        // One always stays.
+                        enabled: !(selected && shown.length === 1)
+                        onClicked: Router.setShownMedia(selected ? shown.filter(m => m !== modelData.key) : shown.concat([modelData.key]))
+                    }
+                }
+            }
+        }
+    }
+
+    SettingsGroup {
+        visible: App.platform !== "android" && !Theme.retro
         title: qsTr("Navigation")
         note: qsTr("Narrow windows and phones always use tabs along the bottom.")
         Flow {
@@ -235,6 +426,24 @@ SettingsPane {
             }
         }
         SettingRow {
+            visible: App.platform === "android"
+            iconName: "gauge"
+            title: qsTr("Highest refresh rate")
+            description: qsTr("Scroll and animate at your screen's fastest rate, such as 120 Hz, instead of the rate the phone picks for apps. Uses a little more battery.")
+            Toggle { checked: App.settings.highRefresh !== false; onToggled: App.setSetting("highRefresh", checked) }
+        }
+        SettingRow {
+            iconName: "hand"
+            title: qsTr("Fling glide")
+            description: App.platform === "android" ? qsTr("How long lists keep moving after a swipe.")
+                                                    : qsTr("How long lists keep moving after a touchpad or touch screen swipe.")
+            Segmented {
+                options: [{ value: "short", label: qsTr("Short") }, { value: "default", label: qsTr("Default") }, { value: "long", label: qsTr("Long") }]
+                value: App.settings.flingGlide || "default"
+                onPicked: (v) => App.setSetting("flingGlide", v)
+            }
+        }
+        SettingRow {
             iconName: "sparkles"
             title: qsTr("Reduce motion")
             description: qsTr("Turns off page transitions, hover lifts, animated backgrounds and other animations.")
@@ -266,7 +475,7 @@ SettingsPane {
         title: qsTr("Start")
         SettingRow {
             iconName: "house"
-            title: qsTr("Open SCANCORE on")
+            title: qsTr("Open ENO on")
             description: qsTr("The page you see when the app starts.")
             Select {
                 model: [{ value: "home", label: "Home" }, { value: "comics", label: qsTr("Comics") }, { value: "novels", label: qsTr("Novels") },

@@ -12,8 +12,11 @@
 namespace sc::comics {
 
 QVariantMap Summary::toMap() const {
-    return {{"title", title}, {"url", url},       {"cover", cover},   {"type", type},
-            {"author", author}, {"genres", genres}, {"views", views}, {"source", source}};
+    QVariantMap map{{"title", title}, {"url", url},       {"cover", cover},   {"type", type},
+                    {"author", author}, {"genres", genres}, {"views", views}, {"source", source}};
+    if (units > 0)
+        map.insert(QStringLiteral("units"), units);
+    return map;
 }
 
 QVariantMap Chapter::toMap() const {

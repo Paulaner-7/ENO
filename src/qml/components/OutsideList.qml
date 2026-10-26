@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // A place in a ListView's header for a field that must not be inside the
 // list. A ListView gives its first row focus whenever its model is

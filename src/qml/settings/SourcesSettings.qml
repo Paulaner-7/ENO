@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 SettingsPane {
     id: pane
@@ -108,6 +108,42 @@ SettingsPane {
         }
     }
 
+    // The reader's own Komga, Kavita and Suwayomi servers.
+    ServerDialog { id: serverDialog; onClosed: pane.serversChanged() }
+    signal serversChanged()
+    SettingsGroup {
+        title: qsTr("Your servers")
+        note: qsTr("Komga, Kavita and Suwayomi servers you run: their comics are a source like the others, searched with them and saved to the library.")
+        Repeater {
+            // A handful, as many as the reader runs.
+            model: (pane.serversChanged, Comics.servers())
+            SettingRow {
+                required property var modelData
+                iconName: "server"
+                title: modelData.label
+                description: modelData.kind.charAt(0).toUpperCase() + modelData.kind.slice(1) + " · " + modelData.url
+                Row {
+                    spacing: 4
+                    IconButton { iconName: "pencil"; tip: qsTr("Change"); onClicked: serverDialog.start(modelData) }
+                    IconButton { iconName: "external-link"; tip: qsTr("Open in the browser"); onClicked: App.openUrl(modelData.url) }
+                    IconButton {
+                        iconName: "trash"
+                        tip: qsTr("Remove")
+                        onClicked: {
+                            Comics.removeServer(modelData.id)
+                            pane.serversChanged()
+                        }
+                    }
+                }
+            }
+        }
+        SettingRow {
+            iconName: "plus"
+            title: qsTr("Add your server")
+            ScButton { text: qsTr("Add"); onClicked: serverDialog.start(null) }
+        }
+    }
+
     // Extensions from the repositories the user added.
     readonly property var extensionRepos: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.repositories()) }
     readonly property int extensionCount: { App.dependOn(Extensions.revision); return Router.reachable(Extensions.installed()).length }
@@ -129,6 +165,12 @@ SettingsPane {
             title: qsTr("Add a repository")
             description: qsTr("Paste a repository link, or open one from a repository's page with SCANCORE.")
             ScButton { text: qsTr("Add"); onClicked: Router.addRepository("") }
+        }
+        SettingRow {
+            iconName: "gauge"
+            title: qsTr("Diagnostics")
+            description: qsTr("Whether the extensions runtime answers, a quick test of a source, and the sites each extension contacted.")
+            ScButton { text: qsTr("Open"); variant: "ghost"; onClicked: Router.openExtensionsDiagnostics() }
         }
         // For bug reports: what extensions reported (computers).
         SettingRow {

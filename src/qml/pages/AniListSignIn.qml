@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Connecting AniList without copying anything: AniList's own sign-in page,
 // inside SCANCORE, and the account is connected as soon as AniList hands the

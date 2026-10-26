@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // One source by itself: its popular and latest lists, and searches with its
 // own filters, a page at a time as the list scrolls. Comics' and anime's

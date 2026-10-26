@@ -42,10 +42,13 @@ public:
     Q_INVOKABLE void retry(int id);
     Q_INVOKABLE void retryFailed();
     Q_INVOKABLE void clearFinished();
-    QString folder() const;
+    Q_INVOKABLE QString folder() const;
     bool hasCustomFolder() const;
     Q_INVOKABLE void setFolder(const QString &folder);
     Q_INVOKABLE void resetFolder();
+    // The novel's downloaded chapters as an EPUB for e-readers. Kept for the
+    // (unreachable in ENO) comic and novel pages; anime never calls it.
+    Q_INVOKABLE sc::Task *exportEpub(const QString &seriesId);
     Q_INVOKABLE QString sizeOnDisk() const;
 
     // A downloaded episode as the player takes a video ({url, subtitles,

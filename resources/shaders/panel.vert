@@ -11,6 +11,7 @@ layout(std140, binding = 0) uniform buf {
     float qt_Opacity;
     float bicubic;
     vec2 texSize;
+    float sharpen;
 };
 
 void main() {

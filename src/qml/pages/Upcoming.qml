@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // One release radar for everything you follow: anime episodes as AniList
 // schedules them, and the next comic and novel chapters as each series'

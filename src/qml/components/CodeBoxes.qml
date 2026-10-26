@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // An access code typed into one box per character. One hidden input takes
 // the typing (and pasting), so backspace and phone keyboards just work.

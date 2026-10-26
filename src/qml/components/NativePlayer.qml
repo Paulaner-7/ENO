@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Plays a video from an anime extension with SCANCORE's own player (libmpv,
 // MpvPlayer), with controls along the bottom: play, episodes, seek, time,
@@ -32,6 +32,12 @@ Item {
     property bool hasPrev: false
     // Full screen now (WatchPage: phones in landscape, desktops' window).
     property bool fullScreen: false
+    // How far the picture may reach past the sides (a phone's cutout, kept
+    // clear by the page): Stretch and Crop to fill use it, so they fill
+    // the whole screen; the controls stay clear of it.
+    property real bleedLeft: 0
+    property real bleedRight: 0
+    readonly property bool fills: ["stretch", "crop"].includes(App.settings.playerFit)
     property bool hasNext: false
     readonly property bool controlsShown: chromeShown || mpv.paused || mpv.buffering || seekBar.pressed || panelOpen
 
@@ -50,6 +56,8 @@ Item {
 
     function seek(seconds) { mpv.seek(seconds) }
     function togglePause() { mpv.togglePause(); interacted() }
+    // A watch party's host playing or paused.
+    function setPlaying(on) { if (mpv.loaded && !mpv.ended && on === mpv.paused) mpv.togglePause() }
     function seekBy(seconds) { mpv.seekBy(seconds); interacted() }
     function changeVolume(delta) {
         const v = Math.max(0, Math.min(130, Math.round(mpv.volume + delta)))
@@ -134,6 +142,8 @@ Item {
     MpvPlayer {
         id: mpv
         anchors.fill: parent
+        anchors.leftMargin: root.fills ? -root.bleedLeft : 0
+        anchors.rightMargin: root.fills ? -root.bleedRight : 0
         source: root.url
         headers: root.video.headers || ({})
         options: root.video.mpvArgs || ({})

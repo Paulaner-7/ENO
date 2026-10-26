@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // Novel discovery (the chosen catalogue's and Royal Road's shelves) and
 // search, through the catalogue or across novel sources.

@@ -205,8 +205,9 @@ QList<Entry> entries(const QString &dir) {
         if (listed.isValid()) {
             for (const auto &line : listed.toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts)) {
                 const auto parts = line.split(QLatin1Char('\t'));
-                if (parts.size() == 3 && !parts[0].startsWith(QLatin1Char('.')))
-                    out.append({parts[2], parts[0], parts[1] == QLatin1String("1")});
+                if (parts.size() >= 3 && !parts[0].startsWith(QLatin1Char('.')))
+                    out.append({parts[2], parts[0], parts[1] == QLatin1String("1"),
+                                parts.size() >= 5 ? parts[3].toLongLong() : -1, parts.size() >= 5 ? parts[4].toLongLong() / 1000 : 0});
             }
             return out;
         }
@@ -214,7 +215,7 @@ QList<Entry> entries(const QString &dir) {
 #endif
     for (const auto &info : QDir(dir).entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
         if (!info.fileName().startsWith(QLatin1Char('.')))
-            out.append({info.absoluteFilePath(), info.fileName(), info.isDir()});
+            out.append({info.absoluteFilePath(), info.fileName(), info.isDir(), info.size(), info.lastModified().toSecsSinceEpoch()});
     return out;
 }
 

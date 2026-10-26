@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // A Lucide icon tinted to a colour, or the Apple SF Symbol of the same name
 // (filled variant where the symbol set has one).

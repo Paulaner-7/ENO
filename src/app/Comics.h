@@ -29,7 +29,14 @@ public:
     // MyAnimeList), which knows far more series and their other
     // names than any one source: {comics: [{catalog, catalogId, hid, title,
     // titles, cover, type, status, year, ids, ...}], catalog, label}.
-    Q_INVOKABLE sc::Task *catalog(const QString &query);
+    // `filters`: Comick's search filters (Catalogue.h, comickQuery); with
+    // them an empty query browses.
+    Q_INVOKABLE sc::Task *catalog(const QString &query, const QVariantMap &filters = {});
+    // Comick's genres ([{slug, name, group, count}]) and tags ([{slug,
+    // title, count}]: the 300 most used, or with `all` every one, about
+    // 9,500), cached for a day.
+    Q_INVOKABLE sc::Task *comickGenres();
+    Q_INVOKABLE sc::Task *comickTags(bool all = false);
     // That catalogue's shelves: {catalog, label, shelves: [{key, items}]}.
     Q_INVOKABLE sc::Task *catalogFeeds(bool mature = false);
     // Where a catalogue title can be read: the series on SCANCORE's sources
@@ -68,6 +75,15 @@ public:
     Q_INVOKABLE sc::Task *latest(int limit = 40);
 
     Q_INVOKABLE QString imageReferer(const QString &url) const;
+    // The reader's own servers (Settings → Sources → Your servers):
+    // [{id, kind, label, url, username, hasPassword, hasKey}] (no secrets).
+    Q_INVOKABLE QVariantList servers() const;
+    // Adds or changes one ({id?, kind, label, url, username, password,
+    // apiKey}; an empty password or key keeps the saved one). Returns its id.
+    Q_INVOKABLE QString saveServer(const QVariantMap &server);
+    Q_INVOKABLE void removeServer(const QString &id);
+    // Logs in and searches once: {ok, count} or fails with why.
+    Q_INVOKABLE sc::Task *testServer(const QString &id);
     // The series' page on its site, for "Open on the website".
     Q_INVOKABLE sc::Task *webUrl(const QString &url);
     // Warms the image cache for the first pages of an upcoming chapter.
@@ -75,7 +91,8 @@ public:
 
     // Catalogue helpers shared with Novels (blocking).
     static QVariantMap catalogShelves(const QString &media, bool mature);
-    static QVariantMap catalogSearch(const QString &media, const QString &query, bool mature);
+    static QVariantMap catalogSearch(const QString &media, const QString &query, bool mature,
+                                     const QVariantMap &filters = {});
     static QStringList catalogNames(const QVariantMap &item);
 
     // Chapter list as library units ({key, number, title, url, released}).

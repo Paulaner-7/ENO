@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A source's search filters as its extension describes them: headings,
 // lists, text, check boxes, include/exclude boxes, sorting and groups of
@@ -60,9 +60,9 @@ Dialog {
             NumberAnimation { property: "scale"; to: 0.97; duration: Motion.fast }
         }
     }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }
@@ -105,6 +105,8 @@ Dialog {
     }
 
     contentItem: Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         implicitHeight: body.implicitHeight
         contentHeight: body.implicitHeight
         clip: true

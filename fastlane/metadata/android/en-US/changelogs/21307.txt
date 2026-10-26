@@ -1,0 +1,3 @@
+• Fixed empty pages and readers after updating to 2.12.1
+• Android TV: Back leaves the player; Settings scroll and work with the remote
+• Includes 2.12.1: the Retro look, translation as one story, the player freeze fix

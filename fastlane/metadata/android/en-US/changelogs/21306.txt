@@ -1,0 +1,3 @@
+• The Windows Phone look is now called Retro, with smooth animations
+• Translation reads a comic as one story; pick the language in the reader
+• Fixed the player freezing after the next episode

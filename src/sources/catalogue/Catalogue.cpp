@@ -90,9 +90,9 @@ public:
         return comickShelves(response.json().object(), mature);
     }
 
-    QList<Entry> search(const QString &, const QString &query, bool) override {
+    QList<Entry> search(const QString &, const QString &query, bool, const QVariantMap &filters) override {
         QUrl url(QStringLiteral("https://api.comick.dev/v1.0/search/"));
-        url.setQuery(QUrlQuery{{"q", query.left(100)}, {"page", "1"}, {"limit", "40"}, {"showall", "false"}});
+        url.setQuery(comickQuery(query, filters));
         const auto response = Http::get(url, kComickHeaders);
         if (!response.ok())
             throw Error(QStringLiteral("Comick's catalogue is unavailable right now (%1).").arg(response.status), response.status);
@@ -176,7 +176,7 @@ public:
         return out;
     }
 
-    QList<Entry> search(const QString &media, const QString &query, bool mature) override {
+    QList<Entry> search(const QString &media, const QString &query, bool mature, const QVariantMap &) override {
         auto variables = adultVariable(mature);
         variables.insert("search", query.left(100));
         const auto data = anilist(QStringLiteral("query ($search: String, $adult: Boolean) { Page(perPage: 40) { media(type: MANGA, "
@@ -245,7 +245,7 @@ public:
         return out;
     }
 
-    QList<Entry> search(const QString &media, const QString &query, bool mature) override {
+    QList<Entry> search(const QString &media, const QString &query, bool mature, const QVariantMap &) override {
         // MyAnimeList refuses queries shorter than three letters.
         if (query.size() < 3)
             return {};
@@ -286,6 +286,51 @@ private:
 };
 
 } // namespace
+
+QUrlQuery comickQuery(const QString &query, const QVariantMap &f) {
+    QUrlQuery q;
+    if (!query.isEmpty())
+        q.addQueryItem(QStringLiteral("q"), query.left(100));
+    q.addQueryItem(QStringLiteral("page"), QStringLiteral("1"));
+    q.addQueryItem(QStringLiteral("limit"), QStringLiteral("50"));
+    q.addQueryItem(QStringLiteral("showall"), f.value("showall").toBool() ? QStringLiteral("true") : QStringLiteral("false"));
+    // Comick's limits per list.
+    const auto states = [&f](const char *key, int wanted, int most) {
+        QStringList out;
+        const auto map = f.value(QLatin1String(key)).toMap();
+        for (auto it = map.cbegin(); it != map.cend() && out.size() < most; ++it) {
+            const auto v = it.value();
+            const int state = v.typeId() == QMetaType::QVariantMap ? v.toMap().value("state").toInt() : v.toInt();
+            if (state == wanted)
+                out.append(it.key());
+        }
+        return out;
+    };
+    const auto add = [&q](const QString &name, const QStringList &values) {
+        for (const auto &v : values)
+            q.addQueryItem(name, v);
+    };
+    add(QStringLiteral("genres"), states("genres", 1, 10));
+    add(QStringLiteral("excludes"), states("genres", 2, 40));
+    add(QStringLiteral("tags"), states("tags", 1, 10));
+    add(QStringLiteral("excluded-tags"), states("tags", 2, 30));
+    add(QStringLiteral("content_rating"), states("content", 1, 4));
+    add(QStringLiteral("excluded_content_rating"), states("content", 2, 4));
+    add(QStringLiteral("violence_rating"), states("violence", 1, 2));
+    add(QStringLiteral("excluded_violence_rating"), states("violence", 2, 2));
+    add(QStringLiteral("country"), f.value("country").toStringList().mid(0, 10));
+    add(QStringLiteral("demographic"), f.value("demographic").toStringList());
+    for (const char *key : {"sort", "status", "time", "from", "to", "minimum", "maximum"}) {
+        const auto value = f.value(QLatin1String(key)).toString();
+        if (!value.isEmpty() && value != QLatin1String("0"))
+            q.addQueryItem(QLatin1String(key), value);
+    }
+    if (const auto rating = f.value("rating").toDouble(); rating > 0)
+        q.addQueryItem(QStringLiteral("minimum_rating"), QString::number(rating));
+    if (f.value("completed").toBool())
+        q.addQueryItem(QStringLiteral("completed"), QStringLiteral("true"));
+    return q;
+}
 
 Entry comickEntry(const QJsonObject &c) {
     static const QHash<QString, QString> kinds{{"kr", "Manhwa"}, {"cn", "Manhua"}, {"jp", "Manga"}};

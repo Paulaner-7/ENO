@@ -1,11 +1,12 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Before a Mihon backup comes in: the repositories it names that are not
 // added here, and the extensions its series came from that are not
 // installed. With them, those series come back on their own sources;
-// without, they wait to be found by title. Opens only when there is
+// without, they wait to be found by title. Also the extensions of the other
+// sources set up in that app, so what was installed there is here too. Opens only when there is
 // something to offer (see start()).
 Dialog {
     id: dialog
@@ -16,8 +17,10 @@ Dialog {
     // Repository links ticked to add; extensions installed or not.
     property var chosenRepos: []
     property bool installExtensions: true
+    property bool installOthers: true
     readonly property var newRepos: preview ? preview.repositories.filter(r => !r.added) : []
-    readonly property var extensions: preview ? preview.extensions : []
+    readonly property var extensions: preview ? preview.extensions.filter(e => e.series > 0) : []
+    readonly property var otherExtensions: preview ? preview.extensions.filter(e => e.series === 0) : []
     readonly property int extensionSeries: extensions.reduce((n, e) => n + e.series, 0)
     readonly property bool needsRuntime: App.platform !== "android" && Extensions.runtimeAvailable && !Extensions.runtimeInstalled
     readonly property bool busy: runtimeTask !== null && runtimeTask.loading
@@ -33,7 +36,8 @@ Dialog {
     function begin() {
         const prepare = {
             repositories: dialog.chosenRepos,
-            extensions: dialog.installExtensions ? dialog.extensions.map(e => ({ kind: e.kind, pkg: e.pkg })) : []
+            extensions: (dialog.installExtensions ? dialog.extensions : []).concat(dialog.installOthers ? dialog.otherExtensions : [])
+                .map(e => ({ kind: e.kind, pkg: e.pkg }))
         }
         // Extensions run in the Extensions runtime on computers: it comes first.
         if (prepare.extensions.length > 0 && dialog.needsRuntime) {
@@ -54,6 +58,7 @@ Dialog {
         function onFinished(result) {
             dialog.chosenRepos = result.repositories.filter(r => !r.added && !r.error).map(r => r.url)
             dialog.installExtensions = true
+            dialog.installOthers = true
             // Nothing to offer: straight in. Mihon's downloads are offered
             // until a folder of them is chosen.
             if (result.repositories.every(r => r.added) && result.extensions.length === 0
@@ -77,9 +82,9 @@ Dialog {
     closePolicy: dialog.busy ? Popup.NoAutoClose : Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     Overlay.modal: Rectangle { color: Theme.overlay }
-    background: Rectangle {
+    background: GlassPanel {
         radius: Theme.radiusXl
-        color: Theme.surface
+        fill: Theme.surface
         border.width: 1
         border.color: Theme.borderStrong
     }
@@ -89,6 +94,8 @@ Dialog {
     contentItem: Column {
         spacing: 16
     Flickable {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         width: parent.width
         implicitHeight: body.implicitHeight
         // The window's height, less the margin, padding and buttons.
@@ -233,9 +240,51 @@ Dialog {
                     onToggled: dialog.installExtensions = checked
                 }
             }
+            // The other extensions installed there.
+            Item {
+                width: parent.width
+                height: Math.max(40, otherText.implicitHeight + 12)
+                visible: dialog.otherExtensions.length > 0
+                Column {
+                    id: otherText
+                    anchors.left: parent.left
+                    anchors.right: otherToggle.left
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 2
+                    Text {
+                        width: parent.width
+                        readonly property int count: dialog.otherExtensions.length
+                        readonly property string app: dialog.preview ? dialog.preview.app : "Mihon"
+                        text: dialog.extensions.length > 0
+                              ? (count === 1 ? qsTr("Also the other extension you had in %1").arg(app) : qsTr("Also the %1 other extensions you had in %2").arg(count).arg(app))
+                              : (count === 1 ? qsTr("Install the extension you had in %1").arg(app) : qsTr("Install the %1 extensions you had in %2").arg(count).arg(app))
+                        color: Theme.text
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textSm
+                        wrapMode: Text.Wrap
+                    }
+                    Text {
+                        width: parent.width
+                        text: dialog.otherExtensions.slice(0, 6).map(e => e.name).join(", ")
+                              + (dialog.otherExtensions.length > 6 ? qsTr(" and %1 more").arg(dialog.otherExtensions.length - 6) : "")
+                        color: Theme.textFaint
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.textXs
+                        wrapMode: Text.Wrap
+                    }
+                }
+                Toggle {
+                    id: otherToggle
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    checked: dialog.installOthers
+                    onToggled: dialog.installOthers = checked
+                }
+            }
             Text {
                 width: parent.width
-                visible: dialog.installExtensions && dialog.extensions.length > 0 && dialog.needsRuntime
+                visible: (dialog.installExtensions && dialog.extensions.length > 0 || dialog.installOthers && dialog.otherExtensions.length > 0) && dialog.needsRuntime
                 text: qsTr("Extensions run in the Extensions runtime, which downloads first (about 100 MB).")
                 color: Theme.textMuted
                 font.family: Theme.fontSans

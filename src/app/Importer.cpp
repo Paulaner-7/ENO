@@ -679,10 +679,11 @@ bool isAdded(const QSet<QString> &added, const backups::Repository &repo) {
 }
 
 // Extensions the backup's series came from that are not installed here,
-// with how many series each brings back: {kind:pkg -> (package, count)}.
-// Looks in the repositories added and in `more` (previews of others).
+// with how many series each brings back: {kind:pkg -> (package, count)};
+// then those of the other sources set up in that app (`configured`), with
+// none. Looks in the repositories added and in `more` (previews of others).
 QHash<QString, QPair<ext::Package, int>> neededExtensions(const QList<Item> &items, const QList<ext::Package> &more,
-                                                          int *unknown = nullptr) {
+                                                          int *unknown = nullptr, const QList<quint64> &configured = {}) {
     QSet<QString> installed;
     for (const auto &source : ext::Manager::sources())
         installed.insert(source.key);
@@ -705,6 +706,16 @@ QHash<QString, QPair<ext::Package, int>> neededExtensions(const QList<Item> &ite
         entry.first = *it;
         ++entry.second;
     }
+    // A source id alone does not say comic or anime (Aniyomi keeps both).
+    for (const auto id : configured)
+        for (const auto *kind : {"mihon", "aniyomi"}) {
+            const auto key = QLatin1String(kind) + QLatin1Char(':') + QString::number(id);
+            const auto it = bySource.constFind(key);
+            if (installed.contains(key) || it == bySource.constEnd())
+                continue;
+            auto &entry = out[ext::kindName(it->kind) + QLatin1Char(':') + it->pkg];
+            entry.first = *it;
+        }
     return out;
 }
 
@@ -738,7 +749,7 @@ Task *Importer::previewMihon(const QUrl &file) {
         }
         int unknown = 0;
         QVariantList extensions;
-        for (const auto &[package, count] : neededExtensions(backup.items, offered, &unknown))
+        for (const auto &[package, count] : neededExtensions(backup.items, offered, &unknown, backup.configuredSources))
             extensions.append(QVariantMap{{"kind", ext::kindName(package.kind)}, {"pkg", package.pkg}, {"name", package.name}, {"series", count}});
         std::sort(extensions.begin(), extensions.end(),
                   [](const QVariant &a, const QVariant &b) { return a.toMap().value("series").toInt() > b.toMap().value("series").toInt(); });
@@ -790,7 +801,7 @@ Task *Importer::importMihon(const QUrl &file, const QVariantMap &prepare) {
             wanted.insert(value.toMap().value("kind").toString() + QLatin1Char(':') + value.toMap().value("pkg").toString());
         if (!wanted.isEmpty()) {
             QList<std::function<bool()>> jobs;
-            for (const auto &[package, count] : neededExtensions(backup.items, {})) {
+            for (const auto &[package, count] : neededExtensions(backup.items, {}, nullptr, backup.configuredSources)) {
                 if (!wanted.contains(ext::kindName(package.kind) + QLatin1Char(':') + package.pkg))
                     continue;
                 jobs.append([kind = package.kind, pkg = package.pkg] {

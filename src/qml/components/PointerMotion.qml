@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // Reports real mouse movement over its parent. Qt Quick re-sends a hover at
 // the pointer's last position on every repainted frame, and on phones a

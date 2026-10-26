@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Dropdown. model: [{value, label}] ; bind `value`, handle `picked`.
 // On phones the choices open as a sheet from the bottom, titled `title`
@@ -24,6 +24,42 @@ ComboBox {
     onValueChanged: currentIndex = Math.max(0, indexOfValue(value))
     onModelChanged: currentIndex = Math.max(0, indexOfValue(value))
     onActivated: (index) => picked(valueAt(index))
+
+    // A TV's remote: while the list is closed the D-pad moves on to the next
+    // control (a ComboBox would step through its choices instead, and the
+    // focus got stuck there), and Select opens the list; in it the D-pad
+    // picks and Select chooses.
+    property bool openedByRemote: false
+    Keys.onPressed: (event) => {
+        if (!App.tv || popup.visible) return
+        const dirs = { [Qt.Key_Left]: "left", [Qt.Key_Right]: "right", [Qt.Key_Up]: "up", [Qt.Key_Down]: "down" }
+        if (dirs[event.key] !== undefined) {
+            event.accepted = true
+            if (Router.shell) Router.shell.moveFocus(dirs[event.key])
+        } else if (event.key === Qt.Key_Select || event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+            event.accepted = true
+            if (event.isAutoRepeat) return
+            openedByRemote = true
+            popup.open()
+        }
+    }
+    // The release of the press that opened the list would choose at once.
+    // ComboBox chooses on Enter and Return only; a remote's Select chooses too.
+    Keys.onReleased: (event) => {
+        if (!App.tv || (event.key !== Qt.Key_Select && event.key !== Qt.Key_Enter && event.key !== Qt.Key_Return)) return
+        if (openedByRemote) {
+            event.accepted = true
+            openedByRemote = false
+        } else if (event.key === Qt.Key_Select && popup.visible) {
+            event.accepted = true
+            const index = highlightedIndex
+            popup.close()
+            if (index >= 0 && index !== currentIndex) {
+                currentIndex = index
+                picked(valueAt(index))
+            }
+        }
+    }
 
     background: Rectangle {
         radius: Theme.radiusMd
@@ -123,6 +159,8 @@ ComboBox {
             NumberAnimation { property: "y"; to: menu.parent ? menu.parent.height : 800; duration: Motion.normal; easing.type: Easing.InCubic }
         }
         contentItem: ListView {
+            maximumFlickVelocity: Motion.flickVelocity
+            flickDeceleration: Motion.flickDeceleration
             clip: true
             implicitHeight: contentHeight
             model: control.popup.visible ? control.delegateModel : null

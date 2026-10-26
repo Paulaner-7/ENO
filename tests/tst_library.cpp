@@ -416,8 +416,16 @@ private slots:
         backup.message(2, category(QStringLiteral("Plan to read"), 1));
         backup.message(2, category(QStringLiteral("Empty one"), 4));
         backup.message(106, repo);
+        // Settings of two sources set up there (one with none of the
+        // library on it), and an app setting that is not a source's.
+        for (const auto *key : {"source_2499283573021220255", "source_7", "source_7", "source_x"}) {
+            ProtoWriter prefs;
+            prefs.text(1, QString::fromLatin1(key));
+            backup.message(105, prefs);
+        }
 
         const auto parsed = backups::parseMihonBackup(backup.data());
+        QCOMPARE(parsed.configuredSources, (QList<quint64>{2499283573021220255ull, 7}));
         QCOMPARE(parsed.lists, (QStringList{QStringLiteral("Weekly"), QStringLiteral("Favourites"), QStringLiteral("Empty one")}));
         QCOMPARE(parsed.repositories.size(), 1);
         QCOMPARE(parsed.repositories[0].name, QStringLiteral("Keiyoushi"));

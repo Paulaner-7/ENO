@@ -138,10 +138,10 @@ end
 
 
 def winget(version, setup_sha):
-    head = f"PackageIdentifier: MediumDev.ScanCore\nPackageVersion: {version}\n"
+    head = f"PackageIdentifier: MediumDev.Scancore\nPackageVersion: {version}\n"
     return {
-        "MediumDev.ScanCore.yaml": head + "DefaultLocale: en-US\nManifestType: version\nManifestVersion: 1.12.0\n",
-        "MediumDev.ScanCore.installer.yaml": head + f"""InstallerLocale: en-US
+        "MediumDev.Scancore.yaml": head + "DefaultLocale: en-US\nManifestType: version\nManifestVersion: 1.12.0\n",
+        "MediumDev.Scancore.installer.yaml": head + f"""InstallerLocale: en-US
 Platform:
   - Windows.Desktop
 MinimumOSVersion: 10.0.0.0
@@ -160,7 +160,7 @@ Installers:
 ManifestType: installer
 ManifestVersion: 1.12.0
 """,
-        "MediumDev.ScanCore.locale.en-US.yaml": head + f"""PackageLocale: en-US
+        "MediumDev.Scancore.locale.en-US.yaml": head + f"""PackageLocale: en-US
 Publisher: Medium Dev
 PackageName: SCANCORE
 License: MIT
@@ -222,7 +222,7 @@ def main():
     (out / "homebrew" / "Casks").mkdir(parents=True, exist_ok=True)
     (out / "homebrew" / "Casks" / "scancore.rb").write_text(cask(version, digests[f"SCANCORE-{version}-macos-universal.dmg"]))
     # winget keeps one folder per version; only the newest is kept here.
-    winget_root = out / "winget" / "MediumDev.ScanCore"
+    winget_root = out / "winget" / "MediumDev.Scancore"
     if winget_root.exists():
         for old in winget_root.iterdir():
             if old.is_dir() and old.name != version:

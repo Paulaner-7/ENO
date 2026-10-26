@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import ScanCore
+import Scancore
 
 // The last thing read or watched, large, on Home: its cover over a blurred
 // copy of itself, how far along it is, and one click to carry on.

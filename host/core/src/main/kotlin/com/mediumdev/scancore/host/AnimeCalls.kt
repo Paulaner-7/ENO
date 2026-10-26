@@ -88,12 +88,12 @@ class AnimeCalls(
                     } else {
                         source.resolveVideo(video) ?: throw HostError("This video is not available.", 404)
                     }
-                val ready = resolved.copy(initialized = true)
+                val ready = LocalServers.serve(source, resolved.copy(initialized = true))
                 AnimeCodec.video(handles.put(source, ready), ready, (source as? AnimeHttpSource)?.headers)
             }
             "fetchImage" -> fetchImage(source, params)
             "filters" -> AnimeCodec.filters(source.getFilterList())
-            "preferences" -> settings.describe(configurable(source))
+            "preferences" -> (source as? ConfigurableAnimeSource)?.let { settings.describe(Configurable.of(it)) } ?: JsonArray(emptyList())
             "setPreference" -> {
                 settings.set(configurable(source), params.string("key"), params["value"] ?: JsonNull)
                 JsonNull
@@ -188,7 +188,12 @@ class AnimeCalls(
                 if (video.videoUrl != "null" || http == null) video else video.copy(videoUrl = http.getVideoUrl(video))
             }
         val sorted = http?.run { withUrls.sortVideos() } ?: withUrls
-        return buildJsonArray { for (v in sorted) add(AnimeCodec.video(handles.put(source, v), v, http?.headers)) }
+        return buildJsonArray {
+            for (v in sorted) {
+                val served = LocalServers.serve(source, v)
+                add(AnimeCodec.video(handles.put(source, served), served, http?.headers))
+            }
+        }
     }
 
     // Covers through the source's own client and headers.

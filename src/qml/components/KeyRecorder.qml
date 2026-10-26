@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // An action's keys as key caps. Click to record new ones: the next key press
 // (with any modifiers) becomes the shortcut, Backspace leaves the action

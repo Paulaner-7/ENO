@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Bottom navigation for phones. The selection pill slides between tabs;
 // "More" opens the remaining sections and search.
@@ -10,6 +10,7 @@ Rectangle {
     signal navigate(string section)
     signal openPalette()
 
+    // The media the reader chose on the welcome (Settings → Interface).
     readonly property var tabs: [
         { key: "home", label: qsTr("Home"), icon: "house" },
         { key: "anime", label: qsTr("Anime"), icon: "tv" },
@@ -107,6 +108,7 @@ Rectangle {
         contentItem: Column {
             Repeater {
                 model: [
+                    { key: "notifications", label: qsTr("Notifications"), icon: Notifications.unread > 0 ? "bell-dot" : "bell" },
                     { key: "search", label: qsTr("Search"), icon: "search" },
                     { key: "activity", label: qsTr("Activity"), icon: "activity" },
                     { key: "settings", label: qsTr("Settings"), icon: "settings" }
@@ -118,6 +120,7 @@ Rectangle {
                     onClicked: {
                         more.close()
                         if (modelData.key === "search") bar.openPalette()
+                        else if (modelData.key === "notifications") Router.go("notifications")
                         else bar.navigate(modelData.key)
                     }
                     background: Rectangle { radius: Theme.radiusMd; color: parent.pressed ? Theme.surface3 : "transparent" }

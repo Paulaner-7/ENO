@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A cover with title and subtitle. Lifts and sharpens on hover, settles in
 // with a short staggered entrance, and reports its cover for the hero

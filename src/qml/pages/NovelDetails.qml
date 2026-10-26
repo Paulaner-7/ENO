@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 SeriesPage {
     media: "novel"

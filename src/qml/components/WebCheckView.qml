@@ -1,6 +1,6 @@
 import QtQuick
 import QtWebEngine
-import ScanCore
+import Scancore
 
 // A plain browser view for passing a site's browser check. Cookies it
 // receives are shared with SCANCORE's own requests (see WebBridge).

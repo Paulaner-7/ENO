@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 SettingsPane {
     id: pane
@@ -153,6 +153,84 @@ SettingsPane {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    SettingsGroup {
+        visible: !Theme.eink
+        title: qsTr("Glass")
+        SettingRow {
+            iconName: "layers"
+            title: qsTr("Glass menus and sheets")
+            description: qsTr("Menus, sheets and dialogs show what is behind them, blurred.")
+            Toggle { checked: App.settings.glass === true; onToggled: App.setSetting("glass", checked) }
+        }
+    }
+
+    // The phones' own twenty, square as their tiles.
+    SettingsGroup {
+        visible: Theme.retro
+        title: qsTr("Retro colours")
+        note: qsTr("The accent colours of Windows Phone, or any colour from the wheel. Tiles, the hub title and switches take it.")
+        Flow {
+            x: 16
+            width: parent.width - 32
+            topPadding: 16
+            bottomPadding: 14
+            spacing: 8
+            Repeater {
+                model: Theme.retroAccentNames
+                AbstractButton {
+                    id: retroSwatch
+                    required property string modelData
+                    readonly property bool selected: App.settings.accent === modelData
+                    width: 44
+                    height: 44
+                    Accessible.name: modelData.replace("retro-", "")
+                    hoverEnabled: true
+                    ToolTip.visible: hovered && !Theme.touch
+                    ToolTip.text: modelData.replace("retro-", "")
+                    onClicked: App.setSetting("accent", modelData)
+                    background: Rectangle {
+                        color: Theme.retroAccents[retroSwatch.modelData]
+                        border.width: retroSwatch.selected ? 3 : 0
+                        border.color: Theme.text
+                    }
+                    contentItem: Item {
+                        Icon { anchors.centerIn: parent; visible: retroSwatch.selected; name: "check"; size: 18; color: "white" }
+                    }
+                    scale: pressed ? 0.92 : 1
+                    Behavior on scale { NumberAnimation { duration: Motion.instant } }
+                }
+            }
+            // Any colour: the wheel, square like the rest.
+            AbstractButton {
+                id: retroCustom
+                readonly property bool selected: Theme.customAccent
+                width: 44
+                height: 44
+                Accessible.name: qsTr("Custom colour")
+                hoverEnabled: true
+                ToolTip.visible: hovered && !Theme.touch
+                ToolTip.text: qsTr("Custom colour")
+                onClicked: retroPicker.edit(Theme.customAccent ? Theme.accent : Theme.tile)
+                background: Rectangle {
+                    color: Theme.customAccent ? Theme.accent : Theme.surface2
+                    border.width: retroCustom.selected ? 3 : 1
+                    border.color: retroCustom.selected ? Theme.text : Theme.border
+                }
+                contentItem: Item {
+                    Image {
+                        anchors.centerIn: parent
+                        width: 26
+                        height: 26
+                        source: "image://colorwheel/" + Math.round(52 * Screen.devicePixelRatio)
+                        sourceSize: Qt.size(Math.round(52 * Screen.devicePixelRatio), Math.round(52 * Screen.devicePixelRatio))
+                    }
+                }
+                scale: pressed ? 0.92 : 1
+                Behavior on scale { NumberAnimation { duration: Motion.instant } }
             }
         }
     }
@@ -571,6 +649,15 @@ SettingsPane {
         id: basePicker
         title: qsTr("Window colour")
         onChanged: (c) => pane.update({ base: String(c).slice(0, 7) })
+    }
+    ColorPicker {
+        id: retroPicker
+        title: qsTr("Tile colour")
+        swatches: Theme.retroAccentNames.slice(0, 14).map(n => String(Theme.retroAccents[n]))
+        onChanged: (c) => {
+            App.setSetting("customAccent", String(c).slice(0, 7))
+            App.setSetting("accent", "custom")
+        }
     }
     ColorPicker {
         id: accentPicker

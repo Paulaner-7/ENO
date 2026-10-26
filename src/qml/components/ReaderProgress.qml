@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // How far through a chapter: the comic reader's progress bar, and its
 // previews in Settings → Reading and the welcome screens. Three looks:
@@ -25,6 +25,9 @@ Item {
     // How see-through the whole bar is (1 = solid).
     property real strength: 0.85
     property bool interactive: true
+    // Pages with reactions (PageReactions): a dot beside the bar at each.
+    property var marks: []
+    property color markColor: "#f59e0b"
     // Free space between the bar and the window's edge (status bar).
     property real inset: 0
     property real insetBottom: 0
@@ -99,6 +102,25 @@ Item {
                     color: bar.currentColor
                 }
             }
+        }
+    }
+
+    // Pages with reactions: dots just inside the bar's edge.
+    Repeater {
+        model: bar.count > 0 ? bar.marks.filter(m => m >= 0 && m < bar.count) : []
+        Rectangle {
+            required property int modelData
+            readonly property real along: (modelData + 0.5) / bar.count * bar.length
+            readonly property real pos: bar.horizontal && bar.reversed ? bar.length - along : along
+            width: 5
+            height: 5
+            radius: 2.5
+            color: bar.markColor
+            border.width: 1
+            border.color: Qt.rgba(0, 0, 0, 0.5)
+            x: bar.horizontal ? track.x + pos - width / 2
+                              : bar.edge === "right" ? track.x - width - 3 : track.x + track.width + 3
+            y: bar.horizontal ? track.y - height - 3 : track.y + pos - height / 2
         }
     }
 

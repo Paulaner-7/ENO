@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Thin overlay scrollbar that widens on hover.
 ScrollBar {

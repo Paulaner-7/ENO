@@ -109,3 +109,11 @@ For a source change, include the URL of a series that shows the problem and what
 - Run `ctest` (and the live probe for source changes) before opening it.
 - For interface changes, attach a screenshot. Check the phone layout too: a window narrower than 720 px uses it.
 - By contributing you agree that your work is released under the [MIT licence](LICENSE).
+
+## Contributors
+
+Thank you to everyone who has helped build SCANCORE. The picture follows GitHub's list of contributors by itself, so a merged pull request puts your avatar here.
+
+<a href="https://github.com/medium-gh/scancore/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=medium-gh/scancore" alt="SCANCORE's contributors" />
+</a>

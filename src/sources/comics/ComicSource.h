@@ -26,6 +26,8 @@ struct Summary {
     // The source's other names for it (other languages), for "Read from" to
     // recognise a catalogue title shown under a translated name.
     QStringList names;
+    // How many chapters it has, when the search says (0: unknown).
+    int units = 0;
     QVariantMap toMap() const;
 };
 

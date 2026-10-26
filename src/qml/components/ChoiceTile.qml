@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A selectable card with a small picture above its label, for choices that
 // are easier to see than to read (theme, reader layout).

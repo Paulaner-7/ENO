@@ -625,8 +625,12 @@ void Engine::load() {
         const auto error = m_instance.isError() ? m_instance : m_js->catchError();
         throw Error(QStringLiteral("The plugin failed to start: %1").arg(failure(error)), 501);
     }
-    if (!m_instance.isObject() || !m_instance.property(QStringLiteral("parseNovel")).isCallable())
-        throw Error(QStringLiteral("That file is not an LNReader plugin."), 501);
+    // Music plugins (music:<id>) search songs and say where each plays.
+    const bool music = m_plugin.key.startsWith(QLatin1String("music:"));
+    const auto needs = music ? QStringList{QStringLiteral("searchSongs"), QStringLiteral("streamOf")} : QStringList{QStringLiteral("parseNovel")};
+    for (const auto &method : needs)
+        if (!m_instance.isObject() || !m_instance.property(method).isCallable())
+            throw Error(music ? QStringLiteral("That file is not a SCANCORE music plugin.") : QStringLiteral("That file is not an LNReader plugin."), 501);
     m_loaded = true;
 }
 

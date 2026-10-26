@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Dialogs
-import ScanCore
+import Scancore
 
 // A year in SCANCORE: time spent, chapters and episodes, the longest streak,
 // the busiest month and the series read most, on one card that can be saved

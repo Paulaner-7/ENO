@@ -1,5 +1,5 @@
 import QtQuick
-import ScanCore
+import Scancore
 
 // The source chips under a search field: "All sources", then one per source
 // with its result count while a search runs. Installed extensions can add
@@ -47,6 +47,10 @@ Item {
     }
 
     ListView {
+        id: chipList
+        maximumFlickVelocity: Motion.flickVelocity
+        Glide { flick: chipList }
+        flickDeceleration: Motion.flickDeceleration
         visible: root.scrolls
         anchors.fill: parent
         orientation: ListView.Horizontal

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // A PIN entry: dots for the digits typed and a number pad (keys work too).
 // `length` > 0 tries the PIN as soon as that many digits are in; 0 takes 4

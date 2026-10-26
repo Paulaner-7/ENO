@@ -104,6 +104,16 @@ QJsonValue LineHost::call(const QString &method, const QJsonObject &params) {
 void LineHost::receive(const QByteArray &line) {
     const auto reply = QJsonDocument::fromJson(line).object();
     if (reply.contains(QStringLiteral("ask"))) {
+        // Interactive checks need the request's identity before a failure
+        // reply exists; otherwise the visible browser uses a different UA.
+        if (reply.value(QStringLiteral("method")).toString() == QLatin1String("readerBrowserCheck")) {
+            const auto params = reply.value(QStringLiteral("params")).toObject();
+            const auto agent = params.value(QStringLiteral("userAgent")).toString();
+            if (!agent.isEmpty()) {
+                std::lock_guard lock(g_mutex);
+                g_agents.insert(QUrl(params.value(QStringLiteral("url")).toString()).host(), agent);
+            }
+        }
         const auto ask = reply.value(QStringLiteral("ask")).toInteger();
         const std::weak_ptr<int> alive = m_alive;
         Answer answer = [this, alive, ask](const QJsonValue &result) {

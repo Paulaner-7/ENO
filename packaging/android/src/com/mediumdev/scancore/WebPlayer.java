@@ -22,6 +22,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import androidx.webkit.JavaScriptReplyProxy;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
+
+import java.util.Collections;
+
 // The anime player's web view (src/qml/components/WebPlayerSystem.qml), which
 // Qt WebView creates with two of Android's defaults that do not suit a player:
 // - a page may only start video by itself muted, so every episode started
@@ -32,9 +38,64 @@ import android.widget.FrameLayout;
 //   screen or Back is pressed;
 // - a pop-up the player's ads open (on the first tap) loads in the web view
 //   itself, so an ad site replaced the player. Pop-ups are now refused, and
-//   the page cannot leave the player wrapper (WebPlayerSystem.qml).
+//   the page cannot leave the player wrapper (WebPlayerSystem.qml);
+// - Back closed the whole player while the player's own menu (quality,
+//   subtitles) was open. A script in the player's frame now says when that
+//   menu opens, and Back closes it first (closeMenu).
 public final class WebPlayer {
     private WebPlayer() {}
+
+    // Runs in every frame of the player page. The built-in player is
+    // ArtPlayer, which marks its open settings and context menus with a class
+    // on the player and closes them on a click outside it.
+    private static final String MENU_SCRIPT = "(function(){"
+        + "if(!window.scBack||window.__scMenu)return;window.__scMenu=1;"
+        + "var p=null,open=false;"
+        + "function find(){if(!p||!p.isConnected)p=document.querySelector('.art-video-player');return p}"
+        + "function shown(){var q=find();return !!q&&(q.classList.contains('art-setting-show')||q.classList.contains('art-contextmenu-show'))}"
+        + "function report(){var o=shown();if(o!==open){open=o;scBack.postMessage(o?'open':'closed')}}"
+        + "scBack.onmessage=function(e){if(e.data!=='close'||!find())return;"
+        + "document.documentElement.dispatchEvent(new MouseEvent('click',{bubbles:true}));"
+        + "p.classList.remove('art-setting-show','art-contextmenu-show');report()};"
+        + "new MutationObserver(report).observe(document,{subtree:true,attributes:true,attributeFilter:['class']});"
+        + "})()";
+
+    // Whether a frame said its menu is open, and that frame. Written on the
+    // UI thread; Back asks from Qt's thread.
+    private static volatile boolean menuOpen;
+    private static JavaScriptReplyProxy menuFrame;
+
+    // Back while the player's menu is open: the menu closes, and true.
+    public static boolean closeMenu(final Activity activity) {
+        if (!menuOpen) return false;
+        menuOpen = false;
+        activity.runOnUiThread(WebPlayer::sendClose);
+        return true;
+    }
+
+    private static void sendClose() {
+        JavaScriptReplyProxy frame = menuFrame;
+        menuFrame = null;
+        menuOpen = false;
+        if (frame != null) frame.postMessage("close");
+    }
+
+    private static void watchMenus(WebView web) {
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)
+            || !WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) return;
+        // The player's host comes from the sources manifest, so any frame.
+        WebViewCompat.addWebMessageListener(web, "scBack", Collections.singleton("*"),
+            (view, message, origin, mainFrame, reply) -> {
+                if ("open".equals(message.getData())) {
+                    menuFrame = reply;
+                    menuOpen = true;
+                } else if (reply == menuFrame) {
+                    menuFrame = null;
+                    menuOpen = false;
+                }
+            });
+        WebViewCompat.addDocumentStartJavaScript(web, MENU_SCRIPT, Collections.singleton("*"));
+    }
 
     // The player page may load: its web view is prepared, or none turned up.
     static native void nativePrepared();
@@ -44,7 +105,11 @@ public final class WebPlayer {
     // waits for nativePrepared(): a player that starts before this finds no
     // sound and no full screen, and does not look again.
     public static void prepare(final Activity activity) {
-        activity.runOnUiThread(() -> attempt(activity, 0));
+        activity.runOnUiThread(() -> {
+            menuFrame = null;
+            menuOpen = false;
+            attempt(activity, 0);
+        });
     }
 
     // Every 100 ms; after 5 s the page loads anyway, and the search goes on
@@ -73,6 +138,7 @@ public final class WebPlayer {
             web.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
             web.setWebChromeClient(new Client(activity, web, client));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) web.setWebViewClient(new Guard(web.getWebViewClient()));
+            watchMenus(web);
             return 1;
         }
         int prepared = 0;
@@ -198,8 +264,14 @@ public final class WebPlayer {
                 @Override
                 public boolean dispatchKeyEvent(KeyEvent event) {
                     if (event.getKeyCode() != KeyEvent.KEYCODE_BACK) return super.dispatchKeyEvent(event);
+                    if (event.getAction() != KeyEvent.ACTION_UP) return true;
+                    // The player's menu closes first, then full screen.
+                    if (menuOpen) {
+                        sendClose();
+                        return true;
+                    }
                     CustomViewCallback leave = Client.this.callback;
-                    if (event.getAction() == KeyEvent.ACTION_UP && leave != null) leave.onCustomViewHidden();
+                    if (leave != null) leave.onCustomViewHidden();
                     return true;
                 }
             };

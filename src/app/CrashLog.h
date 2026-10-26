@@ -26,4 +26,24 @@ void remove(const QString &file);
 // Version, system and the recent log, for problems that are not crashes.
 QString diagnostics();
 
+// Hangs: when the interface's thread has not come back to its event loop
+// for 8 s while the app is in use, a report ("…-hang.txt", offered like a
+// crash's) says so, with that thread's stack and the stacks of threads that
+// are Busy at the time. Call once from the interface's thread, after
+// install().
+void watchHangs();
+
+// A thread about to wait on something that may never answer (mpv's
+// renderer): a hang report taken meanwhile names it and shows its stack.
+class Busy {
+public:
+    explicit Busy(const char *what);
+    ~Busy();
+    Busy(const Busy &) = delete;
+    Busy &operator=(const Busy &) = delete;
+
+private:
+    int m_slot = -1;
+};
+
 } // namespace sc::crashlog

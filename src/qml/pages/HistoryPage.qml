@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import ScanCore
+import Scancore
 
 // Everything read or watched recently, grouped by day.
 Item {
@@ -58,6 +58,8 @@ Item {
     }
 
     ListView {
+        maximumFlickVelocity: Motion.flickVelocity
+        flickDeceleration: Motion.flickDeceleration
         WheelScroll {}
         id: list
         anchors.fill: parent
@@ -66,9 +68,16 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
         bottomMargin: 40
         ScrollBar.vertical: ScScrollBar {}
+        // The list arrives after the header is laid out, and a new model
+        // left the view below the title (the page opened scrolled past it):
+        // until the reader scrolls, stay at the very top.
+        property bool touched: false
+        onMovementStarted: touched = true
+        onModelChanged: if (!touched) Qt.callLater(() => { if (!list.touched) list.positionViewAtBeginning() })
 
         header: Column {
             width: list.width
+            onHeightChanged: if (!list.touched) Qt.callLater(() => { if (!list.touched) list.positionViewAtBeginning() })
             spacing: 18
             PageHeader {
                 title: qsTr("History")
@@ -100,9 +109,19 @@ Item {
                 width: list.width - 2 * Theme.gutter
                 spacing: 12
                 Segmented {
-                    visible: !Router.animeOnly
+                    visible: !Router.animeOnly && !Theme.retro
                     options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics"), icon: "book-open" },
                               { value: "novel", label: qsTr("Novels"), icon: "book-text" }, { value: "anime", label: qsTr("Anime"), icon: "tv" }]
+                    value: page.media
+                    onPicked: (v) => page.media = v
+                }
+                // Retro: the same as pivot headers.
+                PivotHeaders {
+                    visible: Theme.retro && !Router.animeOnly
+                    width: parent.width
+                    height: visible ? implicitHeight : 0
+                    options: [{ value: "", label: qsTr("All") }, { value: "comic", label: qsTr("Comics") },
+                              { value: "novel", label: qsTr("Novels") }, { value: "anime", label: qsTr("Anime") }]
                     value: page.media
                     onPicked: (v) => page.media = v
                 }
