@@ -1,5 +1,6 @@
 #include "MpvPlayer.h"
 
+#include "App.h"
 #include "CrashLog.h"
 
 #include "core/Http.h"
@@ -325,11 +326,17 @@ MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_co
     }
     const auto option = [mpv](const char *name, const char *value) { mpv_set_option_string(mpv, name, value); };
     option("vo", "libmpv");
-    // Hardware decoding where it is safe (Android: MediaCodec, straight
-    // into OpenGL when it can, else copied); SCANCORE_MPV_HWDEC overrides it
-    // (e.g. "no" to compare).
+    // Hardware decoding where it is safe; SCANCORE_MPV_HWDEC overrides it
+    // (e.g. "no" to compare). Android: MediaCodec with its frames copied
+    // back. Handing them straight to OpenGL ("direct", playerHwdec) could
+    // freeze the picture and the app after a new episode on some phones
+    // (#30): drawing then waited on Android's buffer queue while the
+    // interface waited on the drawing.
 #ifdef Q_OS_ANDROID
-    const char *hwdec = "mediacodec,mediacodec-copy";
+    const auto choice = App::instance()->settings().value(QStringLiteral("playerHwdec")).toString();
+    const char *hwdec = choice == QLatin1String("direct") ? "mediacodec,mediacodec-copy"
+                        : choice == QLatin1String("off")  ? "no"
+                                                          : "mediacodec-copy";
     option("hwdec-codecs", "h264,hevc,mpeg4,mpeg2video,vp8,vp9,av1");
 #else
     const char *hwdec = "auto-safe";

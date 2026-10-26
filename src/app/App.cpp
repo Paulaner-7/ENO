@@ -123,6 +123,9 @@ const QVariantMap kDefaults{
     {"subtitleColor", "#ffffff"},
     {"subtitleBox", false},
     {"animeSharpen", "off"},
+    // Android's video decoding: "copy" (MediaCodec, frames copied back),
+    // "direct" (into OpenGL; faster, froze on some phones) or "off".
+    {"playerHwdec", "copy"},
     {"playerSpeed", 1},
     // How the picture fills the player (fit, crop, stretch, original) and
     // the phone gestures in full screen (NativePlayer.qml).

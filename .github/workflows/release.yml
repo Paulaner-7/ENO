@@ -254,6 +254,17 @@ jobs:
       # ---------------------------------------------------------------- macOS
       - name: macOS disk image
         if: runner.os == 'macOS'
+        env:
+          # Signing and notarization (#31), when the repository has them:
+          # MACOS_CERTIFICATE (a Developer ID Application .p12, base64),
+          # MACOS_CERTIFICATE_PASSWORD, APPLE_ID, APPLE_TEAM_ID and
+          # APPLE_APP_PASSWORD (an app-specific password). Without them the
+          # disk image is made as before, unsigned.
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
         run: |
           cp -R build/bin/scancore.app SCANCORE.app
           if [ -n "${MPV_DIR:-}" ]; then
@@ -269,9 +280,43 @@ jobs:
           # out; listed with -executable so its Qt references are rewritten.
           mkdir -p SCANCORE.app/Contents/PlugIns/webview
           cp "$QT_ROOT_DIR/plugins/webview/libqtwebview_darwin.dylib" SCANCORE.app/Contents/PlugIns/webview/
-          macdeployqt SCANCORE.app -qmldir=src/qml -dmg -always-overwrite \
+          mkdir -p dist
+          if [ -z "${MACOS_CERTIFICATE:-}" ] || [ -z "${APPLE_ID:-}" ]; then
+            macdeployqt SCANCORE.app -qmldir=src/qml -dmg -always-overwrite \
+              -executable=SCANCORE.app/Contents/PlugIns/webview/libqtwebview_darwin.dylib
+            mv SCANCORE.dmg "dist/SCANCORE-$VERSION-macos-universal.dmg"
+            exit 0
+          fi
+          # A keychain of its own for the Developer ID certificate.
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$MACOS_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/certificate.p12" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          IDENTITY="$(security find-identity -v -p codesigning "$KEYCHAIN" | grep 'Developer ID Application' | head -1 | sed -E 's/.*"(.*)"/\1/')"
+          macdeployqt SCANCORE.app -qmldir=src/qml -always-overwrite \
             -executable=SCANCORE.app/Contents/PlugIns/webview/libqtwebview_darwin.dylib
-          mkdir -p dist && mv SCANCORE.dmg "dist/SCANCORE-$VERSION-macos-universal.dmg"
+          # Inside out: every library and plug-in, then the app, with the
+          # hardened runtime and a secure timestamp.
+          find SCANCORE.app/Contents \( -name '*.dylib' -o -name '*.so' \) -type f -print0 | \
+            xargs -0 codesign --force --timestamp --options runtime --sign "$IDENTITY"
+          find SCANCORE.app/Contents/Frameworks -name '*.framework' -maxdepth 1 -print0 | \
+            xargs -0 codesign --force --timestamp --options runtime --sign "$IDENTITY"
+          codesign --force --timestamp --options runtime --entitlements packaging/macos/entitlements.plist \
+            --sign "$IDENTITY" SCANCORE.app
+          codesign --verify --deep --strict SCANCORE.app
+          hdiutil create -volname SCANCORE -srcfolder SCANCORE.app -ov -format UDZO SCANCORE.dmg
+          codesign --force --timestamp --sign "$IDENTITY" SCANCORE.dmg
+          # Apple checks it; the ticket is stapled so it opens offline too.
+          xcrun notarytool submit SCANCORE.dmg --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_PASSWORD" --wait
+          xcrun stapler staple SCANCORE.dmg
+          mv SCANCORE.dmg "dist/SCANCORE-$VERSION-macos-universal.dmg"
+          security delete-keychain "$KEYCHAIN"
 
       - uses: actions/upload-artifact@v4
         with:
