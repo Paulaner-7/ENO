@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>ส่วนขยายทั้งหมด</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>เส้นคมชัดขึ้นและขยายภาพสำหรับตอนที่ความละเอียดต่ำ</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>เส้นคมชัดขึ้นและขยายภาพสำหรับตอนที่ความละเอียดต่ำ ดีที่สุดต้องใช้การ์ดจอแรง ๆ</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>ปิด</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>ประเภท</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>ธีม</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>รูปแบบ</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>เนื้อหา</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>ตัวกรองการค้นหา</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>แค็ตตาล็อกของ Comick เมื่อตั้งตัวกรองไว้ การค้นหาว่างจะแสดงรายการให้เลือกดู</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>ปิด</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>ไม่มีตัวกรอง</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>ตัวกรอง 1 รายการ</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>ตัวกรอง %1 รายการ</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>ล้าง</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>ใช้</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>เรียงตาม</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>ตรงที่สุด</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>มีผู้ติดตามมากที่สุด</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>มีผู้ชมมากที่สุด</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>คะแนนสูงสุด</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>คะแนนเฉลี่ย</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>ตอนใหม่</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>เพิ่มล่าสุด</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>สถานะ</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>ทั้งหมด</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>กำลังเผยแพร่</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>จบแล้ว</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>ยกเลิกแล้ว</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>พักการเผยแพร่</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>เพิ่มใน Comick เมื่อ</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>เมื่อใดก็ได้</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>ในสัปดาห์ที่ผ่านมา</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>ในเดือนที่ผ่านมา</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>ใน 3 เดือนที่ผ่านมา</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>ในปีที่ผ่านมา</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>คะแนนอย่างน้อย</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>ปีที่เผยแพร่</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>ตั้งแต่ปี</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>ถึงปี</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>ตอน</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>อย่างน้อย</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>ไม่เกิน</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>แปลครบแล้ว</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>ทุกตอนออกเป็นภาษาอังกฤษแล้ว ไม่ใช่แค่เรื่องจบแล้ว</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>รวมเรื่องที่ไม่มีจำนวนตอน</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>ชนิด</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>มังฮวา</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>มังงะ</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>มังฮัว</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>ฮ่องกง</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>กลุ่มผู้อ่าน</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>โชเน็น</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>โชโจ</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>เซเน็น</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>โจเซ</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>ไม่ระบุ</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>ระดับเนื้อหา</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>แตะหนึ่งครั้งเพื่อรวม สองครั้งเพื่อไม่รวม</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>ปลอดภัย</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>ชวนคิด</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>อีโรติก</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>ลามกอนาจาร</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>ความรุนแรงโจ่งแจ้ง</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>ค้นหาประเภทหรือแท็ก</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>รวมได้สูงสุด %1 รายการ</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>แสดงทั้งหมด %1</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>แท็ก</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>รวมได้สูงสุด %1 และไม่รวมได้ %2 รายการ</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>แท็กเพิ่มเติม</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>ไม่มีแท็กที่ตรงกับ “%1”</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>รวม</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>ไม่รวม</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>ยังค้นหาอยู่ %1</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>ตัวกรองการค้นหา</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>เปิดตัวกรอง 1 รายการ</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>เปิดตัวกรอง %1 รายการ</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>ล้าง</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 เรื่องจากแค็ตตาล็อกของ %2 (กรองแล้ว)</translation>
         </message>
     </context>
     <context>
@@ -5668,6 +5975,26 @@
         <message>
             <source>Settings</source>
             <translation>การตั้งค่า</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>เร็ว</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>การ์ดจอส่วนใหญ่</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>ดีที่สุด</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>ต้องใช้การ์ดจอแรง ๆ</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>ทำให้คม (Anime4K)</translation>
         </message>
     </context>
     <context>

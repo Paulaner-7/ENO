@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Tất cả tiện ích</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Nét vẽ sạch hơn và phóng to cho các tập độ phân giải thấp.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Nét vẽ sạch hơn và phóng to cho các tập độ phân giải thấp. Tốt nhất cần card đồ họa mạnh.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Đóng</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Thể loại</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Chủ đề</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Định dạng</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Nội dung</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Bộ lọc tìm kiếm</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Danh mục của Comick. Khi có bộ lọc, tìm kiếm trống sẽ duyệt danh mục.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Đóng</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Không có bộ lọc</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 bộ lọc</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 bộ lọc</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Xóa</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Áp dụng</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Sắp xếp theo</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Khớp nhất</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Nhiều người theo dõi nhất</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Nhiều lượt xem nhất</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Điểm cao nhất</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Điểm trung bình</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Chương mới</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Thêm gần đây</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Trạng thái</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Bất kỳ</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Đang ra</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Hoàn thành</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Đã hủy</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Tạm ngưng</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Thêm vào Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Bất cứ lúc nào</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>Trong tuần qua</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Trong tháng qua</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Trong 3 tháng qua</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>Trong năm qua</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Điểm tối thiểu</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Phát hành</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>Từ năm</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Đến năm</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Chương</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Ít nhất</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Nhiều nhất</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Đã dịch đủ</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Mọi chương đã có bản tiếng Anh, không chỉ là bộ truyện đã kết thúc.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Gồm cả truyện không rõ số chương</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Loại</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hồng Kông</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Đối tượng</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Không ghi</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Phân loại nội dung</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Chạm một lần để bao gồm, hai lần để loại trừ</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>An toàn</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Gợi cảm</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Khiêu dâm nhẹ</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Khiêu dâm</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Bạo lực rõ nét</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Tìm thể loại hoặc thẻ</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>Tối đa %1 bao gồm</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Hiện tất cả %1</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Thẻ</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>Tối đa %1 bao gồm và %2 loại trừ</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Thêm thẻ</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Không có thẻ nào khớp với “%1”.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Bao gồm</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Loại trừ</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 vẫn đang tìm</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Bộ lọc tìm kiếm</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 bộ lọc đang bật</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 bộ lọc đang bật</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Xóa</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 tựa từ danh mục của %2, đã lọc</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>Cài đặt</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Nhanh</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Hầu hết card đồ họa</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Tốt nhất</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Cần card đồ họa mạnh</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Làm nét (Anime4K)</translation>
         </message>
     </context>
     <context>

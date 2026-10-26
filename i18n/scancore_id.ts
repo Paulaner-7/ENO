@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Semua ekstensi</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Garis lebih bersih dan peningkatan resolusi untuk episode beresolusi rendah.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Garis lebih bersih dan peningkatan resolusi untuk episode beresolusi rendah. Terbaik butuh kartu grafis yang kuat.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Tutup</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Genre</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Tema</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Format</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Konten</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filter pencarian</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Katalog Comick. Dengan filter aktif, pencarian kosong menjelajah.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Tutup</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Tanpa filter</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filter</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filter</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Hapus</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Terapkan</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Urutkan menurut</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Paling cocok</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Paling banyak diikuti</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Paling banyak dilihat</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Rating teratas</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Rating rata-rata</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Bab baru</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Baru ditambahkan</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Status</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Apa saja</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Berlanjut</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Selesai</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Dibatalkan</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Hiatus</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Ditambahkan ke Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Kapan saja</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>Dalam seminggu terakhir</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Dalam sebulan terakhir</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Dalam 3 bulan terakhir</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>Dalam setahun terakhir</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Rating minimal</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Terbit</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>Dari tahun</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Sampai tahun</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Bab</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Minimal</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Maksimal</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Diterjemahkan penuh</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Setiap bab sudah terbit dalam bahasa Inggris, bukan hanya serinya tamat.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Sertakan seri tanpa jumlah bab</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Jenis</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Demografi</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Tidak disebutkan</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Rating konten</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Ketuk sekali untuk menyertakan, dua kali untuk mengecualikan</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Aman</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Sugestif</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Erotis</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornografi</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Kekerasan grafis</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Cari genre atau tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>Hingga %1 disertakan</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Tampilkan semua %1</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>Hingga %1 disertakan dan %2 dikecualikan</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Tag lainnya</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Tidak ada tag yang cocok dengan “%1”.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Disertakan</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Dikecualikan</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 masih mencari</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filter pencarian</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filter aktif</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filter aktif</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Hapus</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 judul dari katalog %2, difilter</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>Pengaturan</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Cepat</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Sebagian besar kartu grafis</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Terbaik</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Butuh kartu grafis yang kuat</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Pertajam (Anime4K)</translation>
         </message>
     </context>
     <context>

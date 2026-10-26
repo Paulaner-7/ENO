@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Tüm eklentiler</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Düşük çözünürlüklü bölümler için daha temiz çizgiler ve büyütme.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Düşük çözünürlüklü bölümler için daha temiz çizgiler ve büyütme. En iyi için güçlü bir ekran kartı gerekir.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Kapat</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Türler</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Temalar</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Biçim</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>İçerik</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Arama filtreleri</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick kataloğu. Filtreler açıkken boş arama kataloğa göz atar.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Kapat</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Filtre yok</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filtre</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filtre</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Temizle</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Uygula</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Sırala</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>En iyi eşleşme</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>En çok takip edilen</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>En çok izlenen</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>En yüksek puanlı</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Ortalama puan</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Yeni bölümler</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Son eklenenler</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Durum</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Herhangi</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Devam ediyor</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Tamamlandı</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>İptal edildi</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Ara verildi</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick'e eklenme</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Herhangi bir zaman</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>Son bir haftada</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Son bir ayda</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Son 3 ayda</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>Son bir yılda</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>En düşük puan</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Yayın</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>Başlangıç yılı</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Bitiş yılı</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Bölümler</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>En az</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>En çok</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Tamamen çevrildi</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Yalnızca serinin bitmesi değil, her bölüm İngilizce çıkmış.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Bölüm sayısı bilinmeyen serileri de göster</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Tür</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Hedef kitle</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Belirtilmemiş</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>İçerik derecesi</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Dahil etmek için bir kez, hariç tutmak için iki kez dokunun</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Genel</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Müstehcen</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Erotik</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornografik</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Ağır şiddet</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Tür veya etiket bul</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>En çok %1 dahil</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Tümünü göster (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Etiketler</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>En çok %1 dahil ve %2 hariç</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Daha fazla etiket</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>“%1” ile eşleşen etiket yok.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Dahil</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Hariç</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 hâlâ arıyor</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Arama filtreleri</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filtre açık</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filtre açık</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Temizle</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 kataloğundan %1 eser, filtreli</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>Ayarlar</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Hızlı</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Çoğu ekran kartı</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>En iyi</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Güçlü bir ekran kartı gerekir</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Keskinleştir (Anime4K)</translation>
         </message>
     </context>
     <context>

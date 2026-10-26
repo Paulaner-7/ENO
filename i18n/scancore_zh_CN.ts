@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>全部扩展</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>让低分辨率剧集的线条更干净并放大画面。</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>让低分辨率剧集的线条更干净并放大画面。「最佳」需要性能强的显卡。</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>关闭</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>类型</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>主题</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>形式</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>内容</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>搜索筛选</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick 的目录。设置筛选条件后,空搜索会直接浏览。</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>关闭</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>没有筛选条件</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 个筛选条件</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 个筛选条件</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>清除</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>应用</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>排序方式</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>最佳匹配</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>关注最多</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>浏览最多</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>评分最高</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>平均评分</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新章节</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>最近添加</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>状态</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>任意</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>连载中</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>已完成</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>已腰斩</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>休刊中</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>加入 Comick 的时间</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>任何时间</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>最近一周</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>最近一个月</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>最近 3 个月</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>最近一年</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>评分不低于</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>发表年份</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>起始年份</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>截止年份</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>章节</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>至少</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>至多</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>已完整翻译</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>所有章节都已出英文版,而不只是作品已完结。</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>包括没有章节数的作品</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>种类</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>韩漫</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>日漫</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>国漫</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>香港</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>受众</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>少年</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>少女</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>青年</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>女性向</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>未注明</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>内容分级</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>点一次包含,点两次排除</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>全年龄</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>擦边</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>情色</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>色情</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>血腥暴力</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>查找类型或标签</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>最多包含 %1 个</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>显示全部 %1</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>标签</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>最多包含 %1 个、排除 %2 个</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>更多标签</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>没有与“%1”匹配的标签。</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>包含</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>排除</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 个仍在搜索</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>搜索筛选</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>已开启 1 个筛选条件</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>已开启 %1 个筛选条件</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>清除</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 目录中的 %1 部作品(已筛选)</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>设置</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>快速</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>大多数显卡</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>最佳</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>需要性能强的显卡</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>锐化 (Anime4K)</translation>
         </message>
     </context>
     <context>

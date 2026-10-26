@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>すべての拡張機能</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>低解像度のエピソードの線をきれいにし、拡大します。</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>低解像度のエピソードの線をきれいにし、拡大します。「最高」には高性能なグラフィックカードが必要です。</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>閉じる</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>ジャンル</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>テーマ</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>形式</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>内容</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>検索フィルター</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick のカタログ。フィルターを設定すると、空の検索で一覧を表示します。</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>閉じる</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>フィルターなし</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>フィルター 1 件</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>フィルター %1 件</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>消去</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>適用</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>並べ替え</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>関連度順</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>フォロー数順</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>閲覧数順</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>高評価</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>平均評価</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>新しいチャプター</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>最近追加した順</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>状態</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>すべて</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>連載中</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>完了</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>打ち切り</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>休載中</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick への追加</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>いつでも</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>過去 1 週間</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>過去 1 か月</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>過去 3 か月</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>過去 1 年</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>評価が次以上</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>発表年</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>開始年</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>終了年</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>章</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>最小</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>最大</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>翻訳完了</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>シリーズの完結だけでなく、全話が英語で出ています。</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>話数不明の作品も含める</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>種類</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>韓国マンガ</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>マンガ</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>中国マンガ</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>香港</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>対象読者</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>少年</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>少女</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>青年</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>女性向け</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>指定なし</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>コンテンツ区分</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>1 回タップで含める、2 回で除外</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>全年齢</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>やや過激</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>エロティカ</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>ポルノ</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>過激な暴力</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>ジャンルやタグを探す</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>含めるのは %1 件まで</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>すべて表示（%1）</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>タグ</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>含めるのは %1 件、除外は %2 件まで</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>タグをもっと見る</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>「%1」に一致するタグはありません。</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>含む</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>除外</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 件がまだ検索中</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>検索フィルター</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>フィルター 1 件オン</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>フィルター %1 件オン</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>消去</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 のカタログから %1 作品(絞り込み)</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>設定</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>高速</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>ほとんどのグラフィックカード</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>最高</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>高性能なグラフィックカードが必要</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>シャープ化 (Anime4K)</translation>
         </message>
     </context>
     <context>

@@ -2,6 +2,13 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.13.2 — 2026-10-26
+
+Search Comick your way, and Anime4K's Best looks right on Linux.
+
+- **Search filters**: the funnel beside the Comics search box opens Comick's own filters: sort, status, type, demographic, content rating, genres and tags to include or leave out (every one of Comick's tags can be searched), years, chapter counts, rating, how recently a series was added, and fully translated. Filters stay until you clear them, and with some set an empty search browses by them.
+- **Sharpen (Anime4K)** is also in the player's settings while watching, to compare. On Linux, Best no longer turns the picture teal and checkered: SCANCORE now draws with desktop OpenGL where the computer has it. Phones offer Off and Fast.
+
 ## 2.13.1 — 2026-10-25
 
 Back does what you expect in the anime player's own menus and on the welcome screens.

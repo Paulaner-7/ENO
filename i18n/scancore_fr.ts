@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Toutes les extensions</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Des traits plus nets et un agrandissement pour les épisodes en basse résolution.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Des traits plus nets et un agrandissement pour les épisodes en basse résolution. Meilleur demande une carte graphique puissante.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Fermer</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Genres</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Thèmes</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Format</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Contenu</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filtres de recherche</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Catalogue de Comick. Avec des filtres, une recherche vide parcourt le catalogue.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Fermer</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Aucun filtre</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filtre</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filtres</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Effacer</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Appliquer</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Trier par</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Meilleure correspondance</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Les plus suivies</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Les plus vues</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Mieux notés</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Note moyenne</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Nouveaux chapitres</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Ajoutés récemment</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Statut</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Tous</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>En cours</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Terminé</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Abandonnée</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>En pause</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Ajouté à Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>N’importe quand</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>La semaine dernière</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Le mois dernier</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Ces 3 derniers mois</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>L’année dernière</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Note minimale</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Parution</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>À partir de</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Jusqu’à</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Chapitres</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Au moins</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Au plus</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Entièrement traduit</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Tous les chapitres sont sortis en anglais, pas seulement la série terminée.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Inclure les séries sans nombre de chapitres</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Type</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Public</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Non précisé</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Classification du contenu</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Touchez une fois pour inclure, deux fois pour exclure</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Tous publics</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Suggestif</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Érotique</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornographique</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Violence explicite</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Chercher un genre ou un tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>Jusqu’à %1 inclus</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Tout voir (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Tags</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>Jusqu’à %1 inclus et %2 exclus</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Plus de tags</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Aucun tag ne correspond à « %1 ».</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Inclus</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Exclu</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 cherchent encore</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Filtres de recherche</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filtre actif</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filtres actifs</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Effacer</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 titres du catalogue de %2, filtrés</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>Réglages</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Rapide</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>La plupart des cartes graphiques</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Meilleur</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Demande une carte graphique puissante</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Netteté (Anime4K)</translation>
         </message>
     </context>
     <context>

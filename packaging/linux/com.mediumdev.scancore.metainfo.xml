@@ -52,6 +52,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.13.2" date="2026-10-26">
+      <description>
+        <p>Comick's search filters on the Comics page (genres and tags to include or leave out, status, type, years, rating and more), and Anime4K's Best sharpening drawn correctly on Linux.</p>
+      </description>
+    </release>
     <release version="2.13.1" date="2026-10-25">
       <description>
         <p>Back closes the anime player's own menu before the player, and goes to the previous step on the welcome screens. Sources show their catalogue right below the source chips.</p>

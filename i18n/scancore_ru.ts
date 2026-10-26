@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Все расширения</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Чище линии и увеличение для серий в низком разрешении.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Чище линии и увеличение для серий в низком разрешении. Для «Лучшее» нужна мощная видеокарта.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Закрыть</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Жанры</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Темы</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Формат</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Содержание</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Фильтры поиска</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Каталог Comick. С фильтрами пустой поиск показывает подборку.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Закрыть</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Без фильтров</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 фильтр</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>Фильтров: %1</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Очистить</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Применить</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Сортировка</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Лучшее совпадение</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Больше всего подписок</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Больше всего просмотров</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Лучшие по оценке</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Средняя оценка</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Новые главы</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Недавно добавленные</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Статус</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Любой</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Выходит</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Завершено</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Отменён</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Перерыв</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Добавлено в Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Когда угодно</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>За последнюю неделю</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>За последний месяц</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>За последние 3 месяца</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>За последний год</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Оценка не ниже</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Публикация</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>С года</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>До года</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Главы</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Не меньше</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Не больше</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Полностью переведён</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Все главы вышли на английском, а не просто серия завершена.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Включать серии без числа глав</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Тип</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Манхва</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Манга</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Маньхуа</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Гонконг</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Аудитория</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Сёнэн</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Сёдзё</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Сэйнэн</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Дзёсэй</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Не указано</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Возрастной рейтинг</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>Нажмите раз, чтобы включить, дважды — чтобы исключить</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Для всех</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Откровенный</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Эротика</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Порнографический</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Жестокое насилие</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Найти жанр или тег</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>До %1 включённых</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Показать все (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Теги</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>До %1 включённых и %2 исключённых</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Ещё теги</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Нет тегов по запросу «%1».</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Включено</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Исключено</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>Ещё ищут: %1</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Фильтры поиска</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>Включён 1 фильтр</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>Включено фильтров: %1</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Очистить</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 тайтлов из каталога %2 с фильтрами</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>Настройки</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Быстрый</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Большинство видеокарт</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Лучшее</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Нужна мощная видеокарта</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Резкость (Anime4K)</translation>
         </message>
     </context>
     <context>

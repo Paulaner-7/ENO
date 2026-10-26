@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>Lahat ng extension</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>Mas malinis na linya at pagpapalaki para sa mga episode na mababa ang resolution.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>Mas malinis na linya at pagpapalaki para sa mga episode na mababa ang resolution. Kailangan ng Pinakamahusay ang malakas na graphics card.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>Isara</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>Mga genre</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>Mga tema</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>Format</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>Nilalaman</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Mga filter sa paghahanap</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Katalogo ng Comick. Kapag may filter, ang walang lamang paghahanap ay nagba-browse.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>Isara</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>Walang filter</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 filter</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 filter</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Burahin</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>Ilapat</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>Ayusin ayon sa</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>Pinakatugma</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>Pinakamaraming sumusubaybay</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>Pinakamaraming nanood</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>Pinakamataas ang rating</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>Average na rating</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>Mga bagong kabanata</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>Kamakailang idinagdag</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>Katayuan</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>Kahit ano</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>Patuloy</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>Natapos</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>Kinansela</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>Naka-hiatus</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Naidagdag sa Comick</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>Kahit kailan</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>Sa nakaraang linggo</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>Sa nakaraang buwan</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>Sa nakaraang 3 buwan</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>Sa nakaraang taon</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>Rating na hindi bababa sa</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>Nailathala</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>Mula sa taon</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>Hanggang taon</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>Mga kabanata</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>Hindi bababa sa</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>Hindi hihigit sa</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>Buong naisalin</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>Lumabas na sa Ingles ang bawat kabanata, hindi lang tapos na ang serye.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>Isama ang mga seryeng walang bilang ng kabanata</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>Uri</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>Manhwa</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>Manga</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>Manhua</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>Hong Kong</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>Demograpiko</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>Shounen</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>Shoujo</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>Seinen</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>Josei</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>Hindi nakasaad</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>Rating ng nilalaman</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>I-tap nang isang beses para isama, dalawang beses para hindi isama</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>Ligtas</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>Mapanukso</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>Erotika</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>Pornograpiko</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>Matinding karahasan</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>Maghanap ng genre o tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>Hanggang %1 kasama</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>Ipakita lahat (%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>Mga tag</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>Hanggang %1 kasama at %2 hindi kasama</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>Higit pang tag</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>Walang tag na tugma sa “%1”.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>Kasama</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>Hindi kasama</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 ang naghahanap pa</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>Mga filter sa paghahanap</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 filter ang naka-on</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 filter ang naka-on</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>Burahin</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%1 pamagat mula sa katalogo ng %2, na-filter</translation>
         </message>
     </context>
     <context>
@@ -5668,6 +5975,26 @@
         <message>
             <source>Settings</source>
             <translation>Settings</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>Mabilis</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>Karamihan ng graphics card</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>Pinakamahusay</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>Kailangan ng malakas na graphics card</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>Patalasin (Anime4K)</translation>
         </message>
     </context>
     <context>

@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>모든 확장 프로그램</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>저해상도 에피소드의 선을 깔끔하게 하고 확대합니다.</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>저해상도 에피소드의 선을 깔끔하게 하고 확대합니다. 최고에는 성능 좋은 그래픽 카드가 필요합니다.</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>닫기</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>장르</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>테마</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>형식</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>콘텐츠</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>검색 필터</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick 카탈로그. 필터가 있으면 빈 검색으로 둘러봅니다.</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>닫기</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>필터 없음</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>필터 1개</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>필터 %1개</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>지우기</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>적용</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>정렬</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>가장 관련 있음</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>팔로우 많은 순</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>조회수 많은 순</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>최고 평점</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>평균 평점</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>새 챕터</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>최근 추가</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>상태</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>전체</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>연재 중</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>완료</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>연재 중단</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>휴재</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick 추가 시기</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>언제든지</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>최근 1주</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>최근 1개월</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>최근 3개월</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>최근 1년</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>평점 이상</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>출간</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>시작 연도</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>종료 연도</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>챕터</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>최소</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>최대</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>번역 완료</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>시리즈가 완결된 것만이 아니라 모든 화가 영어로 나왔습니다.</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>화수가 없는 작품도 포함</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>종류</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>한국 만화</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>망가</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>중국 만화</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>홍콩</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>독자층</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>소년</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>순정</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>청년</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>여성향</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>지정 없음</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>콘텐츠 등급</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>한 번 누르면 포함, 두 번 누르면 제외</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>전체 이용가</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>선정적</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>에로</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>포르노</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>잔혹한 폭력</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>장르나 태그 찾기</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>포함은 최대 %1개</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>모두 보기(%1)</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>태그</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>포함은 최대 %1개, 제외는 최대 %2개</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>태그 더 보기</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>“%1”와(과) 맞는 태그가 없습니다.</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>포함</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>제외</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1개가 아직 검색 중</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>검색 필터</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>필터 1개 켜짐</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>필터 %1개 켜짐</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>지우기</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 카탈로그의 작품 %1개(필터 적용)</translation>
         </message>
     </context>
     <context>
@@ -5676,6 +5983,26 @@
         <message>
             <source>Settings</source>
             <translation>설정</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>빠름</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>대부분의 그래픽 카드</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>최고</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>성능 좋은 그래픽 카드 필요</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>선명하게 (Anime4K)</translation>
         </message>
     </context>
     <context>

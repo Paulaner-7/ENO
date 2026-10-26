@@ -1469,6 +1469,14 @@
             <source>All extensions</source>
             <translation>सभी एक्सटेंशन</translation>
         </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes.</source>
+            <translation>कम रिज़ॉल्यूशन वाले एपिसोड के लिए साफ़ रेखाएँ और बड़ा आकार।</translation>
+        </message>
+        <message>
+            <source>Cleaner lines and upscaling for lower-resolution episodes. Best needs a strong graphics card.</source>
+            <translation>कम रिज़ॉल्यूशन वाले एपिसोड के लिए साफ़ रेखाएँ और बड़ा आकार। सबसे अच्छा के लिए दमदार ग्राफ़िक्स कार्ड चाहिए।</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -1616,6 +1624,285 @@
         <message>
             <source>Close</source>
             <translation>बंद करें</translation>
+        </message>
+    </context>
+    <context>
+        <name>CatalogueFilters</name>
+        <message>
+            <source>Genres</source>
+            <translation>शैलियाँ</translation>
+        </message>
+        <message>
+            <source>Themes</source>
+            <translation>थीम</translation>
+        </message>
+        <message>
+            <source>Format</source>
+            <translation>फ़ॉर्मैट</translation>
+        </message>
+        <message>
+            <source>Content</source>
+            <translation>सामग्री</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>खोज फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>Comick's catalogue. With filters set, an empty search browses.</source>
+            <translation>Comick का कैटलॉग। फ़िल्टर चालू हों तो खाली खोज ब्राउज़ करती है।</translation>
+        </message>
+        <message>
+            <source>Close</source>
+            <translation>बंद करें</translation>
+        </message>
+        <message>
+            <source>No filters</source>
+            <translation>कोई फ़िल्टर नहीं</translation>
+        </message>
+        <message>
+            <source>1 filter</source>
+            <translation>1 फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>%1 filters</source>
+            <translation>%1 फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>साफ़ करें</translation>
+        </message>
+        <message>
+            <source>Apply</source>
+            <translation>लागू करें</translation>
+        </message>
+        <message>
+            <source>Sort by</source>
+            <translation>इसके अनुसार क्रम</translation>
+        </message>
+        <message>
+            <source>Best match</source>
+            <translation>सबसे सटीक</translation>
+        </message>
+        <message>
+            <source>Most followed</source>
+            <translation>सबसे ज़्यादा फ़ॉलो की गई</translation>
+        </message>
+        <message>
+            <source>Most viewed</source>
+            <translation>सबसे ज़्यादा देखी गई</translation>
+        </message>
+        <message>
+            <source>Top rated</source>
+            <translation>सबसे ऊंची रेटिंग</translation>
+        </message>
+        <message>
+            <source>Average rating</source>
+            <translation>औसत रेटिंग</translation>
+        </message>
+        <message>
+            <source>New chapters</source>
+            <translation>नए अध्याय</translation>
+        </message>
+        <message>
+            <source>Recently added</source>
+            <translation>हाल में जोड़े</translation>
+        </message>
+        <message>
+            <source>Status</source>
+            <translation>स्थिति</translation>
+        </message>
+        <message>
+            <source>Any</source>
+            <translation>कोई भी</translation>
+        </message>
+        <message>
+            <source>Ongoing</source>
+            <translation>जारी</translation>
+        </message>
+        <message>
+            <source>Completed</source>
+            <translation>पूरा हुआ</translation>
+        </message>
+        <message>
+            <source>Cancelled</source>
+            <translation>रद्द</translation>
+        </message>
+        <message>
+            <source>On hiatus</source>
+            <translation>विराम पर</translation>
+        </message>
+        <message>
+            <source>Added to Comick</source>
+            <translation>Comick में जोड़ा गया</translation>
+        </message>
+        <message>
+            <source>Any time</source>
+            <translation>कभी भी</translation>
+        </message>
+        <message>
+            <source>In the last week</source>
+            <translation>पिछले हफ़्ते में</translation>
+        </message>
+        <message>
+            <source>In the last month</source>
+            <translation>पिछले महीने में</translation>
+        </message>
+        <message>
+            <source>In the last 3 months</source>
+            <translation>पिछले 3 महीनों में</translation>
+        </message>
+        <message>
+            <source>In the last year</source>
+            <translation>पिछले साल में</translation>
+        </message>
+        <message>
+            <source>Rating at least</source>
+            <translation>रेटिंग कम से कम</translation>
+        </message>
+        <message>
+            <source>Published</source>
+            <translation>प्रकाशन</translation>
+        </message>
+        <message>
+            <source>From year</source>
+            <translation>इस वर्ष से</translation>
+        </message>
+        <message>
+            <source>To year</source>
+            <translation>इस वर्ष तक</translation>
+        </message>
+        <message>
+            <source>Chapters</source>
+            <translation>चैप्टर</translation>
+        </message>
+        <message>
+            <source>At least</source>
+            <translation>कम से कम</translation>
+        </message>
+        <message>
+            <source>At most</source>
+            <translation>ज़्यादा से ज़्यादा</translation>
+        </message>
+        <message>
+            <source>Fully translated</source>
+            <translation>पूरी तरह अनुवादित</translation>
+        </message>
+        <message>
+            <source>Every chapter is out in English, not only that the series has ended.</source>
+            <translation>हर अध्याय अंग्रेज़ी में आ चुका है, सिर्फ़ सीरीज़ ख़त्म नहीं हुई।</translation>
+        </message>
+        <message>
+            <source>Include series without a chapter count</source>
+            <translation>बिना अध्याय गिनती वाली सीरीज़ भी दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Type</source>
+            <translation>प्रकार</translation>
+        </message>
+        <message>
+            <source>Manhwa</source>
+            <translation>मनहवा</translation>
+        </message>
+        <message>
+            <source>Manga</source>
+            <translation>मंगा</translation>
+        </message>
+        <message>
+            <source>Manhua</source>
+            <translation>मनहुआ</translation>
+        </message>
+        <message>
+            <source>Hong Kong</source>
+            <translation>हांगकांग</translation>
+        </message>
+        <message>
+            <source>Demographic</source>
+            <translation>पाठक वर्ग</translation>
+        </message>
+        <message>
+            <source>Shounen</source>
+            <translation>शोनेन</translation>
+        </message>
+        <message>
+            <source>Shoujo</source>
+            <translation>शोजो</translation>
+        </message>
+        <message>
+            <source>Seinen</source>
+            <translation>सेइनेन</translation>
+        </message>
+        <message>
+            <source>Josei</source>
+            <translation>जोसेई</translation>
+        </message>
+        <message>
+            <source>None given</source>
+            <translation>नहीं बताया</translation>
+        </message>
+        <message>
+            <source>Content rating</source>
+            <translation>सामग्री रेटिंग</translation>
+        </message>
+        <message>
+            <source>Tap once to include, twice to leave out</source>
+            <translation>शामिल करने के लिए एक बार, बाहर करने के लिए दो बार टैप करें</translation>
+        </message>
+        <message>
+            <source>Safe</source>
+            <translation>सुरक्षित</translation>
+        </message>
+        <message>
+            <source>Suggestive</source>
+            <translation>उत्तेजक</translation>
+        </message>
+        <message>
+            <source>Erotica</source>
+            <translation>कामुक</translation>
+        </message>
+        <message>
+            <source>Pornographic</source>
+            <translation>अश्लील</translation>
+        </message>
+        <message>
+            <source>Graphic violence</source>
+            <translation>भीषण हिंसा</translation>
+        </message>
+        <message>
+            <source>Find a genre or tag</source>
+            <translation>शैली या टैग खोजें</translation>
+        </message>
+        <message>
+            <source>Up to %1 included</source>
+            <translation>%1 तक शामिल</translation>
+        </message>
+        <message>
+            <source>Show all %1</source>
+            <translation>सभी %1 दिखाएँ</translation>
+        </message>
+        <message>
+            <source>Tags</source>
+            <translation>टैग</translation>
+        </message>
+        <message>
+            <source>Up to %1 included and %2 left out</source>
+            <translation>%1 तक शामिल और %2 तक बाहर</translation>
+        </message>
+        <message>
+            <source>More tags</source>
+            <translation>और टैग</translation>
+        </message>
+        <message>
+            <source>No tag matches “%1”.</source>
+            <translation>“%1” से कोई टैग मेल नहीं खाता।</translation>
+        </message>
+        <message>
+            <source>Included</source>
+            <translation>शामिल</translation>
+        </message>
+        <message>
+            <source>Left out</source>
+            <translation>बाहर</translation>
         </message>
     </context>
     <context>
@@ -2151,6 +2438,26 @@
         <message>
             <source>%1 still searching</source>
             <translation>%1 अभी खोज रहे हैं</translation>
+        </message>
+        <message>
+            <source>Search filters</source>
+            <translation>खोज फ़िल्टर</translation>
+        </message>
+        <message>
+            <source>1 filter on</source>
+            <translation>1 फ़िल्टर चालू</translation>
+        </message>
+        <message>
+            <source>%1 filters on</source>
+            <translation>%1 फ़िल्टर चालू</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>साफ़ करें</translation>
+        </message>
+        <message>
+            <source>%1 titles from %2's catalogue, filtered</source>
+            <translation>%2 के कैटलॉग से %1 शीर्षक, फ़िल्टर किए हुए</translation>
         </message>
     </context>
     <context>
@@ -5668,6 +5975,26 @@
         <message>
             <source>Settings</source>
             <translation>सेटिंग</translation>
+        </message>
+        <message>
+            <source>Fast</source>
+            <translation>तेज़</translation>
+        </message>
+        <message>
+            <source>Most graphics cards</source>
+            <translation>ज़्यादातर ग्राफ़िक्स कार्ड</translation>
+        </message>
+        <message>
+            <source>Best</source>
+            <translation>सबसे अच्छा</translation>
+        </message>
+        <message>
+            <source>Needs a strong graphics card</source>
+            <translation>दमदार ग्राफ़िक्स कार्ड चाहिए</translation>
+        </message>
+        <message>
+            <source>Sharpen (Anime4K)</source>
+            <translation>शार्प करें (Anime4K)</translation>
         </message>
     </context>
     <context>
