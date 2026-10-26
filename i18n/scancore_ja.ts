@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>普段のキー</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>もっと見る</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 で続ける</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>全画面を終了</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

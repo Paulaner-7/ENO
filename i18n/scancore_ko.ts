@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>평소 키</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>더보기</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1에서 이어 보기</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>전체 화면 종료</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Touches habituelles</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Plus</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Continuer sur %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Quitter le plein écran</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

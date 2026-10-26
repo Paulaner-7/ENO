@@ -1294,9 +1294,20 @@ Rectangle {
             // Phones: smaller buttons, no gaps, so all fit beside the close button.
             readonly property int button: reader.width < 420 ? 32 : 34
             spacing: reader.width < 420 ? 0 : 4
+            // What the row would hold; when that is wider than the room
+            // beside the close button, the occasional ones (reactions,
+            // comments, another device, full screen) go into a More menu.
+            readonly property bool online: !String(reader.series.sourceUrl || "").startsWith("file:")
+            readonly property bool canReact: reactions.available && online
+            readonly property bool canHandOff: Live.devices.length > 0 && !!reader.series.id && !App.settings.incognito
+            readonly property int spares: (canReact ? 1 : 0) + (online ? 1 : 0) + (canHandOff ? 1 : 0) + 1
+            readonly property int core: 6 + (translateTo.visible ? 1 : 0) + (newWindow.visible ? 1 : 0) + (splitButton.visible ? 1 : 0)
+            readonly property real room: reader.width - 36 - 34 - 12
+            readonly property bool crowded: (core + spares) * (button + spacing) > room
             // Pages are on the progress bar at the left edge; chapters here.
             // Computers: on in a window of its own (where it left off).
             IconButton {
+                id: newWindow
                 diameter: topActions.button
                 visible: Router.windows && !(Window.window && Window.window.isPageWindow === true)
                 iconName: "columns-2"
@@ -1342,6 +1353,7 @@ Rectangle {
             }
             // Wide windows: another comic or novel on the right half.
             IconButton {
+                id: splitButton
                 diameter: topActions.button
                 visible: !!Router.shell && Router.shell.canSplit && Router.shell.splitItem !== reader
                 iconName: "panel-left"
@@ -1351,7 +1363,7 @@ Rectangle {
             }
             IconButton {
                 diameter: topActions.button
-                visible: reactions.available && !String(reader.series.sourceUrl || "").startsWith("file:")
+                visible: topActions.canReact && !topActions.crowded
                 iconName: "heart"
                 iconColor: reactions.mineFor(reader.currentPanel) ? Theme.accent : "white"
                 tip: qsTr("React to this page")
@@ -1359,7 +1371,7 @@ Rectangle {
             }
             IconButton {
                 diameter: topActions.button
-                visible: !String(reader.series.sourceUrl || "").startsWith("file:")
+                visible: topActions.online && !topActions.crowded
                 iconName: "message-circle"
                 iconColor: "white"
                 tip: qsTr("Comments")
@@ -1399,7 +1411,9 @@ Rectangle {
                 }
             }
             ContinueOn {
+                id: continueOn
                 diameter: topActions.button
+                visible: topActions.canHandOff && !topActions.crowded
                 seriesId: reader.series.id || ""
                 iconColor: "white"
                 save: () => reader.saveProgress(true)
@@ -1413,10 +1427,36 @@ Rectangle {
             }
             IconButton {
                 diameter: topActions.button
+                visible: !topActions.crowded
                 iconName: fullScreen.fullScreen ? "minimize" : "maximize"
                 iconColor: "white"
                 tip: qsTr("Full screen") + reader.keyHint("reader.fullscreen")
                 onClicked: fullScreen.toggle()
+            }
+            // Narrow screens: the occasional buttons, as a menu.
+            IconButton {
+                id: moreActions
+                diameter: topActions.button
+                visible: topActions.crowded
+                iconName: "ellipsis"
+                iconColor: "white"
+                tip: qsTr("More")
+                onClicked: {
+                    reader.showControls()
+                    const list = []
+                    if (topActions.canReact)
+                        list.push({ text: qsTr("React to this page"), icon: "heart", run: () => reactPopup.open() })
+                    if (topActions.online)
+                        list.push({ text: qsTr("Comments"), icon: "message-circle", run: () => comments.open() })
+                    if (topActions.canHandOff)
+                        for (const device of Live.devices)
+                            list.push({ text: qsTr("Continue on %1").arg(device.name), icon: device.platform === "android" ? "smartphone" : "monitor",
+                                        run: () => continueOn.send(device) })
+                    list.push({ text: fullScreen.fullScreen ? qsTr("Leave full screen") : qsTr("Full screen"),
+                                icon: fullScreen.fullScreen ? "minimize" : "maximize", run: () => fullScreen.toggle() })
+                    moreMenu.openAt(moreActions, moreActions.width, moreActions.height, list)
+                }
+                ActionMenu { id: moreMenu }
             }
         }
     }

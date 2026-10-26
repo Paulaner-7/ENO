@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>ปุ่มประจำ</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>เพิ่มเติม</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>ดูต่อบน %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>ออกจากโหมดเต็มจอ</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

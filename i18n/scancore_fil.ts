@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Mga karaniwang key</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Higit pa</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Ituloy sa %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Lumabas sa full screen</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

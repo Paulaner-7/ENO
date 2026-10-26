@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>रोज़ की कुंजियाँ</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>और</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 पर जारी रखें</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>फ़ुल स्क्रीन से बाहर निकलें</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

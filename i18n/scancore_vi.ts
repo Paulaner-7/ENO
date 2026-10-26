@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Phím thường ngày</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Thêm</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Tiếp tục trên %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Thoát toàn màn hình</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

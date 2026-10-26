@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>日常按键</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>更多</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>在 %1 上继续</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>退出全屏</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

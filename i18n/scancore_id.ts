@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Tombol sehari-hari</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Lainnya</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Lanjutkan di %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Keluar dari layar penuh</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

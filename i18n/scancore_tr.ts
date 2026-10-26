@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Günlük tuşlar</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Daha fazla</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>%1 üzerinde devam et</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Tam ekrandan çık</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Teclas de siempre</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Más</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Continuar en %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Salir de pantalla completa</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>

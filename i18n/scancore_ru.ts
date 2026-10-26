@@ -2340,6 +2340,18 @@
             <source>Everyday keys</source>
             <translation>Обычные клавиши</translation>
         </message>
+        <message>
+            <source>More</source>
+            <translation>Ещё</translation>
+        </message>
+        <message>
+            <source>Continue on %1</source>
+            <translation>Продолжить на %1</translation>
+        </message>
+        <message>
+            <source>Leave full screen</source>
+            <translation>Выйти из полноэкранного режима</translation>
+        </message>
     </context>
     <context>
         <name>ComicsPage</name>
