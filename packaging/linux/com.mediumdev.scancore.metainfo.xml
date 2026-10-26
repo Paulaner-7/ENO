@@ -52,6 +52,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="2.15.0" date="2026-10-26">
+      <description>
+        <p>Music: anime openings and endings from AnimeThemes, your own music files and music extensions, with synced lyrics you can tap to jump to, a queue, a mini player that keeps going while you read, and the song's video beside its words.</p>
+      </description>
+    </release>
     <release version="2.14.1" date="2026-10-26">
       <description>
         <p>Fixes the Android player's picture freezing when the next episode starts on some phones.</p>

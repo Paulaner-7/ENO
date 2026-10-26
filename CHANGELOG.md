@@ -2,6 +2,19 @@
 
 Downloads for the current version are listed on the [releases page](https://github.com/medium-gh/scancore/releases).
 
+## 2.15.0 — 2026-10-26
+
+Music: anime songs, your own files and music extensions, with lyrics that follow along.
+
+- **Music** is a new section (a preview: turn it on in the welcome's first step or Settings → Interface). It plays on while you read or watch, from a mini player above the tabs, and in the system's media controls.
+- **Anime songs**: openings, endings and inserts from AnimeThemes. Search by song, singer or anime, play this season's by anime, or open the **Songs** tab on an anime's page.
+- **Your files**: pick folders of MP3, FLAC, Ogg, Opus or M4A files. They're listed album by album with their covers; nothing is copied. Android reads folders chosen in the system picker.
+- **Music extensions**: add a repository of music extensions in Extensions and their songs show under Music → Extensions. SCANCORE doesn't come with any; how to write one is in docs/music-plugins.md.
+- **Now Playing**: the cover over a backdrop in its colours, a scrubber, shuffle and repeat, and the queue. Synced lyrics light up line by line and a tap jumps there. They come from a .lrc file next to your file, lyrics kept in the file, the extension, or LRCLIB.
+- **Watch the video**: an anime song's creditless video plays beside its lyrics, from where the song was.
+- Retro's hub gets a Music section, and the welcome asks what you read, watch and listen to.
+- Fixed: in the comic reader on phones, the previous-chapter button ran into the close button. When the top bar is too narrow, reactions, comments, another device and full screen move into a More menu.
+
 ## 2.14.1 — 2026-10-26
 
 - **Android player**: the picture no longer freezes, with the app, when the next episode starts on some phones (#30). Video is decoded by the phone's hardware with its frames copied back; Settings → Anime → Picture → Video decoding keeps the faster direct way to choose.

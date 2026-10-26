@@ -1,0 +1,4 @@
+• Music (preview): anime songs, your own files and music extensions
+• Synced lyrics you can tap, a queue and a mini player that keeps playing
+• Watch an anime song's video beside its lyrics
+• Fixed: the comic reader's top buttons crowding the close button on phones
