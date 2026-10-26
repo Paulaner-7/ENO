@@ -161,6 +161,8 @@ signals:
 private:
     void load();
     void drainEvents();
+    // Anime4K's shaders for the look's "sharpen".
+    void applySharpen();
     void setError(const QString &error);
     // The variant for preferredHeight, once a new file's tracks are known.
     void pickVariant();

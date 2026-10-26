@@ -41,6 +41,7 @@
 #include <QFontDatabase>
 #include <QIcon>
 #include <QOpenGLContext>
+#include <QSurfaceFormat>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQuickWindow>
@@ -195,6 +196,16 @@ void chooseGraphicsApi() {
         MpvPlayer::setSceneSupported(false);
         return;
     }
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    // Desktop OpenGL where the driver has it: Wayland may otherwise pick
+    // OpenGL ES, where mpv's renderer garbles Anime4K's Best networks.
+    QSurfaceFormat desktop = QSurfaceFormat::defaultFormat();
+    desktop.setRenderableType(QSurfaceFormat::OpenGL);
+    QOpenGLContext desktopProbe;
+    desktopProbe.setFormat(desktop);
+    if (desktopProbe.create() && !desktopProbe.isOpenGLES())
+        QSurfaceFormat::setDefaultFormat(desktop);
+#endif
 #if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
     QOpenGLContext probe;
     if (!probe.create()) {

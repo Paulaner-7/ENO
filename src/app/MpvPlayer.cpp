@@ -60,6 +60,9 @@ struct MpvCore {
     // mpv 0.38+ names subtitle borders "sub-outline-*" (older: "sub-border-*").
     bool outlineNames = true;
 #endif
+    // The scene draws with OpenGL ES (phones; some computers): mpv's
+    // renderer there garbles Anime4K's largest networks.
+    std::atomic<bool> gles{false};
     QMutex mutex;
     MpvPlayer *item = nullptr;
 
@@ -271,6 +274,8 @@ private:
         }
         mpv_render_context_set_update_callback(
             m_context, [](void *core) { static_cast<MpvCore *>(core)->post(&MpvPlayer::update); }, m_core.get());
+        if (auto *context = QOpenGLContext::currentContext())
+            m_core->gles = context->isOpenGLES();
         m_core->post(&MpvPlayer::rendererReady);
     }
 
@@ -357,6 +362,12 @@ MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_co
     option("demuxer-max-back-bytes", "50MiB");
 #endif
     option("network-timeout", "30");
+    // Tests: more options as "name=value;name=value".
+    for (const auto &pair : qEnvironmentVariable("SCANCORE_MPV_OPTIONS").split(QLatin1Char(';'), Qt::SkipEmptyParts)) {
+        const auto at = pair.indexOf(QLatin1Char('='));
+        if (at > 0)
+            option(pair.left(at).toUtf8().constData(), pair.mid(at + 1).toUtf8().constData());
+    }
     if (mpv_initialize(mpv) < 0) {
         mpv_terminate_destroy(mpv);
         m_error = QStringLiteral("The video player could not start.");
@@ -368,7 +379,8 @@ MpvPlayer::MpvPlayer(QQuickItem *parent) : QQuickFramebufferObject(parent), m_co
         mpv_free(name);
     else
         m_core->outlineNames = false;
-    mpv_request_log_messages(mpv, "warn");
+    // Tests: a chattier log (SCANCORE_MPV_LOG=v).
+    mpv_request_log_messages(mpv, qEnvironmentVariableIsSet("SCANCORE_MPV_LOG") ? qgetenv("SCANCORE_MPV_LOG").constData() : "warn");
     mpv_observe_property(mpv, TimePos, "time-pos", MPV_FORMAT_DOUBLE);
     mpv_observe_property(mpv, Duration, "duration", MPV_FORMAT_DOUBLE);
     mpv_observe_property(mpv, Pause, "pause", MPV_FORMAT_FLAG);
@@ -464,6 +476,7 @@ void MpvPlayer::setError(const QString &error) {
 
 void MpvPlayer::rendererReady() {
     m_rendererReady = true;
+    applySharpen();
     if (m_loadWaiting)
         load();
 }
@@ -816,8 +829,21 @@ void MpvPlayer::setLook(const QVariantMap &look) {
     setString(mpv, "keepaspect", fit == QLatin1String("stretch") ? QStringLiteral("no") : QStringLiteral("yes"));
     setString(mpv, "panscan", fit == QLatin1String("crop") ? QStringLiteral("1.0") : QStringLiteral("0.0"));
     setString(mpv, "video-unscaled", fit == QLatin1String("original") ? QStringLiteral("yes") : QStringLiteral("no"));
+    applySharpen();
+#endif
+}
+
+void MpvPlayer::applySharpen() {
+#ifdef SCANCORE_HAVE_MPV
+    if (!m_core->mpv)
+        return;
+    auto mode = m_look.value(QStringLiteral("sharpen")).toString();
+    // Best's networks come out tinted and checkered in mpv's OpenGL ES
+    // renderer (desktop OpenGL draws them right): Fast there.
+    if (mode == QLatin1String("hq") && m_core->gles)
+        mode = QStringLiteral("fast");
     // A list, so no separator (":" or ";" by system) gets in the way.
-    setStrings(mpv, "glsl-shaders", sharpenShaders(look.value(QStringLiteral("sharpen")).toString()));
+    setStrings(m_core->mpv, "glsl-shaders", sharpenShaders(mode));
 #endif
 }
 

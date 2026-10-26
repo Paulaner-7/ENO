@@ -108,6 +108,13 @@ Item {
         const fit = App.settings.playerFit || "fit"
         out.push({ key: "fit", icon: "crop", label: qsTr("Fit"), value: (fits.find(f => f.value === fit) || fits[0]).label,
                    choices: fits.map(f => ({ label: f.label, detail: f.detail, selected: f.value === fit, pick: () => App.setSetting("playerFit", f.value) })) })
+        // Anime4K, to compare while watching (also in Settings → Anime).
+        const sharpens = [{ value: "off", label: qsTr("Off") },
+                          { value: "fast", label: qsTr("Fast"), detail: root.phone ? "" : qsTr("Most graphics cards") }]
+            .concat(root.phone ? [] : [{ value: "hq", label: qsTr("Best"), detail: qsTr("Needs a strong graphics card") }])
+        const sharpen = root.phone && App.settings.animeSharpen === "hq" ? "fast" : App.settings.animeSharpen || "off"
+        out.push({ key: "sharpen", icon: "sparkles", label: qsTr("Sharpen (Anime4K)"), value: (sharpens.find(s => s.value === sharpen) || sharpens[0]).label,
+                   choices: sharpens.map(s => ({ label: s.label, detail: s.detail || "", selected: s.value === sharpen, pick: () => App.setSetting("animeSharpen", s.value) })) })
         return out
     }
 
