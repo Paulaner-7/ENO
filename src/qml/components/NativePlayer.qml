@@ -370,7 +370,7 @@ Item {
         id: bar
         anchors.bottom: parent.bottom
         width: parent.width
-        height: root.phone ? 64 : 76
+        height: root.phone ? 92 : 100
         visible: opacity > 0.01 && mpv.available
         opacity: root.controlsShown ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: Motion.slow } }
@@ -385,7 +385,7 @@ Item {
             id: seekBar
             x: 12
             width: parent.width - 24
-            y: root.phone ? 6 : 12
+            y: root.phone ? 8 : 12
             height: 22
             from: 0
             to: Math.max(1, mpv.duration)
@@ -460,9 +460,9 @@ Item {
             trackPointer: true
             backdropItem: mpv
             radius: height / 2
-            x: leftControls.x - 6
-            height: 46
-            width: leftControls.width + 12
+            x: leftControls.x - 8
+            height: leftControls.height + 12
+            width: leftControls.width + 16
             anchors.verticalCenter: leftControls.verticalCenter
             tintColor: Qt.rgba(0.06, 0.06, 0.08, 0.30)
         }
@@ -473,8 +473,8 @@ Item {
             trackPointer: true
             backdropItem: mpv
             radius: height / 2
-            height: 46
-            width: rightControls.width + 12
+            height: rightControls.height + 12
+            width: rightControls.width + 16
             anchors.right: parent.right
             anchors.rightMargin: 2
             anchors.verticalCenter: rightControls.verticalCenter
@@ -484,8 +484,10 @@ Item {
         Row {
             id: leftControls
             x: 8
+            z: 2
+            height: 40
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.phone ? 4 : 8
+            anchors.bottomMargin: root.phone ? 6 : 8
             spacing: 2
             IconButton {
                 id: playButton
@@ -556,8 +558,9 @@ Item {
                 }
             }
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                height: parent.height
                 leftPadding: 8
+                verticalAlignment: Text.AlignVCenter
                 text: root.formatTime(seekBar.pressed ? seekBar.value : mpv.position) + " / " + root.formatTime(mpv.duration)
                 color: "#e4e4e7"
                 font.family: Theme.fontSans
@@ -568,10 +571,12 @@ Item {
 
         Row {
             id: rightControls
+            z: 2
+            height: 40
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.phone ? 4 : 8
+            anchors.bottomMargin: root.phone ? 6 : 8
             spacing: 2
             // Quality, audio, subtitles, speed, fit and more: one panel.
             IconButton {

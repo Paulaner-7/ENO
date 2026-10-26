@@ -482,12 +482,6 @@ Rectangle {
         if (nativeStream && (currentUrl.length > 0 || casting))
             items.push(casting ? { text: qsTr("Stop casting"), icon: "cast", run: stopCasting }
                                : { text: qsTr("Cast to a TV"), icon: "cast", run: () => castPicker.open() })
-        if (canOpenOutside)
-            items.push({ text: qsTr("Open in another app"), icon: "external-link", run: () => openOutside(outsidePlayers[0]) })
-        if (media.anilistId)
-            items.push({ text: Party.active ? qsTr("Watch party (%1)").arg(Party.code) : qsTr("Watch together"), icon: "users", run: () => partyPanel.open() })
-        if (media.anilistId)
-            items.push({ text: qsTr("Comments"), icon: "message-circle", run: () => comments.open() })
         return items
     }
     ActionMenu { id: moreMenu }
@@ -753,16 +747,11 @@ Rectangle {
     onIndexChanged: if (panel.opened) fillPanel()
     function fillPanel() {
         const sections = nativeStream && player.item && player.item.settingsSections ? player.item.settingsSections() : []
-        if (streams.length > 1)
-            sections.push({ key: "server", icon: "server", label: qsTr("Server"), value: (streams.find(s => isCurrent(s)) || { quality: "" }).quality, stay: false,
-                            choices: streams.map(s => ({ label: s.quality, selected: isCurrent(s), pick: () => pickServer(s) })) })
         if (episodes.length > 1)
             sections.push({ key: "episodes", icon: "list", label: qsTr("Episodes"), value: qsTr("Episode ") + (episode.number || ""),
                             choices: episodes.map((e, i) => ({ label: qsTr("Episode ") + e.number, detail: e.title && !String(e.title).startsWith("Episode") ? e.title : "",
                                                                selected: i === index, pick: () => load(i) })) })
         const actions = []
-        if (!fromSource && (hasSources || nativeStream))
-            actions.push({ icon: "server", label: qsTr("Watch from…"), run: () => watchFrom.start(media, false) })
         for (const item of moreItems())
             actions.push({ icon: item.icon, label: item.text, enabled: item.enabled, run: item.run })
         panel.sections = sections
@@ -1016,14 +1005,6 @@ Rectangle {
                     iconName: "refresh-cw"
                     onClicked: watch.load(watch.index)
                 }
-                ScButton {
-                    visible: !watch.fromSource && watch.hasSources && !watch.finding
-                             && ((watch.streamsTask !== null && !watch.streamsTask.loading && watch.streams.length === 0)
-                                 || (watch.videosTask !== null && !watch.videosTask.loading && !watch.currentId))
-                    text: qsTr("Watch from…")
-                    iconName: "server"
-                    onClicked: watchFrom.start(watch.media, false)
-                }
             }
         }
 
@@ -1194,68 +1175,9 @@ Rectangle {
             anchors.verticalCenter: backButton.verticalCenter
             spacing: 6
             visible: !watch.phone
-            Repeater {
-                model: watch.sourceChips
-                Chip {
-                    required property var modelData
-                    text: modelData.label
-                    iconName: modelData.key === "more" ? "" : "server"
-                    selected: modelData.key === (watch.provider.source || "")
-                    onClicked: watch.pickSource(modelData.key)
-                }
-            }
-            Rectangle { visible: watch.sourceChips.length > 0 && watch.streams.length > 0; width: 1; height: 20; color: "#3f3f46"; anchors.verticalCenter: parent.verticalCenter }
-            Repeater {
-                model: watch.streams
-                Chip {
-                    required property var modelData
-                    text: modelData.quality
-                    selected: watch.isCurrent(modelData)
-                    onClicked: watch.pickServer(modelData)
-                }
-            }
-            Item { width: 8; height: 1 }
             IconButton { filled: true; iconName: "skip-back"; iconColor: "white"; enabled: watch.hasPrev; tip: qsTr("Previous episode") + watch.keyHint("player.prev"); onClicked: watch.load(watch.index - 1) }
             IconButton { filled: true; iconName: "skip-forward"; iconColor: "white"; enabled: watch.hasNext; tip: qsTr("Next episode") + watch.keyHint("player.next"); onClicked: watch.load(watch.index + 1) }
             IconButton { filled: true; iconName: "list"; iconColor: "white"; active: watch.sideOpen; tip: qsTr("Episodes"); onClicked: watch.sideOpen = !watch.sideOpen }
-            IconButton {
-                filled: true
-                visible: !watch.fromSource && (watch.hasSources || watch.nativeStream)
-                iconName: "server"
-                iconColor: "white"
-                tip: qsTr("Watch from")
-                onClicked: watchFrom.start(watch.media, false)
-            }
-            // On in a window of its own (a second screen).
-            IconButton {
-                visible: Router.windows && !(Window.window && Window.window.isPageWindow === true)
-                iconName: "columns-2"
-                iconColor: "white"
-                tip: qsTr("Open in a new window")
-                onClicked: {
-                    watch.saveProgress(true)
-                    Router.openWindow("pages/WatchPage.qml", { media: watch.media, episodes: watch.episodes, index: watch.index })
-                    Router.leave(watch)
-                }
-            }
-            IconButton {
-                visible: !!watch.media.anilistId
-                iconName: "users"
-                iconColor: Party.active ? Theme.accent : "white"
-                tip: Party.active ? qsTr("Watch party (%1)").arg(Party.code) : qsTr("Watch together")
-                onClicked: partyPanel.open()
-                Rectangle {
-                    visible: Party.unread > 0
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.margins: 4
-                    width: 8
-                    height: 8
-                    radius: 4
-                    color: Theme.accent
-                }
-            }
-            IconButton { filled: true; visible: !!watch.media.anilistId; iconName: "message-circle"; iconColor: "white"; tip: qsTr("Comments"); onClicked: comments.open() }
             ContinueOn { seriesId: watch.series.id || ""; iconColor: "white"; save: () => watch.saveProgress(true) }
             IconButton {
                 filled: true
@@ -1273,15 +1195,6 @@ Rectangle {
                 iconColor: watch.casting ? Theme.accent : "white"
                 tip: watch.casting ? qsTr("Stop casting") : qsTr("Cast to a TV")
                 onClicked: watch.casting ? watch.stopCasting() : castPicker.open()
-            }
-            IconButton {
-                filled: true
-                id: outsideButton
-                visible: watch.canOpenOutside
-                iconName: "external-link"
-                iconColor: "white"
-                tip: qsTr("Open in another player")
-                onClicked: watch.pickOutside(outsideButton)
             }
             IconButton {
                 filled: true
@@ -1427,54 +1340,11 @@ Rectangle {
                 x: 16
                 width: parent.width - 32
                 height: 36
-                Flickable {
-                    maximumFlickVelocity: Motion.flickVelocity
-                    flickDeceleration: Motion.flickDeceleration
-                    anchors.left: parent.left
-                    anchors.right: phoneNav.left
-                    anchors.rightMargin: 8
-                    height: parent.height
-                    contentWidth: chips.width
-                    clip: true
-                    flickableDirection: Flickable.HorizontalFlick
-                    Row {
-                        id: chips
-                        spacing: 6
-                        anchors.verticalCenter: parent.verticalCenter
-                        Repeater {
-                            model: watch.sourceChips
-                            Chip {
-                                required property var modelData
-                                text: modelData.label
-                                iconName: modelData.key === "more" ? "" : "server"
-                                selected: modelData.key === (watch.provider.source || "")
-                                onClicked: watch.pickSource(modelData.key)
-                            }
-                        }
-                        Rectangle { visible: watch.sourceChips.length > 0 && watch.streams.length > 0; width: 1; height: 20; color: "#3f3f46"; anchors.verticalCenter: parent.verticalCenter }
-                        Repeater {
-                            model: watch.streams
-                            Chip {
-                                required property var modelData
-                                text: modelData.quality
-                                selected: watch.isCurrent(modelData)
-                                onClicked: watch.pickServer(modelData)
-                            }
-                        }
-                    }
-                }
                 Row {
                     id: phoneNav
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 4
-                    IconButton {
-                        visible: !watch.fromSource && (watch.hasSources || watch.nativeStream)
-                        iconName: "server"
-                        iconColor: "white"
-                        diameter: 40
-                        onClicked: watchFrom.start(watch.media, false)
-                    }
                     // Our own player's bar has these; a web player has none.
                     IconButton { visible: !watch.nativeStream; iconName: "skip-back"; iconColor: "white"; diameter: 40; enabled: watch.hasPrev; onClicked: watch.load(watch.index - 1) }
                     IconButton { visible: !watch.nativeStream; iconName: "skip-forward"; iconColor: "white"; diameter: 40; enabled: watch.hasNext; onClicked: watch.load(watch.index + 1) }
