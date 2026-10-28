@@ -53,6 +53,62 @@ Item {
     signal nextRequested()
     // A tap on the picture (phones): WatchPage shows or hides its chrome.
     signal tapped()
+    signal subtitleTranslated(string label)
+    signal subtitleTranslationFailed(string message)
+
+    readonly property bool translateSubs: App.settings.animeTranslateSubs === true
+    property var subtitleTask: null
+    property var translatedCues: []
+    property string translatedTrackUrl: ""
+
+    function checkExternalSubtitleTranslation() {
+        const list = (video && Array.isArray(video.subtitles)) ? video.subtitles : []
+        if (!translateSubs || list.length === 0) {
+            translatedCues = []
+            translatedTrackUrl = ""
+            subtitleTask = null
+            return
+        }
+        const isIt = (t) => /ita|italian|italiano|\bit\b/i.test(String(t.lang || t.title || ""))
+        if (list.some(isIt)) {
+            translatedCues = []
+            return
+        }
+        const pick = list.find(t => t && t.url && /eng|english|\ben\b/i.test(String(t.lang || t.title || ""))) || list.find(t => t && t.url)
+        if (!pick || pick.url === translatedTrackUrl) return
+        translatedTrackUrl = pick.url
+        const referer = (video && video.headers && (video.headers.Referer || video.headers.referer)) || url
+        subtitleTask = Translator.subtitles(pick.url, referer, "en", "it", {})
+    }
+
+    onVideoChanged: checkExternalSubtitleTranslation()
+    onTranslateSubsChanged: checkExternalSubtitleTranslation()
+
+    Connections {
+        target: root.subtitleTask
+        function onFinished(result) {
+            if (!result || !Array.isArray(result.cues)) return
+            root.translatedCues = result.cues
+            mpv.setTrack("sub", 0)
+            root.subtitleTranslated(Qt.locale("it").nativeLanguageName || "it")
+        }
+        function onFailed(error) {
+            root.subtitleTranslationFailed(error)
+        }
+    }
+
+    readonly property string activeTranslatedText: {
+        if (!translateSubs || !translatedCues || translatedCues.length === 0) return ""
+        const ms = mpv.position * 1000
+        const lines = []
+        for (let i = 0; i < translatedCues.length; ++i) {
+            const c = translatedCues[i]
+            if (ms >= c.start && ms <= c.end && c.text) {
+                if (lines.indexOf(c.text) < 0) lines.push(c.text)
+            }
+        }
+        return lines.join("\n")
+    }
 
     function seek(seconds) { mpv.seek(seconds) }
     function togglePause() { mpv.togglePause(); interacted() }
@@ -106,7 +162,8 @@ Item {
             { value: "off", label: qsTr("Off"), detail: qsTr("Original 1080p stream without upscaler") },
             { value: "hq", label: qsTr("Anime4K Soft (M)"), detail: qsTr("Stepped down from L: softer lines, no harsh AI artifacts") },
             { value: "light", label: qsTr("Anime4K Light (S)"), detail: qsTr("Ultra-gentle enhancement: minimal processing") },
-            { value: "fsrcnnx_hq", label: qsTr("4K FSRCNNX"), detail: qsTr("Natural mathematical CNN: zero edge alteration") }
+            { value: "fsrcnnx_hq", label: qsTr("4K FSRCNNX"), detail: qsTr("Natural mathematical CNN: zero edge alteration") },
+            { value: "ravu", label: qsTr("RAVU + KrigBilateral"), detail: qsTr("Clean lines (RAVU-Zoom) and colours that stay inside them") }
         ]
         const sharpen = App.settings.animeSharpen || "hq"
         out.push({ key: "sharpen", icon: "sparkles", label: qsTr("Upscale 4K"),
@@ -117,6 +174,19 @@ Item {
                        selected: s.value === sharpen,
                        pick: () => App.setSetting("animeSharpen", s.value)
                    })) })
+        out.push({ key: "deband", icon: "sparkles", label: qsTr("Deband"),
+                   value: App.settings.animeDeband === true ? qsTr("On") : qsTr("Off"),
+                   choices: [{ label: qsTr("Off"), selected: App.settings.animeDeband !== true, pick: () => App.setSetting("animeDeband", false) },
+                             { label: qsTr("On"), detail: qsTr("Smooths colour banding and compression blocks"),
+                               selected: App.settings.animeDeband === true, pick: () => App.setSetting("animeDeband", true) }] })
+        const smooths = [{ value: "off", label: qsTr("Off"), detail: qsTr("Every frame as it is") },
+                         { value: "natural", label: qsTr("Natural"), detail: qsTr("Light blending, no ghosting") },
+                         { value: "smooth", label: qsTr("Smooth"), detail: qsTr("Fluid motion at the screen's refresh rate; a little soft in fast scenes") }]
+        const smooth = App.settings.animeSmooth || "off"
+        out.push({ key: "smooth", icon: "gauge", label: qsTr("Smooth motion"),
+                   value: (smooths.find(s => s.value === smooth) || smooths[0]).label,
+                   choices: smooths.map(s => ({ label: s.label, detail: s.detail, selected: s.value === smooth,
+                                                pick: () => App.setSetting("animeSmooth", s.value) })) })
         return out
     }
 
@@ -144,7 +214,8 @@ Item {
         subtitles: root.video.subtitles || []
         look: ({ subtitleScale: Number(App.settings.subtitleScale) || 1, subtitleOutline: Number(App.settings.subtitleOutline),
                  subtitleColor: App.settings.subtitleColor || "#ffffff", subtitleBox: App.settings.subtitleBox === true,
-                 sharpen: App.settings.animeSharpen || "off", fit: App.settings.playerFit || "fit" })
+                 sharpen: App.settings.animeSharpen || "off",
+                 deband: App.settings.animeDeband === true, smooth: App.settings.animeSmooth || "off", fit: App.settings.playerFit || "fit" })
         audio: root.video.audio || []
         startAt: root.startAt
         // Settings → Anime: the variant and audio language to start with.
@@ -317,6 +388,24 @@ Item {
             font.pixelSize: Theme.textSm
             font.weight: Font.DemiBold
         }
+    }
+
+    Text {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: root.controlsShown && bar.visible ? bar.height + 20 : 42
+        width: parent.width * 0.88
+        visible: root.activeTranslatedText.length > 0
+        text: root.activeTranslatedText
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.WordWrap
+        color: App.settings.subtitleColor || "#ffffff"
+        style: Text.Outline
+        styleColor: "#000000"
+        font.family: Theme.fontSans
+        font.weight: Font.Bold
+        font.pixelSize: Math.round(Math.max(18, parent.height * 0.036) * (Number(App.settings.subtitleScale) || 1))
+        z: 3
     }
 
     Spinner {

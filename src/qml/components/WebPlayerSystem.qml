@@ -28,6 +28,20 @@ Item {
     readonly property string subLangPref: App.settings.animeSubLang || "it"
     readonly property string subQualityPref: App.settings.animeSubQuality || "high"
     readonly property string videoQualityPref: App.settings.animeVideoQuality || "max"
+    // Settings → Anime: a track in another language is translated here
+    // (Translator) and shown over the video.
+    readonly property bool translateSubs: App.settings.animeTranslateSubs === true
+    property var subtitleTracks: []
+    property string subtitleSignature: ""
+    property string currentSubtitleUrl: ""
+    property string translatingSubtitle: ""
+    property string failedSubtitle: ""
+    property bool subtitleTranslationStarted: false
+    property bool subtitleToastShown: false
+    property real subToastUntil: 0
+    property string subToastMsg: ""
+    property var subtitleTask: null
+    property var translatedCues: []
 
     // Top bar & playback context (injected inside WKWebView on desktop)
     property string mediaTitle: ""
@@ -42,6 +56,19 @@ Item {
     property var activeSkip: null
     property var episodesList: []
     property int currentIndex: 0
+    property real videoTimeMs: 0
+    readonly property string activeTranslatedText: {
+        if (!translateSubs || !translatedCues || translatedCues.length === 0) return ""
+        const ms = videoTimeMs
+        const lines = []
+        for (let i = 0; i < translatedCues.length; ++i) {
+            const c = translatedCues[i]
+            if (ms >= c.start && ms <= c.end && c.text) {
+                if (lines.indexOf(c.text) < 0) lines.push(c.text)
+            }
+        }
+        return lines.join("\n")
+    }
 
     readonly property string streamsJson: JSON.stringify(streams || [])
     readonly property string activeSkipJson: JSON.stringify(activeSkip || null)
@@ -69,6 +96,9 @@ Item {
     signal skipClicked(real toSeconds)
     signal episodeSelected(int index)
     signal italianMissing()
+    // The player's track was translated and is now shown.
+    signal subtitleTranslated(string label)
+    signal subtitleTranslationFailed(string error)
 
     property int taps: 0
 
@@ -99,6 +129,147 @@ Item {
         if (direct && web) {
             web.runJavaScript("window.postMessage({zenFullscreenState:" + (isFs ? "true" : "false") + "},'*')")
         }
+    }
+
+    // The language of a subtitle track as its name gives it ("English",
+    // "ita", "Español"); "" when the name does not say.
+    function subtitleLanguage(name) {
+        const n = String(name || "").toLowerCase()
+        if (/ita|italian|italiano/.test(n)) return "it"
+        if (/eng|english/.test(n)) return "en"
+        if (/jpn|japanese|日本語/.test(n)) return "ja"
+        if (/spa|spanish|español|castellano/.test(n)) return "es"
+        if (/fre|french|français|francais/.test(n)) return "fr"
+        if (/ger|german|deutsch/.test(n)) return "de"
+        if (/por|portuguese|português|portugues/.test(n)) return "pt"
+        if (/rus|russian|русский/.test(n)) return "ru"
+        if (/kor|korean|한국어/.test(n)) return "ko"
+        if (/chi|chinese|中文|简体|繁體/.test(n)) return "zh"
+        if (/ara|arabic|العربية/.test(n)) return "ar"
+        return ""
+    }
+
+    // A track's address without the CDN host: the same file when the host
+    // rotates during playback.
+    function subtitleKey(url) {
+        const address = String(url || "")
+        const start = address.indexOf("://")
+        const slash = start < 0 ? -1 : address.indexOf("/", start + 3)
+        return slash >= 0 ? address.slice(slash) : address
+    }
+
+    // A track worth translating: full dialogue over signs and title cards.
+    function subtitleScore(track) {
+        const n = String(track.name || "").toLowerCase()
+        const u = String(track.url || "").toLowerCase()
+        let score = 0
+        if (/full|dialog|complete/.test(n)) score += 4
+        if (/subtitle/.test(n)) score += 1
+        if (/eng|english/.test(n)) score += 2
+        if (/\.(srt|vtt)(\?|$)/.test(u)) score += 0.25
+        if (/forced|dubtitle|sdh|cc\b/.test(n)) score -= 4
+        if (/sign|song|karaoke|\bop\b|\bed\b/.test(n)) score -= 4
+        if (/episode name|title|credit/.test(n)) score -= 4
+        return score
+    }
+
+    // The track to translate: full dialogue first, the one playing a little
+    // beyond a tie. Null when the player already has Italian: nothing to do.
+    function pickSubtitle(tracks, current) {
+        const list = (tracks || []).filter(t => t && t.url)
+        if (list.length === 0 || list.some(t => subtitleLanguage(t.name) === "it")) return null
+        let best = null
+        let bestScore = -1000
+        for (const t of list) {
+            const score = subtitleScore(t) + (subtitleKey(t.url) === subtitleKey(current) ? 0.5 : 0)
+            if (score > bestScore) {
+                bestScore = score
+                best = t
+            }
+        }
+        return best
+    }
+
+    // The probe's tracks: translate the chosen one once per page or track.
+    function considerSubtitles(tracks, current) {
+        currentSubtitleUrl = current || ""
+        const list = []
+        for (const t of (tracks || []))
+            if (t && t.url) list.push({ name: t.name || "", url: t.url })
+        const signature = JSON.stringify(list.map(t => ({ name: t.name, key: subtitleKey(t.url) })))
+        if (signature !== subtitleSignature) {
+            subtitleSignature = signature
+            subtitleTracks = list
+        }
+        if (!translateSubs || list.length === 0 || !visible) return
+        const track = pickSubtitle(list, currentSubtitleUrl)
+        if (!track || subtitleKey(track.url) === translatingSubtitle || subtitleKey(track.url) === failedSubtitle) return
+        translateSubtitle(track)
+    }
+
+    function translateSubtitle(track) {
+        if (!track || !track.url || (subtitleTask && subtitleTask.loading)) return
+        if (!Translator.textReady) {
+            failedSubtitle = subtitleKey(track.url)
+            subtitleTranslationFailed(Translator.hint)
+            return
+        }
+        subtitleTranslationStarted = true
+        translatingSubtitle = subtitleKey(track.url)
+        subToastMsg = "Traduzione sottotitoli in corso…"
+        subToastUntil = Date.now() + 8000
+        subtitleTask = Translator.subtitles(track.url, currentUrl || url, subtitleLanguage(track.name), "it", {
+            work: mediaTitle,
+            chapter: episodeLine,
+            scope: mediaTitle.length > 0 ? "anime:" + mediaTitle : ""
+        })
+    }
+
+    function showTranslatedSubtitles(result) {
+        if (!result) return
+        translatedCues = Array.isArray(result.cues) ? result.cues : []
+    }
+
+    function removeTranslatedSubtitles() {
+        translatedCues = []
+        if (!web) return
+        web.runJavaScript("(function(){try{var ov=document.getElementById('eno-sub-overlay');if(ov){ov.textContent='';ov.classList.remove('active');}var s=document.getElementById('eno-sub-style');if(s)s.remove();}catch(_){}})()")
+    }
+
+    function escapeRx(str) {
+        return String(str).replace(/\\/g, "\\\\")
+    }
+
+    function resetSubtitles() {
+        subtitleTracks = []
+        subtitleSignature = ""
+        currentSubtitleUrl = ""
+        translatingSubtitle = ""
+        failedSubtitle = ""
+        subtitleTranslationStarted = false
+        subtitleToastShown = false
+        subToastUntil = 0
+        subToastMsg = ""
+        subtitleTask = null
+        translatedCues = []
+    }
+
+    onVisibleChanged: {
+        if (visible && translateSubs && subtitleTracks.length > 0 && translatedCues.length === 0)
+            considerSubtitles(subtitleTracks, currentSubtitleUrl)
+    }
+
+    onTranslateSubsChanged: {
+        subtitleSignature = ""
+        failedSubtitle = ""
+        if (translateSubs) {
+            if (subtitleTracks.length > 0)
+                considerSubtitles(subtitleTracks, currentSubtitleUrl)
+            return
+        }
+        removeTranslatedSubtitles()
+        translatingSubtitle = ""
+        subtitleTranslationStarted = false
     }
 
     function wrapper(src) {
@@ -137,18 +308,22 @@ Item {
         + "var activeSkip=" + activeSkipJson + ";"
         + "var episodes=" + episodesJson + ";"
         + "var currentIdx=" + Number(currentIndex) + ";"
+        + "var subText=" + JSON.stringify(activeTranslatedText) + ";"
+        + "var subTranslated=" + (translatedCues.length > 0 ? "true" : "false") + ";"
+        + "var translateSubs=" + (translateSubs ? "true" : "false") + ";"
+        + "var subBanner=" + JSON.stringify(Date.now() < subToastUntil ? subToastMsg : "") + ";"
         + "if(!w.__sc){"
-        + "  w.__sc={k:[],toggleFs:false,subConfigured:false,qualityConfigured:false,moved:false,act:null,drawerOpen:false,autoResumed:false,italianMissing:false,playTicks:0};"
+        + "  w.__sc={k:[],toggleFs:false,subConfigured:false,subNotified:false,qualityConfigured:false,moved:false,act:null,drawerOpen:false,autoResumed:false,italianMissing:false,playTicks:0,subs:[],curSub:'',scanned:null};"
         + "  try{"
         + "    localStorage.setItem('zen-subtitle-quality','" + subQualityPref + "');"
         + "    localStorage.setItem('zen-quality-pref','1080p');"
         + "    localStorage.removeItem('artplayer-subtitle-pref-dub');"
-        + "    var curSub=localStorage.getItem('artplayer-subtitle-pref-sub');"
-        + "    if(!curSub||curSub==='null'||curSub==='[]')localStorage.setItem('artplayer-subtitle-pref-sub',JSON.stringify(['Italian']));"
+        + "    if(translateSubs){localStorage.setItem('artplayer-subtitle-pref-sub','off');localStorage.setItem('artplayer-subtitle-pref-dub','off');}"
+        + "    else if('" + subLangPref + "'==='it'){localStorage.setItem('artplayer-subtitle-pref-sub',JSON.stringify(['Italian']));}"
         + "  }catch(_){}"
         + "  try{if(w.Hls&&w.Hls.DefaultConfig){w.Hls.DefaultConfig.audioTrackLoadingTimeOut=30000;}}catch(_){}"
         + "  w.addEventListener('keydown',function(e){"
-        + "    if(e.repeat||/^(Control|Shift|Alt|Meta)$/.test(e.key))return;"
+        + "    if(e.repeat||['Control','Shift','Alt','Meta'].indexOf(e.key)>=0)return;"
         + "    w.__sc.k.push({key:e.key,ctrl:e.ctrlKey,alt:e.altKey,shift:e.shiftKey,meta:e.metaKey});"
         + "  },true);"
         + "  w.addEventListener('pointermove',function(){w.__sc.moved=true;},true);"
@@ -179,14 +354,17 @@ Item {
         + "        try{art.plugins.artplayerPluginLibass.resize();}catch(_){}"
         + "      }"
         + "    }"
-        + "    if(!w.__sc.subConfigured&&art.setting&&art.setting.option){"
-        + "      var subOpt=art.setting.option.find(function(o){"
+        + "    var subOpt=null;"
+        + "    var settingOpts=(art.setting&&art.setting.option)||(art.option&&art.option.settings)||null;"
+        + "    if(settingOpts){"
+        + "      subOpt=settingOpts.find(function(o){"
         + "        return o.html==='Subtitles'||o.name==='subtitles'||(o.selector&&o.selector.some(function(s){return s.name==='off';}));"
         + "      });"
-        + "      if(subOpt&&subOpt.selector&&subOpt.selector.length>1){"
-        + "        var langRegex=" + (subLangPref === "it" ? "/ita|italian|italiano/i" : subLangPref === "en" ? "/eng|english/i" : "/.*/") + ";"
+        + "      if(!w.__sc.subConfigured&&subOpt&&subOpt.selector&&subOpt.selector.length>1){"
         + "        var matchSub=subOpt.selector.find(function(s){"
-        + "          return s.name!=='off'&&langRegex.test(s.name||s.html||'');"
+        + "          if(!s||s.name==='off')return false;"
+        + "          var nm=String(s.name||s.html||'').toLowerCase();"
+        + "          return '" + subLangPref + "'==='it'?(nm.indexOf('ita')>=0||nm.indexOf('italian')>=0):'" + subLangPref + "'==='en'?(nm.indexOf('eng')>=0||nm.indexOf('english')>=0):true;"
         + "        });"
         + "        if(matchSub){"
         + "          var curSubUrl=(art.subtitle&&art.subtitle.url)?art.subtitle.url:'';"
@@ -198,20 +376,35 @@ Item {
         + "            }catch(_){}"
         + "          }"
         + "          w.__sc.hasSubIta=true;"
+        + "          w.__sc.subConfigured=true;"
         + "        }else{"
         + "          w.__sc.hasSubIta=false;"
-        + "          if('" + subLangPref + "'==='it'){"
+        + "          if('" + subLangPref + "'==='it'&&!w.__sc.subNotified){"
         + "            w.__sc.italianMissing=true;"
+        + "            w.__sc.subNotified=true;"
         + "          }"
         + "        }"
-        + "        w.__sc.subConfigured=true;"
+        + "      }"
+        + "      if(subOpt&&subOpt.selector){"
+        + "        var subs=[];"
+        + "        for(var si=0;si<subOpt.selector.length;si++){"
+        + "          var sub=subOpt.selector[si];"
+        + "          if(sub&&sub.name!=='off'&&sub.url)subs.push({name:sub.name||sub.html||'',url:sub.url});"
+        + "        }"
+        + "        if(subs.length>0)w.__sc.subs=subs;"
         + "      }"
         + "    }"
-        + "    if(!w.__sc.subConfigured&&art&&(art.playing||(art.video&&art.video.readyState>=2))){"
+        + "    if(art.subtitle&&art.subtitle.url){"
+        + "      w.__sc.curSub=art.subtitle.url;"
+        + "      if((!w.__sc.subs||w.__sc.subs.length===0)&&!w.__sc.scanned){"
+        + "        w.__sc.subs=[{name:'Default',url:art.subtitle.url}];"
+        + "      }"
+        + "    }"
+        + "    if(!w.__sc.subConfigured&&!w.__sc.subNotified&&art&&(art.playing||(art.video&&art.video.readyState>=2))){"
         + "      w.__sc.playTicks=(w.__sc.playTicks||0)+1;"
-        + "      if(w.__sc.playTicks>=6&&'" + subLangPref + "'==='it'){"
+        + "      if(w.__sc.playTicks>=8&&'" + subLangPref + "'==='it'){"
         + "        w.__sc.italianMissing=true;"
-        + "        w.__sc.subConfigured=true;"
+        + "        w.__sc.subNotified=true;"
         + "      }"
         + "    }"
         + "    if(!w.__sc.qualityConfigured&&art.hls&&art.hls.levels&&art.hls.levels.length>0){"
@@ -252,7 +445,7 @@ Item {
         + "      w.__sc.artErrHooked=true;"
         + "      try{"
         + "        art.on('error',function(err){"
-        + "          if(err&&/audiotrack/i.test(String(err))){"
+        + "          if(err&&String(err).toLowerCase().indexOf('audiotrack')>=0){"
         + "            try{if(art.hls){art.hls.audioTrack=0;art.hls.recoverMediaError();}}catch(_){}"
         + "          }"
         + "        });"
@@ -261,10 +454,37 @@ Item {
         + "    try{"
         + "      var notices=document.querySelectorAll('.art-notice,.art-error');"
         + "      for(var ni=0;ni<notices.length;ni++){"
-        + "        if(/audiotrack/i.test(notices[ni].textContent||'')){"
+        + "        if((notices[ni].textContent||'').toLowerCase().indexOf('audiotrack')>=0){"
         + "          notices[ni].style.display='none';"
         + "        }"
         + "      }"
+        + "    }catch(_){}"
+        + "  }"
+        + "  if((!w.__sc.subs||w.__sc.subs.length===0)&&w.__sc.scanned)w.__sc.subs=w.__sc.scanned;"
+        + "  if(!w.__sc.scanned&&document.scripts&&document.scripts.length>0){"
+        + "    try{"
+        + "      var scs=document.scripts,found=[];"
+        + "      for(var sci=0;sci<scs.length;sci++){"
+        + "        var tx=scs[sci].textContent||'';"
+        + "        var at=tx.indexOf('subtitles:[{');"
+        + "        if(at<0)continue;"
+        + "        var seg=tx.slice(at,at+20000);"
+        + "        var parts=seg.split('url:\"');"
+        + "        for(var pi=1;pi<parts.length;pi++){"
+        + "          var p=parts[pi];"
+        + "          var uEnd=p.indexOf('\"');"
+        + "          if(uEnd<0)continue;"
+        + "          var u=p.slice(0,uEnd);"
+        + "          var lIdx=p.indexOf('language:\"');"
+        + "          if(lIdx<0||lIdx>400)continue;"
+        + "          var lRest=p.slice(lIdx+10);"
+        + "          var lEnd=lRest.indexOf('\"');"
+        + "          if(lEnd<0)continue;"
+        + "          found.push({name:lRest.slice(0,lEnd),url:u});"
+        + "        }"
+        + "        if(found.length)break;"
+        + "      }"
+        + "      if(found.length){w.__sc.subs=found;w.__sc.scanned=found;}"
         + "    }catch(_){}"
         + "  }"
         + "}catch(_){}"
@@ -325,8 +545,47 @@ Item {
         + "        + '.eno-ep-item:hover{background:rgba(255,255,255,0.08);}'"
         + "        + '.eno-ep-item.active{background:rgba(255,255,255,0.14);border-left:3px solid #3b82f6;}'"
         + "        + '.eno-ep-num{font-size:13px;font-weight:600;color:#fff;}'"
-        + "        + '.eno-ep-name{font-size:11px;color:#a1a1aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}';"
+        + "        + '.eno-ep-name{font-size:11px;color:#a1a1aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}'"
+        + "        + '#eno-sub-overlay{position:fixed;left:6%;right:6%;bottom:64px;z-index:2147483645;pointer-events:none;text-align:center;font-family:\"Gandhi Sans\",-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;font-weight:700;font-size:clamp(20px,2.6vw,30px);line-height:1.35;color:#ffffff;text-shadow:-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000,0 2px 8px rgba(0,0,0,0.92);white-space:pre-line;display:none;}'"
+        + "        + '#eno-sub-overlay.active{display:block;}'"
+        + "        + '#eno-sub-toast{position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:2147483647;pointer-events:none;background:rgba(16,185,129,0.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.28);border-radius:999px;padding:7px 18px;font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.45);opacity:0;transition:opacity 0.25s ease;}'"
+        + "        + '#eno-sub-toast.show{opacity:1;}';"
         + "      document.head.appendChild(st);"
+        + "    }"
+        + "    if(!document.getElementById('eno-sub-toast')){"
+        + "      var stb=document.createElement('div');"
+        + "      stb.id='eno-sub-toast';"
+        + "      stb.style.cssText='position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:2147483647;pointer-events:none;background:rgba(16,185,129,0.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.28);border-radius:999px;padding:7px 18px;font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.45);display:none;';"
+        + "      document.body.appendChild(stb);"
+        + "    }"
+        + "    var stb=document.getElementById('eno-sub-toast');"
+        + "    if(stb){"
+        + "      if(subBanner.length>0){stb.textContent=subBanner;stb.style.display='block';}"
+        + "      else{stb.style.display='none';}"
+        + "    }"
+        + "    if(!document.getElementById('eno-sub-overlay')){"
+        + "      var sov=document.createElement('div');"
+        + "      sov.id='eno-sub-overlay';"
+        + "      sov.style.cssText='position:fixed;left:6%;right:6%;bottom:64px;z-index:2147483645;pointer-events:none;text-align:center;font-family:\"Gandhi Sans\",-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;font-weight:700;font-size:clamp(20px,2.6vw,30px);line-height:1.35;color:#ffffff;text-shadow:-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000,0 2px 8px rgba(0,0,0,0.92);white-space:pre-line;display:none;';"
+        + "      document.body.appendChild(sov);"
+        + "    }"
+        + "    var sov=document.getElementById('eno-sub-overlay');"
+        + "    if(sov){"
+        + "      if(sov.textContent!==subText)sov.textContent=subText;"
+        + "      sov.style.display=subText.length>0?'block':'none';"
+        + "    }"
+        + "    if(subTranslated||translateSubs){"
+        + "      if(!document.getElementById('eno-sub-style')){"
+        + "        var sst=document.createElement('style');"
+        + "        sst.id='eno-sub-style';"
+        + "        sst.textContent='.art-subtitle,.artplayer-plugin-libass,.libassjs-canvas-parent,.libassjs-canvas,.art-layer-subtitleLoading,.subtitle-toast{display:none!important;opacity:0!important;visibility:hidden!important}';"
+        + "        document.head.appendChild(sst);"
+        + "      }"
+        + "      if(art&&art.subtitle)art.subtitle.show=false;"
+        + "      if(art&&art.plugins&&art.plugins.artplayerPluginLibass){"
+        + "        try{art.plugins.artplayerPluginLibass.hide();}catch(_){}"
+        + "        try{if(art.plugins.artplayerPluginLibass.libass)art.plugins.artplayerPluginLibass.libass.freeTrack();}catch(_){}"
+        + "      }"
         + "    }"
         + "    if(!document.getElementById('eno-topbar')){"
         + "      var tb=document.createElement('div');"
@@ -422,11 +681,12 @@ Item {
         + "  }"
         + "}catch(_){}"
         + "var k=w.__sc.k;w.__sc.k=[];"
+        + "try{if(w.__sc&&w.__sc.enoSyncSubs)w.__sc.enoSyncSubs();}catch(_){}"
         + "var toggleFs=w.__sc.toggleFs;w.__sc.toggleFs=false;"
         + "var moved=w.__sc.moved;w.__sc.moved=false;"
         + "var act=w.__sc.act;w.__sc.act=null;"
         + "var noIta=!!w.__sc.italianMissing;w.__sc.italianMissing=false;"
-        + "return JSON.stringify({t:v?v.currentTime:0,d:v&&isFinite(v.duration)?v.duration:0,s:v&&v.ended?'Ended':'',k:k,fs:toggleFs,mv:moved,act:act,noIta:noIta});"
+        + "return JSON.stringify({t:v?v.currentTime:0,d:v&&isFinite(v.duration)?v.duration:0,s:v&&v.ended?'Ended':'',k:k,fs:toggleFs,mv:moved,act:act,noIta:noIta,subs:w.__sc.subs||[],curSub:w.__sc.curSub||''});"
         + "})()"
 
     function host(address) {
@@ -449,7 +709,10 @@ Item {
         else web.loadHtml(wrapper(url), "https://reanime.to/")
     }
     onReadyChanged: load()
-    onUrlChanged: load()
+    onUrlChanged: {
+        resetSubtitles()
+        load()
+    }
 
     Connections {
         target: root.Window.window
@@ -484,7 +747,10 @@ Item {
                 && root.host(request.url) !== root.host(root.url))
                 web.url = root.url
             if (root.direct && request.status === WebView.LoadStartedStatus) {
-                web.runJavaScript("(function(){try{localStorage.removeItem('artplayer-subtitle-pref-dub');if(window.Hls&&window.Hls.DefaultConfig){window.Hls.DefaultConfig.audioTrackLoadingTimeOut=30000;}}catch(_){}})()")
+                web.runJavaScript("(function(){try{localStorage.removeItem('artplayer-subtitle-pref-dub');"
+                    + (root.translateSubs ? "localStorage.setItem('artplayer-subtitle-pref-sub','off');localStorage.setItem('artplayer-subtitle-pref-dub','off');"
+                       : (root.subLangPref === 'it' ? "localStorage.setItem('artplayer-subtitle-pref-sub',JSON.stringify(['Italian']));" : ""))
+                    + "if(window.Hls&&window.Hls.DefaultConfig){window.Hls.DefaultConfig.audioTrackLoadingTimeOut=30000;}}catch(_){}})()")
             }
             if (root.direct && request.status === WebView.LoadSucceededStatus) {
                 const subQuality = root.subQualityPref
@@ -492,7 +758,8 @@ Item {
                     + "localStorage.setItem('zen-subtitle-quality','" + subQuality + "');"
                     + "localStorage.setItem('zen-quality-pref','1080p');"
                     + "localStorage.removeItem('artplayer-subtitle-pref-dub');"
-                    + "var s=localStorage.getItem('artplayer-subtitle-pref-sub');if(!s||s==='null'||s==='[]')localStorage.setItem('artplayer-subtitle-pref-sub',JSON.stringify(['Italian']));"
+                    + (root.translateSubs ? "localStorage.setItem('artplayer-subtitle-pref-sub','off');localStorage.setItem('artplayer-subtitle-pref-dub','off');"
+                       : (root.subLangPref === 'it' ? "localStorage.setItem('artplayer-subtitle-pref-sub',JSON.stringify(['Italian']));" : ""))
                     + (root.resumeAt > 5 ? "sessionStorage.setItem('zen-ios-resume','" + Number(root.resumeAt) + "');" : "")
                     + "if(window.Hls&&window.Hls.DefaultConfig){window.Hls.DefaultConfig.audioTrackLoadingTimeOut=30000;}"
                     + "}catch(_){}})()"
@@ -502,13 +769,46 @@ Item {
         }
     }
 
+    Connections {
+        target: root.subtitleTask
+        function onProgressed(partial) {
+            if (!partial || !Array.isArray(partial.cues)) return
+            root.showTranslatedSubtitles(partial)
+            if (!root.subtitleToastShown) {
+                root.subtitleToastShown = true
+                root.subToastMsg = "Sottotitoli tradotti in italiano"
+                root.subToastUntil = Date.now() + 3500
+                root.subtitleTranslated(Qt.locale("it").nativeLanguageName || "it")
+            }
+        }
+        function onFinished(result) {
+            if (!result || !Array.isArray(result.cues)) return
+            root.showTranslatedSubtitles(result)
+            if (!root.subtitleToastShown) {
+                root.subtitleToastShown = true
+                root.subToastMsg = "Sottotitoli tradotti in italiano"
+                root.subToastUntil = Date.now() + 3500
+                root.subtitleTranslated(Qt.locale("it").nativeLanguageName || "it")
+            }
+        }
+        function onFailed(error) {
+            root.failedSubtitle = root.translatingSubtitle
+            root.subtitleTranslationStarted = false
+            root.subToastMsg = String(error || "Errore traduzione sottotitoli")
+            root.subToastUntil = Date.now() + 4000
+            root.subtitleTranslationFailed(error)
+            if (App.settings.autoItalianFallback !== false) root.italianMissing()
+        }
+    }
+
     Timer {
-        interval: 500
+        interval: 200
         running: root.direct && root.visible && root.url.length > 0
         repeat: true
         onTriggered: web.runJavaScript(root.probe, (result) => {
             try {
                 const s = JSON.parse(result)
+                root.videoTimeMs = (Number(s.t) || 0) * 1000
                 for (const k of s.k || []) root.key(k)
                 if (s.fs) root.toggleFullScreen()
                 if (s.mv) root.interacted()
@@ -520,7 +820,8 @@ Item {
                     else if (s.act.name === 'skip') root.skipClicked(s.act.to)
                     else if (s.act.name === 'episode') root.episodeSelected(s.act.index)
                 }
-                if (s.noIta && App.settings.autoItalianFallback !== false) root.italianMissing()
+                if (Array.isArray(s.subs)) root.considerSubtitles(s.subs, s.curSub || "")
+                if (s.noIta && App.settings.autoItalianFallback !== false && !root.subtitleTranslationStarted) root.italianMissing()
                 if (s.d > 0) root.time(s.t, s.d, s.s || "")
             } catch (e) {}
         })

@@ -16,6 +16,7 @@ add_library(scancore_core STATIC
     core/translation/Cloud.cpp
     core/translation/Onnx.cpp
     core/translation/LocalMt.cpp
+    core/translation/Subtitles.cpp
     core/StreamRelay.cpp
     core/VideoSave.cpp
     core/UpdateRules.cpp
@@ -249,6 +250,15 @@ qt_add_resources(scancore anime4k
     PREFIX /
     BASE ${PROJECT_SOURCE_DIR}/resources
     FILES ${SCANCORE_SHADERS})
+# The ENO anime stack (Settings → Anime → Upscale): RAVU-Zoom for the luma and
+# KrigBilateral for the chroma. mpv reads real files, so the player copies
+# them out of the resources to the cache folder (MpvPlayer.cpp).
+file(GLOB SCANCORE_ENO_SHADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/resources/shaders/eno/*.hook
+     ${PROJECT_SOURCE_DIR}/resources/shaders/eno/*.glsl)
+qt_add_resources(scancore enoshaders
+    PREFIX /
+    BASE ${PROJECT_SOURCE_DIR}/resources
+    FILES ${SCANCORE_ENO_SHADERS})
 qt_add_resources(scancore lncrawl
     PREFIX /
     BASE ${PROJECT_SOURCE_DIR}/resources

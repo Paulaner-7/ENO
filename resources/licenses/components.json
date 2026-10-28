@@ -42,6 +42,12 @@
   "file": "Anime4K.txt"
  },
  {
+  "name": "RAVU-Zoom (mpv-prescalers) and KrigBilateral",
+  "use": "Luma upscaling and chroma reconstruction shaders for anime (player)",
+  "licence": "LGPL-3.0",
+  "file": "LGPL-3.0-only.txt"
+ },
+ {
   "name": "Mihon and Tachiyomi source API",
   "use": "Comic extensions (extension host)",
   "licence": "Apache-2.0",

@@ -115,12 +115,6 @@ Item {
             PageHeader {
                 title: qsTr("Novels")
                 subtitle: qsTr("Web novels and light novels from ") + page.sources.length + qsTr(" sources")
-                IconButton {
-                    iconName: "layout-dashboard"
-                    tip: qsTr("Edit page")
-                    active: page.editing
-                    onClicked: page.editing = !page.editing
-                }
                 // A book of your own (issue #16): an EPUB opens in the
                 // novel reader, a PDF as pages.
                 IconButton {

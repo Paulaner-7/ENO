@@ -128,6 +128,10 @@ const QVariantMap kDefaults{
     {"subtitleColor", "#ffffff"},
     {"subtitleBox", false},
     {"animeSharpen", "hq"},
+    // The player's picture clean-up and frame blending (MpvPlayer.cpp):
+    // deband on/off, and smoothing off|natural|smooth.
+    {"animeDeband", false},
+    {"animeSmooth", "off"},
     // Android's video decoding: "copy" (MediaCodec, frames copied back),
     // "direct" (into OpenGL; faster, froze on some phones) or "off".
     {"playerHwdec", "copy"},

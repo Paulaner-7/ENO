@@ -11,8 +11,8 @@ AbstractButton {
     property bool loading: false
     property bool compact: false
     property bool iconAfter: false
-    property bool glassBezel: false
     property bool inGlassBar: false
+    property bool glassBezel: !inGlassBar
     property int zTier: 0
 
     readonly property color fill: variant === "primary" ? Theme.accent
@@ -28,6 +28,9 @@ AbstractButton {
     font.family: Theme.fontSans
     font.pixelSize: compact ? Theme.textSm : Theme.textMd
     font.weight: Font.DemiBold
+
+    anchors.verticalCenter: (parent && String(parent).indexOf("QQuickRow") !== -1) ? parent.verticalCenter : undefined
+    transform: Translate { y: (control.parent && String(control.parent).indexOf("QQuickFlow") !== -1) ? Math.max(0, (38 - control.height) / 2) : 0 }
 
     NativeGlassButton {
         id: nativeBtn
@@ -47,35 +50,57 @@ AbstractButton {
         style: control.variant === "primary" ? "regular" : "clear"
         interactive: true
         fillColor: control.fill
-        tintColor: control.variant === "primary" ? Theme.alpha(Theme.accent, 0.36) : Qt.rgba(0, 0, 0, 0)
+        tintColor: control.variant === "primary" ? Theme.alpha(Theme.accent, 0.36)
+            : control.variant === "danger" ? Theme.alpha(Theme.danger, 0.25)
+            : Qt.rgba(0, 0, 0, 0)
         borderColor: control.variant === "ghost" || control.variant === "secondary" ? Theme.border : Qt.rgba(0, 0, 0, 0)
         onClicked: control.clicked()
     }
 
-    background: Rectangle {
+    background: Item {
         visible: !nativeBtn.visible
-        radius: height / 2
-        color: control.fill
-        border.width: control.variant === "ghost" || (control.variant === "secondary" && control.hovered) ? 1 : 0
-        border.color: control.hovered ? Theme.borderStrong : Theme.border
-        scale: control.pressed ? 0.96 : control.hovered ? 1.02 : 1
-        Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
-        Behavior on border.color { ColorAnimation { duration: Motion.fast } }
-        Rectangle {
+        LiquidGlass {
             anchors.fill: parent
-            radius: parent.radius
-            color: control.variant === "primary" ? Theme.accentInk : Theme.text
-            opacity: control.pressed ? 0.12 : control.hovered ? 0.06 : 0
-            Behavior on opacity { NumberAnimation { duration: Motion.fast } }
+            visible: control.glassBezel && !Theme.eink
+            nativeEnabled: false
+            radius: height / 2
+            glassStyle: control.variant === "primary" ? "regular" : "clear"
+            interactive: true
+            externalHovered: control.hovered
+            externalPressed: control.pressed
+            trackPointer: false
+            tintColor: control.variant === "primary"
+                ? Theme.alpha(Theme.accent, 0.36)
+                : control.variant === "danger"
+                ? Theme.alpha(Theme.danger, 0.25)
+                : Theme.alpha(control.fill, control.hovered ? (Theme.dark ? 0.68 : 0.78) : (Theme.dark ? 0.55 : 0.65))
         }
         Rectangle {
             anchors.fill: parent
-            anchors.margins: -3
-            radius: Theme.pill(height)
-            color: "transparent"
-            border.width: 2
-            border.color: Theme.alpha(Theme.accent, 0.6)
-            visible: control.visualFocus
+            visible: !control.glassBezel || Theme.eink
+            radius: height / 2
+            color: control.fill
+            border.width: control.variant === "ghost" || (control.variant === "secondary" && control.hovered) ? 1 : 0
+            border.color: control.hovered ? Theme.borderStrong : Theme.border
+            scale: control.pressed ? 0.96 : control.hovered ? 1.02 : 1
+            Behavior on scale { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
+            Behavior on border.color { ColorAnimation { duration: Motion.fast } }
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: control.variant === "primary" ? Theme.accentInk : Theme.text
+                opacity: control.pressed ? 0.12 : control.hovered ? 0.06 : 0
+                Behavior on opacity { NumberAnimation { duration: Motion.fast } }
+            }
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: -3
+                radius: Theme.pill(height)
+                color: "transparent"
+                border.width: 2
+                border.color: Theme.alpha(Theme.accent, 0.6)
+                visible: control.visualFocus
+            }
         }
     }
 

@@ -3,6 +3,10 @@ build/
 *.user
 .qmlls.ini
 aqtinstall.log
+CMakeFiles/
+CMakeCache.txt
+.DS_Store
+.commandcode/
 
 # Flatpak builds and the exported repository
 .flatpak-builder/

@@ -14,11 +14,14 @@ ComboBox {
 
     textRole: "label"
     valueRole: "value"
-    implicitHeight: 36
+    implicitHeight: 38
     implicitWidth: Math.max(140, contentItem.implicitWidth + 48)
     font.family: Theme.fontSans
     font.pixelSize: Theme.textSm
     hoverEnabled: true
+
+    anchors.verticalCenter: (parent && String(parent).indexOf("QQuickRow") !== -1) ? parent.verticalCenter : undefined
+    transform: Translate { y: (control.parent && String(control.parent).indexOf("QQuickFlow") !== -1) ? Math.max(0, (38 - control.height) / 2) : 0 }
 
     Component.onCompleted: currentIndex = Math.max(0, indexOfValue(value))
     onValueChanged: currentIndex = Math.max(0, indexOfValue(value))
@@ -61,12 +64,28 @@ ComboBox {
         }
     }
 
-    background: Rectangle {
-        radius: Theme.radiusMd
-        color: control.hovered || control.popup.visible ? Theme.surface3 : Theme.surface2
-        border.width: 1
-        border.color: control.visualFocus ? Theme.accent : Theme.border
-        Behavior on color { ColorAnimation { duration: Motion.fast } }
+    background: Item {
+        LiquidGlass {
+            anchors.fill: parent
+            visible: !Theme.eink
+            nativeEnabled: false
+            radius: Theme.radiusMd
+            glassStyle: "clear"
+            interactive: true
+            externalHovered: control.hovered || control.popup.visible
+            externalPressed: control.down
+            trackPointer: false
+            tintColor: Theme.alpha(Theme.surface2, (control.hovered || control.popup.visible) ? (Theme.dark ? 0.68 : 0.78) : (Theme.dark ? 0.55 : 0.65))
+        }
+        Rectangle {
+            anchors.fill: parent
+            visible: Theme.eink
+            radius: Theme.radiusMd
+            color: control.hovered || control.popup.visible ? Theme.surface3 : Theme.surface2
+            border.width: 1
+            border.color: control.visualFocus ? Theme.accent : Theme.border
+            Behavior on color { ColorAnimation { duration: Motion.fast } }
+        }
     }
     contentItem: Text {
         leftPadding: 14

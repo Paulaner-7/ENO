@@ -33,7 +33,6 @@ Item {
     readonly property string seriesId: fromSource ? (summary.id || media.id || "") : Anime.seriesId(anilistId)
     readonly property var episodes: !episodesTask || !episodesTask.ok ? [] : fromSource ? episodesTask.result.episodes : episodesTask.result
     readonly property var seasons: fromSource && episodesTask && episodesTask.ok ? episodesTask.result.seasons : []
-    readonly property bool hasSources: { App.dependOn(Extensions.revision); return Anime.sources().some(s => s.enabled) }
     // The library as of when this page was last in sight: while a reader or
     // the player sits on top, progress saves every few seconds and would
     // re-query and re-sort this page each time, out of sight.
@@ -56,7 +55,6 @@ Item {
     readonly property var progress: { App.dependOn(page.libraryRevision); return Library.progressMap(seriesId) }
     readonly property bool saved: { App.dependOn(page.libraryRevision); return Library.isSaved(seriesId) }
     property bool descending: false
-    property string tab: "episodes"
     // Long series are shown 100 episodes at a time.
     property int range: 0
     readonly property int rangeSize: 100
@@ -166,13 +164,6 @@ Item {
         height: parent.height
         contentHeight: page.wide ? header.height + 40 : 0
     }
-    Rectangle {
-        visible: page.wide
-        x: side.width
-        width: 1
-        height: parent.height
-        color: Theme.border
-    }
 
     SmoothFlickable {
         id: flick
@@ -222,6 +213,8 @@ Item {
                         Router.toast(qsTr("Removed from your library"))
                     } else {
                         Library.save(page.series)
+                        if (page.episodes && page.episodes.length > 0)
+                            Library.storeUnits(page.seriesId, page.episodes)
                         Router.toast(qsTr("Added to your library"), "success")
                     }
                 }
@@ -231,20 +224,6 @@ Item {
                     filled: true
                     tip: qsTr("Watch trailer")
                     onClicked: App.openUrl(page.media.trailer)
-                }
-                IconButton {
-                    visible: !page.fromSource && page.hasSources
-                    iconName: "server"
-                    filled: true
-                    tip: qsTr("Watch from")
-                    onClicked: watchFrom.start(page.media, false)
-                }
-                IconButton {
-                    visible: Trackers.anyConnected
-                    iconName: "link"
-                    filled: true
-                    tip: qsTr("Tracking")
-                    onClicked: tracking.open()
                 }
                 // Retro: a tile for it on the hub.
                 IconButton {
@@ -261,42 +240,10 @@ Item {
             }
             }
 
-            Segmented {
-                x: Theme.gutter
-                // Reviews and discussions are kept by AniList title.
-                visible: !page.fromSource
-                options: [{ value: "episodes", label: qsTr("Episodes") }]
-                    .concat([{ value: "reviews", label: qsTr("Reviews") }, { value: "discussion", label: qsTr("Discussion") }])
-                value: page.tab
-                onPicked: (v) => page.tab = v
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "reviews"
-                visible: active
-                sourceComponent: Reviews {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
-            }
-            Loader {
-                x: Theme.gutter
-                width: parent.width - 2 * Theme.gutter
-                active: page.tab === "discussion"
-                visible: active
-                sourceComponent: Discussion {
-                    media: "anime"
-                    anilistId: page.anilistId
-                    title: page.media.title || ""
-                }
-            }
-
             Item {
                 width: parent.width
                 height: 34
-                visible: page.tab === "episodes" && page.episodes.length > 0
+                visible: page.episodes.length > 0
                 Text {
                     x: Theme.gutter
                     anchors.verticalCenter: parent.verticalCenter
@@ -342,7 +289,7 @@ Item {
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 8
-                visible: page.tab === "episodes" && page.episodes.length > page.rangeSize
+                visible: page.episodes.length > page.rangeSize
                 Repeater {
                     model: Math.ceil(page.episodes.length / page.rangeSize)
                     Chip {
@@ -358,7 +305,6 @@ Item {
 
             Flow {
                 id: episodeFlow
-                visible: page.tab === "episodes"
                 x: Theme.gutter
                 width: parent.width - 2 * Theme.gutter
                 spacing: 16
@@ -544,6 +490,7 @@ Item {
                             model: page.relatedFilterOptions
                             Chip {
                                 required property var modelData
+                                glass: true
                                 text: modelData
                                 selected: page.relatedFilter === modelData
                                 onClicked: page.relatedFilter = modelData
@@ -565,13 +512,4 @@ Item {
     }
 
     BackToTop { flick: flick }
-
-    WatchFromDialog { id: watchFrom }
-
-    TrackingDialog {
-        id: tracking
-        seriesId: page.seriesId
-        media: "anime"
-        seriesTitle: page.media.title || ""
-    }
 }

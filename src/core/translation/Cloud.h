@@ -18,6 +18,9 @@ namespace sc::translation {
 QStringList deepl(const QStringList &texts, const QString &from, const QString &to, const QString &key);
 // Google Cloud Translation (v2, an API key).
 QStringList google(const QStringList &texts, const QString &from, const QString &to, const QString &key);
+// Built-in keyless Google Translate (gtx endpoint), used automatically when no
+// API key or local model is configured.
+QStringList gtx(const QStringList &texts, const QString &from, const QString &to);
 // Any OpenAI-compatible chat service (OpenAI, OpenRouter, a local Ollama or
 // LM Studio): `base` is its address up to /v1.
 QStringList chatModel(const QStringList &texts, const QString &from, const QString &to, const QString &base, const QString &key,

@@ -55,6 +55,12 @@ public:
     // `hint`: {work, chapter, scope}.
     Q_INVOKABLE sc::Task *texts(const QStringList &texts, const QString &from);
     Q_INVOKABLE sc::Task *texts(const QStringList &texts, const QString &from, const QVariantMap &hint);
+    // The subtitle track at `url` (WebVTT, SubRip or ASS), its lines
+    // translated into `to` (target() when empty) unless they already are:
+    // {lang (the source, "" when it is guessed), translated (bool), engine,
+    // cues: [{start, end, text}] in milliseconds, vtt (the track to play)}.
+    // `hint` is as for texts().
+    Q_INVOKABLE sc::Task *subtitles(const QString &url, const QString &referer, const QString &from, const QString &to, const QVariantMap &hint);
     // [{value, label, detail}] for Settings.
     Q_INVOKABLE QVariantList readers() const;
     Q_INVOKABLE QVariantList translators() const;

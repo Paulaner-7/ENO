@@ -83,6 +83,66 @@ QStringList google(const QStringList &texts, const QString &from, const QString 
 
 namespace {
 
+QString gtxSingle(const QString &text, const QString &sl, const QString &tl) {
+    if (text.trimmed().isEmpty())
+        return text;
+    const auto url = withQuery(QUrl(QStringLiteral("https://translate.googleapis.com/translate_a/single")),
+                               {{"client", "gtx"}, {"sl", sl}, {"tl", tl}, {"dt", "t"}, {"q", text}});
+    const auto response = Http::get(url, {{"Accept", "application/json"}}, 15000);
+    if (!response.ok())
+        throw Error(QObject::tr("Subtitle translation service could not be reached (HTTP %1).").arg(response.status), response.status);
+    const auto root = response.json().array();
+    if (root.isEmpty())
+        return text;
+    QString out;
+    for (const auto &seg : root.first().toArray()) {
+        const auto part = seg.toArray();
+        if (!part.isEmpty())
+            out += part.first().toString();
+    }
+    return out;
+}
+
+} // namespace
+
+QStringList gtx(const QStringList &texts, const QString &from, const QString &to) {
+    if (texts.isEmpty())
+        return {};
+    const QString sl = from.trimmed().isEmpty() ? QStringLiteral("auto") : base(from);
+    const QString tl = to.trimmed().isEmpty() ? QStringLiteral("it") : base(to);
+
+    // Join texts with newline so an entire batch translates in a single HTTP request.
+    QStringList sanitized;
+    sanitized.reserve(texts.size());
+    for (auto t : texts) {
+        t.replace(QLatin1Char('\r'), QLatin1Char(' '));
+        t.replace(QLatin1Char('\n'), QLatin1Char(' '));
+        sanitized.append(t);
+    }
+    const QString joined = sanitized.join(QLatin1Char('\n'));
+    const QString translatedJoined = gtxSingle(joined, sl, tl);
+    const QStringList parts = translatedJoined.split(QLatin1Char('\n'), Qt::KeepEmptyParts);
+    if (parts.size() == texts.size()) {
+        QStringList out;
+        out.reserve(parts.size());
+        for (const auto &p : parts)
+            out.append(p.trimmed());
+        return out;
+    }
+
+    // Fallback if line breaks shifted in the batch: bisect into smaller sub-batches.
+    if (texts.size() > 1) {
+        const qsizetype mid = texts.size() / 2;
+        QStringList out = gtx(texts.mid(0, mid), from, to);
+        out += gtx(texts.mid(mid), from, to);
+        return out;
+    }
+
+    return {gtxSingle(sanitized.first(), sl, tl).trimmed()};
+}
+
+namespace {
+
 // The model's answer: {"translations": [...], "summary": "...", "glossary":
 // [{"term", "translation"}]}, or just the array. Models like to wrap JSON in
 // a code fence or talk around it.

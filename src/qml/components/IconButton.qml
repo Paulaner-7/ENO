@@ -13,13 +13,16 @@ AbstractButton {
     property bool filled: false
     property bool inGlassBar: false
     property int zTier: 0
-    property int diameter: 34
+    property int diameter: filled ? 38 : 34
 
     implicitWidth: diameter
     implicitHeight: diameter
     hoverEnabled: true
     focusPolicy: Qt.TabFocus
     opacity: enabled ? 1 : 0.35
+
+    anchors.verticalCenter: (parent && String(parent).indexOf("QQuickRow") !== -1) ? parent.verticalCenter : undefined
+    transform: Translate { y: (control.parent && String(control.parent).indexOf("QQuickFlow") !== -1) ? Math.max(0, (38 - control.height) / 2) : 0 }
 
     NativeGlassButton {
         id: nativeBtn

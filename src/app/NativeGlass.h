@@ -178,6 +178,9 @@ class NativeGlassButton : public QQuickItem {
     Q_PROPERTY(QString badgeText READ badgeText WRITE setBadgeText NOTIFY badgeTextChanged)
     Q_PROPERTY(QColor badgeTextColor READ badgeTextColor WRITE setBadgeTextColor NOTIFY badgeTextColorChanged)
     Q_PROPERTY(qreal rightInset READ rightInset WRITE setRightInset NOTIFY rightInsetChanged)
+    Q_PROPERTY(QString eyebrow READ eyebrow WRITE setEyebrow NOTIFY eyebrowChanged)
+    Q_PROPERTY(QString detail READ detail WRITE setDetail NOTIFY detailChanged)
+    Q_PROPERTY(QImage coverImage READ coverImage WRITE setCoverImage NOTIFY coverImageChanged)
     Q_PROPERTY(qreal progress READ progress WRITE setProgress NOTIFY progressChanged)
     Q_PROPERTY(QString tip READ tip WRITE setTip NOTIFY tipChanged)
     Q_PROPERTY(bool hovered READ hovered NOTIFY hoveredChanged)
@@ -284,6 +287,13 @@ public:
     qreal rightInset() const { return m_rightInset; }
     void setRightInset(qreal r);
 
+    QString eyebrow() const { return m_eyebrow; }
+    void setEyebrow(const QString &t) { if (m_eyebrow == t) return; m_eyebrow = t; emit eyebrowChanged(); syncNativeView(); }
+    QString detail() const { return m_detail; }
+    void setDetail(const QString &t) { if (m_detail == t) return; m_detail = t; emit detailChanged(); syncNativeView(); }
+    QImage coverImage() const { return m_coverImage; }
+    void setCoverImage(const QImage &i) { m_coverImage = i; emit coverImageChanged(); syncNativeView(); }
+
     qreal progress() const { return m_progress; }
     void setProgress(qreal p);
 
@@ -334,6 +344,9 @@ signals:
     void badgeTextColorChanged();
     void rightInsetChanged();
     void progressChanged();
+    void eyebrowChanged();
+    void detailChanged();
+    void coverImageChanged();
     void tipChanged();
     void hoveredChanged();
     void pressedChanged();
@@ -383,6 +396,9 @@ private:
     QColor m_badgeTextColor = Qt::white;
     qreal m_rightInset = 0.0;
     qreal m_progress = 0.0;
+    QString m_eyebrow;
+    QString m_detail;
+    QImage m_coverImage;
     QString m_tip;
     bool m_hovered = false;
     bool m_pressed = false;

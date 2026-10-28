@@ -2,6 +2,7 @@
 #include "sources/servers/Servers.h"
 
 #include "Activity.h"
+#include "Anime.h"
 #include "App.h"
 #include "Comics.h"
 #include "Downloads.h"
@@ -776,7 +777,7 @@ Task *Library::checkUpdates(bool automatic) {
             "SELECT s.id, s.media, s.source, s.source_url, s.title, s.status, l.category, l.known_units, "
             "(SELECT COUNT(*) FROM progress p WHERE p.series_id = s.id) AS touched, "
             "(SELECT COUNT(*) FROM progress p WHERE p.series_id = s.id AND p.completed = 1) AS read_units "
-            "FROM library l JOIN series s ON s.id = l.series_id WHERE s.media IN ('comic', 'novel') AND s.source != 'local'"));
+            "FROM library l JOIN series s ON s.id = l.series_id WHERE s.media IN ('anime', 'comic', 'novel') AND s.source != 'local'"));
         QVariantList rows;
         for (const auto &value : all) {
             const auto row = value.toMap();
@@ -792,9 +793,16 @@ Task *Library::checkUpdates(bool automatic) {
             jobs.append([row]() -> QVariantMap {
                 const auto media = row.value(QStringLiteral("media")).toString();
                 const auto url = row.value(QStringLiteral("source_url")).toString();
-                const auto units = media == QLatin1String("comic") ? Comics::fetchUnits(url)
-                                                                    : Novels::fetchUnits(url);
-                return {{"id", row.value(QStringLiteral("id"))}, {"units", units}};
+                const auto source = row.value(QStringLiteral("source")).toString();
+                const auto id = row.value(QStringLiteral("id")).toString();
+                QVariantList units;
+                if (media == QLatin1String("comic"))
+                    units = Comics::fetchUnits(url);
+                else if (media == QLatin1String("novel"))
+                    units = Novels::fetchUnits(url);
+                else if (media == QLatin1String("anime"))
+                    units = Anime::fetchUnits(id, source, url);
+                return {{"id", id}, {"units", units}};
             });
         }
         QStringList updated;
@@ -848,10 +856,13 @@ Task *Library::checkUpdates(bool automatic) {
             updated.append(title);
             // One per series; more chapters later replace it.
             const auto latest = fresh.last().toMap().value(QStringLiteral("title")).toString();
+            const auto media = row.value(QStringLiteral("media")).toString();
+            const QString unitLabel = (media == QLatin1String("anime"))
+                ? (fresh.size() == 1 ? tr("1 new episode") : tr("%1 new episodes").arg(fresh.size()))
+                : (fresh.size() == 1 ? tr("1 new chapter") : tr("%1 new chapters").arg(fresh.size()));
             if (!digest)
                 Notifications::post({QStringLiteral("chapters"), QStringLiteral("chapters:") + id, title,
-                                     (fresh.size() == 1 ? tr("1 new chapter") : tr("%1 new chapters").arg(fresh.size()))
-                                         + (latest.isEmpty() ? QString() : QStringLiteral(" · ") + latest),
+                                     unitLabel + (latest.isEmpty() ? QString() : QStringLiteral(" · ") + latest),
                                      QVariantMap{{"seriesId", id}},
                                      Database::pref(QStringLiteral("setting.notifyUpdates"), true).toBool()});
             const auto category = row.value(QStringLiteral("category")).toString();
@@ -863,7 +874,7 @@ Task *Library::checkUpdates(bool automatic) {
         // One notification for the whole check, when chosen.
         if (digest && total > 0)
             Notifications::post({QStringLiteral("chapters"), QStringLiteral("chapters:digest"),
-                                 total == 1 ? tr("1 new chapter in your library") : tr("%1 new chapters in your library").arg(total),
+                                 total == 1 ? tr("1 new episode in your library") : tr("%1 new episodes in your library").arg(total),
                                  QLocale().createSeparatedList(updated.mid(0, 4)) + (updated.size() > 4 ? QStringLiteral(" …") : QString()),
                                  QVariantMap{{"section", "library"}},
                                  Database::pref(QStringLiteral("setting.notifyUpdates"), true).toBool()});

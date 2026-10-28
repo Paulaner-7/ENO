@@ -10,6 +10,8 @@ AbstractButton {
     property string detail
     // A colour dot before the label (theme presets).
     property color dot: "transparent"
+    // macOS 27 native Liquid Glass (the same plate as ScButton's primary).
+    property bool glass: true
 
     checkable: false
     hoverEnabled: true
@@ -20,7 +22,32 @@ AbstractButton {
     font.weight: Font.Medium
     opacity: enabled ? 1 : 0.45
 
+    anchors.verticalCenter: (parent && String(parent).indexOf("QQuickRow") !== -1) ? parent.verticalCenter : undefined
+
+    NativeGlassButton {
+        id: nativeChip
+        anchors.fill: parent
+        visible: chip.glass && !Theme.eink && isSupported
+        glass: true
+        cornerRadius: height / 2
+        style: chip.selected ? "regular" : "clear"
+        interactive: true
+        iconName: chip.iconName
+        iconSize: 14
+        iconColor: chip.selected ? Theme.accentInk : Theme.textMuted
+        text: chip.text
+        textColor: chip.selected ? Theme.accentInk : Theme.text
+        fontSize: Theme.textSm
+        bold: chip.selected
+        fillColor: chip.selected ? Theme.accent : Theme.surface2
+        tintColor: chip.selected
+            ? Theme.alpha(Theme.accent, 0.36)
+            : Theme.alpha(Theme.surface2, Theme.dark ? 0.55 : 0.72)
+        onClicked: chip.clicked()
+    }
+
     background: Rectangle {
+        visible: !nativeChip.visible
         radius: Theme.pill(height)
         color: chip.selected ? Theme.accent : chip.hovered ? Theme.surface3 : Theme.surface2
         border.width: chip.selected ? 0 : 1
@@ -30,6 +57,7 @@ AbstractButton {
         Behavior on scale { NumberAnimation { duration: Motion.fast } }
     }
     contentItem: Item {
+        visible: !nativeChip.visible
         implicitWidth: row.implicitWidth
         implicitHeight: row.implicitHeight
         Row {

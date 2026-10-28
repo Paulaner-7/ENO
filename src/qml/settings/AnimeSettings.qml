@@ -5,6 +5,8 @@ SettingsPane {
     title: qsTr("Anime")
     subtitle: qsTr("Playback and skipping")
     iconName: "tv"
+    // The en→it pair that translating an English track needs.
+    readonly property bool hasSubtitleModel: { App.dependOn(OnDevice.revision); return OnDevice.canTranslate("en", "it") }
 
     SettingsGroup {
         title: qsTr("Player")
@@ -46,6 +48,27 @@ SettingsPane {
                 options: [{ value: "it", label: qsTr("Italian") }, { value: "en", label: qsTr("English") }, { value: "orig", label: qsTr("Original") }]
                 value: App.settings.animeSubLang || "it"
                 onPicked: (v) => App.setSetting("animeSubLang", v)
+            }
+        }
+        SettingRow {
+            iconName: "languages"
+            title: qsTr("Translate subtitles into Italian")
+            description: qsTr("When the player has subtitles in another language, translates them on this computer and shows them over the video.")
+            Toggle {
+                checked: App.settings.animeTranslateSubs === true
+                onToggled: App.setSetting("animeTranslateSubs", checked)
+            }
+        }
+        SettingRow {
+            visible: App.settings.animeTranslateSubs === true && !hasSubtitleModel
+            iconName: "download"
+            title: qsTr("Translation model")
+            description: qsTr("Download what translating the subtitles needs; nothing is sent anywhere.")
+            ScButton {
+                text: qsTr("Choose languages")
+                variant: "secondary"
+                compact: true
+                onClicked: modelDialog.start()
             }
         }
         SettingRow {
@@ -198,10 +221,31 @@ SettingsPane {
                     { value: "off", label: qsTr("Off") },
                     { value: "hq", label: qsTr("Soft (M)") },
                     { value: "light", label: qsTr("Light (S)") },
-                    { value: "fsrcnnx_hq", label: qsTr("FSRCNNX") }
+                    { value: "fsrcnnx_hq", label: qsTr("FSRCNNX") },
+                    { value: "ravu", label: qsTr("RAVU") }
                 ]
                 value: App.settings.animeSharpen || "hq"
                 onPicked: (v) => App.setSetting("animeSharpen", v)
+            }
+        }
+        SettingRow {
+            iconName: "sparkles"
+            title: qsTr("Deband")
+            description: qsTr("Removes colour banding and compression blocks in flat areas. Applies at once while watching.")
+            Toggle { checked: App.settings.animeDeband === true; onToggled: App.setSetting("animeDeband", checked) }
+        }
+        SettingRow {
+            iconName: "gauge"
+            title: qsTr("Smooth motion")
+            description: qsTr("Blends frames to the screen's refresh rate (it does not invent new frames). Natural keeps it light; Smooth is more fluid but can soften fast scenes.")
+            Segmented {
+                options: [
+                    { value: "off", label: qsTr("Off") },
+                    { value: "natural", label: qsTr("Natural") },
+                    { value: "smooth", label: qsTr("Smooth") }
+                ]
+                value: App.settings.animeSmooth || "off"
+                onPicked: (v) => App.setSetting("animeSmooth", v)
             }
         }
         SettingRow {
@@ -254,4 +298,7 @@ SettingsPane {
             Toggle { checked: App.settings.playerHoldSpeed !== false; onToggled: App.setSetting("playerHoldSpeed", checked) }
         }
     }
+
+    // The models translating subtitles on this computer (OnDevice).
+    OnDeviceDialog { id: modelDialog; target: "it" }
 }

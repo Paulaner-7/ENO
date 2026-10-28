@@ -42,40 +42,44 @@ Item {
         width: parent.width - 2 * Theme.gutter
         height: parent.height
         radius: Theme.radiusXl
-        color: Theme.surface
+        color: "transparent"
         Behavior on y { NumberAnimation { duration: Motion.normal; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.emphasized } }
 
-        // Cover artwork refracted and frosted through macOS 27 Liquid Glass.
-        Image {
-            id: backdrop
+        // macOS 27 native Liquid Glass plate (NSGlassEffectView / CASDFLayer).
+        // Same native glass as the Details button, as the card's plate.
+        NativeGlassButton {
+            id: glassBg
+            readonly property bool nativeActive: visible
             anchors.fill: parent
-            source: card.entry.cover ? App.image(card.entry.cover) : ""
-            sourceSize.width: 240
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            visible: false
-        }
-        LiquidGlass {
-            anchors.fill: parent
-            nativeEnabled: false
-            radius: panel.radius
-            backdropTexture: backdrop
-            autoBackdrop: false
-            blurMax: 52
+            visible: !Theme.eink && isSupported
+            glass: true
+            passthrough: true
+            zTier: 0
+            cornerRadius: panel.radius
+            style: "regular"
             interactive: true
-            externalHovered: hover.hovered
-            tintColor: Theme.alpha(Theme.surface, hover.hovered ? (Theme.dark ? 0.42 : 0.55) : (Theme.dark ? 0.52 : 0.65))
+            layout: "resume"
+            eyebrow: card.anime ? qsTr("Continue watching") : qsTr("Continue reading")
+            text: card.entry.title || ""
+            badgeText: card.unitLine + (card.entry.progressAt ? "  ·  " + App.relativeTime(card.entry.progressAt) : "")
+            detail: card.upNext ? "" : (card.isFinished || card.entry.completed) ? qsTr("Finished") : Math.round(card.percent * 100) + "%"
+            progress: card.percent
+            textColor: Theme.text
+            badgeTextColor: Theme.textMuted
+            accentColor: Theme.accent
+            fontSize: Theme.compact ? Theme.textXl : Theme.text2xl
+            rightInset: Theme.compact ? 18 : actions.width + 40
         }
-        Rectangle {
-            anchors.fill: parent
-            radius: panel.radius
-            gradient: Gradient {
-                orientation: Gradient.Horizontal
-                GradientStop { position: 0.0; color: Theme.alpha(Theme.surface, 0.22) }
-                GradientStop { position: 0.68; color: Theme.alpha(Theme.surface, 0.86) }
-                GradientStop { position: 1.0; color: Theme.alpha(Theme.surface, 0.96) }
-            }
+        Connections {
+            target: cover
+            function onReadyChanged() { if (cover.ready) grabTimer.restart() }
         }
+        Timer {
+            id: grabTimer
+            interval: 150
+            onTriggered: cover.grabToImage(function(r) { glassBg.coverImage = r.image })
+        }
+        Component.onCompleted: if (cover.ready) grabTimer.restart()
 
         Shadow {
             target: cover
@@ -92,11 +96,10 @@ Item {
             radius: Theme.radiusMd
             source: card.entry.cover || ""
             title: card.entry.title || ""
-            scale: hover.hovered ? 1.045 : 1
-            Behavior on scale { NumberAnimation { duration: Motion.slow; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.spring } }
         }
 
         Column {
+            visible: !glassBg.nativeActive
             anchors.left: cover.right
             anchors.leftMargin: Theme.compact ? 16 : 22
             anchors.right: Theme.compact ? parent.right : actions.left
@@ -183,6 +186,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             radius: panel.radius
+            visible: !glassBg.nativeActive
             color: "transparent"
             border.width: 1
             border.color: hover.hovered ? Theme.borderStrong : Theme.border

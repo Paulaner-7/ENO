@@ -11,7 +11,10 @@ Dialog {
     property string installing: ""
     property string status: ""
     property string query: ""
-    readonly property var items: { App.dependOn(OnDevice.revision); return OnDevice.languages(Translator.target) }
+    // What the languages are translated into; the reader's own target unless
+    // a page (the player's subtitles) asks for another.
+    property string target: Translator.target
+    readonly property var items: { App.dependOn(OnDevice.revision); return OnDevice.languages(target) }
     readonly property var shown: {
         const q = query.trim().toLowerCase()
         if (!q) return items
@@ -22,7 +25,7 @@ Dialog {
     function download(language) {
         installing = language
         status = qsTr("Starting…")
-        installTask = OnDevice.install(language, Translator.target)
+        installTask = OnDevice.install(language, target)
     }
 
     Connections {
@@ -94,7 +97,7 @@ Dialog {
             bottomPadding: 12
             Text {
                 width: parent.width
-                text: qsTr("Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.").arg(Qt.locale(Translator.target).nativeLanguageName || Translator.target)
+                text: qsTr("Each language brings what reading its pages and translating them into %1 needs: about 140 MB. Nothing is sent anywhere. ONNX Runtime (Microsoft), PaddleOCR and Opus-MT do the work.").arg(Qt.locale(dialog.target).nativeLanguageName || dialog.target)
                 color: Theme.textMuted
                 font.family: Theme.fontSans
                 font.pixelSize: Theme.textSm
@@ -164,7 +167,7 @@ Dialog {
                     text: row.modelData.installed ? qsTr("Remove") : qsTr("Download")
                     onClicked: {
                         if (row.modelData.installed)
-                            OnDevice.remove(row.modelData.language, Translator.target)
+                            OnDevice.remove(row.modelData.language, dialog.target)
                         else
                             dialog.download(row.modelData.language)
                     }

@@ -551,9 +551,14 @@ Task *OnDevice::installUpscaler() {
 QImage OnDevice::upscale(const QImage &image) const { return upscalerNow()->upscale(image); }
 
 bool OnDevice::any() const {
+    if (!runtimeInstalled())
+        return false;
     for (const auto &r : kReaders)
         if (readerInstalled(QLatin1String(r.name)))
-            return runtimeInstalled();
+            return true;
+    for (const auto &p : kPairs)
+        if (pairInstalled(&p))
+            return true;
     return false;
 }
 

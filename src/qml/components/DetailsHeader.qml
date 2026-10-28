@@ -1,10 +1,9 @@
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Controls.Basic
 import Scancore
 
-// Top of a details page: blurred cover backdrop, cover (hero target), title,
-// metadata, description and primary actions.
+// Top of a details page: cover (hero target), title, metadata, description
+// and primary actions.
 Item {
     id: header
     property var series: ({})
@@ -25,60 +24,6 @@ Item {
 
     width: parent ? parent.width : 900
     implicitHeight: Math.max(info.y + info.height, coverBox.y + coverBox.height) + 34
-
-    // Backdrop. Over a background picture or a see-through window the page
-    // has no colour to fade into, so the backdrop fades out itself.
-    Item {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 420
-        clip: true
-        layer.enabled: Theme.layered
-        layer.effect: MultiEffect {
-            maskEnabled: true
-            maskSource: backdropFade
-        }
-        Image {
-            id: backdropSource
-            anchors.fill: parent
-            source: header.series.banner ? App.image(header.series.banner) : (header.anilist && header.anilist.banner ? App.image(header.anilist.banner) : (header.series.cover ? App.image(header.series.cover, header.coverReferer) : ""))
-            sourceSize.width: 320
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            visible: false
-        }
-        MultiEffect {
-            anchors.fill: parent
-            source: backdropSource
-            blurEnabled: true
-            blur: 1
-            blurMax: 64
-            saturation: 0.1
-            opacity: backdropSource.status === Image.Ready ? (Theme.dark ? 0.42 : 0.3) : 0
-            Behavior on opacity { NumberAnimation { duration: 700 } }
-        }
-        Rectangle {
-            anchors.fill: parent
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Theme.alpha(Theme.bg, 0.15) }
-                GradientStop { position: 0.6; color: Theme.alpha(Theme.bg, 0.8) }
-                GradientStop { position: 1.0; color: Theme.bg }
-            }
-        }
-    }
-
-    Rectangle {
-        id: backdropFade
-        width: parent.width
-        height: 420
-        visible: false
-        layer.enabled: true
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "white" }
-            GradientStop { position: 0.45; color: Qt.rgba(1, 1, 1, 0.7) }
-            GradientStop { position: 1.0; color: "transparent" }
-        }
-    }
 
     IconButton {
         x: Theme.gutter - 8
@@ -153,6 +98,12 @@ Item {
                 Item {
                     required property var modelData
                     readonly property bool isRating: String(modelData).startsWith("★ ")
+                    readonly property bool isAiring: /^(Airing|RELEASING|Ongoing|currently_airing|In corso)$/i.test(String(modelData).trim())
+                    readonly property bool isFinished: /^(Finished|FINISHED|Completed|COMPLETED|finished_airing|Finito)$/i.test(String(modelData).trim())
+                    readonly property string displayText: isRating ? String(modelData).slice(2)
+                        : isAiring ? qsTr("In corso")
+                        : isFinished ? qsTr("Finito")
+                        : String(modelData)
                     height: 26
                     width: metaRow.implicitWidth + 18
                     LiquidGlass {
@@ -163,13 +114,17 @@ Item {
                         iconName: parent.isRating ? "star" : ""
                         iconSize: 13
                         iconColor: Theme.warning
-                        text: parent.isRating ? String(parent.modelData).slice(2) : String(parent.modelData)
-                        textColor: parent.isRating ? Theme.text : Theme.textMuted
+                        text: parent.displayText
+                        textColor: parent.isAiring
+                            ? (Theme.dark ? "#ff6b6b" : Theme.danger)
+                            : parent.isRating ? Theme.text : Theme.textMuted
                         fontSize: Theme.textXs + 1
-                        bold: parent.isRating
-                        tintColor: parent.isRating
-                            ? Theme.alpha(Theme.warning, Theme.dark ? 0.18 : 0.22)
-                            : Theme.alpha(Theme.surface2, Theme.dark ? 0.55 : 0.72)
+                        bold: parent.isRating || parent.isAiring
+                        tintColor: parent.isAiring
+                            ? Theme.alpha(Theme.danger, Theme.dark ? 0.32 : 0.25)
+                            : parent.isRating
+                                ? Theme.alpha(Theme.warning, Theme.dark ? 0.18 : 0.22)
+                                : Theme.alpha(Theme.surface2, Theme.dark ? 0.55 : 0.72)
                     }
                     Row {
                         id: metaRow
@@ -184,11 +139,11 @@ Item {
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: isRating ? String(modelData).slice(2) : modelData
-                            color: isRating ? Theme.text : Theme.textMuted
+                            text: displayText
+                            color: isAiring ? (Theme.dark ? "#ff6b6b" : Theme.danger) : isRating ? Theme.text : Theme.textMuted
                             font.family: Theme.fontSans
                             font.pixelSize: Theme.textXs + 1
-                            font.weight: isRating ? Font.DemiBold : Font.Medium
+                            font.weight: (isRating || isAiring) ? Font.DemiBold : Font.Medium
                         }
                     }
                 }
@@ -216,24 +171,18 @@ Item {
             }
             // In the library: the symbol alone, filled once it is saved.
             IconButton {
+                diameter: 38
                 filled: true
                 active: header.saved
                 iconName: "bookmark"
                 iconColor: header.saved ? Theme.text : Theme.textMuted
                 tip: header.saved ? qsTr("In library") : qsTr("Add to library")
+                transform: Translate { y: Math.max(0, (38 - height) / 2) }
                 onClicked: header.toggleSaved()
-            }
-            // Where a saved series sits in the library, and favourites.
-            Select {
-                visible: header.saved && !!header.series.id
-                implicitWidth: 168
-                // Visible lists, and the one the series is on even if hidden.
-                model: Router.libraryCategories(header.series.media, false, value)
-                value: { App.dependOn(Library.revision); return header.saved ? (Library.category(header.series.id) || "reading") : "reading" }
-                onPicked: (v) => Library.setCategory(header.series.id, v)
             }
             IconButton {
                 id: heart
+                diameter: 38
                 visible: header.saved && !!header.series.id
                 readonly property bool on: { App.dependOn(Library.revision); return header.saved && Library.isFavourite(header.series.id) }
                 filled: true
@@ -241,6 +190,7 @@ Item {
                 iconName: "heart"
                 iconColor: on ? Theme.danger : Theme.textMuted
                 tip: on ? qsTr("Remove from favourites") : qsTr("Add to favourites")
+                transform: Translate { y: Math.max(0, (38 - height) / 2) }
                 onClicked: Library.setFavourite(header.series.id, !on)
             }
         }

@@ -3,6 +3,7 @@
 #include "core/Text.h"
 #include "core/translation/Cloud.h"
 #include "core/translation/Layout.h"
+#include "core/translation/Subtitles.h"
 #include "core/Http.h"
 
 #include <QJsonArray>
@@ -19,6 +20,7 @@
 #include <QTest>
 
 using namespace sc;
+using namespace sc::translation;
 
 // Text helpers that need no network or database.
 class TextTests : public QObject {
@@ -111,11 +113,15 @@ private slots:
                     {"boundingBox":{"vertices":[{"x":10,"y":10},{"x":110,"y":10},{"x":110,"y":40},{"x":10,"y":40}]},
                      "words":[{"symbols":[{"text":"안"},{"text":"녕","property":{"detectedBreak":{"type":"SPACE"}}}]},
                               {"symbols":[{"text":"하"},{"text":"세"},{"text":"요"}]}]}]}]}]}}]})";
+            else if (host == QLatin1String("translate.googleapis.com"))
+                r.body = R"([[["Ciao\n","Hello\n"],["Che cosa?", "What?"]],null,"en"])";
             else
                 return std::nullopt;
             return r;
         });
         using namespace translation;
+        QCOMPARE(gtx({QStringLiteral("Hello"), QStringLiteral("What?")}, QStringLiteral("en"), QStringLiteral("it")),
+                 (QStringList{QStringLiteral("Ciao"), QStringLiteral("Che cosa?")}));
         QCOMPARE(deepl({QStringLiteral("안녕"), QStringLiteral("뭐?")}, QStringLiteral("ko"), QStringLiteral("en"), QStringLiteral("k:fx")),
                  (QStringList{QStringLiteral("Hello"), QStringLiteral("What?")}));
         QCOMPARE(seen.last().headers.value(0).second, QByteArray("DeepL-Auth-Key k:fx"));
@@ -141,6 +147,62 @@ private slots:
         QVERIFY_THROWS_EXCEPTION(Error, deepl({QStringLiteral("x")}, {}, QStringLiteral("en"), {}));
         QCOMPARE(seen.size(), before);
         Http::setTestHandler({});
+    }
+
+    // WebVTT, SubRip and ASS tracks all become cues with their text and
+    // times, and a WebVTT track a browser can play.
+    void subtitleTracks() {
+        const auto vtt = parseSubtitles(QByteArrayLiteral(
+            "WEBVTT\n\n"
+            "NOTE a comment\n\n"
+            "00:00:01.500 --> 00:00:03.000 align:start\n"
+            "<v Roger>Hello &amp; welcome</v>\n\n"
+            "00:00:04.000 --> 00:00:05.250\n"
+            "Second line\n"
+            "on two lines"));
+        QCOMPARE(vtt.size(), 2);
+        QCOMPARE(vtt[0].start, 1500);
+        QCOMPARE(vtt[0].end, 3000);
+        QCOMPARE(vtt[0].text, QStringLiteral("Hello & welcome"));
+        QCOMPARE(vtt[1].start, 4000);
+        QCOMPARE(vtt[1].end, 5250);
+        QCOMPARE(vtt[1].text, QStringLiteral("Second line\non two lines"));
+
+        const auto srt = parseSubtitles(QByteArrayLiteral(
+            "1\n"
+            "00:00:01,000 --> 00:00:02,500\n"
+            "<i>Hi</i> &lt;there&gt;\n\n"
+            "2\n"
+            "00:00:03,000 --> 00:00:04,000\n"
+            "Two\n"
+            "lines"));
+        QCOMPARE(srt.size(), 2);
+        QCOMPARE(srt[0].text, QStringLiteral("Hi <there>"));
+        QCOMPARE(srt[1].text, QStringLiteral("Two\nlines"));
+
+        const auto ass = parseSubtitles(QByteArrayLiteral(
+            "[Script Info]\n"
+            "Title: Test\n\n"
+            "[Events]\n"
+            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+            "Dialogue: 0,0:00:01.00,0:00:01.50,Signs,,0,0,0,,{\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}\n"
+            "Dialogue: 0,0:00:01.50,0:00:02.00,Default,,0,0,0,,{\\an8}Hello, world\\NSecond line\n"
+            "Dialogue: 0,0:00:02.00,0:00:03.25,Default,,0,0,0,,{\\an8}Hello, world\\NSecond line\n"));
+        QCOMPARE(ass.size(), 1);
+        QCOMPARE(ass[0].start, 1500);
+        QCOMPARE(ass[0].end, 3250);
+        QCOMPARE(ass[0].text, QStringLiteral("Hello, world\nSecond line"));
+
+        const auto written = toWebVtt(srt);
+        QVERIFY(written.startsWith(QStringLiteral("WEBVTT\n\n")));
+        QVERIFY(written.contains(QStringLiteral("00:00:01.000 --> 00:00:02.500")));
+        const auto again = parseSubtitles(written.toUtf8());
+        QCOMPARE(again.size(), 2);
+        QCOMPARE(again[1].text, QStringLiteral("Two\nlines"));
+
+        QCOMPARE(plainSubtitleText(QStringLiteral("Two\nlines  here")), QStringLiteral("Two lines here"));
+        // Nothing that is not a track.
+        QCOMPARE(parseSubtitles(QByteArrayLiteral("<html>no subtitles</html>")).size(), 0);
     }
 
     // Exported novels open in SCANCORE's own EPUB reader again, chapters,

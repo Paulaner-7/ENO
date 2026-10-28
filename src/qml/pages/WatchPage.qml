@@ -73,6 +73,7 @@ Rectangle {
     property var italianFallbackSeasonsTask: null
     property var pendingItalianMatch: null
     property bool italianFallbackTriggered: false
+    property var checkedServers: ({})
 
     readonly property bool phone: App.platform === "android"
     readonly property bool landscape: width > height
@@ -179,6 +180,7 @@ Rectangle {
     }
 
     function load(i) {
+        const targetResume = (position > 5 ? position : resumeAt)
         saveProgress(true)
         nextCountdown.stop()
         index = i
@@ -191,6 +193,9 @@ Rectangle {
         const isNearEnd = p && p.position && p.position.duration > 0 && p.position.seconds >= p.position.duration - 20
         const isCompleted = p && p.completed && (p.percent >= 0.96 || isNearEnd)
         resumeAt = p && !isCompleted && p.position ? (p.position.seconds || 0) : 0
+        if (targetResume > 5 && (!resumeAt || resumeAt < targetResume)) {
+            resumeAt = targetResume
+        }
         resumed = (resumeAt <= 5)
         resumeSeekAttempts = 0
         currentUrl = ""
@@ -204,6 +209,7 @@ Rectangle {
         pickGrace.stop()
         streamsTask = null
         videosTask = null
+        checkedServers = ({})
         italianFallbackTriggered = false
         italianFallbackTask = null
         italianFallbackSeasonsTask = null
@@ -550,18 +556,51 @@ Rectangle {
     }
 
     function handleItalianMissing() {
-        if (italianFallbackTriggered || nativeStream || !hasSources || App.settings.autoItalianFallback === false) return
+        if (App.settings.autoItalianFallback === false) return
         if (italianFallbackTask && italianFallbackTask.loading) return
-        italianFallbackTriggered = true
+
+        // 1. Check if there are other servers in watch.streams that haven't been tried yet
+        const currentQuality = App.settings.animeServer || ""
+        const checked = Object.assign({}, checkedServers)
+        if (currentUrl) checked[currentUrl] = true
+        if (currentQuality) checked[currentQuality] = true
+        checkedServers = checked
+
+        if (!nativeStream && watch.streams && watch.streams.length > 1) {
+            const nextStream = watch.streams.find(s => s.url && !checked[s.url] && !checked[s.quality])
+            if (nextStream) {
+                const at = position > 5 ? position : resumeAt
+                watch.resumeAt = at
+                Router.toast(qsTr("Nessun sottotitolo in italiano su questo server; provo %1…").arg(nextStream.quality), "info")
+                pickServer(nextStream)
+                return
+            }
+        }
+
+        // 2. Fall back to Italian extensions
+        if (italianFallbackTriggered) return
+        if (!hasSources) {
+            Router.toast(qsTr("Nessun sottotitolo in italiano trovato sui server primari e nessuna estensione disponibile."), "warning")
+            return
+        }
 
         const allSources = Anime.sources() || []
         const itSources = allSources.filter(s => s.enabled && (s.language === "it" || /saturn|world|unity|aniplay/i.test(s.label || s.key)))
         if (itSources.length === 0) {
-            Router.toast(qsTr("No Italian subtitles on primary server; no Italian extensions installed."), "warning")
+            Router.toast(qsTr("Nessun sottotitolo in italiano trovato sui server primari e nessuna estensione italiana installata."), "warning")
             return
         }
 
-        Router.toast(qsTr("Italian subtitles not found on primary server; searching on %1…").arg("AnimeSaturn"), "info")
+        if (nativeStream && provider && provider.source) {
+            const isCurrentItalian = itSources.some(s => s.key === provider.source) || /saturn|world|unity|aniplay/i.test(provider.source || provider.sourceLabel)
+            if (isCurrentItalian) return
+        }
+
+        italianFallbackTriggered = true
+        const preservePos = position > 5 ? position : resumeAt
+        if (preservePos > 5) watch.resumeAt = preservePos
+
+        Router.toast(qsTr("Sottotitoli in italiano non trovati; ricerca automatica su %1…").arg("AnimeSaturn"), "info")
 
         const saturn = itSources.find(s => /saturn/i.test(s.label || s.key))
         const sourceKeys = saturn ? [saturn.key].concat(itSources.filter(s => s.key !== saturn.key).map(s => s.key)) : itSources.map(s => s.key)
@@ -584,11 +623,14 @@ Rectangle {
                 watch.italianFallbackSeasonsTask = Anime.sourceAnime(match.url, { title: match.title, seasons: true })
                 return
             }
+            const preservePos = watch.position > 5 ? watch.position : watch.resumeAt
             const provider = { source: match.source, url: match.url, title: match.title, sourceLabel: match.sourceLabel }
-            Anime.setProvider(media.anilistId || 0, provider)
+            if (App.settings.animeTranslateSubs !== true)
+                Anime.setProvider(media.anilistId || 0, provider)
             Router.toast(qsTr("Switched to %1 with Italian subtitles").arg(match.sourceLabel || "AnimeSaturn"), "success")
             watch.provider = provider
             watch.load(watch.index)
+            if (preservePos > 5) watch.resumeAt = preservePos
         }
         function onFailed(err) {
             Router.toast(qsTr("Could not switch to Italian extension: ") + err, "error")
@@ -602,11 +644,14 @@ Rectangle {
             if (!m) return
             const seasons = result.seasons || []
             const season = seasons.length > 0 ? seasons[0] : ({})
+            const preservePos = watch.position > 5 ? watch.position : watch.resumeAt
             const provider = Object.assign({}, m, season, { seasons: false, sourceLabel: m.sourceLabel })
-            Anime.setProvider(media.anilistId || 0, provider)
+            if (App.settings.animeTranslateSubs !== true)
+                Anime.setProvider(media.anilistId || 0, provider)
             Router.toast(qsTr("Switched to %1 with Italian subtitles").arg(m.sourceLabel || "AnimeSaturn"), "success")
             watch.provider = provider
             watch.load(watch.index)
+            if (preservePos > 5) watch.resumeAt = preservePos
         }
     }
 
@@ -903,6 +948,8 @@ Rectangle {
                 function onNextRequested() { watch.nextEpisode() }
                 function onTapped() { watch.toggleChrome() }
                 function onItalianMissing() { watch.handleItalianMissing() }
+                function onSubtitleTranslated(label) { Router.toast(qsTr("Sottotitoli tradotti in italiano"), "success") }
+                function onSubtitleTranslationFailed(error) { Router.toast(error, "warning") }
             }
         }
         CastOverlay {

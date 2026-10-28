@@ -21,6 +21,8 @@
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QQuickOpenGLUtils>
+#include <QQuickWindow>
+#include <QScreen>
 #include <QSet>
 #include <QUrl>
 #include <QtGui/qguiapplication_platform.h>
@@ -249,6 +251,10 @@ public:
             crashlog::Busy busy("mpv drawing the video");
             mpv_render_context_render(m_context, params);
         }
+        // Tells mpv when a frame reached the screen, so frame interpolation
+        // (display-resample) can time its blends against the real refresh.
+        // Qt presents once render() returns; this is the closest point.
+        mpv_render_context_report_swap(m_context);
         QQuickOpenGLUtils::resetOpenGLState();
     }
 
@@ -492,6 +498,7 @@ void MpvPlayer::setError(const QString &error) {
 void MpvPlayer::rendererReady() {
     m_rendererReady = true;
     applySharpen();
+    applyPicture();
     if (m_loadWaiting)
         load();
 }
@@ -809,6 +816,24 @@ QStringList sharpenShaders(const QString &mode) {
     QStringList out;
     const auto dir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/anime4k");
     QDir().mkpath(dir);
+    // ENO's stack: KrigBilateral rebuilds the chroma from the luma (it runs
+    // before the luma is scaled), then RAVU-Zoom scales the luma straight
+    // to the window's size. Plain fragment passes, so macOS's OpenGL 4.1 is
+    // enough. mpv reads real files, not Qt resources: copied to the cache.
+    if (mode == QLatin1String("ravu")) {
+        for (const auto file : {QStringLiteral("KrigBilateral.glsl"), QStringLiteral("ravu-zoom-r3.hook")}) {
+            const auto path = dir + QLatin1Char('/') + file;
+            const QString resource = QStringLiteral(":/shaders/eno/") + file;
+            if (QFileInfo(path).size() != QFileInfo(resource).size()) {
+                QFile::remove(path);
+                if (!QFile::copy(resource, path))
+                    return {};
+                QFile::setPermissions(path, QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther);
+            }
+            out.append(path);
+        }
+        return out;
+    }
     QStringList names = modes.value(mode);
     if (fsrcnnx.contains(mode))
         names = {fsrcnnx.value(mode)};
@@ -857,6 +882,50 @@ void MpvPlayer::setLook(const QVariantMap &look) {
     setString(mpv, "panscan", fit == QLatin1String("crop") ? QStringLiteral("1.0") : QStringLiteral("0.0"));
     setString(mpv, "video-unscaled", fit == QLatin1String("original") ? QStringLiteral("yes") : QStringLiteral("no"));
     applySharpen();
+    applyPicture();
+#endif
+}
+
+// Deband and temporal smoothing, changed while a video plays.
+void MpvPlayer::applyPicture() {
+#ifdef SCANCORE_HAVE_MPV
+    auto *mpv = m_core->mpv;
+    if (!mpv)
+        return;
+    // Anime's flat gradients band easily: two passes, a little grain so the
+    // steps do not come back as contours.
+    const bool deband = m_look.value(QStringLiteral("deband")).toBool();
+    setString(mpv, "deband", deband ? QStringLiteral("yes") : QStringLiteral("no"));
+    if (deband) {
+        setString(mpv, "deband-iterations", QStringLiteral("2"));
+        setString(mpv, "deband-threshold", QStringLiteral("35"));
+        setString(mpv, "deband-range", QStringLiteral("20"));
+        setString(mpv, "deband-grain", QStringLiteral("6"));
+    }
+    // Temporal interpolation: the picture is resampled to the screen's
+    // refresh rate (frames are blended, not invented). "natural" is mpv's
+    // oversample (no ghosting; blends only between refreshes that fall
+    // between two frames); "smooth" is a blurred sphinx filter, fluid but
+    // softer in fast scenes.
+    const auto smooth = m_look.value(QStringLiteral("smooth")).toString();
+    const bool interpolate = smooth == QLatin1String("natural") || smooth == QLatin1String("smooth");
+    if (interpolate) {
+        // The render API has no display to ask: tell mpv the refresh rate.
+        double hz = 60;
+        if (auto *w = window(); w && w->screen())
+            hz = w->screen()->refreshRate();
+        setString(mpv, "display-fps-override", QString::number(hz > 1 ? hz : 60.0));
+        if (smooth == QLatin1String("smooth")) {
+            setString(mpv, "tscale", QStringLiteral("sphinx"));
+            setString(mpv, "tscale-blur", QStringLiteral("0.6991556596428412"));
+            setString(mpv, "tscale-radius", QStringLiteral("1.0"));
+            setString(mpv, "tscale-clamp", QStringLiteral("0.0"));
+        } else {
+            setString(mpv, "tscale", QStringLiteral("oversample"));
+        }
+    }
+    setString(mpv, "video-sync", interpolate ? QStringLiteral("display-resample") : QStringLiteral("audio"));
+    setString(mpv, "interpolation", interpolate ? QStringLiteral("yes") : QStringLiteral("no"));
 #endif
 }
 

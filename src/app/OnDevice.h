@@ -57,7 +57,7 @@ public:
     // installed. Throw sc::Error when the models are missing.
     bool canRead(const QString &language) const;
     QList<translation::TextLine> read(const QImage &image, const QString &language) const;
-    bool canTranslate(const QString &from, const QString &to) const;
+    Q_INVOKABLE bool canTranslate(const QString &from, const QString &to) const;
     QStringList translate(const QStringList &texts, const QString &from, const QString &to) const;
 
 signals:

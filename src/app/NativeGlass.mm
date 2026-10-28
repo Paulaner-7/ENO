@@ -556,6 +556,71 @@ bool computeEffectiveVisibility(QQuickItem *item, QRectF *outSceneRect, qreal *o
         return;
     }
 
+    // 2b. Resume card layout (Home): cover, texts and progress drawn above the glass.
+    if (layout == QLatin1String("resume")) {
+        const CGFloat coverH = b.size.height - 36.0;
+        const CGFloat coverW = coverH / 1.5;
+        NSRect coverRect = NSMakeRect(18.0, 18.0, coverW, coverH);
+        NSBezierPath *clip = [NSBezierPath bezierPathWithRoundedRect:coverRect xRadius:10.0 yRadius:10.0];
+        const QImage ci = self.owner->coverImage();
+        if (!ci.isNull()) {
+            QImage q = ci.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            CGColorSpaceRef cs = CGColorSpaceCreateDeviceRGB();
+            CGContextRef cx = CGBitmapContextCreate(const_cast<uchar *>(q.bits()), q.width(), q.height(), 8, q.bytesPerLine(), cs,
+                                                    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+            CGImageRef cg = CGBitmapContextCreateImage(cx);
+            CGContextRelease(cx);
+            CGColorSpaceRelease(cs);
+            if (cg) {
+                NSImage *img = [[NSImage alloc] initWithCGImage:cg size:NSMakeSize(q.width(), q.height())];
+                CGImageRelease(cg);
+                [NSGraphicsContext saveGraphicsState];
+                [clip addClip];
+                const CGFloat sc = std::max(coverW / q.width(), coverH / q.height());
+                const CGFloat dw = q.width() * sc, dh = q.height() * sc;
+                NSRect dst = NSMakeRect(coverRect.origin.x + (coverW - dw) / 2.0, coverRect.origin.y + (coverH - dh) / 2.0, dw, dh);
+                [img drawInRect:dst fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0 respectFlipped:YES hints:nil];
+                [NSGraphicsContext restoreGraphicsState];
+            }
+        } else {
+            [[NSColor colorWithWhite:0.5 alpha:0.25] setFill];
+            [clip fill];
+        }
+        const CGFloat tx = coverRect.origin.x + coverW + 22.0;
+        const CGFloat tw = std::max<CGFloat>(40.0, b.size.width - tx - self.owner->rightInset());
+        NSMutableParagraphStyle *el = [[NSMutableParagraphStyle alloc] init];
+        el.lineBreakMode = NSLineBreakByTruncatingTail;
+        NSColor *muted = nsColorFromQColor(self.owner->badgeTextColor());
+        NSDictionary *eA = @{NSFontAttributeName: [NSFont systemFontOfSize:11 weight:NSFontWeightBold],
+                             NSForegroundColorAttributeName: muted, NSKernAttributeName: @1.4, NSParagraphStyleAttributeName: el};
+        NSDictionary *tA = @{NSFontAttributeName: [NSFont systemFontOfSize:std::max(14, self.owner->fontSize()) weight:NSFontWeightBold],
+                             NSForegroundColorAttributeName: nsColorFromQColor(self.owner->textColor()), NSParagraphStyleAttributeName: el};
+        NSDictionary *sA = @{NSFontAttributeName: [NSFont systemFontOfSize:13 weight:NSFontWeightRegular],
+                             NSForegroundColorAttributeName: muted, NSParagraphStyleAttributeName: el};
+        NSString *eS = self.owner->eyebrow().toUpper().toNSString();
+        NSString *tS = self.owner->text().toNSString();
+        NSString *sS = self.owner->badgeText().toNSString();
+        const CGFloat eh = [eS sizeWithAttributes:eA].height, th = [tS sizeWithAttributes:tA].height, sh = [sS sizeWithAttributes:sA].height;
+        const CGFloat totalH = eh + 6 + th + 6 + (sS.length ? sh + 6 : 0) + 10;
+        CGFloat y = (b.size.height - totalH) / 2.0;
+        [eS drawInRect:NSMakeRect(tx, y, tw, eh) withAttributes:eA]; y += eh + 6;
+        [tS drawInRect:NSMakeRect(tx, y, tw, th) withAttributes:tA]; y += th + 6;
+        if (sS.length) { [sS drawInRect:NSMakeRect(tx, y, tw, sh) withAttributes:sA]; y += sh + 6; }
+        y += 6;
+        const CGFloat barW = std::min<CGFloat>(220.0, tw * 0.6);
+        [[nsColorFromQColor(self.owner->textColor()) colorWithAlphaComponent:0.14] setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(tx, y, barW, 4) xRadius:2 yRadius:2] fill];
+        [nsColorFromQColor(self.owner->accentColor()) setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(tx, y, barW * std::clamp<CGFloat>(self.owner->progress(), 0.03, 1.0), 4) xRadius:2 yRadius:2] fill];
+        NSString *dS = self.owner->detail().toNSString();
+        if (dS.length) {
+            NSDictionary *dA = @{NSFontAttributeName: [NSFont monospacedDigitSystemFontOfSize:11 weight:NSFontWeightRegular],
+                                 NSForegroundColorAttributeName: muted};
+            [dS drawAtPoint:NSMakePoint(tx + barW + 10, y - 4) withAttributes:dA];
+        }
+        return;
+    }
+
     // 3. Sidebar item layout (Search bar, Nav items, Settings, Collapse)
     if (layout == QLatin1String("sidebar")) {
         const bool collapsed = self.owner->collapsed();

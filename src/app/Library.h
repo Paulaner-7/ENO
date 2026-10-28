@@ -122,7 +122,7 @@ public:
     // The custom list with this name (case aside), made when there is none
     // (imports from other apps); any thread.
     static QString categoryNamed(const QString &name);
-    static void storeUnits(const QString &seriesId, const QVariantList &units);
+    Q_INVOKABLE static void storeUnits(const QString &seriesId, const QVariantList &units);
     static QVariantList cachedUnits(const QString &seriesId);
     void notifyChanged();
 

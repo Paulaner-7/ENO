@@ -194,8 +194,8 @@ QString formatLabel(const QString &format) {
 }
 
 QString statusLabel(const QString &status) {
-    static const QHash<QString, QString> labels{{"FINISHED", "Finished"},
-                                                {"RELEASING", "Airing"},
+    static const QHash<QString, QString> labels{{"FINISHED", "Finito"},
+                                                {"RELEASING", "In corso"},
                                                 {"NOT_YET_RELEASED", "Upcoming"},
                                                 {"CANCELLED", "Cancelled"},
                                                 {"HIATUS", "Hiatus"}};
@@ -381,7 +381,7 @@ namespace {
 QVariantMap malCard(const QJsonObject &n) {
     static const QHash<QString, QString> formats{{"tv", "TV"},        {"movie", "Movie"},  {"ova", "OVA"},   {"ona", "ONA"},
                                                  {"special", "Special"}, {"music", "Music"}, {"tv_special", "TV Special"}};
-    static const QHash<QString, QString> statuses{{"finished_airing", "Finished"}, {"currently_airing", "Airing"},
+    static const QHash<QString, QString> statuses{{"finished_airing", "Finito"}, {"currently_airing", "In corso"},
                                                   {"not_yet_aired", "Upcoming"}};
     const auto alt = n.value("alternative_titles").toObject();
     const auto english = alt.value("en").toString();
@@ -717,61 +717,65 @@ Task *Anime::media(int anilistId) {
     });
 }
 
+QVariantList Anime::fetchEpisodes(int anilistId) {
+    const auto m = mediaObject(anilistId);
+    QHash<int, QVariantMap> known;
+    const auto cacheKey = QStringLiteral("anizip:%1").arg(anilistId);
+    QJsonObject zip;
+    if (auto cached = Database::cacheGet(cacheKey))
+        zip = QJsonDocument::fromJson(*cached).object();
+    else {
+        try {
+            const auto response =
+                Http::get(QUrl(QStringLiteral("https://api.ani.zip/mappings?anilist_id=%1").arg(anilistId)), {}, 10000);
+            if (response.ok()) {
+                zip = QJsonDocument::fromJson(response.body).object();
+                Database::cachePut(cacheKey, response.body, 12 * 3600);
+            }
+        } catch (const Error &) {
+            if (auto stale = Database::cacheGet(cacheKey, true))
+                zip = QJsonDocument::fromJson(*stale).object();
+        }
+    }
+    const auto today = QDateTime::currentDateTimeUtc();
+    int highest = 0;
+    const auto eps = zip.value("episodes").toObject();
+    static const QRegularExpression digits(QStringLiteral("^\\d+$"));
+    for (auto it = eps.begin(); it != eps.end(); ++it) {
+        if (!digits.match(it.key()).hasMatch())
+            continue;
+        const auto e = it.value().toObject();
+        const auto air = e.value("airDate").toString(e.value("airdate").toString());
+        if (!air.isEmpty() && QDateTime::fromString(air, Qt::ISODate) > today)
+            continue;
+        const int number = it.key().toInt();
+        const auto titles = e.value("title").toObject();
+        auto name = titles.value("en").toString();
+        if (name.isEmpty())
+            name = titles.value("x-jat").toString();
+        known.insert(number, QVariantMap{{"title", name},
+                                         {"image", e.value("image").toString()},
+                                         {"overview", e.value("overview").toString(e.value("summary").toString())},
+                                         {"airDate", air},
+                                         {"runtime", e.value("runtime").toInt(e.value("length").toInt())}});
+        highest = std::max(highest, number);
+    }
+    const int count = std::min(5000, std::max(releasedCount(m), highest));
+    QVariantList out;
+    for (int n = 1; n <= count; ++n) {
+        auto row = known.value(n);
+        if (row.value("title").toString().isEmpty())
+            row.insert("title", QStringLiteral("Episode %1").arg(n));
+        row.insert("number", n);
+        row.insert("key", QString::number(n));
+        out.append(row);
+    }
+    return out;
+}
+
 Task *Anime::episodes(int anilistId) {
     return Task::run([anilistId]() -> QVariant {
-        const auto m = mediaObject(anilistId);
-        QHash<int, QVariantMap> known;
-        const auto cacheKey = QStringLiteral("anizip:%1").arg(anilistId);
-        QJsonObject zip;
-        if (auto cached = Database::cacheGet(cacheKey))
-            zip = QJsonDocument::fromJson(*cached).object();
-        else {
-            try {
-                const auto response =
-                    Http::get(QUrl(QStringLiteral("https://api.ani.zip/mappings?anilist_id=%1").arg(anilistId)), {}, 10000);
-                if (response.ok()) {
-                    zip = QJsonDocument::fromJson(response.body).object();
-                    Database::cachePut(cacheKey, response.body, 12 * 3600);
-                }
-            } catch (const Error &) {
-                if (auto stale = Database::cacheGet(cacheKey, true))
-                    zip = QJsonDocument::fromJson(*stale).object();
-            }
-        }
-        const auto today = QDateTime::currentDateTimeUtc();
-        int highest = 0;
-        const auto eps = zip.value("episodes").toObject();
-        static const QRegularExpression digits(QStringLiteral("^\\d+$"));
-        for (auto it = eps.begin(); it != eps.end(); ++it) {
-            if (!digits.match(it.key()).hasMatch())
-                continue;
-            const auto e = it.value().toObject();
-            const auto air = e.value("airDate").toString(e.value("airdate").toString());
-            if (!air.isEmpty() && QDateTime::fromString(air, Qt::ISODate) > today)
-                continue;
-            const int number = it.key().toInt();
-            const auto titles = e.value("title").toObject();
-            auto name = titles.value("en").toString();
-            if (name.isEmpty())
-                name = titles.value("x-jat").toString();
-            known.insert(number, QVariantMap{{"title", name},
-                                             {"image", e.value("image").toString()},
-                                             {"overview", e.value("overview").toString(e.value("summary").toString())},
-                                             {"airDate", air},
-                                             {"runtime", e.value("runtime").toInt(e.value("length").toInt())}});
-            highest = std::max(highest, number);
-        }
-        const int count = std::min(5000, std::max(releasedCount(m), highest));
-        QVariantList out;
-        for (int n = 1; n <= count; ++n) {
-            auto row = known.value(n);
-            if (row.value("title").toString().isEmpty())
-                row.insert("title", QStringLiteral("Episode %1").arg(n));
-            row.insert("number", n);
-            row.insert("key", QString::number(n));
-            out.append(row);
-        }
-        return out;
+        return fetchEpisodes(anilistId);
     });
 }
 
@@ -1011,8 +1015,36 @@ QString providerKey(int anilistId) { return QStringLiteral("anime.provider:%1").
 } // namespace
 
 QVariantList Anime::fetchUnits(const QString &url) {
+    if (url.contains(QLatin1String("anilist.co/anime/")) || url.startsWith(QLatin1String("anime:anilist:"))) {
+        const auto parts = url.split(QLatin1Char('/'));
+        int anilistId = parts.last().toInt();
+        if (anilistId <= 0 && url.startsWith(QLatin1String("anime:anilist:")))
+            anilistId = url.mid(14).toInt();
+        if (anilistId > 0)
+            return fetchEpisodes(anilistId);
+    }
     const auto wrapped = ext::unwrapUrl(url);
-    return episodeUnits(requireSource(wrapped ? wrapped->key : QString())->episodes(url, {}));
+    if (!wrapped)
+        return {};
+    auto source = requireSource(wrapped->key);
+    if (!source)
+        return {};
+    return episodeUnits(source->episodes(url, {}));
+}
+
+QVariantList Anime::fetchUnits(const QString &seriesId, const QString &source, const QString &sourceUrl) {
+    if (source == QLatin1String("anilist") || seriesId.startsWith(QLatin1String("anime:anilist:"))) {
+        int anilistId = 0;
+        if (seriesId.startsWith(QLatin1String("anime:anilist:")))
+            anilistId = seriesId.mid(14).toInt();
+        else {
+            const auto parts = sourceUrl.split(QLatin1Char('/'));
+            anilistId = parts.last().toInt();
+        }
+        if (anilistId > 0)
+            return fetchEpisodes(anilistId);
+    }
+    return fetchUnits(sourceUrl);
 }
 
 QVariantList Anime::sources() const {

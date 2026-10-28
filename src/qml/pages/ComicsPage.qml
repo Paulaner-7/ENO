@@ -106,12 +106,6 @@ Item {
             PageHeader {
                 title: qsTr("Comics")
                 subtitle: page.sources.length + qsTr(" sources · manhwa, manga and webtoons")
-                IconButton {
-                    iconName: "layout-dashboard"
-                    tip: qsTr("Edit page")
-                    active: page.editing
-                    onClicked: page.editing = !page.editing
-                }
                 ScButton {
                     text: qsTr("Extensions")
                     iconName: "puzzle"

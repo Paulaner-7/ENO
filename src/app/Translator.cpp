@@ -5,8 +5,10 @@
 #include "core/Database.h"
 #include "core/Http.h"
 #include "core/ImageCache.h"
+#include "core/Parallel.h"
 #include "core/Task.h"
 #include "core/translation/Cloud.h"
+#include "core/translation/Subtitles.h"
 
 #include <QBuffer>
 #include <QCryptographicHash>
@@ -112,6 +114,19 @@ QByteArray encoded(const QImage &image) {
 QStringList translateWith(const QString &engine, const QStringList &texts, const QString &from, const QString &to) {
     QStringList out;
     const int batch = engine == QLatin1String("chat") ? 40 : 50;
+    if (engine == QLatin1String("gtx") && texts.size() > batch) {
+        QList<std::function<QStringList()>> jobs;
+        for (int i = 0; i < texts.size(); i += batch) {
+            const auto part = texts.mid(i, batch);
+            jobs.append([part, from, to]() -> QStringList { return gtx(part, from, to); });
+        }
+        for (const auto &outcome : parallel(jobs)) {
+            if (!outcome.ok())
+                throw Error(outcome.error, outcome.status, outcome.verifyUrl);
+            out += *outcome.value;
+        }
+        return out;
+    }
     for (int i = 0; i < texts.size(); i += batch) {
         const auto part = texts.mid(i, batch);
         if (engine == QLatin1String("deepl"))
@@ -122,8 +137,14 @@ QStringList translateWith(const QString &engine, const QStringList &texts, const
             out += chatModel(part, from, to, setting("translateChatUrl"), setting("translateChatKey"), setting("translateChatModel"));
         else if (engine == QLatin1String("mlkit"))
             out += mlkitTranslate(part, from, to);
-        else if (engine == QLatin1String("local"))
-            out += OnDevice::instance()->translate(part, from, to);
+        else if (engine == QLatin1String("local")) {
+            try {
+                out += OnDevice::instance()->translate(part, from, to);
+            } catch (const Error &) {
+                out += gtx(part, from, to);
+            }
+        } else if (engine == QLatin1String("gtx"))
+            out += gtx(part, from, to);
         else if (engine == QLatin1String("fake"))
             for (const auto &t : part)
                 out += QStringLiteral("Translated: ") + t;
@@ -323,6 +344,47 @@ QStringList translateChat(const QStringList &texts, const QString &from, const Q
     return out;
 }
 
+// Texts through an engine, each one kept for a month: a chapter read again
+// (or an episode's subtitle track played again) costs nothing.
+QStringList translateCached(const QStringList &texts, const QString &from, const QString &to, const QString &translator,
+                            const QVariantMap &hint) {
+    if (translator.isEmpty())
+        throw Error(Translator::instance()->hint());
+    QStringList out(texts.size());
+    QStringList missing;
+    QHash<QString, QList<int>> whereByText;
+    const auto keyFor = [&](const QString &text) {
+        return QStringLiteral("translate:text:") +
+               QString::fromLatin1(QCryptographicHash::hash((translator + QLatin1Char('|') + from + QLatin1Char('|') + to + QLatin1Char('|') + text).toUtf8(),
+                                                           QCryptographicHash::Sha1)
+                                       .toHex());
+    };
+    for (int i = 0; i < texts.size(); ++i) {
+        if (texts[i].trimmed().isEmpty())
+            continue;
+        if (const auto cached = Database::cacheGet(keyFor(texts[i])))
+            out[i] = QString::fromUtf8(*cached);
+        else {
+            auto &indices = whereByText[texts[i]];
+            if (indices.isEmpty())
+                missing.append(texts[i]);
+            indices.append(i);
+        }
+    }
+    if (!missing.isEmpty()) {
+        const auto done = translator == QLatin1String("chat")
+            ? translateChat(missing, from, to, contextFor(hint, {}, {}, translator, from, to), hint.value(QStringLiteral("scope")).toString())
+            : translateWith(translator, missing, from, to);
+        for (int j = 0; j < missing.size(); ++j) {
+            const auto translatedLine = done.value(j);
+            for (const int idx : whereByText.value(missing[j]))
+                out[idx] = translatedLine;
+            Database::cachePut(keyFor(missing[j]), translatedLine.toUtf8(), kMonth);
+        }
+    }
+    return out;
+}
+
 } // namespace
 
 Translator *Translator::instance() {
@@ -385,8 +447,10 @@ QString Translator::textEngine() const {
         return onAndroid() ? chosen : QString();
     if (chosen == QLatin1String("local"))
         return OnDevice::instance()->any() ? chosen : QString();
+    if (chosen == QLatin1String("gtx"))
+        return chosen;
     // Automatic: a key the reader gave, else the phone's own, else the
-    // computer's.
+    // computer's, else built-in keyless web translation.
     if (!setting("translateDeeplKey").isEmpty())
         return QStringLiteral("deepl");
     if (!setting("translateGoogleKey").isEmpty())
@@ -395,7 +459,7 @@ QString Translator::textEngine() const {
         return QStringLiteral("chat");
     if (onAndroid())
         return QStringLiteral("mlkit");
-    return OnDevice::instance()->any() ? QStringLiteral("local") : QString();
+    return OnDevice::instance()->any() ? QStringLiteral("local") : QStringLiteral("gtx");
 }
 
 bool Translator::pagesReady() const { return !readerEngine().isEmpty() && !textEngine().isEmpty(); }
@@ -410,7 +474,7 @@ QString Translator::hint() const {
                         "Google Cloud key there.")
                    : tr("To translate pages on a computer, add a Google Cloud key in Settings → Reading → Translate (Vision reads the "
                         "page's text).");
-    return tr("Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.");
+    return tr("Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate, or download a language model in Settings → Anime.");
 }
 
 QVariantList Translator::readers() const {
@@ -491,39 +555,75 @@ Task *Translator::texts(const QStringList &texts, const QString &from, const QVa
     const auto translator = textEngine();
     const auto to = target();
     return Task::run([texts, from, hint, translator, to]() -> QVariant {
-        if (translator.isEmpty())
-            throw Error(Translator::instance()->hint());
-        // Each text on its own in the cache, so a chapter read again (or
-        // half of it) costs nothing.
-        QStringList out(texts.size());
-        QStringList missing;
-        QList<int> where;
-        const auto keyFor = [&](const QString &text) {
-            return QStringLiteral("translate:text:") +
-                   QString::fromLatin1(QCryptographicHash::hash((translator + QLatin1Char('|') + from + QLatin1Char('|') + to + QLatin1Char('|') + text).toUtf8(),
-                                                                QCryptographicHash::Sha1)
-                                           .toHex());
+        return translateCached(texts, from, to, translator, hint);
+    });
+}
+
+Task *Translator::subtitles(const QString &url, const QString &referer, const QString &from, const QString &to, const QVariantMap &hint) {
+    const auto translator = textEngine();
+    const auto destination = to.isEmpty() ? target() : to;
+    return Task::run([url, referer, from, hint, translator, destination]() -> QVariant {
+        QByteArray data;
+        if (url.startsWith(QLatin1String("data:"), Qt::CaseInsensitive)) {
+            const auto comma = url.indexOf(QLatin1Char(','));
+            if (comma < 0)
+                throw Error(tr("This subtitle track could not be read."));
+            const auto header = url.left(comma);
+            if (header.contains(QLatin1String(";base64"), Qt::CaseInsensitive))
+                data = QByteArray::fromBase64(url.mid(comma + 1).toUtf8());
+            else
+                data = QUrl::fromPercentEncoding(url.mid(comma + 1).toUtf8()).toUtf8();
+        } else {
+            const auto answer = Http::get(QUrl(url), {{"Referer", referer.toUtf8()}, {"Accept", "text/vtt, application/x-subrip, text/plain, */*"}}, 20000);
+            if (!answer.ok())
+                throw Error(tr("The subtitle track could not be downloaded (HTTP %1).").arg(answer.status), answer.status);
+            data = answer.body;
+        }
+
+        const auto cues = translation::parseSubtitles(data);
+        if (cues.isEmpty())
+            throw Error(tr("This subtitle track has no text ENO can read."));
+
+        QStringList sources;
+        for (const auto &cue : cues)
+            sources.append(translation::plainSubtitleText(cue.text));
+        const bool needsTranslation = from.isEmpty() || from != destination;
+        QStringList translated = sources;
+
+        const auto buildResult = [&](const QStringList &lines, bool partial) -> QVariantMap {
+            QList<translation::SubtitleCue> out;
+            QVariantList stored;
+            for (int i = 0; i < cues.size(); ++i) {
+                auto cue = cues[i];
+                const auto line = lines.value(i);
+                if (!line.trimmed().isEmpty())
+                    cue.text = line;
+                out.append(cue);
+                stored.append(QVariantMap{{"start", cue.start}, {"end", cue.end}, {"text", cue.text}});
+            }
+            return QVariantMap{{"cues", stored},
+                               {"vtt", partial ? QString() : translation::toWebVtt(out)},
+                               {"lang", from},
+                               {"translated", needsTranslation},
+                               {"engine", translator}};
         };
-        for (int i = 0; i < texts.size(); ++i) {
-            if (texts[i].trimmed().isEmpty())
-                continue;
-            if (const auto cached = Database::cacheGet(keyFor(texts[i])))
-                out[i] = QString::fromUtf8(*cached);
-            else {
-                missing.append(texts[i]);
-                where.append(i);
+
+        if (needsTranslation) {
+            constexpr int kFirstChunk = 60;
+            if (sources.size() > kFirstChunk && translator != QLatin1String("chat")) {
+                const auto firstDone = translateCached(sources.mid(0, kFirstChunk), from, destination, translator, hint);
+                for (int i = 0; i < firstDone.size(); ++i)
+                    translated[i] = firstDone[i];
+                Task::report(buildResult(translated, true));
+                const auto restDone = translateCached(sources.mid(kFirstChunk), from, destination, translator, hint);
+                for (int i = 0; i < restDone.size(); ++i)
+                    translated[kFirstChunk + i] = restDone[i];
+            } else {
+                translated = translateCached(sources, from, destination, translator, hint);
             }
         }
-        if (!missing.isEmpty()) {
-            const auto done = translator == QLatin1String("chat")
-                ? translateChat(missing, from, to, contextFor(hint, {}, {}, translator, from, to), hint.value(QStringLiteral("scope")).toString())
-                : translateWith(translator, missing, from, to);
-            for (int j = 0; j < where.size(); ++j) {
-                out[where[j]] = done.value(j);
-                Database::cachePut(keyFor(missing[j]), done.value(j).toUtf8(), kMonth);
-            }
-        }
-        return out;
+
+        return buildResult(translated, false);
     });
 }
 

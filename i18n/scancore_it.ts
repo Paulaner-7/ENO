@@ -1525,6 +1525,26 @@
             <source>Software</source>
             <translation>Software</translation>
         </message>
+        <message>
+            <source>Translate subtitles into Italian</source>
+            <translation>Traduci i sottotitoli in italiano</translation>
+        </message>
+        <message>
+            <source>When the player has subtitles in another language, translates them on this computer and shows them over the video.</source>
+            <translation>Quando il player ha sottotitoli in un&apos;altra lingua, li traduce su questo computer e li mostra sopra il video.</translation>
+        </message>
+        <message>
+            <source>Translation model</source>
+            <translation>Modello di traduzione</translation>
+        </message>
+        <message>
+            <source>Download what translating the subtitles needs; nothing is sent anywhere.</source>
+            <translation>Scarica ciò che serve per tradurre i sottotitoli; nulla viene inviato altrove.</translation>
+        </message>
+        <message>
+            <source>Choose languages</source>
+            <translation>Scegli le lingue</translation>
+        </message>
     </context>
     <context>
         <name>AuthForm</name>
@@ -9305,8 +9325,8 @@
             <translation>Per tradurre le pagine su un computer, aggiungi una chiave Google Cloud in Impostazioni → Lettura → Traduci (Vision legge il testo della pagina).</translation>
         </message>
         <message>
-            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate.</source>
-            <translation>Aggiungi una chiave DeepL o Google, o l’indirizzo di un modello, in Impostazioni → Lettura → Traduci.</translation>
+            <source>Add a DeepL or Google key, or a model's address, in Settings → Reading → Translate, or download a language model in Settings → Anime.</source>
+            <translation>Aggiungi una chiave DeepL o Google, o l’indirizzo di un modello, in Impostazioni → Lettura → Traduci, oppure scarica un modello linguistico in Impostazioni → Anime.</translation>
         </message>
         <message>
             <source>Automatic</source>

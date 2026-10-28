@@ -71,13 +71,6 @@ Item {
                 glassBezel: true
                 onClicked: partyPanel.open()
             }
-            IconButton {
-                iconName: "layout-dashboard"
-                filled: true
-                tip: qsTr("Edit page")
-                active: page.editing
-                onClicked: page.editing = !page.editing
-            }
         }
     }
 
@@ -211,16 +204,21 @@ Item {
                     visible: false
                     layer.enabled: true
                     gradient: Gradient {
-                        GradientStop { position: 0.5; color: "white" }
+                        GradientStop { position: 0.0; color: "#ffffffff" }
+                        GradientStop { position: 0.80; color: "#ffffffff" }
+                        GradientStop { position: 0.90; color: Qt.rgba(1, 1, 1, 0.45) }
                         GradientStop { position: 1.0; color: "transparent" }
                     }
                 }
                 Item {
+                    id: heroPictures
                     anchors.fill: parent
-                    layer.enabled: Theme.layered
+                    layer.enabled: true
                     layer.effect: MultiEffect {
                         maskEnabled: true
                         maskSource: heroFade
+                        maskThresholdMin: 0.5
+                        maskSpreadAtMin: 0.5
                     }
                     // The pictures follow the finger under shades that stay
                     // put (moving the shades with them uncovered the slowly
@@ -257,20 +255,16 @@ Item {
                             }
                         }
                     }
+
+                    // Horizontal legibility shade for title and details; placed
+                    // inside heroPictures so its bottom also dissolves via heroFade.
                     Rectangle {
                         anchors.fill: parent
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
-                            GradientStop { position: 0.0; color: Theme.alpha(Theme.base, 0.95) }
-                            GradientStop { position: 0.55; color: Theme.alpha(Theme.base, 0.45) }
-                            GradientStop { position: 1.0; color: Theme.alpha(Theme.base, 0.1) }
-                        }
-                    }
-                    Rectangle {
-                        anchors.fill: parent
-                        gradient: Gradient {
-                            GradientStop { position: 0.55; color: "transparent" }
-                            GradientStop { position: 1.0; color: Theme.bg }
+                            GradientStop { position: 0.0; color: Theme.alpha(Theme.base, 0.85) }
+                            GradientStop { position: 0.55; color: Theme.alpha(Theme.base, 0.40) }
+                            GradientStop { position: 1.0; color: "transparent" }
                         }
                     }
                 }
